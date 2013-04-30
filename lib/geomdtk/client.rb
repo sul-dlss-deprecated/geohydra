@@ -65,7 +65,7 @@ module GeoMDTK
     end
     
     def self.export_mef(uuid, dir = ".")
-      res = service_raw("mef.export", { :uuid => uuid })
+      res = service_raw("mef.export", { :uuid => uuid, :version => 'true' })
       File.open("#{dir}/#{uuid}.mef", 'wb') {|f| f.write(res.body) }
     end
   
