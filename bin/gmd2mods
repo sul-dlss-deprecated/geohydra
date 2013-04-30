@@ -1,0 +1,8 @@
+#!/bin/bash
+d=tmp
+for fn in $d/*.mef; do
+  unzip -qo $fn -d $d
+  uuid=$(basename $fn .mef)
+  echo "Transforming $uuid -> $d/descMetadata_$uuid.xml"
+  xsltproc lib/geomdtk/gmd2mods.xslt $d/$uuid/metadata/metadata.xml > $d/descMetadata_$uuid.xml
+done
