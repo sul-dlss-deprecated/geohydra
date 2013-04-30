@@ -1,2 +1,3 @@
 .ruby*
 *.lock
+tmp
