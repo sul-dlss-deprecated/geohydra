@@ -1,6 +1,6 @@
 <updateHandler>
   <updateLog>
-    <str name="dir">/home/drh/geoMetadata/data</str>
+    <str name="dir">${solr.data.dir:}</str>
   </updateLog>
 </updateHandler>
 
