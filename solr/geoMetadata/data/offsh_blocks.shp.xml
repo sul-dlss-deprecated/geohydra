@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+  <doc>
+    <field name="_version_">1</field>
+    <field name="id">geonetwork:01F8FFDA-6569-4872-8A3F-206CAF51C825</field>
+    <field name="uuid_ssi">geonetwork:01F8FFDA-6569-4872-8A3F-206CAF51C825</field>
+    <field name="projection_ssi">EPSG_4269</field>
+    <field name="title_ssi">Offshore Lease Blocks in the Gulf of Mexico, 2011 - 1007 Update</field>
+    <field name="publisher_ssi">Minerals Management Service</field>
+    <field name="place_ssim">, , </field>
+    <field name="publication_dsi">2011-01-01</field>
+    <field name="abstract_tsi">Contains information that defines the Federal lease blocks for the Gulf of Mexico OCS Region.</field>
+    <field name="purpose_tsi">Locating and analysing information on the Gulf of Mexico's offshore lease blocks</field>
+    <field name="place_ss">Gulf of Mexico</field>
+    <field name="subject_si">Offshore Blocks</field>
+    <field name="genre_ss">Downloadable Data</field>
+    <field name="genre_ss">utilitiesCommunication</field>
+    <field name="coverage_tsi">-97.238989 --
+          -81.170106,
+          30.289096 --
+          23.780775</field>
+    <field name="distribution_format_ssim">Shapefile</field>
+    <field name="provenance_tsi">
+        Source: 
+        .
+        MMS.
+        2008-01-01.
+        publication.
+      </field>
+    <field name="quality_tsi"/>
+  </doc>
+</add>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+  <doc>
+    <field name="_version_">1</field>
+    <field name="projection_ssi">EPSG_4269</field>
+    <field name="title_ssi">Texas Land Survey, 2011 - 1007 UDPATE</field>
+    <field name="publisher_ssi">Hart Energy</field>
+    <field name="place_ssim">, , </field>
+    <field name="publication_dsi">2011-07-05</field>
+    <field name="abstract_tsi">The Texas Land Survey is used to describe land parcels within the state of Texas in a fashion similar to the Public Land Survey System.</field>
+    <field name="purpose_tsi">This data is intended for mapping purposes only.</field>
+    <field name="place_ss">Texas</field>
+    <field name="subject_si">Land use</field>
+    <field name="subject_si">Surveying</field>
+    <field name="genre_ss">Downloadable Data</field>
+    <field name="genre_ss">planningCadastre</field>
+    <field name="coverage_tsi">-106.645985 --
+          -93.50835,
+          36.500527 --
+          25.837407</field>
+    <field name="distribution_format_ssim">Shapefile</field>
+  </doc>
+</add>

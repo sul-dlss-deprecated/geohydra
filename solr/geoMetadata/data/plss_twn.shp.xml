@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+  <doc>
+    <field name="_version_">1</field>
+    <field name="id">geonetwork:5200B8D2-ADC7-4EC6-A2C3-6EA6A5B340E8</field>
+    <field name="uuid_ssi">geonetwork:5200B8D2-ADC7-4EC6-A2C3-6EA6A5B340E8</field>
+    <field name="projection_ssi">EPSG_4269</field>
+    <field name="title_ssi">Public Lands Survey System, Townships and Ranges in the United States, 2011 - 1007 Update</field>
+    <field name="publisher_ssi">Hart Energy</field>
+    <field name="place_ssim">, , </field>
+    <field name="publication_dsi">2011-07-05</field>
+    <field name="abstract_tsi">Dataset represent the Public Land Survey System at the Township level.</field>
+    <field name="purpose_tsi">To identify townships and ranges within the Public Land Survey System</field>
+    <field name="place_ss">United States</field>
+    <field name="subject_si">Public lands</field>
+    <field name="genre_ss">Downloadable Data</field>
+    <field name="coverage_tsi">-178.285802 --
+          -80.031491,
+          71.468273 --
+          25.138416</field>
+    <field name="distribution_format_ssim">Shapefile</field>
+    <field name="provenance_tsi">
+        Source: 
+        .
+        Hart Energy.
+        2011-07-05.
+        publication.
+      </field>
+    <field name="quality_tsi"/>
+  </doc>
+</add>
