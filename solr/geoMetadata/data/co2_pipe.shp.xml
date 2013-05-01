@@ -11,15 +11,15 @@
     <field name="publication_dsi">2012-01-01</field>
     <field name="abstract_tsi">Dataset represents locations of existing and proposed CO2 pipelines. Includes all interstate pipelines and major intrastate pipelines.</field>
     <field name="purpose_tsi">Locating Carbon Dioxide (CO2) pipelines in the United States.</field>
-    <field name="place_ss">United States</field>
-    <field name="subject_si">Carbon Dioxode</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="genre_ss">location</field>
-    <field name="genre_ss">utilitiesCommunication</field>
-    <field name="coverage_tsi">-109.758319 --
-          -88.990844,
-          48.999336 --
-          29.423028</field>
+    <field name="place_ssim">United States</field>
+    <field name="subject_ssim">Carbon Dioxode</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">location</field>
+    <field name="genre_ssim">utilitiesCommunication</field>
+    <field name="nw_llsi">48.999336,
+          -109.758319</field>
+    <field name="se_llsi">29.423028,
+          -88.990844</field>
     <field name="distribution_format_ssim">Shapefile</field>
     <field name="provenance_tsi">
         Source: 

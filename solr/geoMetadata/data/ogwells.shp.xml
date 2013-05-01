@@ -11,20 +11,20 @@
     <field name="publication_dsi">2011-07-05</field>
     <field name="abstract_tsi">This layer is based on data provided by numerous sources in a variety of digital formats, collected at the state or county level.</field>
     <field name="purpose_tsi">The purpose of this file is to combine multiple well data sources into one national file.</field>
-    <field name="place_ss">United States</field>
-    <field name="subject_si">Oil wells</field>
-    <field name="genre_ss">002</field>
-    <field name="genre_ss">002</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="genre_ss">utilitiesCommunication</field>
-    <field name="coverage_tsi">-124.646 --
-          -73.38717,
-          48.998656 --
-          24.421389</field>
-    <field name="coverage_tsi">-124.646 --
-          -73.38717,
-          48.998656 --
-          24.421389</field>
+    <field name="place_ssim">United States</field>
+    <field name="subject_ssim">Oil wells</field>
+    <field name="genre_ssim">002</field>
+    <field name="genre_ssim">002</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">utilitiesCommunication</field>
+    <field name="nw_llsi">48.998656,
+          -124.646</field>
+    <field name="se_llsi">24.421389,
+          -73.38717</field>
+    <field name="nw_llsi">48.998656,
+          -124.646</field>
+    <field name="se_llsi">24.421389,
+          -73.38717</field>
     <field name="distribution_format_ssim">Shapefile</field>
   </doc>
 </add>

@@ -11,14 +11,14 @@
     <field name="publication_dsi">2011-01-01</field>
     <field name="abstract_tsi">Shows the locations and extents of oil and gas fields in the United States</field>
     <field name="purpose_tsi">Locating and analysing United States oil and gas field data for use in geographic information systems.</field>
-    <field name="place_ss">United States</field>
-    <field name="subject_si">Oil fields</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="genre_ss">utilitiesCommunication</field>
-    <field name="coverage_tsi">-151.479444 --
-          -78.085007,
-          69.4325 --
-          26.071745</field>
+    <field name="place_ssim">United States</field>
+    <field name="subject_ssim">Oil fields</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">utilitiesCommunication</field>
+    <field name="nw_llsi">69.4325,
+          -151.479444</field>
+    <field name="se_llsi">26.071745,
+          -78.085007</field>
     <field name="distribution_format_ssim">Shapefile</field>
     <field name="provenance_tsi">
         Source: 

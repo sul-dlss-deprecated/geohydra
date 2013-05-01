@@ -49,17 +49,17 @@
       <xsl:for-each select="gmd:descriptiveKeywords/gmd:MD_Keywords">
           <xsl:choose>
             <xsl:when test="gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='theme']">
-              <field name="subject_si">
+              <field name="subject_ssim">
                 <xsl:value-of select="gmd:keyword/gco:CharacterString"/>
               </field>
             </xsl:when>
             <xsl:when test="gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']">
-              <field name="place_ss">
+              <field name="place_ssim">
                 <xsl:value-of select="gmd:keyword/gco:CharacterString"/>
               </field>
             </xsl:when>
             <xsl:otherwise>
-              <field name="genre_ss">
+              <field name="genre_ssim">
                 <xsl:value-of select="gmd:keyword/gco:CharacterString"/>
               </field>
             </xsl:otherwise>
@@ -67,17 +67,19 @@
       </xsl:for-each>
       
       <xsl:for-each select="gmd:topicCategory">
-        <field name="genre_ss">
+        <field name="genre_ssim">
           <xsl:value-of select="gmd:MD_TopicCategoryCode"/>
         </field>
       </xsl:for-each>
     
       <xsl:for-each select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-        <field name="coverage_tsi">
-          <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/> --
-          <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>,
-          <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/> --
-          <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+        <field name="nw_llsi">
+          <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>,
+          <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+        </field>
+        <field name="se_llsi">
+          <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>,
+          <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
         </field>
       </xsl:for-each>
     </xsl:for-each>

@@ -11,13 +11,13 @@
     <field name="publication_dsi">2011-07-05</field>
     <field name="abstract_tsi">Dataset represent the Public Land Survey System at the Township level.</field>
     <field name="purpose_tsi">To identify townships and ranges within the Public Land Survey System</field>
-    <field name="place_ss">United States</field>
-    <field name="subject_si">Public lands</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="coverage_tsi">-178.285802 --
-          -80.031491,
-          71.468273 --
-          25.138416</field>
+    <field name="place_ssim">United States</field>
+    <field name="subject_ssim">Public lands</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="nw_llsi">71.468273,
+          -178.285802</field>
+    <field name="se_llsi">25.138416,
+          -80.031491</field>
     <field name="distribution_format_ssim">Shapefile</field>
     <field name="provenance_tsi">
         Source: 

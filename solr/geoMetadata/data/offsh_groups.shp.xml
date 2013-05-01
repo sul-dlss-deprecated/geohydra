@@ -11,14 +11,14 @@
     <field name="publication_dsi">2011-01-01</field>
     <field name="abstract_tsi">Contains information that defines the Federal lease blocks for the Gulf of Mexico Outer Continental Shelf Region.</field>
     <field name="purpose_tsi">Locating and analysing information on the Gulf of Mexico's offshore lease blocks</field>
-    <field name="place_ss">Gulf of Mexico</field>
-    <field name="subject_si">Offshore Blocks</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="genre_ss">utilitiesCommunication</field>
-    <field name="coverage_tsi">-97.238989 --
-          -81.170106,
-          30.289096 --
-          23.780775</field>
+    <field name="place_ssim">Gulf of Mexico</field>
+    <field name="subject_ssim">Offshore Blocks</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">utilitiesCommunication</field>
+    <field name="nw_llsi">30.289096,
+          -97.238989</field>
+    <field name="se_llsi">23.780775,
+          -81.170106</field>
     <field name="distribution_format_ssim">Shapefile</field>
     <field name="provenance_tsi">
         Source: 

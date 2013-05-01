@@ -11,14 +11,14 @@
     <field name="publication_dsi">2011-01-01</field>
     <field name="abstract_tsi">Contains the major shipping fairways for the Gulf of Mexico Region. Shipping Safety Fairways: A lane or corridor in which no artificial island or fixed structure, whether temporary or permanent, will be permitted.</field>
     <field name="purpose_tsi">Locating and analysing information on the Gulf of Mexico's offshore lease blocks</field>
-    <field name="place_ss">Gulf of Mexico</field>
-    <field name="subject_si">Shipping</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="genre_ss">transportation</field>
-    <field name="coverage_tsi">-97.119945 --
-          -82.307619,
-          30.665492 --
-          25.467075</field>
+    <field name="place_ssim">Gulf of Mexico</field>
+    <field name="subject_ssim">Shipping</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">transportation</field>
+    <field name="nw_llsi">30.665492,
+          -97.119945</field>
+    <field name="se_llsi">25.467075,
+          -82.307619</field>
     <field name="distribution_format_ssim">Shapefile</field>
   </doc>
 </add>

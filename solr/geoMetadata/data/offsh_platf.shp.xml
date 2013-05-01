@@ -10,15 +10,15 @@
     <field name="place_ssim">, , </field>
     <field name="abstract_tsi">Identifies the location of platforms in Gulf Of Mexico. All platforms existing in the database are included.</field>
     <field name="purpose_tsi">Locating and analysing information on the Gulf of Mexico's offshore platforms</field>
-    <field name="place_ss">Gulf of Mexico</field>
-    <field name="subject_si">Offshore Platforms</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="genre_ss">inlandWaters</field>
-    <field name="genre_ss">utilitiesCommunication</field>
-    <field name="coverage_tsi">-97.113524 --
-          -87.75762,
-          30.195178 --
-          26.036053</field>
+    <field name="place_ssim">Gulf of Mexico</field>
+    <field name="subject_ssim">Offshore Platforms</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">inlandWaters</field>
+    <field name="genre_ssim">utilitiesCommunication</field>
+    <field name="nw_llsi">30.195178,
+          -97.113524</field>
+    <field name="se_llsi">26.036053,
+          -87.75762</field>
     <field name="distribution_format_ssim">Shapefile</field>
     <field name="provenance_tsi">
         Source: 

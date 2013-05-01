@@ -9,15 +9,15 @@
     <field name="publication_dsi">2011-07-05</field>
     <field name="abstract_tsi">The Texas Land Survey is used to describe land parcels within the state of Texas in a fashion similar to the Public Land Survey System.</field>
     <field name="purpose_tsi">This data is intended for mapping purposes only.</field>
-    <field name="place_ss">Texas</field>
-    <field name="subject_si">Land use</field>
-    <field name="subject_si">Surveying</field>
-    <field name="genre_ss">Downloadable Data</field>
-    <field name="genre_ss">planningCadastre</field>
-    <field name="coverage_tsi">-106.645985 --
-          -93.50835,
-          36.500527 --
-          25.837407</field>
+    <field name="place_ssim">Texas</field>
+    <field name="subject_ssim">Land use</field>
+    <field name="subject_ssim">Surveying</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">planningCadastre</field>
+    <field name="nw_llsi">36.500527,
+          -106.645985</field>
+    <field name="se_llsi">25.837407,
+          -93.50835</field>
     <field name="distribution_format_ssim">Shapefile</field>
   </doc>
 </add>
