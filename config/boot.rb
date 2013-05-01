@@ -5,7 +5,8 @@ require 'logger'
 environment  = ENV['ROBOT_ENVIRONMENT'] ||= 'development'
 GEOMDTK_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
 
-# require 'dor-services'
+require 'dor-services'
+
 # require 'lyber_core'
 ENV_FILE = GEOMDTK_ROOT + "/config/environments/#{environment}.rb"
 require ENV_FILE

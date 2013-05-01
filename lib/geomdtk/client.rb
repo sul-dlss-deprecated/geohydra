@@ -5,14 +5,15 @@ require "savon"
 
 module GeoMDTK
   class Client
-
+    
+    @@geonetwork_status_codes = %w{unknown draft approved retired submitted rejected}
+    
     def self.site_info
       service("xml.info", { :type => 'site' }).xpath('/info/site')
     end
 
     def self.metrics
-      RestClient.get "#{@@geonetwork_base}/monitor/metrics", 
-        :params => { :pretty => 'true' }
+      service("../../monitor/metrics", { :pretty => 'true' })
     end
 
     def self.each_uuid
@@ -29,12 +30,14 @@ module GeoMDTK
       end
       r
     end
-  
+    
     def self.fetch_by_uuid(uuid)
-      {
-        :status => service("xml.metadata.status.get", { :uuid => uuid }),
-        :xml    => service("xml.metadata.get", { :uuid => uuid })
-      }
+      xml = service("xml.metadata.status.get", { :uuid => uuid })
+      i = xml.xpath('/response/record/statusid').first.content.to_i
+      Struct.new(:content, :status).new(
+        service("xml.metadata.get", { :uuid => uuid }),
+        @@geonetwork_status_codes[i]
+      )
     end
     
     def self.export(uuid, dir = ".", format = :mef)
@@ -46,7 +49,7 @@ module GeoMDTK
     end
     
     def self.search_wsdl(q = nil)
-      client = Savon.client(wsdl: "#{@@geonetwork_base}/srv/eng/xml.search")
+      client = Savon.client(wsdl: "#{Dor::Config.geonetwork.service_root}/srv/eng/xml.search")
       client.operations
       response = client.call() do
         message()
@@ -56,21 +59,29 @@ module GeoMDTK
     
     private
     
-    def self.service(name, params = {})
-      Nokogiri::XML(service_raw(name, params))
-    end
-
-    def self.service_raw(name, params)
-      RestClient.get "#{@@geonetwork_base}/srv/eng/#{name}", :params => params
+    def self.service(name, params, format = :default)
+      if format == :default and name.start_with?('xml.')
+        format = :xml
+      end
+      
+      r = RestClient.get "#{Dor::Config.geonetwork.service_root}/srv/eng/#{name}", :params => params
+      
+      if format == :xml
+        Nokogiri::XML(r)
+      elsif format == :default
+        r
+      else
+        raise ArgumentError, "service requires format valid parameter: #{format}"
+      end
     end
     
     def self.export_mef(uuid, dir = ".")
-      res = service_raw("mef.export", { :uuid => uuid, :version => 'true' })
+      res = service("mef.export", { :uuid => uuid, :version => 'true' })
       File.open("#{dir}/#{uuid}.mef", 'wb') {|f| f.write(res.body) }
     end
   
     def self.export_csw(uuid, dir = ".")
-      res = service_raw("csw", { 
+      res = service("csw", { 
     	  :request => 'GetRecordById',
     		:service => 'CSW',
     		:version => '2.0.2',
