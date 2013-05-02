@@ -8,3 +8,5 @@ java -cp "/usr/share/tomcat6/webapps/solr/WEB-INF/lib/*" \
   -solrhome /home/lyberadmin/solr-home
 
 echo curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=CREATE&name=${c}&numShards=1&replicationFactor=3"
+
+echo curl "https://sul-solr-a.stanford.edu/solr/admin/collections?action=RELOAD&name=${c}"
