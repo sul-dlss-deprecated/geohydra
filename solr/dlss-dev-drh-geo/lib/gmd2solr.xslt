@@ -6,7 +6,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
   version="1.0"
   exclude-result-prefixes="gmd gco">
-  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" omit-xml-declaration="no"/>
   <xsl:strip-space elements="*"/>
   
   <xsl:template match="gmd:fileIdentifier">
@@ -111,8 +111,8 @@
   
   <xsl:template match="/gmd:MD_Metadata">
     <add><doc>
-      <field name="_version_">1</field>
       <xsl:apply-templates/>
+      <field name="_version_">1</field>
     </doc></add>
   </xsl:template>
 
