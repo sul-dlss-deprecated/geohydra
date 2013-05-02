@@ -90,7 +90,8 @@
             <projection><!-- TODO: need better way to extract URI for projection -->
               <xsl:text>urn:ogc:def:crs:</xsl:text><xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/><xsl:text>::</xsl:text><xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
             </projection>
-            <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+            <!-- TODO: only select the first extent - should use extent[type=blah] -->
+            <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[1]/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
               <coordinates><!-- NW NE SE SW NW polygon in (x,y) coordinates --><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/></coordinates>
             </xsl:for-each>
           </cartographics>
