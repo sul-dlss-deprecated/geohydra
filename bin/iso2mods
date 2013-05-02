@@ -1,0 +1,20 @@
+#!/bin/bash
+d=tmp
+for fn in $d/*.mef; do
+  unzip -qo $fn -d $d
+  uuid=$(basename $fn .mef)
+  echo "Transforming $uuid -> content/descMetadata_$uuid.xml"
+  xsltproc lib/geomdtk/iso2mods.xsl $d/$uuid/metadata/metadata.xml > content/descMetadata_$uuid.xml
+done
+
+for fn in $d/*.shp.xml; do
+  f=$d/$(basename $fn .shp.xml | tr A-Z a-z)_iso19139.xml
+  echo "Transforming $fn -> $f"
+  xsltproc lib/geomdtk/ArcGIS2ISO19139.xslt $fn > $f
+done
+
+for fn in $d/*_iso19139.xml; do
+  f=content/descMetadata_$(basename $fn)
+  echo "Transforming $fn -> $f"
+  xsltproc lib/geomdtk/iso2mods.xsl $fn > $f
+done
