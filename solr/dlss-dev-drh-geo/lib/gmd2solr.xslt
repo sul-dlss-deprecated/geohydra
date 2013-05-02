@@ -10,6 +10,7 @@
   <xsl:strip-space elements="*"/>
   
   <xsl:template match="gmd:fileIdentifier">
+    <field name="_version_">1</field>
     <field name="id">geonetwork:<xsl:value-of select="gco:CharacterString"/></field>
     <field name="uuid_ssi">geonetwork:<xsl:value-of select="gco:CharacterString"/></field>
   </xsl:template>
@@ -112,7 +113,6 @@
   <xsl:template match="/gmd:MD_Metadata">
     <add><doc>
       <xsl:apply-templates/>
-      <field name="_version_">1</field>
     </doc></add>
   </xsl:template>
 

@@ -14,6 +14,6 @@ java -cp "/usr/share/tomcat6/webapps/solr/WEB-INF/lib/*" \
 
 curl "$urlbase/admin/collections?action=RELOAD&name=${c}"
 
-for fn in data/*.xml; do
-  curl -X POST -H "Content-Type: text/xml" $urlbase/${c}/update @$fn
+grep -l -e 'field name=.id.' data/* | while read fn; do
+  curl -X POST -H "Content-Type: text/xml" -d "@$fn" "$urlbase/${c}/update"
 done

@@ -11,13 +11,14 @@
 
 
     <field name="id" type="string" stored="true" indexed="true" multiValued="false" required="true"/>
-    <field name="_version_" type="long"     indexed="true"  stored="true"/>
-    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
+    <field name="_version_" type="long" indexed="true"  stored="true" required="true"/>
+<!--    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>-->
 
+<!--
     <field name="text" type="text" stored="false" indexed="true" multiValued="true"/>
-
     <field name="lat" type="tdouble" stored="true" indexed="true" multiValued="false"/>
     <field name="lng" type="tdouble" stored="true" indexed="true" multiValued="false"/>
+  -->
 
     <dynamicField name="*_ti" type="text" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_tim" type="text" stored="false" indexed="true" multiValued="true"/>
