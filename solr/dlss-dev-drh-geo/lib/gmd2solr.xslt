@@ -10,7 +10,7 @@
   <xsl:strip-space elements="*"/>
   
   <xsl:template match="gmd:fileIdentifier">
-    <field name="_version_">1</field>
+    <field name="_version_">0</field>
     <field name="id">geonetwork:<xsl:value-of select="gco:CharacterString"/></field>
     <field name="uuid_ssi">geonetwork:<xsl:value-of select="gco:CharacterString"/></field>
   </xsl:template>
@@ -18,6 +18,9 @@
   <xsl:template match="gmd:identificationInfo">
     <xsl:for-each select="gmd:MD_DataIdentification">
       <xsl:for-each select="gmd:citation/gmd:CI_Citation">
+        <field name="text">
+          <xsl:value-of select="gmd:title/gco:CharacterString"/>
+        </field>
         <field name="title_ssi">
             <xsl:value-of select="gmd:title/gco:CharacterString"/>
         </field>      
@@ -33,7 +36,7 @@
         </xsl:for-each>
         <xsl:for-each select="gmd:date/gmd:CI_Date"> 
           <xsl:if test="gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='publication']">
-            <field name="publication_dsi">
+            <field name="publication_tsi">
               <xsl:value-of select="gmd:date/gco:Date"/>
             </field>
           </xsl:if>
@@ -73,7 +76,7 @@
         </field>
       </xsl:for-each>
     
-      <xsl:for-each select="gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+      <xsl:for-each select="gmd:extent[1]/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
         <field name="nw_llsi">
           <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>,
           <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
