@@ -1,4 +1,6 @@
+.DS_Store
 .ruby*
 *.lock
 tmp
 private
+content
