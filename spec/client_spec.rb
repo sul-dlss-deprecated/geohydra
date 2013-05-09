@@ -1,4 +1,3 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
@@ -19,13 +18,14 @@ describe GeoMDTK::Client do
 
     it "verify identificationInfo" do
       ['ad78de38-212e-4131-856d-22719145d5dc'].each do |uuid|
-        obj = GeoMDTK::Client.fetch_by_uuid(uuid)
-        xml = obj.content        
-        xml.xpath('/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()').to_s.should == uuid
-        title = xml.xpath("gmd:identificationInfo/gmd:MD_DataIdentification/" + 
+        doc = GeoMDTK::Client.fetch_by_uuid(uuid).content
+        doc.xpath('/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()').to_s.should == uuid
+        title = doc.xpath("/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/" + 
                   "gmd:citation/gmd:CI_Citation/" + 
                   "gmd:title/gco:CharacterString").text
         title.should == "Carbon Dioxide (CO2) Pipelines in the United States, 2011"
+        
+        # puts doc.to_xml(:indent => 2, :encoding => 'UTF-8')
       end
     end
   end

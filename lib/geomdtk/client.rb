@@ -37,10 +37,10 @@ module GeoMDTK
       i = xml.xpath('/response/record/statusid').first.content.to_i
       status = @@geonetwork_status_codes[i]
       
-      xml = service("xml.metadata.get", { :uuid => uuid })
-      xml.xpath('//geonet:info') { |e| e.remove }
+      doc = service("xml.metadata.get", { :uuid => uuid })
+      doc.xpath('/gmd:MD_Metadata/geonet:info').each { |x| x.remove }
       Struct.new(:content, :status).new(
-        xml.xpath('//gmd:MD_Metadata').first,
+        doc,
         status
       )
     end
