@@ -6,6 +6,7 @@ gem 'dor-services'
 gem 'druid-tools'
 gem 'lyber-core'
 gem 'mods'
+gem 'rspec'
 
 gem 'savon'
 gem 'rest-client'

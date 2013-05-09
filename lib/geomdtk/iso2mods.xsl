@@ -9,7 +9,7 @@
     <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
       <xsl:for-each select="/gmi:MI_Metadata|/gmd:MD_Metadata">
         <xsl:for-each select="gmd:fileIdentifier">
-          <identifier type="local" displayLabel="file_identifier_id">gmd:<xsl:value-of select="gco:CharacterString"/></identifier>
+          <identifier type="local" displayLabel="file_identifier_id">geonetwork:<xsl:value-of select="gco:CharacterString"/></identifier>
         </xsl:for-each>
         <!-- TODO: not sure how these dataSetURIs work -->
         <identifier type="local" displayLabel="data_set_uri">

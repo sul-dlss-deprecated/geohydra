@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'nokogiri'
+require 'dor-services'
 require 'rest_client'
 require "savon"
 
@@ -34,9 +35,13 @@ module GeoMDTK
     def self.fetch_by_uuid(uuid)
       xml = service("xml.metadata.status.get", { :uuid => uuid })
       i = xml.xpath('/response/record/statusid').first.content.to_i
+      status = @@geonetwork_status_codes[i]
+      
+      xml = service("xml.metadata.get", { :uuid => uuid })
+      xml.xpath('//geonet:info') { |e| e.remove }
       Struct.new(:content, :status).new(
-        service("xml.metadata.get", { :uuid => uuid }),
-        @@geonetwork_status_codes[i]
+        xml.xpath('//gmd:MD_Metadata').first,
+        status
       )
     end
     
@@ -65,7 +70,6 @@ module GeoMDTK
       end
       
       r = RestClient.get "#{Dor::Config.geonetwork.service_root}/srv/eng/#{name}", :params => params
-      
       if format == :xml
         Nokogiri::XML(r)
       elsif format == :default
