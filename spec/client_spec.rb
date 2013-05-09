@@ -22,8 +22,10 @@ describe GeoMDTK::Client do
         obj = GeoMDTK::Client.fetch_by_uuid(uuid)
         xml = obj.content        
         xml.xpath('/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()').to_s.should == uuid
-        xml.xpath("gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString").text.should == "Carbon Dioxide (CO2) Pipelines in the United States, 2011"
-        
+        title = xml.xpath("gmd:identificationInfo/gmd:MD_DataIdentification/" + 
+                  "gmd:citation/gmd:CI_Citation/" + 
+                  "gmd:title/gco:CharacterString").text
+        title.should == "Carbon Dioxide (CO2) Pipelines in the United States, 2011"
       end
     end
   end
