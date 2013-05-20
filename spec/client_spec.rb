@@ -4,13 +4,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 
 require 'bundler/setup'
 require 'rspec'
-# require 'awesome_print'
 require 'rspec/autorun'
 require 'rspec/mocks'
 
 require 'rubygems'
 require 'geomdtk'
-require 'pp'
+require 'awesome_print'
 
 describe GeoMDTK::Client do
 
@@ -25,8 +24,27 @@ describe GeoMDTK::Client do
                   "gmd:title/gco:CharacterString").text
         title.should == "Carbon Dioxide (CO2) Pipelines in the United States, 2011"
         
-        # puts doc.to_xml(:indent => 2, :encoding => 'UTF-8')
+        # ap doc.to_xml(:indent => 2, :encoding => 'UTF-8')
       end
+    end
+    
+    it "info" do
+      r = GeoMDTK::Client.info(['site', 'users', 'groups', 'sources', 'operators'])
+      ap r
+    end
+    
+    it "info groups" do
+      GeoMDTK::Client.info(['groups']).each do |k, v|
+        v.xpath('/info/groups/group').size.should > 0
+        v.xpath('/info/groups/group/name/text()="all"').should == true
+        g = v.xpath('/info/groups/group[./name/text()="all"]').first
+        g['id'].to_i.should == 1
+      end
+    end
+    
+    it "info bad parameter" do
+      expect { GeoMDTK::Client.info(%w{nonsense}) }.to raise_error(ArgumentError)
+      expect { GeoMDTK::Client.info(%w{site groups nonsense}) }.to raise_error(ArgumentError)
     end
   end
 end

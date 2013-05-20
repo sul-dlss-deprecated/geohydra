@@ -14,6 +14,9 @@ require ENV_FILE
 # Project dir in load path.
 $LOAD_PATH.unshift(GEOMDTK_ROOT + '/lib')
 
+require GEOMDTK_ROOT + "/../rgeoserver/lib/rgeoserver"
+require 'rgeoserver'
+
 # Development dependencies.
 if ['local', 'development'].include? environment
   # require 'awesome_print'

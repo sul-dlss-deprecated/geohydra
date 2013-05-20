@@ -3,11 +3,17 @@ require 'nokogiri'
 require 'dor-services'
 require 'rest_client'
 require "savon"
+require 'awesome_print'
 
 module GeoMDTK
   class Client
-    
+    # as defined in http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#status
+    cattr_reader :geonetwork_status_codes
     @@geonetwork_status_codes = %w{unknown draft approved retired submitted rejected}
+    
+    # As defined in http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#xml-info
+    cattr_reader :geonetwork_info_codes
+    @@geonetwork_info_codes = %w{site users groups sources schemas categories operations regions status}
     
     def self.site_info
       service("xml.info", { :type => 'site' }).xpath('/info/site')
@@ -60,6 +66,19 @@ module GeoMDTK
         message()
       end
       response.body
+    end
+    
+    # @param types [Array] any type from `geonetwork_info_codes`
+    def self.info(types = geonetwork_info_codes)
+      r = {}
+      types.each do |t|
+        if geonetwork_info_codes.include?(t)
+          r[t] = service("xml.info", { :type => t })
+        else
+          raise ArgumentError, "#{t} is not a supported type for xml.info REST service"
+        end
+      end
+      r
     end
     
     private
