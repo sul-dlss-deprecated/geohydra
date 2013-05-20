@@ -29,7 +29,7 @@ describe GeoMDTK::Client do
     end
     
     it "info" do
-      r = GeoMDTK::Client.info(['site', 'users', 'groups', 'sources', 'operators'])
+      r = GeoMDTK::Client.info(['site', 'users', 'groups', 'sources', 'operations'])
       ap r
     end
     
