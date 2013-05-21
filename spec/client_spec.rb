@@ -16,18 +16,18 @@ describe GeoMDTK::Client do
   describe "#fetch_by_uuid" do
 
     it "verify identificationInfo" do
-      ['ad78de38-212e-4131-856d-22719145d5dc'].each do |uuid|
+      %w{FA6ED959-7DED-4722-B1FB-A85FB79725BA}.each do |uuid|
         begin
           doc = GeoMDTK::Client.fetch_by_uuid(uuid).content
-          doc.xpath('/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()').to_s.should == uuid
-          title = doc.xpath("/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/" + 
+          fileId = doc.xpath('/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()')
+          fileId.to_s.should == uuid
+          title = doc.xpath("/gmd:MD_Metadata/" + 
+                    "gmd:identificationInfo/gmd:MD_DataIdentification/" + 
                     "gmd:citation/gmd:CI_Citation/" + 
                     "gmd:title/gco:CharacterString").text
           title.should == "Carbon Dioxide (CO2) Pipelines in the United States, 2011"
-
-          # ap doc.to_xml(:indent => 2, :encoding => 'UTF-8')
         rescue RestClient::Forbidden => e
-          puts e.message
+          ap e
         end
         
       end
@@ -50,6 +50,12 @@ describe GeoMDTK::Client do
     it "info bad parameter" do
       expect { GeoMDTK::Client.info(%w{nonsense}) }.to raise_error(ArgumentError)
       expect { GeoMDTK::Client.info(%w{site groups nonsense}) }.to raise_error(ArgumentError)
+    end
+    
+    it "search #each_uuid" do
+      GeoMDTK::Client.each_uuid do |uuid|
+        # ap uuid
+      end
     end
   end
 end

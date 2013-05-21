@@ -2,7 +2,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'dor-services'
 require 'rest_client'
-require "savon"
+# require "savon"
 require 'awesome_print'
 
 module GeoMDTK
@@ -24,9 +24,9 @@ module GeoMDTK
     end
 
     def self.each_uuid
-      xml = service("xml.search", { :remote => 'off'})
-      xml.xpath('//uuid').each do |a_tag|
-        yield a_tag.content.strip
+      xml = service("xml.search", { :remote => 'off', :hitsPerPage => -1 })
+      xml.xpath('//uuid').each do |uuid|
+        yield uuid.content.to_s.strip
       end
     end
     
@@ -38,17 +38,20 @@ module GeoMDTK
       r
     end
     
+    # @param uuid [String] the UUID (fileIdentifier) in the GeoNetwork database
     def self.fetch_by_uuid(uuid)
+      status = nil
       xml = service("xml.metadata.status.get", { :uuid => uuid })
-      i = xml.xpath('/response/record/statusid').first.content.to_i
-      status = @@geonetwork_status_codes[i]
-      
+      if xml.xpath('/response/record')
+        id = xml.xpath('/response/record/statusid').first.to_i
+        status = @@geonetwork_status_codes[id]
+      end
       doc = service("xml.metadata.get", { :uuid => uuid })
+      if not doc.xpath('/gmd:MD_Metadata')
+        raise ArgumentError, "#{uuid} not found"
+      end
       doc.xpath('/gmd:MD_Metadata/geonet:info').each { |x| x.remove }
-      Struct.new(:content, :status).new(
-        doc,
-        status
-      )
+      Struct.new(:content, :status).new(doc, status)
     end
     
     def self.export(uuid, dir = ".", format = :mef)
@@ -59,14 +62,14 @@ module GeoMDTK
       end
     end
     
-    def self.search_wsdl(q = nil)
-      client = Savon.client(wsdl: "#{Dor::Config.geonetwork.service_root}/srv/eng/xml.search")
-      client.operations
-      response = client.call() do
-        message()
-      end
-      response.body
-    end
+    # def self.search_wsdl(q = nil)
+    #   client = Savon.client(wsdl: "#{Dor::Config.geonetwork.service_root}/srv/eng/xml.search")
+    #   client.operations
+    #   response = client.call() do
+    #     message()
+    #   end
+    #   response.body
+    # end
     
     # @param types [Array] any type from `geonetwork_info_codes`
     def self.info(types = geonetwork_info_codes)
@@ -81,14 +84,17 @@ module GeoMDTK
       r
     end
     
-    private
+  private
     
     def self.service(name, params, format = :default)
       if format == :default and name.start_with?('xml.')
         format = :xml
       end
+      uri = "#{Dor::Config.geonetwork.service_root}/srv/eng/#{name}"
       
-      r = RestClient.get "#{Dor::Config.geonetwork.service_root}/srv/eng/#{name}", :params => params
+      ap({ :uri => uri, :params => params, :format => format }) if $DEBUG
+      
+      r = RestClient.get uri, :params => params
       if format == :xml
         Nokogiri::XML(r)
       elsif format == :default

@@ -12,7 +12,7 @@ describe GeoMDTK::Deploy do
   describe "#push" do
     it "#push_shapefile" do
       Dir.glob("/Volumes/Geo3TB/data/druid/*.zip").each do |fn|
-        GeoMDTK::Deploy.new.push(fn, File.basename(fn).gsub(%r{\.zip$}, ''))
+        GeoMDTK::Deploy.push(fn, File.basename(fn).gsub(%r{\.zip$}, ''))
       end
     end
   end
