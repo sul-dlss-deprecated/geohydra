@@ -1,7 +1,7 @@
 Dor::Config.configure do
 
   geonetwork do
-    service_root 'http://localhost:8080/geonetwork'
+    service_root 'http://admin:admin@geomdtk-dev.stanford.edu/geonetwork'
   end
   
   dor do
@@ -11,12 +11,9 @@ Dor::Config.configure do
   end
   
   geoserver do
-    service_root 'http://localhost:8080/geoserver'
-    admin do
-      user 'admin'
-      password 'admin123'
-    end 
-    ssh "geostaff@kurma-podd1.stanford.edu"
+    service_root 'http://admin:admin123@kurma-podd1.stanford.edu/geoserver'
+    host "kurma-podd1.stanford.edu"
+    workspace "druid"
     data_dir "/var/geoserver/current/data"
   end
 
