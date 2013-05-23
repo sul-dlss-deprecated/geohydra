@@ -3,7 +3,7 @@ module GeoMDTK
     @@TYPES = {
      'shapefile_zip' =>  %r{\.zip$}
     }
-    @@SSH_CMD = '/usr/bin/ssh -F /dev/null -K'
+    @@SSH_CMD = '/usr/bin/ssh'
     @@RSYNC_CMD = "/usr/bin/rsync -e '#{@@SSH_CMD}'"
     @@config = Dor::Config
     
@@ -17,7 +17,8 @@ module GeoMDTK
     end
 
     def self.push_shapefile_zip(zipfn, datastore)
-      do_system("curl -v" +
+      puts "Uploading #{zipfn}"
+      do_system("curl" +
                 " -XPUT -H 'Content-type: application/zip'" +
                 " --data-binary '@#{zipfn}'" +
                 " '#{@@config.geoserver.service_root}/" +   
