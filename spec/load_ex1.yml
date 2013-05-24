@@ -1,20 +1,35 @@
 example_vector:
   layername: "Precincts_Jan262012_5"
-  filename: "branner/Precincts_Jan262012_5/Precincts_Jan262012_5.shp"
+  filename: "derived/EPSG/4326/branner/Precincts_Jan262012_5/Precincts_Jan262012_5.shp"
   format: "Shapefile"
   title: "US Precincts, 2008"
   description: "This is a dataset developed by Prof. Jonathan Rodden at Stanford University showing precinct polygon data for the United States for the year 2008."
   keywords: ["vector", "precinct", "political", "US", "voting", "2008", "elections", { 
-      keyword: "California", language: en, vocabulary: "ISOTC211/19115:place"}]
+      keyword: "California", language: "en", vocabulary: "ISOTC211/19115:place"}]
   metadata_links: [{
     metadataType: TC211, 
-    content: "http://purl.stanford.edu/catalog/aa111aa1111/iso19139.xml"}] 
+    content: "http://purl.stanford.edu/aa111aa1111.iso19139.xml"}] 
   metadata:
     druid: aa111aa1111
     publisher: "Jonathan Rodden, Stanford University"
 
+example_raster:
+  layername: antietam_1867
+  filename: rumsey/g3881015alpha.tif
+  format: GeoTIFF
+  title: "U.S. Civil War battle of Antietam, 1867"
+  description: "Map shows the U.S. Civil War battle of Antietam.  It indicates fortifications, roads, railroads, houses, names of residents, fences, drainage, vegetation, and relief by hachures."
+  keywords: ["civil war", "battles", { 
+      keyword: "Sharpsburg, MD", language: "en", vocabulary: "urn:geonames.org?GeoNameId=4369352"}]
+  metadata_links: [{
+    metadataType: TC211, 
+    content: "http://purl.stanford.edu/bb222bb2222.iso19139.xml"}] 
+  metadata:
+    druid: bb222bb2222
+    publisher: Unknown
+
 # This shapefile has ESPG:3313? which isn't included in the default GeoServer configuration
-example_vector_broken_projection:
+example_vector2:
   layername: urban2050_ca
   filename: branner/urban2050_ca/urban2050_ca.shp
   format: Shapefile
@@ -24,22 +39,22 @@ example_vector_broken_projection:
     keyword: "California", language: en, vocabulary: "ISOTC211/19115:place"}]
   metadata_links: [{
     metadataType: TC211, 
-    content: "http://purl.stanford.edu/catalog/aa111aa1111/iso19139.xml"}] 
+    content: "http://purl.stanford.edu/cc111cc1111.iso19139.xml"}] 
   metadata:
-    druid: aa111aa1111
+    druid: cc111cc1111
     publisher: Landis
 
-example_raster:
-  layername: antietam_1867
-  filename: rumsey/g3881015alpha.tif
-  format: GeoTIFF
-  title: "U.S. Civil War battle of Antietam, 1867"
-  description: "Map shows the U.S. Civil War battle of Antietam.  It indicates fortifications, roads, railroads, houses, names of residents, fences, drainage, vegetation, and relief by hachures."
-  keywords: ["civil war", "battles"]
+example_vector3:
+  layername: "bdelta_clip_veg"
+  filename: "branner/bdelta_clip_veg/bdelta_clip_veg.shp"
+  format: "Shapefile"
+  title: "Land cover, 2002 Forest and Range Assessment"
+  description: "CDF-FRAP compiled the 'best available' land cover data into a single data layer, to support the various analyses required for the 2002 Forest and Range Assessment. Typically the most current and detailed data were collected for various regions of the state or for unique mapping efforts (farmland, wetlands, riparian vegetation). Decision rules were developed that controlled which layers were given priority in areas of overlap. Cross-walks were used to compile the various sources into the common California Wildlife Wabitat Relationships (CWHR) system classification. Data sources had unique scale/resolution, multi-source data provided as 100m GRID. The original 1/2002 data used to support the Asessment is also available from the FRAP site - this record corresponds to the most recent updated version of the data (10/2002), which incorporates better data for the Mojave & NE Colorado Desert areas."
+  keywords: ["vector", "landcover", "bay area", "farmland", "wetlands", "riparian vegetation", { 
+      keyword: "California", language: en, vocabulary: "ISOTC211/19115:place"}]
   metadata_links: [{
     metadataType: TC211, 
-    content: "http://purl.stanford.edu/catalog/bb222bb2222/iso19139.xml"}] 
+    content: "http://purl.stanford.edu/dd111dd1111.iso19139.xml"}] 
   metadata:
-    druid: bb222bb2222
-    publisher: Unknown
-
+    druid: dd111dd1111
+    publisher: "California Environmental Resource Evaluation System"

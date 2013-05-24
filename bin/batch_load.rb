@@ -3,7 +3,7 @@
 #
 # RGeoServer Batch load layers (batch_demo.rb)
 # Usage: #{File.basename(__FILE__)} [input.yml]
-
+ENV['RGEOSERVER_CONFIG'] ||= 'config/environments/development_rgeoserver.yml'
 require 'rubygems'
 require 'yaml'
 require 'rgeoserver'
@@ -22,8 +22,8 @@ require 'optparse'
 # - metadata_links
 
 #= Configuration constants
-WORKSPACE_NAME = 'rgeoserver'
-NAMESPACE = 'urn:rgeoserver'
+WORKSPACE_NAME = 'druid'
+NAMESPACE = 'http://purl.stanford.edu'
 
 # GeoWebCache configuration
 SEED = true
@@ -39,36 +39,38 @@ SEED_OPTIONS = {
 
 def main layers, flags = {}
   return unless layers
-  datadir = flags[:datadir]
   # Connect to the GeoServer catalog
   cat = RGeoServer::Catalog.new
 
   # Obtain a handle to the workspace and clean it up. 
   ws = RGeoServer::Workspace.new cat, :name => WORKSPACE_NAME
+  puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:verbose]
   ws.delete :recurse => true if flags[:delete] and not ws.new?
+  ws.enabled = 'true'
   ws.save if ws.new?
+  
 
   # Iterate over all records in YAML file and create stores in the catalog
   layers.each do |k, v|
     ['layername', 'format', 'filename', 'title'].each do |id|
       raise ArgumentError, "Layer is missing #{id}" unless v.include?(id)
     end
-    ap v
 
     layername = v['layername'].strip
     format = v['format'].strip
-
-    ap "Layer: #{layername} #{format}"
+    
     if format == 'GeoTIFF'
       # Create of a coverage store
+      puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
       cs = RGeoServer::CoverageStore.new cat, :workspace => ws, :name => layername
-      cs.url = File.join(datadir, v['filename'])
+      cs.url = File.join(flags[:datadir], v['filename'])
       cs.description = v['description'] 
       cs.enabled = 'true'
       cs.data_type = format
       cs.save
 
       # Now create the actual coverage
+      puts "Coverage: #{ws.name}/#{cs.name}/#{layername}" if flags[:verbose]
       cv = RGeoServer::Coverage.new cat, :workspace => ws, :coverage_store => cs, :name => layername 
       cv.title = v['title'] 
       cv.keywords = v['keywords']
@@ -77,15 +79,17 @@ def main layers, flags = {}
 
     elsif format == 'Shapefile'
       # Create data stores for shapefiles
+      puts "DataStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
       ds = RGeoServer::DataStore.new cat, :workspace => ws, :name => layername
       ds.description = v['description']
       ds.connection_parameters = {
-        "url" => File.join(datadir, v['filename']),
+        "url" => File.join(flags[:datadir], v['filename']),
         "namespace" => NAMESPACE
       }
       ds.enabled = 'true'
       ds.save
 
+      puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
       ft = RGeoServer::FeatureType.new cat, :workspace => ws, :data_store => ds, :name => layername 
       ft.title = v['title'] 
       ft.abstract = v['description']
@@ -94,9 +98,11 @@ def main layers, flags = {}
       ft.save
     end
 
-    # Check if a layer has been created, extract some metadata
+    # If the layer has been create, start the seeding process
+    puts "Layer: #{layername}" if flags[:verbose]
     lyr = RGeoServer::Layer.new cat, :name => layername
     if not lyr.new? and SEED
+      puts "Layer: seeding with #{SEED_OPTIONS}" if flags[:verbose]
       lyr.seed :issue, SEED_OPTIONS
     else
       raise NotImplementedError, "Unsupported format #{format}"
@@ -106,9 +112,9 @@ end
 
 begin
   flags = {
-    :delete => true,
-    :verbose => false,
-    :datadir => 'file:///data'
+    :delete => false,
+    :verbose => true,
+    :datadir => 'file:///var/geoserver/current/staging'
   }
   
   OptionParser.new do |opts|
@@ -124,7 +130,7 @@ begin
     end
   end.parse!
   ap flags
-
+  ap ARGV
   if ARGV.size > 0
     ARGV.each do |fn|
       main(YAML::load_file(fn), flags)
