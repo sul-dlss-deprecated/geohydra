@@ -1,0 +1,45 @@
+example_vector:
+  layername: "Precincts_Jan262012_5"
+  filename: "branner/Precincts_Jan262012_5/Precincts_Jan262012_5.shp"
+  format: "Shapefile"
+  title: "US Precincts, 2008"
+  description: "This is a dataset developed by Prof. Jonathan Rodden at Stanford University showing precinct polygon data for the United States for the year 2008."
+  keywords: ["vector", "precinct", "political", "US", "voting", "2008", "elections", { 
+      keyword: "California", language: en, vocabulary: "ISOTC211/19115:place"}]
+  metadata_links: [{
+    metadataType: TC211, 
+    content: "http://purl.stanford.edu/catalog/aa111aa1111/iso19139.xml"}] 
+  metadata:
+    druid: aa111aa1111
+    publisher: "Jonathan Rodden, Stanford University"
+
+# This shapefile has ESPG:3313? which isn't included in the default GeoServer configuration
+example_vector_broken_projection:
+  layername: urban2050_ca
+  filename: branner/urban2050_ca/urban2050_ca.shp
+  format: Shapefile
+  title: "Projected Urban Growth scenarios for 2050"
+  description: "By 2020, most forecasters agree, California will be home to between 43 and 46 million residents-up from 35 million today. Beyond 2020 the size of Californias population is less certain."
+  keywords: ["vector", "urban", "landis", { 
+    keyword: "California", language: en, vocabulary: "ISOTC211/19115:place"}]
+  metadata_links: [{
+    metadataType: TC211, 
+    content: "http://purl.stanford.edu/catalog/aa111aa1111/iso19139.xml"}] 
+  metadata:
+    druid: aa111aa1111
+    publisher: Landis
+
+example_raster:
+  layername: antietam_1867
+  filename: rumsey/g3881015alpha.tif
+  format: GeoTIFF
+  title: "U.S. Civil War battle of Antietam, 1867"
+  description: "Map shows the U.S. Civil War battle of Antietam.  It indicates fortifications, roads, railroads, houses, names of residents, fences, drainage, vegetation, and relief by hachures."
+  keywords: ["civil war", "battles"]
+  metadata_links: [{
+    metadataType: TC211, 
+    content: "http://purl.stanford.edu/catalog/bb222bb2222/iso19139.xml"}] 
+  metadata:
+    druid: bb222bb2222
+    publisher: Unknown
+
