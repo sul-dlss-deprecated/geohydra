@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 
 gem 'nokogiri'
 # gem 'dor-services', :path => '../dor-services'
-# gem 'druid-tools'
+gem 'druid-tools', :path => '../druid-tools'
 # gem 'lyber-core'
 gem 'mods', :path => '../mods'
 gem 'rspec'
