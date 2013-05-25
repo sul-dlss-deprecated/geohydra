@@ -9,3 +9,10 @@ Dir.glob("../staging/druid/*.zip").each do |fn|
   puts cmd
   system(cmd)
 end
+
+Dir.glob("../staging/druid/*.xml").each do |fn|
+  druid = DruidTools::Druid.new("druid:" + File.basename(fn, '.xml'))
+  cmd = "cp #{fn} #{druid.path}.iso19135.xml"
+  puts cmd
+  system(cmd)
+end
