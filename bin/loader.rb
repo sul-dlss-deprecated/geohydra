@@ -32,7 +32,7 @@ SEED_OPTIONS = {
     :number => 4326 
   },
   :zoomStart => 1,
-  :zoomStop => 8,
+  :zoomStop => 10,
   :format => 'image/png',
   :threadCount => 1
 }
@@ -47,13 +47,13 @@ def main layers, flags = {}
   puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:verbose]
   ws.delete :recurse => true if flags[:delete] and not ws.new?
   ws.enabled = 'true'
-  ws.save if ws.new?
+  ws.save
   
 
   # Iterate over all records in YAML file and create stores in the catalog
   layers.each do |k, v|
-    ['layername', 'format', 'filename', 'title'].each do |id|
-      raise ArgumentError, "Layer is missing #{id}" unless v.include?(id)
+    ['layername', 'format', 'filename', 'title'].each do |i|
+      raise ArgumentError, "Layer is missing #{i}" unless v.include?(i)
     end
 
     layername = v['layername'].strip
@@ -72,6 +72,7 @@ def main layers, flags = {}
       # Now create the actual coverage
       puts "Coverage: #{ws.name}/#{cs.name}/#{layername}" if flags[:verbose]
       cv = RGeoServer::Coverage.new cat, :workspace => ws, :coverage_store => cs, :name => layername 
+      cv.enabled = 'true'
       cv.title = v['title'] 
       cv.keywords = v['keywords']
       cv.metadata_links = v['metadata_links']
@@ -87,15 +88,19 @@ def main layers, flags = {}
         "namespace" => NAMESPACE
       }
       ds.enabled = 'true'
+      ds.data_type = format
       ds.save
 
       puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
       ft = RGeoServer::FeatureType.new cat, :workspace => ws, :data_store => ds, :name => layername 
+      ft.enabled = 'true'
       ft.title = v['title'] 
-      ft.abstract = v['description']
+      ft.description = v['description']
       ft.keywords = v['keywords']
       ft.metadata_links = v['metadata_links']
       ft.save
+    else
+      raise NotImplementedError, "Unsupported format #{format}"    
     end
 
     # If the layer has been create, start the seeding process
@@ -104,8 +109,6 @@ def main layers, flags = {}
     if not lyr.new? and SEED
       puts "Layer: seeding with #{SEED_OPTIONS}" if flags[:verbose]
       lyr.seed :issue, SEED_OPTIONS
-    else
-      raise NotImplementedError, "Unsupported format #{format}"
     end
   end
 end
@@ -129,8 +132,7 @@ begin
       flags[:datadir] = v
     end
   end.parse!
-  ap flags
-  ap ARGV
+
   if ARGV.size > 0
     ARGV.each do |fn|
       main(YAML::load_file(fn), flags)
