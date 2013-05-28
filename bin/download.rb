@@ -21,6 +21,11 @@ client.each do |uuid|
         xfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
         ap "Copying #{fn} => #{xfn}"
         File.rename(fn, xfn)
+        
+        yfn = File.join(druid.metadata_dir, 'descMetadata.xml')
+        xslt = File.dirname(__FILE__) + '/../lib/geomdtk/iso2mods.xsl'
+        ap "Transforming #{xfn} => #{yfn}"
+        system("xsltproc --output '#{yfn}' '#{xslt}' '#{xfn}'")
         break
       end
     end

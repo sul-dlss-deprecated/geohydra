@@ -9,12 +9,25 @@
     <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
       <xsl:for-each select="/gmi:MI_Metadata|/gmd:MD_Metadata">
         <xsl:for-each select="gmd:fileIdentifier">
-          <identifier type="local" displayLabel="file_identifier_id">geonetwork:<xsl:value-of select="gco:CharacterString"/></identifier>
+          <identifier type="local" displayLabel="file_identifier_id">
+            <xsl:text>geonetwork:</xsl:text>
+            <xsl:value-of select="gco:CharacterString/text()"/></identifier>
         </xsl:for-each>
         <!-- TODO: not sure how these dataSetURIs work -->
-        <identifier type="local" displayLabel="data_set_uri">
-          <xsl:apply-templates select="gmd:dataSetURI"/>
-        </identifier>
+        <xsl:for-each select="gmd:dataSetURI/gco:CharacterString/text()">
+          <identifier type="local" displayLabel="data_set_uri">
+            <xsl:value-of select="." />
+          </identifier>          
+          <identifier type="local" displayLabel="druid">
+            <xsl:text>druid:</xsl:text>
+            <xsl:value-of select="substring-after(., 'http://purl.stanford.edu/')" />
+          </identifier>  
+          <location>
+            <url displayLabel="PURL">
+              <xsl:value-of select="."/>
+            </url>
+          </location>        
+        </xsl:for-each>
         <!-- TODO: need to handle alternate and translated titles -->
         <titleInfo>
           <title type="main">
@@ -90,9 +103,45 @@
             <projection><!-- TODO: need better way to extract URI for projection -->
               <xsl:text>urn:ogc:def:crs:</xsl:text><xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/><xsl:text>::</xsl:text><xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
             </projection>
-            <!-- TODO: only select the first extent - should use extent[type=blah] -->
-            <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent[1]/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-              <coordinates><!-- NW NE SE SW NW polygon in (x,y) coordinates --><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/><xsl:text> </xsl:text><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>,<xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/></coordinates>
+            <!-- The coordinates definition is quite vague in http://www.loc.gov/standards/mods/userguide/subject.html#coordinates 
+                 but we write both examples
+              -->
+            <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+              <!-- Coordinates are recorded in the order of westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude. 
+              from http://www.loc.gov/marc/bibliographic/bd255.html $c -->
+              <coordinates id="marc_bd255c">
+                <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                <xsl:text> -- </xsl:text>
+                <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                <xsl:text>/</xsl:text>
+                <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                <xsl:text> -- </xsl:text>
+                <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+              </coordinates>
+              <coordinates id="marc_bd255g">
+                <!-- Outer G-ring coordinate pairs
+                     NW NE SE SW NW polygon in (x,y) coordinates
+                     See http://www.loc.gov/marc/bibliographic/bd255.html $g -->
+                <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                <xsl:text>,</xsl:text>
+                <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                <xsl:text>,</xsl:text>
+                <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                <xsl:text>,</xsl:text>
+                <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                <xsl:text>,</xsl:text>
+                <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                <xsl:text>,</xsl:text>
+                <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+              </coordinates>
             </xsl:for-each>
           </cartographics>
         </subject>
@@ -168,9 +217,6 @@
             </url>
           </location>
         </xsl:for-each>
-        <location>
-          <url displayLabel="PURL"><!-- TODO: place holder for purl --></url>
-        </location>
         <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints">
           <accessCondition type="restrictionsOnAccess">
             <xsl:apply-templates select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
