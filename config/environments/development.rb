@@ -1,7 +1,7 @@
 Dor::Config.configure do
 
   geonetwork do
-    service_root 'http://admin:admin@geomdtk-dev.stanford.edu/geonetwork'
+    service_root 'http://geomdtk.stanford.edu/geonetwork'
   end
   
   dor do
@@ -15,6 +15,10 @@ Dor::Config.configure do
     host "kurma-podd1.stanford.edu"
     workspace "druid"
     data_dir "/var/geoserver/current/data"
+  end
+
+  geomdtk do
+    workspace "/tmp/workspace"
   end
 
 end

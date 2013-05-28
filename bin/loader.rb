@@ -9,6 +9,7 @@ require 'yaml'
 require 'rgeoserver'
 require 'awesome_print'
 require 'optparse'
+require 'mods'
 
 #=  Input data. *See DATA section at end of file*
 # The input file is in YAML syntax with each record is a Hash with keys:
@@ -113,11 +114,17 @@ def main layers, flags = {}
   end
 end
 
+def mods_load fn
+  ap fn
+end
+
+# __MAIN__
 begin
   flags = {
     :delete => false,
     :verbose => true,
-    :datadir => 'file:///var/geoserver/current/staging'
+    :datadir => 'file:///var/geoserver/current/staging',
+    :format => 'YAML'
   }
   
   OptionParser.new do |opts|
@@ -131,14 +138,30 @@ begin
     opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: file:///data)") do |v|
       flags[:datadir] = v
     end
+    opts.on("-f FORMAT", "--format=FORMAT", "Input file format (default: YAML)") do |v|
+      flags[:format] = v
+    end
   end.parse!
 
   if ARGV.size > 0
     ARGV.each do |fn|
-      main(YAML::load_file(fn), flags)
+      if flags[:format].upcase == 'YAML'
+        main(YAML::load_file(fn), flags)
+      elsif flags[:format].upcase == 'MODS'
+        mods = Mods::Record.new.from_url(fn)
+        # ap mods.root.namespaces
+        mods.xpath('//mods:identifier[@type="local" and @displayLabel="data_set_uri"]/text()', 'mods' => Mods::MODS_NS).each do |uri|
+          druid = uri.to_s.gsub(%r{(^.*)/([a-z0-9]+)$}, "\\2")
+          ap druid
+          ap mods
+        end
+           # displayLabel="data_set_uri"
+      end
     end
   else
-    main(YAML::load($stdin), flags)
+    if flags[:format] == 'YAML'
+      main(YAML::load($stdin), flags)
+    end
   end
 rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"

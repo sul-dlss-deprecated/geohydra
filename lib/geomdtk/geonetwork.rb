@@ -6,76 +6,69 @@ require 'rest_client'
 require 'awesome_print'
 
 module GeoMDTK
-  class Client
+  class GeoNetwork  
     # as defined in http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#status
-    cattr_reader :geonetwork_status_codes
-    @@geonetwork_status_codes = %w{unknown draft approved retired submitted rejected}
+    GEONETWORK_STATUS_CODES = %w{unknown draft approved retired submitted rejected}
     
     # As defined in http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#xml-info
-    cattr_reader :geonetwork_info_codes
-    @@geonetwork_info_codes = %w{site users groups sources schemas categories operations regions status}
+    GEONETWORK_INFO_CODES = %w{site users groups sources schemas categories operations regions status}
     
-    def self.site_info
+    def initialize options = {}
+      @service_root = options[:service_root] || Dor::Config.geonetwork.service_root
+    end
+    
+    def site_info
       service("xml.info", { :type => 'site' }).xpath('/info/site')
     end
 
-    def self.metrics
+    def metrics
       service("../../monitor/metrics", { :pretty => 'true' })
     end
 
-    def self.each_uuid
+    def each
       xml = service("xml.search", { :remote => 'off', :hitsPerPage => -1 })
       xml.xpath('//uuid').each do |uuid|
         yield uuid.content.to_s.strip
       end
     end
     
-    def self.fetch(path = '//uuid')
-      r = {}
-      each_uuid do |uuid|
-        r[uuid] = fetch_by_uuid(uuid)
-      end
-      r
-    end
-    
     # @param uuid [String] the UUID (fileIdentifier) in the GeoNetwork database
-    def self.fetch_by_uuid(uuid)
+    def fetch(uuid)
       status = nil
       xml = service("xml.metadata.status.get", { :uuid => uuid })
       if xml.xpath('/response/record')
         id = xml.xpath('/response/record/statusid').first.to_i
-        status = @@geonetwork_status_codes[id]
+        status = GEONETWORK_STATUS_CODES[id]
       end
       doc = service("xml.metadata.get", { :uuid => uuid })
       if not doc.xpath('/gmd:MD_Metadata')
         raise ArgumentError, "#{uuid} not found"
       end
       doc.xpath('/gmd:MD_Metadata/geonet:info').each { |x| x.remove }
-      Struct.new(:content, :status).new(doc, status)
+      
+      druid = nil
+      doc.xpath('//gmd:dataSetURI/gco:CharacterString/text()').each do |i|
+        druid = to_druid(i.to_s)
+      end
+      Struct.new(:content, :status, :druid).new(doc, status, druid)
     end
     
-    def self.export(uuid, dir = ".", format = :mef)
-      if format == :mef
+    def export(uuid, dir = ".", format = :mef)
+      case format
+      when :mef then
         export_mef(uuid, dir)
-      elsif format == :csw
+      when :csw then
         export_csw(uuid, dir)
+      else
+        raise ArgumentError, "Unsupported export format #{format}"        
       end
     end
     
-    # def self.search_wsdl(q = nil)
-    #   client = Savon.client(wsdl: "#{Dor::Config.geonetwork.service_root}/srv/eng/xml.search")
-    #   client.operations
-    #   response = client.call() do
-    #     message()
-    #   end
-    #   response.body
-    # end
-    
-    # @param types [Array] any type from `geonetwork_info_codes`
-    def self.info(types = geonetwork_info_codes)
+    # @param types [Array] any type from `GEONETWORK_INFO_CODES`
+    def info(types = GEONETWORK_INFO_CODES)
       r = {}
       types.each do |t|
-        if geonetwork_info_codes.include?(t)
+        if GEONETWORK_INFO_CODES.include?(t)
           r[t] = service("xml.info", { :type => t })
         else
           raise ArgumentError, "#{t} is not a supported type for xml.info REST service"
@@ -86,11 +79,11 @@ module GeoMDTK
     
   private
     
-    def self.service(name, params, format = :default)
+    def service(name, params, format = :default)
       if format == :default and name.start_with?('xml.')
         format = :xml
       end
-      uri = "#{Dor::Config.geonetwork.service_root}/srv/eng/#{name}"
+      uri = "#{@service_root}/srv/eng/#{name}"
       
       ap({ :uri => uri, :params => params, :format => format }) if $DEBUG
       
@@ -104,12 +97,16 @@ module GeoMDTK
       end
     end
     
-    def self.export_mef(uuid, dir = ".")
-      res = service("mef.export", { :uuid => uuid, :version => 'true' })
-      File.open("#{dir}/#{uuid}.mef", 'wb') {|f| f.write(res.body) }
+    def export_mef(uuid, dir = ".")
+      res = service("mef.export", { 
+        :uuid => uuid, 
+        :version => 'true',
+        :relation => 'false'
+      })
+      File.open("#{dir}/#{uuid}.mef", 'w') {|f| f.write(res.body) }
     end
   
-    def self.export_csw(uuid, dir = ".")
+    def export_csw(uuid, dir = ".")
       res = service("csw", { 
     	  :request => 'GetRecordById',
     		:service => 'CSW',
@@ -120,6 +117,8 @@ module GeoMDTK
       File.open("#{dir}/#{uuid}.csw", 'wb') {|f| f.write(res.body) }
     end
     
-    
-  end
+    def to_druid(purl)
+      purl.to_s.gsub(%r{^(http://purl.stanford.edu.*)/([a-z0-9]{11})$}, "\\2")
+    end
+  end  
 end

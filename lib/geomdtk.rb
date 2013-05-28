@@ -1,2 +1,2 @@
-require 'geomdtk/client'
+require 'geomdtk/geonetwork'
 require 'geomdtk/deploy'
