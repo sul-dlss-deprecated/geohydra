@@ -27,8 +27,9 @@ module GeoMDTK
 
     def each
       xml = service("xml.search", { :remote => 'off', :hitsPerPage => -1 })
-      xml.xpath('//uuid').each do |uuid|
-        yield uuid.content.to_s.strip
+      ap xml
+      xml.xpath('//uuid/text()').each do |uuid|
+        yield uuid.to_s.strip
       end
     end
     

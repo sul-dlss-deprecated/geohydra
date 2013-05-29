@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- iso2mods.xsl -- Transformation from ISO 19139 into MODS v3 -->
+<!-- iso2mods.xsl - Transformation from ISO 19139 into MODS v3 -->
 <!-- kd 04/30/2013 
      drh 05/02/2013 
      drh 05/29/2013 
@@ -228,11 +228,14 @@
           <location>
             <url>
               <xsl:attribute name="displayLabel">
-                <xsl:value-of select="gmd:name/gco:CharacterString"/>
+                <xsl:value-of select="gmd:name/gco:CharacterString/text()"/>
               </xsl:attribute>
               <xsl:apply-templates select="gmd:linkage"/>
             </url>
           </location>
+          <identifier type="local" displayLabel="filename">
+            <xsl:value-of select="gmd:name/gco:CharacterString/text()" />
+          </identifier>
         </xsl:for-each>
         <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints">
           <accessCondition type="restrictionsOnAccess">

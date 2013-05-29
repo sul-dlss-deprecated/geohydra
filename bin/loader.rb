@@ -10,6 +10,7 @@ require 'rgeoserver'
 require 'awesome_print'
 require 'optparse'
 require 'mods'
+require 'druid-tools'
 
 #=  Input data. *See DATA section at end of file*
 # The input file is in YAML syntax with each record is a Hash with keys:
@@ -64,7 +65,7 @@ def main layers, flags = {}
       # Create of a coverage store
       puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
       cs = RGeoServer::CoverageStore.new cat, :workspace => ws, :name => layername
-      cs.url = File.join(flags[:datadir], v['filename'])
+      cs.url = "file://" + File.join(flags[:datadir], v['filename'])
       cs.description = v['description'] 
       cs.enabled = 'true'
       cs.data_type = format
@@ -85,7 +86,7 @@ def main layers, flags = {}
       ds = RGeoServer::DataStore.new cat, :workspace => ws, :name => layername
       ds.description = v['description']
       ds.connection_parameters = {
-        "url" => File.join(flags[:datadir], v['filename']),
+        "url" => "file://" + File.join(flags[:datadir], v['filename']),
         "namespace" => NAMESPACE
       }
       ds.enabled = 'true'
@@ -114,8 +115,30 @@ def main layers, flags = {}
   end
 end
 
-def mods_load fn
-  ap fn
+# example_vector2:
+#   layername: urban2050_ca
+#   druid: cc111cc1111
+#   format: Shapefile
+#   title: "Projected Urban Growth scenarios for 2050"
+#   description: "By 2020, most forecasters agree, California will be home to between 43 and 46 million residents-up from 35 million today. Beyond 2020 the size of Californias population is less certain."
+#   keywords: ["vector", "urban", "landis", { 
+#     keyword: "California", language: en, vocabulary: "ISOTC211/19115:place"}]
+#   metadata_links: [{
+#     metadataType: TC211, 
+#     content: "http://purl.stanford.edu/cc111cc1111.iso19139.xml"}] 
+#   metadata:
+#     druid: cc111cc1111
+#     publisher: Landis
+
+# <identifier type="local" displayLabel="filename">OIL_GAS_FIELDS.shp</identifier>
+
+def from_mods mods, flags
+  ap s
+  s = mods.xpath('//mods:identifier[@type="local" and @displayLabel="druid"]/text()',
+                 'mods' => Mods::MODS_NS).first.to_s
+  druid = DruidTools::Druid.new(s, flags[:datadir])
+  ap druid
+  puts "Extracting load parameters from #{druid.id}"
 end
 
 # __MAIN__
@@ -123,43 +146,39 @@ begin
   flags = {
     :delete => false,
     :verbose => true,
-    :datadir => 'file:///var/geoserver/current/staging',
+    :datadir => '/var/geomdtk/current/workspace',
     :format => 'YAML'
   }
   
   OptionParser.new do |opts|
     opts.banner = "Usage: #{File.basename(__FILE__)} [-v] [--delete] [input.yml ...]"
-    opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    opts.on("-v", "--[no-]verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
       flags[:verbose] = v
     end
-    opts.on(nil, "--[no-]delete", "Delete workspaces recursively") do |v|
+    opts.on(nil, "--[no-]delete", "Delete workspaces recursively (default: #{flags[:delete]})") do |v|
       flags[:delete] = v
     end
-    opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: file:///data)") do |v|
+    opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]}") do |v|
       flags[:datadir] = v
     end
-    opts.on("-f FORMAT", "--format=FORMAT", "Input file format (default: YAML)") do |v|
-      flags[:format] = v
+    opts.on("-f FORMAT", "--format=FORMAT", "Input file format of YAML or MODS (default: #{flags[:format]})") do |v|
+      raise ArgumentError, "Invalid format #{v}" unless ['YAML', 'MODS'].include?(v.upcase)
+      flags[:format] = v.upcase
     end
   end.parse!
 
   if ARGV.size > 0
     ARGV.each do |fn|
-      if flags[:format].upcase == 'YAML'
+      case flags[:format]
+      when 'YAML' then
         main(YAML::load_file(fn), flags)
-      elsif flags[:format].upcase == 'MODS'
-        mods = Mods::Record.new.from_url(fn)
-        # ap mods.root.namespaces
-        mods.xpath('//mods:identifier[@type="local" and @displayLabel="data_set_uri"]/text()', 'mods' => Mods::MODS_NS).each do |uri|
-          druid = uri.to_s.gsub(%r{(^.*)/([a-z0-9]+)$}, "\\2")
-          ap druid
-          ap mods
-        end
-           # displayLabel="data_set_uri"
+      when 'MODS' then
+        main(from_mods(Mods::Record.new.from_url(fn), flags), flags)
       end
     end
   else
-    if flags[:format] == 'YAML'
+    case flags[:format]
+    when 'YAML' then
       main(YAML::load($stdin), flags)
     end
   end

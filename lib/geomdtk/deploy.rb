@@ -1,15 +1,13 @@
 module GeoMDTK
   class Deploy
-    @@TYPES = {
+    TYPES = {
      'shapefile_zip' =>  %r{\.zip$}
     }
-    @@SSH_CMD = '/usr/bin/ssh'
-    @@RSYNC_CMD = "/usr/bin/rsync -e '#{@@SSH_CMD}'"
     @@config = Dor::Config
     
     def self.push(fn, collection)
-      @@TYPES.keys.each do |t|
-        if @@TYPES[t].match fn
+      TYPES.keys.each do |t|
+        if TYPES[t].match fn
           return self.send("push_#{t}", fn, collection)
         end
       end
@@ -23,7 +21,6 @@ module GeoMDTK
                 " --data-binary '@#{zipfn}'" +
                 " '#{@@config.geoserver.service_root}/" +   
                 "rest/workspaces/#{@@config.geoserver.workspace}/datastores/#{datastore}/file.shp'")
-      do_rsync(["#{zipfn.gsub(%r{\.zip$}, '.xml')}"], datastore)
     end
     
   private
@@ -31,11 +28,6 @@ module GeoMDTK
       puts "Running: #{cmd}" if $DEBUG
       system(cmd)
     end  
-  
-    def self.do_rsync(fns, datastore)
-      do_system("#{@@RSYNC_CMD} --copy-links --chmod=ug+rw,ug-x,o-rw" +
-        " #{fns.join(' ')} #{@@config.geoserver.host}:#{@@config.geoserver.data_dir}/data/metadata/")
-    end
-    
+      
   end
 end

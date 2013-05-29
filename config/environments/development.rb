@@ -14,11 +14,11 @@ Dor::Config.configure do
     service_root 'http://admin:admin123@localhost:8080/geoserver'
     host "kurma-podd1.stanford.edu"
     workspace "druid"
-    data_dir "/var/geoserver/current/data"
   end
 
   geomdtk do
-    workspace "/tmp/workspace"
+    workspace "/var/geomdtk/current/workspace"
+    stage "/var/geomdtk/current/stage"
   end
 
 end
