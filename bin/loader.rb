@@ -40,7 +40,9 @@ SEED_OPTIONS = {
 }
 
 def main layers, flags = {}
-  return unless layers
+  ap layers
+  raise ArgumentError, "Layer is malformed" unless layers and layers.is_a? Hash
+  
   # Connect to the GeoServer catalog
   cat = RGeoServer::Catalog.new
 
@@ -50,12 +52,11 @@ def main layers, flags = {}
   ws.delete :recurse => true if flags[:delete] and not ws.new?
   ws.enabled = 'true'
   ws.save
-  
 
   # Iterate over all records in YAML file and create stores in the catalog
   layers.each do |k, v|
     ['layername', 'format', 'filename', 'title'].each do |i|
-      raise ArgumentError, "Layer is missing #{i}" unless v.include?(i)
+      raise ArgumentError, "Layer is missing #{i}" unless v.include?(i) and v[i] != nil
     end
 
     layername = v['layername'].strip
@@ -65,7 +66,11 @@ def main layers, flags = {}
       # Create of a coverage store
       puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
       cs = RGeoServer::CoverageStore.new cat, :workspace => ws, :name => layername
-      cs.url = "file://" + File.join(flags[:datadir], v['filename'])
+      if v['filename'] =~ %r{^/}
+        cs.url = "file://" + v['filename']
+      else
+        cs.url = "file://" + File.join(flags[:datadir], v['filename'])
+      end
       cs.description = v['description'] 
       cs.enabled = 'true'
       cs.data_type = format
@@ -86,9 +91,17 @@ def main layers, flags = {}
       ds = RGeoServer::DataStore.new cat, :workspace => ws, :name => layername
       ds.description = v['description']
       ds.connection_parameters = {
-        "url" => "file://" + File.join(flags[:datadir], v['filename']),
+        "url" => 'file://',
         "namespace" => NAMESPACE
       }
+      
+      if v['filename'] =~ %r{^/}
+        ds.connection_parameters['url'] += v['filename']
+      else
+        ds.connection_parameters['url'] += File.join(flags[:datadir], v['filename'])
+      end
+      ap ds.connection_parameters
+      
       ds.enabled = 'true'
       ds.data_type = format
       ds.save
@@ -115,43 +128,47 @@ def main layers, flags = {}
   end
 end
 
-# example_vector2:
-#   layername: urban2050_ca
-#   druid: cc111cc1111
-#   format: Shapefile
-#   title: "Projected Urban Growth scenarios for 2050"
-#   description: "By 2020, most forecasters agree, California will be home to between 43 and 46 million residents-up from 35 million today. Beyond 2020 the size of Californias population is less certain."
-#   keywords: ["vector", "urban", "landis", { 
-#     keyword: "California", language: en, vocabulary: "ISOTC211/19115:place"}]
-#   metadata_links: [{
-#     metadataType: TC211, 
-#     content: "http://purl.stanford.edu/cc111cc1111.iso19139.xml"}] 
-#   metadata:
-#     druid: cc111cc1111
-#     publisher: Landis
-
-# <identifier type="local" displayLabel="filename">OIL_GAS_FIELDS.shp</identifier>
-
-def from_mods mods, flags
-  ap s
-  s = mods.xpath('//mods:identifier[@type="local" and @displayLabel="druid"]/text()',
-                 'mods' => Mods::MODS_NS).first.to_s
-  druid = DruidTools::Druid.new(s, flags[:datadir])
+def from_druid druid, flags
+  prj = flags[:projection] || "EPSG:4326"
+  druid = DruidTools::Druid.new(druid, flags[:datadir])
   ap druid
-  puts "Extracting load parameters from #{druid.id}"
+  mods_fn = druid.path('metadata/descMetadata.xml')
+  puts "Extracting load parameters from #{druid.id} #{mods_fn}"
+  mods = Mods::Record.new
+  mods.from_url(mods_fn)
+  fn = Dir.glob(druid.content_dir + '/' + prj.gsub(':', '/') + '/*.shp').first
+  ap fn
+  r = { 'vector' => {
+    'format' => 'Shapefile',
+    'layername' => druid.id,
+    'filename' => fn,
+    'title' => mods.full_titles.first,
+    'description' => mods.term_value(:abstract),
+    'keywords' => [mods.term_value([:subject, 'topic']),
+                   mods.term_value([:subject, 'geographic'])].flatten,
+    'metadata_links' => [{
+      'metadataType' => 'TC221',
+      'content' => "http://purl.stanford.edu/#{druid.id}.iso19139.xml"
+    }]
+  }}
+  r
 end
 
 # __MAIN__
 begin
   flags = {
-    :delete => false,
+    :delete => true,
     :verbose => true,
     :datadir => '/var/geomdtk/current/workspace',
-    :format => 'YAML'
+    :format => 'MODS'
   }
   
   OptionParser.new do |opts|
-    opts.banner = "Usage: #{File.basename(__FILE__)} [-v] [--delete] [input.yml ...]"
+    opts.banner = "
+    Usage: #{File.basename(__FILE__)} -f MODS [-v] [--delete] druid [druid...]
+           #{File.basename(__FILE__)} -f YAML [-v] [--delete] [input.yaml ...]
+           
+    "
     opts.on("-v", "--[no-]verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
       flags[:verbose] = v
     end
@@ -161,25 +178,29 @@ begin
     opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]}") do |v|
       flags[:datadir] = v
     end
-    opts.on("-f FORMAT", "--format=FORMAT", "Input file format of YAML or MODS (default: #{flags[:format]})") do |v|
+    opts.on("-f FORMAT", "--format=FORMAT", "Input file format of MODS or YAML (default: #{flags[:format]})") do |v|
       raise ArgumentError, "Invalid format #{v}" unless ['YAML', 'MODS'].include?(v.upcase)
       flags[:format] = v.upcase
     end
   end.parse!
 
   if ARGV.size > 0
-    ARGV.each do |fn|
+    ARGV.each do |v|
       case flags[:format]
       when 'YAML' then
-        main(YAML::load_file(fn), flags)
+        main(YAML::load_file(v), flags)
       when 'MODS' then
-        main(from_mods(Mods::Record.new.from_url(fn), flags), flags)
+        main(from_druid(v, flags), flags)
       end
     end
   else
     case flags[:format]
     when 'YAML' then
       main(YAML::load($stdin), flags)
+    when 'MODS' then
+      $stdin.readlines.each do |line|
+        main(from_druid(line.strip, flags), flags)
+      end
     end
   end
 rescue SystemCallError => e

@@ -30,7 +30,7 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, stagedir = STAGEDIR)
 
     # export MEF
     client.export(uuid, tmpdir)
-    do_system("unzip -jo -qq #{tmpdir}/#{uuid}.mef #{uuid}/metadata/*.xml -d #{tmpdir}")
+    do_system("umask 002; unzip -jo -qq #{tmpdir}/#{uuid}.mef #{uuid}/metadata/*.xml -d #{tmpdir}")
     %w{metadata.iso19139.xml metadata.xml}.each do |fn|
       fn = File.join(tmpdir, fn)
       if File.exist? fn
@@ -48,7 +48,7 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, stagedir = STAGEDIR)
     
     # export content
     Dir.glob(File.join(stagedir, "#{druid.id}.zip")) do |fn|
-      do_system("unzip -nj -qq #{fn} -d #{druid.content_dir}")
+      do_system("umask 002; unzip -nj -qq #{fn} -d #{druid.content_dir}")
     end    
   end
 end
