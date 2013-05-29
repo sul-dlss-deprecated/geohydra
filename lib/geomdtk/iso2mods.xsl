@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- iso2mods.xsl -- Transformation from ISO 19139 into MODS v3 -->
 <!-- kd 04/30/2013 
      drh 05/02/2013 
+     drh 05/29/2013 
   -->
 <xsl:stylesheet xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.loc.gov/mods/v3" version="1.0" exclude-result-prefixes="gmd gco gmi">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
@@ -8,25 +10,26 @@
   <xsl:template match="/">
     <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
       <xsl:for-each select="/gmi:MI_Metadata|/gmd:MD_Metadata">
-        <xsl:for-each select="gmd:fileIdentifier">
+        <xsl:for-each select="gmd:fileIdentifier/gco:CharacterString/text()">
           <identifier type="local" displayLabel="file_identifier_id">
             <xsl:text>geonetwork:</xsl:text>
-            <xsl:value-of select="gco:CharacterString/text()"/></identifier>
+            <xsl:value-of select="."/></identifier>
         </xsl:for-each>
-        <!-- TODO: not sure how these dataSetURIs work -->
         <xsl:for-each select="gmd:dataSetURI/gco:CharacterString/text()">
           <identifier type="local" displayLabel="data_set_uri">
             <xsl:value-of select="." />
-          </identifier>          
-          <identifier type="local" displayLabel="druid">
-            <xsl:text>druid:</xsl:text>
-            <xsl:value-of select="substring-after(., 'http://purl.stanford.edu/')" />
-          </identifier>  
-          <location>
-            <url displayLabel="PURL">
-              <xsl:value-of select="."/>
-            </url>
-          </location>        
+          </identifier>
+          <xsl:if test="starts-with(., 'http://purl.stanford.edu/')">
+            <identifier type="local" displayLabel="druid">
+              <xsl:text>druid:</xsl:text>
+              <xsl:value-of select="substring-after(., 'http://purl.stanford.edu/')" />
+            </identifier>
+            <location>
+              <url displayLabel="PURL">
+                <xsl:value-of select="."/>
+              </url>
+            </location>
+          </xsl:if>      
         </xsl:for-each>
         <!-- TODO: need to handle alternate and translated titles -->
         <titleInfo>
@@ -70,7 +73,13 @@
               <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address">
                 <place>
                   <!-- TODO: is there a better way to generate the publication address? -->
-                  <placeTerm type="text"><xsl:value-of select="gmd:city/gco:CharacterString"/>, <xsl:value-of select="gmd:administrativeArea/gco:CharacterString"/>, <xsl:value-of select="gmd:country/gmd:Country/@codeListValue"/></placeTerm>
+                  <placeTerm type="text">
+                    <xsl:value-of select="gmd:city/gco:CharacterString"/>
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="gmd:administrativeArea/gco:CharacterString"/>
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="gmd:country/gmd:Country/@codeListValue"/>
+                    </placeTerm>
                 </place>
               </xsl:for-each>
             </xsl:if>
@@ -101,14 +110,22 @@
         <subject>
           <cartographics>
             <projection><!-- TODO: need better way to extract URI for projection -->
-              <xsl:text>urn:ogc:def:crs:</xsl:text><xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/><xsl:text>::</xsl:text><xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+              <xsl:text>urn:ogc:def:crs:</xsl:text>
+              <xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
+              <xsl:text>::</xsl:text>
+              <xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
             </projection>
-            <!-- The coordinates definition is quite vague in http://www.loc.gov/standards/mods/userguide/subject.html#coordinates 
-                 but we write both examples
-              -->
+            
+<!-- The coordinates definition is quite vague in 
+     http://www.loc.gov/standards/mods/userguide/subject.html#coordinates 
+     so we write both examples and tag with id=marc_bd255[cg]
+  -->
             <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-              <!-- Coordinates are recorded in the order of westernmost longitude, easternmost longitude, northernmost latitude, and southernmost latitude. 
-              from http://www.loc.gov/marc/bibliographic/bd255.html $c -->
+              <!-- Coordinates are recorded in the order of 
+                   westernmost longitude, easternmost longitude, 
+                   northernmost latitude, and southernmost latitude. 
+              
+                   from http://www.loc.gov/marc/bibliographic/bd255.html $c -->
               <coordinates id="marc_bd255c">
                 <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
                 <xsl:text> -- </xsl:text>
@@ -238,7 +255,12 @@
           </xsl:for-each>
         </xsl:for-each>
       </xsl:for-each>
-      <accessCondition>Access is granted to Stanford University affiliates only. Affiliates are limited to current faculty, staff and students.</accessCondition>
+      <accessCondition><!-- TODO what is the type here? -->
+        <xsl:text>
+          Access is granted to Stanford University affiliates only. 
+          Affiliates are limited to current faculty, staff and students.
+        </xsl:text>
+      </accessCondition>
     </mods>
   </xsl:template>
 </xsl:stylesheet>
