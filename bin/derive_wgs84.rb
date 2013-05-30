@@ -1,13 +1,18 @@
 #!/usr/bin/env ruby
+require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
+require 'druid-tools'
 require 'fileutils'
-WORKDIR = '/var/geomdtk/current/workspace'
+
+TMPDIR = $config.geomdtk.tmpdir || 'tmp'
+WORKDIR = $config.geomdtk.workspace || 'workspace'
+STAGEDIR = $config.geomdtk.stage || 'stage'
 
 # ogr2ogr is using a different WKT than GeoServer -- this one is from GeoServer 2.3
 WKT = %q{GEOGCS["WGS 84", DATUM["World Geodetic System 1984", SPHEROID["WGS 84", 6378137.0, 298.257223563,AUTHORITY["EPSG","7030"]], AUTHORITY["EPSG","6326"]], PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], UNIT["degree",0.017453292519943295], AXIS["Geodetic longitude", EAST], AXIS["Geodetic latitude", NORTH], AUTHORITY["EPSG","4326"]]}
 
 def do_system cmd
   puts cmd
-  system(cmd)
+  # system(cmd)
 end
 
 def main(workdir = WORKDIR)
