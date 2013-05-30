@@ -55,7 +55,7 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = true)
       end
       FileUtils.rm_rf tmp
       do_system("zip -Dj #{fn.gsub(%r{\.zip}, '_EPSG_4326.zip')} #{odir}/#{k}.*")
-      FileUtils.rm_rf "#{odir}/EPSG"      
+      FileUtils.rm_rf(File.join(File.dirname(fn), 'EPSG'))
     end
   end
 end
