@@ -57,21 +57,14 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, stagedir = STAGEDIR)
     end
     raise ArgumentError, "Cannot export MEF metadata: #{uuid}: Missing #{tmpdir}/metadata.xml" unless found_metadata
     
-    # export content
+    # export content into zip files
     Dir.glob(File.join(stagedir, "#{druid.id}.zip")) do |fn|
-      do_system(["unzip", "-jo", fn, "-d", druid.content_dir])
-      Dir.glob("#{druid.content_dir}/*.shp") do |shp|
-        ap shp
-        k = File.basename(shp, '.shp')
-        ap k
-        fns = Dir.glob("#{druid.content_dir}/#{k}.*")
-        ap fns
-        ap fns.class
-        fns = fns.delete_if {|x| x =~ %r{\.zip$}}
-        ap fns
-        do_system(["zip", "-1vDj", "#{druid.content_dir}/#{k}.zip", fns.join(' ')])
-        fns.each {|f| File.delete(f) }
-      end
+      # extract shapefile name using filename pattern from
+      # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
+      k = %r{([a-zA-Z0-9_-]+)\.shp$}.match(`unzip -l #{fn}`)[1] 
+      ofn = "#{druid.content_dir}/#{k}.zip"
+      puts "Copying GIS data: #{fn} -> #{ofn}"
+      FileUtils.copy_file fn, ofn
     end    
   end
 end
