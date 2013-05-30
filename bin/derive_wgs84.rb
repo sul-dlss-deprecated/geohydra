@@ -44,9 +44,9 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = true)
     FileUtils.mkdir_p tmp
     do_system("unzip -j #{fn} -d #{tmp}")
     
-    puts "Projecting #{fn} into #{ofn}"
     ofn = File.join(File.dirname(fn), 'EPSG', '4326', shp)
     odir = File.dirname(ofn)
+    puts "Projecting #{fn} into #{ofn}"
     FileUtils.mkdir_p odir unless File.directory? odir
     unless File.exist? ofn
       do_system("ogr2ogr -progress -t_srs '#{WKT}' '#{ofn}' '#{tmp}/#{shp}'") 
