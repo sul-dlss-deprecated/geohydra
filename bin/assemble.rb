@@ -2,9 +2,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'druid-tools'
 
-TMPDIR = Dor::Config.geomdtk.tmpdir || 'tmp'
-WORKDIR = Dor::Config.geomdtk.workspace || 'workspace'
-STAGEDIR = Dor::Config.geomdtk.stage || 'stage'
+TMPDIR = $config.geomdtk.tmpdir || 'tmp'
+WORKDIR = $config.geomdtk.workspace || 'workspace'
+STAGEDIR = $config.geomdtk.stage || 'stage'
 
 def do_system cmd
   if cmd.is_a? Array

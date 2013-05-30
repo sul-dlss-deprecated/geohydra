@@ -3,14 +3,15 @@
 #
 # RGeoServer Batch load layers (batch_demo.rb)
 # Usage: #{File.basename(__FILE__)} [input.yml]
-ENV['RGEOSERVER_CONFIG'] ||= 'config/environments/development_rgeoserver.yml'
-require 'rubygems'
+require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
+
 require 'yaml'
 require 'rgeoserver'
-require 'awesome_print'
 require 'optparse'
 require 'mods'
 require 'druid-tools'
+
+ENV['RGEOSERVER_CONFIG'] ||= 'config/environments/#{environment}_rgeoserver.yml'
 
 #=  Input data. *See DATA section at end of file*
 # The input file is in YAML syntax with each record is a Hash with keys:
@@ -24,19 +25,20 @@ require 'druid-tools'
 # - metadata_links
 
 #= Configuration constants
-WORKSPACE_NAME = 'druid'
-NAMESPACE = 'http://purl.stanford.edu'
+WORKSPACE_NAME = $config.geoserver.workspace || 'druid'
+NAMESPACE = $config.geoserver.namespace || 'http://purl.stanford.edu'
+
 
 # GeoWebCache configuration
-SEED = false
+SEED = $config.geowebcache
 SEED_OPTIONS = {
   :srs => {
-    :number => 4326 
+    :number => $config.geowebcache.srs.gsub(%r{^EPSG:}, '').to_i
   },
-  :zoomStart => 1,
-  :zoomStop => 10,
-  :format => 'image/png',
-  :threadCount => 1
+  :zoomStart => $config.geowebcache.zoom.gsub(%r{:\d$}, '').to_i,
+  :zoomStop => $config.geowebcache.zoom.gsub(%r{^\d:}, '').to_i,
+  :format => $config.geowebcache.format || 'image/png',
+  :threadCount => ($config.geowebcache.threadCount || '1').to_i
 }
 
 def main layers, flags = {}
@@ -187,7 +189,7 @@ begin
     opts.on(nil, "--[no-]delete", "Delete workspaces recursively (default: #{flags[:delete]})") do |v|
       flags[:delete] = v
     end
-    opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]}") do |v|
+    opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]})") do |v|
       flags[:datadir] = v
     end
     opts.on("-f FORMAT", "--format=FORMAT", "Input file format of MODS or YAML (default: #{flags[:format]})") do |v|

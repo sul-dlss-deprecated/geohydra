@@ -14,7 +14,7 @@ module GeoMDTK
     GEONETWORK_INFO_CODES = %w{site users groups sources schemas categories operations regions status}
     
     def initialize options = {}
-      @service_root = options[:service_root] || Dor::Config.geonetwork.service_root
+      @service_root = options[:service_root] || $config.geonetwork.service_root
     end
     
     def site_info
