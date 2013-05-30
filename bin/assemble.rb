@@ -46,7 +46,7 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, stagedir = STAGEDIR)
       found_metadata = true
       xfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
       puts "Copying #{fn} => #{xfn}"
-      FileUtils.copy_file fn, xfn
+      FileUtils.install fn, xfn
       File.delete fn
 
       yfn = File.join(druid.metadata_dir, 'descMetadata.xml')
@@ -64,7 +64,7 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, stagedir = STAGEDIR)
       k = %r{([a-zA-Z0-9_-]+)\.shp$}.match(`unzip -l #{fn}`)[1] 
       ofn = "#{druid.content_dir}/#{k}.zip"
       puts "Copying GIS data: #{fn} -> #{ofn}"
-      FileUtils.copy_file fn, ofn
+      FileUtils.install fn, ofn
     end    
   end
 end
