@@ -28,7 +28,7 @@ WORKSPACE_NAME = 'druid'
 NAMESPACE = 'http://purl.stanford.edu'
 
 # GeoWebCache configuration
-SEED = true
+SEED = false
 SEED_OPTIONS = {
   :srs => {
     :number => 4326 
@@ -91,14 +91,19 @@ def main layers, flags = {}
       ds = RGeoServer::DataStore.new cat, :workspace => ws, :name => layername
       ds.description = v['description']
       ds.connection_parameters = {
-        "url" => 'file://',
-        "namespace" => NAMESPACE
+        "url" => nil,
+        "namespace" => NAMESPACE,
+        "charset" => 'UTF-8',
+        "create spatial index" => 'true',
+        "cache and reuse memory maps" => 'true',
+        "enable spatial index" => 'true',
+        "filetype" => 'shapefile',
+        "memory mapped buffer" => 'false'
       }
-      
       if v['filename'] =~ %r{^/}
-        ds.connection_parameters['url'] += v['filename']
+        ds.connection_parameters['url'] = 'file:' + v['filename']
       else
-        ds.connection_parameters['url'] += File.join(flags[:datadir], v['filename'])
+        ds.connection_parameters['url'] = 'file:' + File.join(flags[:datadir], v['filename'])
       end
       ap ds.connection_parameters
       
