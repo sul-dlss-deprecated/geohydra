@@ -31,7 +31,8 @@ def do_system cmd, dry_run = false
   system(cmd) unless dry_run
 end
 
-def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = false)
+# @param overwrite_prj [Boolean] ogr2ogr writes a .prj file that GeoServer doesn't recognize as EPSG:4326
+def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = true)
   Dir.glob(workdir + "/??/???/??/????/???????????/content/*.zip").each do |fn| # matches druid workspace structure
     puts "Processing #{fn}"
     k = File.basename(fn, '.zip')
@@ -39,21 +40,22 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = false)
     
     puts "Extracting #{fn}"
     tmp = "#{tmpdir}/#{k}"
-    FileUtils.mkdir_p tmp unless File.directory? tmp
-    do_system("unzip -jo #{fn} -d #{tmp}")
+    FileUtils.rm_rf tmp if File.directory? tmp
+    FileUtils.mkdir_p tmp
+    do_system("unzip -j #{fn} -d #{tmp}")
     
-    puts "Projecting #{fn}"
-    dstfn = File.join(File.dirname(fn), 'EPSG', '4326', shp)
-    ddir = File.dirname(dstfn)
-    FileUtils.mkdir_p ddir unless File.directory? ddir
-    unless File.exist? dstfn
-      do_system("ogr2ogr -progress -t_srs '#{WKT}' '#{dstfn}' '#{tmp}/#{shp}'") 
+    puts "Projecting #{fn} into #{ofn}"
+    ofn = File.join(File.dirname(fn), 'EPSG', '4326', shp)
+    odir = File.dirname(ofn)
+    FileUtils.mkdir_p odir unless File.directory? odir
+    unless File.exist? ofn
+      do_system("ogr2ogr -progress -t_srs '#{WKT}' '#{ofn}' '#{tmp}/#{shp}'") 
       if overwrite_prj
-        File.open(dstfn.gsub(%r{shp$}, 'prj'), 'w').write(WKT)
+        File.open(ofn.gsub(%r{shp$}, 'prj'), 'w') {|f| f.write(WKT)}
       end
       FileUtils.rm_rf tmp
-      do_system("zip -vDj #{fn.gsub(%r{\.zip}, '_EPSG_4326.zip')} #{ddir}/#{k}.*")
-      FileUtils.rm_rf "#{ddir}/EPSG"      
+      do_system("zip -Dj #{fn.gsub(%r{\.zip}, '_EPSG_4326.zip')} #{odir}/#{k}.*")
+      FileUtils.rm_rf "#{odir}/EPSG"      
     end
   end
 end
