@@ -11,14 +11,24 @@ def do_system cmd
 end
 
 def main(workdir = WORKDIR)
-  Dir.glob(workdir + "/??/???/??/????/???????????/content/*.shp").each do |fn| # matches druid workspace structure
-    puts fn
-    dstfn = File.join(File.dirname(fn), 'EPSG', '4326', File.basename(fn))
+  Dir.glob(workdir + "/??/???/??/????/???????????/content/*.zip").each do |fn| # matches druid workspace structure
+    puts "Processing #{fn}"
+    k = File.basename(fn, '.zip')
+    shp = k + '.shp'
+    
+    puts "Extracting #{fn}"
+    do_system("mkdir /tmp/#{k} 2>/dev/null; unzip -jo #{fn} -d /tmp/#{k}")
+    
+    puts "Projecting #{fn}"
+    dstfn = File.join(File.dirname(fn), 'EPSG', '4326', shp)
     puts "mkdir -p #{File.dirname(dstfn)}"
     FileUtils.mkdir_p File.dirname(dstfn)
     unless File.exist? dstfn
-      do_system("ogr2ogr -progress -t_srs EPSG:4326 '#{dstfn}' '#{fn}'") 
+      do_system("ogr2ogr -progress -t_srs EPSG:4326 '#{dstfn}' '/tmp/#{k}/#{shp}'") 
       File.open(dstfn.gsub(%r{shp$}, 'prj'), 'w').write(WKT)
+      do_system("rm -rf /tmp/#{k}")
+      do_system("cd #{File.dirname(dstfn)}; zip -1vDj #{fn.gsub(%r{\.zip}, '_epsg_4326.zip')} #{k}.*")
+      do_system("rm -rf #{File.dirname(dstfn)}/EPSG")
     end
   end
 end

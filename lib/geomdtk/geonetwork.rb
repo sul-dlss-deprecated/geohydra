@@ -27,7 +27,6 @@ module GeoMDTK
 
     def each
       xml = service("xml.search", { :remote => 'off', :hitsPerPage => -1 })
-      ap xml
       xml.xpath('//uuid/text()').each do |uuid|
         yield uuid.to_s.strip
       end
@@ -104,7 +103,9 @@ module GeoMDTK
         :version => 'true',
         :relation => 'false'
       })
-      File.open("#{dir}/#{uuid}.mef", 'w') {|f| f.write(res.body) }
+      fn = "#{dir}/#{uuid}.mef"
+      File.open(fn, 'wb') {|f| f.puts(res.body) }
+      raise ArgumentError, "MEF #{fn} is missing" unless File.exist? fn
     end
   
     def export_csw(uuid, dir = ".")

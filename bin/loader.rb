@@ -89,27 +89,29 @@ def main layers, flags = {}
       # Create data stores for shapefiles
       puts "DataStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
       ds = RGeoServer::DataStore.new cat, :workspace => ws, :name => layername
-      ds.description = v['description']
-      ds.connection_parameters = {
-        "url" => nil,
-        "namespace" => NAMESPACE,
-        "charset" => 'UTF-8',
-        "create spatial index" => 'true',
-        "cache and reuse memory maps" => 'true',
-        "enable spatial index" => 'true',
-        "filetype" => 'shapefile',
-        "memory mapped buffer" => 'false'
-      }
-      if v['filename'] =~ %r{^/}
-        ds.connection_parameters['url'] = 'file:' + v['filename']
-      else
-        ds.connection_parameters['url'] = 'file:' + File.join(flags[:datadir], v['filename'])
-      end
-      ap ds.connection_parameters
-      
       ds.enabled = 'true'
       ds.data_type = format
-      ds.save
+      if v['remote']
+        ds.description = v['description']
+        ds.connection_parameters = {
+          "namespace" => NAMESPACE,
+          "charset" => 'UTF-8',
+          "create spatial index" => 'true',
+          "cache and reuse memory maps" => 'true',
+          "enable spatial index" => 'true',
+          "filetype" => 'shapefile',
+          "memory mapped buffer" => 'false'
+        }
+        if v['filename'] =~ %r{^/}
+          ds.connection_parameters['url'] = 'file:' + v['filename']
+        else
+          ds.connection_parameters['url'] = 'file:' + File.join(flags[:datadir], v['filename'])
+        end
+        ap ds.connection_parameters
+        ds.save
+      else
+        ds.upload_file v['filename'], :title => v['title'], :description => v['description']
+      end
 
       puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
       ft = RGeoServer::FeatureType.new cat, :workspace => ws, :data_store => ds, :name => layername 
@@ -141,21 +143,26 @@ def from_druid druid, flags
   puts "Extracting load parameters from #{druid.id} #{mods_fn}"
   mods = Mods::Record.new
   mods.from_url(mods_fn)
-  fn = Dir.glob(druid.content_dir + '/' + prj.gsub(':', '/') + '/*.shp').first
+  # fn = Dir.glob(druid.content_dir + '/' + prj.gsub(':', '/') + '/*.shp').first
+  fn = Dir.glob(druid.content_dir + '/' + prj.gsub(':', '/') + '/*.zip').first
   ap fn
-  r = { 'vector' => {
-    'format' => 'Shapefile',
-    'layername' => druid.id,
-    'filename' => fn,
-    'title' => mods.full_titles.first,
-    'description' => mods.term_value(:abstract),
-    'keywords' => [mods.term_value([:subject, 'topic']),
-                   mods.term_value([:subject, 'geographic'])].flatten,
-    'metadata_links' => [{
-      'metadataType' => 'TC221',
-      'content' => "http://purl.stanford.edu/#{druid.id}.iso19139.xml"
-    }]
-  }}
+  r = { 
+    'vector' => {
+      'remote' => false,
+      'format' => 'Shapefile',
+      'layername' => druid.id,
+      'filename' => fn,
+      'title' => mods.full_titles.first,
+      'description' => mods.term_value(:abstract),
+      'keywords' => [mods.term_value([:subject, 'topic']),
+                     mods.term_value([:subject, 'geographic'])].flatten,
+      'metadata_links' => [{
+        'metadataType' => 'TC221',
+        'content' => "http://purl.stanford.edu/#{druid.id}.iso19139.xml"
+      }]
+    }
+  }
+  ap r
   r
 end
 
