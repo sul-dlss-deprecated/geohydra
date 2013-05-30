@@ -1,7 +1,8 @@
+*.lock
+*.log
 .DS_Store
 .ruby*
-*.lock
-tmp
+.rvmrc*
+data
 private
-content
-*.log
+tmp
