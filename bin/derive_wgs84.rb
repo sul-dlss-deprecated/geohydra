@@ -7,33 +7,53 @@ TMPDIR = $config.geomdtk.tmpdir || 'tmp'
 WORKDIR = $config.geomdtk.workspace || 'workspace'
 STAGEDIR = $config.geomdtk.stage || 'stage'
 
-# ogr2ogr is using a different WKT than GeoServer -- this one is from GeoServer 2.3
-WKT = %q{GEOGCS["WGS 84", DATUM["World Geodetic System 1984", SPHEROID["WGS 84", 6378137.0, 298.257223563,AUTHORITY["EPSG","7030"]], AUTHORITY["EPSG","6326"]], PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], UNIT["degree",0.017453292519943295], AXIS["Geodetic longitude", EAST], AXIS["Geodetic latitude", NORTH], AUTHORITY["EPSG","4326"]]}
+# ogr2ogr is using a different WKT than GeoServer -- this one is from GeoServer 2.3.1.
+# As implemented by EPSG database on HSQL:
+#  http://docs.geotools.org/latest/userguide/library/referencing/hsql.html
+# Also see:
+#  http://spatialreference.org/ref/epsg/4326/prettywkt/
+WKT = <<EOM
+GEOGCS["WGS 84",
+    DATUM["WGS_1984",
+        SPHEROID["WGS 84",6378137,298.257223563,
+            AUTHORITY["EPSG","7030"]],
+        AUTHORITY["EPSG","6326"]],
+    PRIMEM["Greenwich",0,
+        AUTHORITY["EPSG","8901"]],
+    UNIT["degree",0.01745329251994328,
+        AUTHORITY["EPSG","9122"]],
+    AUTHORITY["EPSG","4326"]]
+EOM
+.split.join.freeze
 
-def do_system cmd
-  puts cmd
-  # system(cmd)
+def do_system cmd, dry_run = false
+  puts "RUNNING: #{cmd}"
+  system(cmd) unless dry_run
 end
 
-def main(workdir = WORKDIR)
+def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = false)
   Dir.glob(workdir + "/??/???/??/????/???????????/content/*.zip").each do |fn| # matches druid workspace structure
     puts "Processing #{fn}"
     k = File.basename(fn, '.zip')
     shp = k + '.shp'
     
     puts "Extracting #{fn}"
-    do_system("mkdir /tmp/#{k} 2>/dev/null; unzip -jo #{fn} -d /tmp/#{k}")
+    tmp = "#{tmpdir}/#{k}"
+    FileUtils.mkdir_p tmp unless File.directory? tmp
+    do_system("unzip -jo #{fn} -d #{tmp}")
     
     puts "Projecting #{fn}"
     dstfn = File.join(File.dirname(fn), 'EPSG', '4326', shp)
-    puts "mkdir -p #{File.dirname(dstfn)}"
-    FileUtils.mkdir_p File.dirname(dstfn)
+    ddir = File.dirname(dstfn)
+    FileUtils.mkdir_p ddir unless File.directory? ddir
     unless File.exist? dstfn
-      do_system("ogr2ogr -progress -t_srs EPSG:4326 '#{dstfn}' '/tmp/#{k}/#{shp}'") 
-      File.open(dstfn.gsub(%r{shp$}, 'prj'), 'w').write(WKT)
-      do_system("rm -rf /tmp/#{k}")
-      do_system("cd #{File.dirname(dstfn)}; zip -1vDj #{fn.gsub(%r{\.zip}, '_epsg_4326.zip')} #{k}.*")
-      do_system("rm -rf #{File.dirname(dstfn)}/EPSG")
+      do_system("ogr2ogr -progress -t_srs '#{WKT}' '#{dstfn}' '#{tmp}/#{shp}'") 
+      if overwrite_prj
+        File.open(dstfn.gsub(%r{shp$}, 'prj'), 'w').write(WKT)
+      end
+      FileUtils.rm_rf tmp
+      do_system("zip -vDj #{fn.gsub(%r{\.zip}, '_EPSG_4326.zip')} #{ddir}/#{k}.*")
+      FileUtils.rm_rf "#{ddir}/EPSG"      
     end
   end
 end
