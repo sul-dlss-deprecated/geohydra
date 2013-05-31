@@ -1,0 +1,10 @@
+geoserver:
+  # Set to the REST API for the GeoServer
+  url: "http://localhost:8080/geoserver/rest"
+  # Optional user/password, set to false to disable
+  user: "admin"
+  password: "admin"
+  # Set to your GWC server, or "builtin" for the one bundled with GeoServer
+  geowebcache_url: "builtin"
+  # Set to false to disable or stdout/stderr or 'filename.out'
+  logfile: 'rgeoserver.log' #stdout #false
