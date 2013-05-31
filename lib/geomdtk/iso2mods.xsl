@@ -118,10 +118,7 @@
             <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
               <!-- The coordinates value for MODS v3 is quite vague, 
                    so we use the machine readable GML syntax -->
-              <coordinates>
-                <!-- ISO 19139 -->
-                <xsl:value-of select="."/>
-                
+              <coordinates>                
                 <!-- WMS
                      Uses min/max as attributes
                   -->
@@ -170,7 +167,7 @@
                  <xsl:text> </xsl:text>
                  <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
                </georss:box>
-               <!-- MARC simple:
+               <!-- MARC 255 $c:
                     Coordinates are recorded in the order of 
                     westernmost longitude, easternmost longitude, 
                     northernmost latitude, and southernmost latitude,
@@ -186,6 +183,26 @@
                 <xsl:text> -- </xsl:text>
                 <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
                 <xsl:text>)</xsl:text>
+                <!-- MARC 034
+                     Subfields $d, $e, $f, and $g always appear together. The coordinates 
+                     may be recorded in the form hdddmmss (hemisphere-degrees-minutes-seconds), 
+                     however, other forms are also allowed, such as decimal degrees. 
+                     The subelements are each right justified and unused positions contain zeros.
+                     
+                     $d - Coordinates - westernmost longitude (NR)
+                     $e - Coordinates - easternmost longitude (NR)
+                     $f - Coordinates - northernmost latitude (NR)
+                     $g - Coordinates - southernmost latitude (NR)
+                  -->
+                  <xsl:text>($d</xsl:text>
+                  <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:text>$e</xsl:text>
+                  <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:text>$f</xsl:text>
+                  <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:text>$g</xsl:text>
+                  <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:text>)</xsl:text>
               </coordinates>
             </xsl:for-each>
           </cartographics>
