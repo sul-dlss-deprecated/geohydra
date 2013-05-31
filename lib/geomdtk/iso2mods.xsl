@@ -18,7 +18,7 @@
   <xsl:strip-space elements="*"/>
   <!-- The coordinates value for MODS v3 is quite vague, 
        so we have a variety of formats: 
-       WMS, GML, GeoRSS, MARC034, MARC255 (default)
+       GMD, WMS, GML, GeoRSS, MARC034, MARC255 (default)
        -->
   <xsl:variable name="geoformat" select="'GeoRSS'"/>
   <xsl:template match="/">
@@ -134,6 +134,30 @@
             <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
               <coordinates>       
                 <xsl:choose>
+                  <xsl:when test="$geoformat = 'GMD'">
+                    <gmd:EX_GeographicBoundingBox xmlns:gmd="http://www.isotc211.org/2005/gmd"> 
+                      <gmd:westBoundLongitude> 
+                        <gco:Decimal>
+                          <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                        </gco:Decimal> 
+                      </gmd:westBoundLongitude> 
+                      <gmd:eastBoundLongitude> 
+                        <gco:Decimal>
+                          <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                        </gco:Decimal> 
+                      </gmd:eastBoundLongitude> 
+                      <gmd:southBoundLatitude> 
+                        <gco:Decimal>
+                          <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                        </gco:Decimal> 
+                      </gmd:southBoundLatitude> 
+                      <gmd:northBoundLatitude> 
+                        <gco:Decimal>
+                          <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                        </gco:Decimal> 
+                      </gmd:northBoundLatitude> 
+                    </gmd:EX_GeographicBoundingBox> 
+                  </xsl:when>
                   <xsl:when test="$geoformat = 'WMS'">
                     <!-- WMS
                          Uses min/max as attributes
@@ -223,7 +247,7 @@
 
                        See http://www.w3.org/TR/1999/REC-xslt-19991116#format-number
                     -->
-                    <xsl:text>($d</xsl:text>
+                    <xsl:text>$d</xsl:text>
                     <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, '+000.000000;-000.000000')"/>
                     <xsl:text>$e</xsl:text>
                     <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, '+000.000000;-000.000000')"/>
@@ -231,7 +255,6 @@
                     <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, '+00.000000;-00.000000')"/>
                     <xsl:text>$g</xsl:text>
                     <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, '+00.000000;-00.000000')"/>
-                    <xsl:text>)</xsl:text>
                   </xsl:when>
                   <xsl:otherwise>
                     <!-- MARC 255 $c:
@@ -246,7 +269,6 @@
                          
                          See http://www.loc.gov/marc/bibliographic/bd255.html $c
                          -->
-                    <xsl:text>(</xsl:text>
                     <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
                     <xsl:text> &#x002D;&#x002D; </xsl:text>
                     <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
@@ -254,7 +276,6 @@
                     <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
                     <xsl:text> &#x002D;&#x002D; </xsl:text>
                     <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
-                    <xsl:text>)</xsl:text>
                   </xsl:otherwise>
                 </xsl:choose>
               </coordinates>
