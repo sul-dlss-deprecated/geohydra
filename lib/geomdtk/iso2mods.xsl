@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- iso2mods.xsl - Transformation from ISO 19139 into MODS v3 -->
+<!-- iso2mods.xsl - Transformation from ISO 19139 XML into MODS v3 -->
 <!-- kd 04/30/2013 
      drh 05/02/2013 
      drh 05/29/2013 
   -->
-<xsl:stylesheet xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.loc.gov/mods/v3" version="1.0" exclude-result-prefixes="gmd gco gmi">
+<xsl:stylesheet xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.loc.gov/mods/v3" version="1.0" exclude-result-prefixes="gmd gco gmi">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/">
-    <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xmlns:gml="http://www.opengis.net/gml/3.2" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+    <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
       <xsl:for-each select="/gmi:MI_Metadata|/gmd:MD_Metadata">
         <xsl:for-each select="gmd:fileIdentifier/gco:CharacterString/text()">
           <identifier type="local" displayLabel="file_identifier_id">
@@ -115,25 +115,77 @@
               <xsl:text>::</xsl:text>
               <xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
             </projection>
-            
-<!-- The coordinates definition is quite vague in 
-     http://www.loc.gov/standards/mods/userguide/subject.html#coordinates 
-     so we write both examples and tag with id=marc_bd255[cg]
-  -->
             <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+              <!-- The coordinates value for MODS v3 is quite vague, 
+                   so we use the machine readable GML syntax -->
               <coordinates>
-                <gml:Envelope>
+                <!-- ISO 19139 -->
+                <xsl:value-of select="."/>
+                
+                <!-- WMS
+                     Uses min/max as attributes
+                  -->
+                <wms:BoundingBox xmlns:wms="http://www.opengis.net/wms">
+                  <xsl:attribute name="CRS">EPSG:4326</xsl:attribute>
+                  <xsl:attribute name="minx">
+                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="miny">
+                    <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="maxx">
+                    <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="maxy">
+                    <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                  </xsl:attribute>
+                </wms:BoundingBox>
+                <!-- GML
+                     Using SW and NE corners in (x, y) coordinates
+                  -->
+                <gml:boundingBox xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4326">
                  <gml:lowerCorner>
                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
                    <xsl:text> </xsl:text>
-                   <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                   <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
                  </gml:lowerCorner>
                  <gml:upperCorner>
-                   <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                   <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
                    <xsl:text> </xsl:text>
-                   <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                   <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
                  </gml:upperCorner>
-               </gml:Envelope>
+               </gml:boundingBox>
+               <!-- GeoRSS:
+                    Rectangular envelope property element containing two pairs of coordinates 
+                    (lower left envelope corner, upper right envelope corner) representing 
+                    latitude then longitude in the WGS84 coordinate reference system 
+                    <georss:box>42.943 -71.032 43.039 -69.856</georss:box>
+                    -->
+               <georss:box xmlns:georss="http://www.georss.org/georss">
+                 <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                 <xsl:text> </xsl:text>
+                 <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                 <xsl:text> </xsl:text>
+                 <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                 <xsl:text> </xsl:text>
+                 <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+               </georss:box>
+               <!-- MARC simple:
+                    Coordinates are recorded in the order of 
+                    westernmost longitude, easternmost longitude, 
+                    northernmost latitude, and southernmost latitude,
+                    and separated with double-dash and / characters. 
+                    from http://www.loc.gov/marc/bibliographic/bd255.html $c
+                    -->
+                <xsl:text>(</xsl:text>
+                <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                <xsl:text> -- </xsl:text>
+                <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                <xsl:text>/</xsl:text>
+                <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                <xsl:text> -- </xsl:text>
+                <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                <xsl:text>)</xsl:text>
               </coordinates>
             </xsl:for-each>
           </cartographics>
