@@ -195,13 +195,13 @@
                      $g - Coordinates - southernmost latitude (NR)
                   -->
                   <xsl:text>($d</xsl:text>
-                  <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, '000.000000')"/>
                   <xsl:text>$e</xsl:text>
-                  <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, '000.000000')"/>
                   <xsl:text>$f</xsl:text>
-                  <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, '00.000000')"/>
                   <xsl:text>$g</xsl:text>
-                  <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, '+000.000000')"/>
+                  <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, '00.000000')"/>
                   <xsl:text>)</xsl:text>
               </coordinates>
             </xsl:for-each>
