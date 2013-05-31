@@ -242,17 +242,17 @@
                          
                          Example:
                          
-                         -97.119945 &hyphen;&hyphen; -82.307619/30.665492 &hyphen;&hyphen; 25.467075
+                         -97.119945 &#x002D;&#x002D; -82.307619/30.665492 &#x002D;&#x002D; 25.467075
                          
                          See http://www.loc.gov/marc/bibliographic/bd255.html $c
                          -->
                     <xsl:text>(</xsl:text>
                     <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
-                    <xsl:text> &hyphen;&hyphen; </xsl:text>
+                    <xsl:text> &#x002D;&#x002D; </xsl:text>
                     <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
                     <xsl:text>/</xsl:text>
                     <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
-                    <xsl:text> &hyphen;&hyphen; </xsl:text>
+                    <xsl:text> &#x002D;&#x002D; </xsl:text>
                     <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
                     <xsl:text>)</xsl:text>
                   </xsl:otherwise>
