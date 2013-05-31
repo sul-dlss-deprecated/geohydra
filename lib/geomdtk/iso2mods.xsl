@@ -143,7 +143,7 @@
                 <!-- GML
                      Using SW and NE corners in (x, y) coordinates
                   -->
-                <gml:boundingBox xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4326">
+                <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4326">
                  <gml:lowerCorner>
                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
                    <xsl:text> </xsl:text>
@@ -154,7 +154,7 @@
                    <xsl:text> </xsl:text>
                    <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
                  </gml:upperCorner>
-               </gml:boundingBox>
+               </gml:Envelope>
                <!-- GeoRSS:
                     Rectangular envelope property element containing two pairs of coordinates 
                     (lower left envelope corner, upper right envelope corner) representing 
