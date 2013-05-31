@@ -4,25 +4,31 @@ require 'rest_client'
 require 'awesome_print'
 
 module GeoMDTK
+  # Provides client interface to GeoNetwork's REST API
+  # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services XML Services documentation
   class GeoNetwork  
-    # as defined in http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#status
+    # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#status Valid status descriptions
     GEONETWORK_STATUS_CODES = %w{unknown draft approved retired submitted rejected}
     
-    # As defined in http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#xml-info
+    # @see  http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#xml-info Valid info tags
     GEONETWORK_INFO_CODES = %w{site users groups sources schemas categories operations regions status}
     
+    # @param [Hash] options provides `:service_root` URL
     def initialize options = {}
       @service_root = options[:service_root] || GeoMDTK::CONFIG.geonetwork.service_root
     end
     
+    # @see  http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#site-information-xml-info Site Information: `xml.info`
     def site_info
       service("xml.info", { :type => 'site' }).xpath('/info/site')
     end
 
+    # Fetches metrics
     def metrics
       service("../../monitor/metrics", { :pretty => 'true' })
     end
 
+    # @yield the UUID (fileIdentifier) for all metadata in the GeoNetwork database
     def each
       xml = service("xml.search", { :remote => 'off', :hitsPerPage => -1 })
       xml.xpath('//uuid/text()').each do |uuid|
@@ -30,7 +36,14 @@ module GeoMDTK
       end
     end
     
-    # @param uuid [String] the UUID (fileIdentifier) in the GeoNetwork database
+    # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/metadata_xml_search_retrieve.html Metadata retrieval: `xml.metadata.get`
+    # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/metadata_xml_status.html Metadata status: `xml.metadata.status.get`
+    #
+    # @param  [String] uuid the UUID (fileIdentifier) in the GeoNetwork database
+    # @return [Struct] with the following fields:
+    #    * `:content` as the XML metadata
+    #    * `:status` as the status value, 
+    #    * `:druid` as the druid identifier
     def fetch(uuid)
       status = nil
       xml = service("xml.metadata.status.get", { :uuid => uuid })
@@ -51,6 +64,11 @@ module GeoMDTK
       Struct.new(:content, :status, :druid).new(doc, status, druid)
     end
     
+    # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_mef.html#mef-services  MEF Service
+    # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/csw_services.html CSW service
+    # @param [String] uuid
+    # @param [String] dir directory into which method will save export file(s)
+    # @param [Symbol] format -- Either `:mef` or `:csw`
     def export(uuid, dir = ".", format = :mef)
       case format
       when :mef then
@@ -62,7 +80,9 @@ module GeoMDTK
       end
     end
     
-    # @param types [Array] any type from `GEONETWORK_INFO_CODES`
+    # @see  http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/system_configuration.html#system-configuration 
+    #   System Configuration
+    # @param types [Array] see {::GEONETWORK_INFO_CODES}
     def info(types = GEONETWORK_INFO_CODES)
       r = {}
       types.each do |t|
