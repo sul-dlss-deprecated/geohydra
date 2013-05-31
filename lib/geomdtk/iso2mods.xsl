@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- iso2mods.xsl - Transformation from ISO 19139 XML into MODS v3 -->
-<!-- kd 04/30/2013 
-     drh 05/02/2013 
-     drh 05/29/2013 
-  -->
-<xsl:stylesheet xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.loc.gov/mods/v3" version="1.0" exclude-result-prefixes="gmd gco gmi">
+<!-- 
+     iso19139_to_mods.xsl - Transformation from ISO 19139 XML into MODS v3 
+     
+     Copyright 2013, Stanford University Libraries.
+     
+     Created by Kim Durante and Darren Hardy.
+     -->
+<xsl:stylesheet 
+  xmlns="http://www.loc.gov/mods/v3" 
+  xmlns:gco="http://www.isotc211.org/2005/gco"
+  xmlns:gmi="http://www.isotc211.org/2005/gmi" 
+  xmlns:gmd="http://www.isotc211.org/2005/gmd" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  version="1.0" 
+  exclude-result-prefixes="gmd gco gmi">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
+  <!-- The coordinates value for MODS v3 is quite vague, 
+       so we have a variety of formats: 
+       WMS, GML, GeoRSS, MARC034, MARC255 (default)
+       -->
+  <xsl:variable name="geoformat" select="'GeoRSS'"/>
   <xsl:template match="/">
-    <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+    <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns="http://www.loc.gov/mods/v3" 
+          xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
       <xsl:for-each select="/gmi:MI_Metadata|/gmd:MD_Metadata">
         <xsl:for-each select="gmd:fileIdentifier/gco:CharacterString/text()">
           <identifier type="local" displayLabel="file_identifier_id">
@@ -116,95 +132,130 @@
               <xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
             </projection>
             <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-              <!-- The coordinates value for MODS v3 is quite vague, 
-                   so we use the machine readable GML syntax -->
-              <coordinates>                
-                <!-- WMS
-                     Uses min/max as attributes
-                  -->
-                <wms:BoundingBox xmlns:wms="http://www.opengis.net/wms">
-                  <xsl:attribute name="CRS">EPSG:4326</xsl:attribute>
-                  <xsl:attribute name="minx">
-                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
-                  </xsl:attribute>
-                  <xsl:attribute name="miny">
-                    <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
-                  </xsl:attribute>
-                  <xsl:attribute name="maxx">
-                    <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
-                  </xsl:attribute>
-                  <xsl:attribute name="maxy">
-                    <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
-                  </xsl:attribute>
-                </wms:BoundingBox>
-                <!-- GML
-                     Using SW and NE corners in (x, y) coordinates
-                  -->
-                <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4326">
-                 <gml:lowerCorner>
+              <coordinates>       
+                <xsl:choose>
+                  <xsl:when test="$geoformat = 'WMS'">
+                    <!-- WMS
+                         Uses min/max as attributes
+                         
+                         Example:
+                         
+                         <wms:BoundingBox xmlns:wms="http://www.opengis.net/wms" 
+                                          CRS="EPSG:4326" 
+                                          minx="-97.119945" miny="25.467075" 
+                                          maxx="-82.307619" maxy="30.665492"/>
+                      -->
+                    <wms:BoundingBox xmlns:wms="http://www.opengis.net/wms">
+                      <xsl:attribute name="CRS">EPSG:4326</xsl:attribute>
+                      <xsl:attribute name="minx">
+                        <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                      </xsl:attribute>
+                      <xsl:attribute name="miny">
+                        <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                      </xsl:attribute>
+                      <xsl:attribute name="maxx">
+                        <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                      </xsl:attribute>
+                      <xsl:attribute name="maxy">
+                        <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                      </xsl:attribute>
+                    </wms:BoundingBox>
+                  </xsl:when>
+                  <xsl:when test="$geoformat = 'GML'">
+                  <!-- GML
+                       Using SW and NE corners in (x, y) coordinates
+                       
+                       Example:
+                       
+                       <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4326">
+                         <gml:lowerCorner>-97.119945 25.467075</gml:lowerCorner>
+                         <gml:upperCorner>-82.307619 30.665492</gml:upperCorner>
+                       </gml:Envelope>
+                    -->
+                  <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4326">
+                   <gml:lowerCorner>
+                     <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                     <xsl:text> </xsl:text>
+                     <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                   </gml:lowerCorner>
+                   <gml:upperCorner>
+                     <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                     <xsl:text> </xsl:text>
+                     <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                   </gml:upperCorner>
+                 </gml:Envelope>
+               </xsl:when>
+               <xsl:when test="$geoformat = 'GeoRSS'">
+                 <!-- GeoRSS:
+                      Rectangular envelope property element containing two pairs of coordinates 
+                      (lower left envelope corner, upper right envelope corner) representing 
+                      latitude then longitude in the WGS84 coordinate reference system.
+                      
+                      Example:
+                      
+                      <georss:box>42.943 -71.032 43.039 -69.856</georss:box>
+                      -->
+                 <georss:box xmlns:georss="http://www.georss.org/georss">
+                   <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                   <xsl:text> </xsl:text>
                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
                    <xsl:text> </xsl:text>
-                   <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
-                 </gml:lowerCorner>
-                 <gml:upperCorner>
-                   <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
-                   <xsl:text> </xsl:text>
                    <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
-                 </gml:upperCorner>
-               </gml:Envelope>
-               <!-- GeoRSS:
-                    Rectangular envelope property element containing two pairs of coordinates 
-                    (lower left envelope corner, upper right envelope corner) representing 
-                    latitude then longitude in the WGS84 coordinate reference system 
-                    <georss:box>42.943 -71.032 43.039 -69.856</georss:box>
+                   <xsl:text> </xsl:text>
+                   <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                 </georss:box>
+                </xsl:when>
+                <xsl:when test="$geoformat = 'MARC034'">
+                  <!-- MARC 034
+                       Subfields $d, $e, $f, and $g always appear together. The coordinates 
+                       may be recorded in the form hdddmmss (hemisphere-degrees-minutes-seconds), 
+                       however, other forms are also allowed, such as decimal degrees. 
+                       The subelements are each right justified and unused positions contain zeros.
+
+                       $d - Coordinates - westernmost longitude (NR)
+                       $e - Coordinates - easternmost longitude (NR)
+                       $f - Coordinates - northernmost latitude (NR)
+                       $g - Coordinates - southernmost latitude (NR)
+                       
+                       Example:
+                       
+                       $d-097.119945$e-082.307619$f+30.665492$g+25.467075
+
+                       See http://www.w3.org/TR/1999/REC-xslt-19991116#format-number
                     -->
-               <georss:box xmlns:georss="http://www.georss.org/georss">
-                 <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
-                 <xsl:text> </xsl:text>
-                 <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
-                 <xsl:text> </xsl:text>
-                 <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
-                 <xsl:text> </xsl:text>
-                 <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
-               </georss:box>
-               <!-- MARC 255 $c:
-                    Coordinates are recorded in the order of 
-                    westernmost longitude, easternmost longitude, 
-                    northernmost latitude, and southernmost latitude,
-                    and separated with double-dash and / characters. 
-                    from http://www.loc.gov/marc/bibliographic/bd255.html $c
-                    -->
-                <xsl:text>(</xsl:text>
-                <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
-                <xsl:text> -- </xsl:text>
-                <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
-                <xsl:text>/</xsl:text>
-                <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
-                <xsl:text> -- </xsl:text>
-                <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
-                <xsl:text>)</xsl:text>
-                <!-- MARC 034
-                     Subfields $d, $e, $f, and $g always appear together. The coordinates 
-                     may be recorded in the form hdddmmss (hemisphere-degrees-minutes-seconds), 
-                     however, other forms are also allowed, such as decimal degrees. 
-                     The subelements are each right justified and unused positions contain zeros.
-                     
-                     $d - Coordinates - westernmost longitude (NR)
-                     $e - Coordinates - easternmost longitude (NR)
-                     $f - Coordinates - northernmost latitude (NR)
-                     $g - Coordinates - southernmost latitude (NR)
-                     
-                     See http://www.w3.org/TR/1999/REC-xslt-19991116#format-number
-                  -->
-                  <xsl:text>($d</xsl:text>
-                  <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, '+000.000000;-000.000000')"/>
-                  <xsl:text>$e</xsl:text>
-                  <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, '+000.000000;-000.000000')"/>
-                  <xsl:text>$f</xsl:text>
-                  <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, '+00.000000;-00.000000')"/>
-                  <xsl:text>$g</xsl:text>
-                  <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, '+00.000000;-00.000000')"/>
-                  <xsl:text>)</xsl:text>
+                    <xsl:text>($d</xsl:text>
+                    <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, '+000.000000;-000.000000')"/>
+                    <xsl:text>$e</xsl:text>
+                    <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, '+000.000000;-000.000000')"/>
+                    <xsl:text>$f</xsl:text>
+                    <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, '+00.000000;-00.000000')"/>
+                    <xsl:text>$g</xsl:text>
+                    <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, '+00.000000;-00.000000')"/>
+                    <xsl:text>)</xsl:text>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <!-- MARC 255 $c:
+                         Coordinates are recorded in the order of 
+                         westernmost longitude, easternmost longitude, 
+                         northernmost latitude, and southernmost latitude,
+                         and separated with double-hyphen and / characters.
+                         
+                         Example:
+                         
+                         -97.119945 &hyphen;&hyphen; -82.307619/30.665492 &hyphen;&hyphen; 25.467075
+                         
+                         See http://www.loc.gov/marc/bibliographic/bd255.html $c
+                         -->
+                    <xsl:text>(</xsl:text>
+                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                    <xsl:text> &hyphen;&hyphen; </xsl:text>
+                    <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                    <xsl:text>/</xsl:text>
+                    <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                    <xsl:text> &hyphen;&hyphen; </xsl:text>
+                    <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                    <xsl:text>)</xsl:text>
+                  </xsl:otherwise>
               </coordinates>
             </xsl:for-each>
           </cartographics>
