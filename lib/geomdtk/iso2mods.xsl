@@ -256,6 +256,7 @@
                     <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
                     <xsl:text>)</xsl:text>
                   </xsl:otherwise>
+                </xsl:choose>
               </coordinates>
             </xsl:for-each>
           </cartographics>
