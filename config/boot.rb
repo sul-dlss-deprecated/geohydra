@@ -1,26 +1,16 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'logger'
 
-environment  = ENV['ROBOT_ENVIRONMENT'] ||= 'development'
-GEOMDTK_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
+ENV['GEOMDTK_ENVIRONMENT'] ||= 'development'
+GEOMDTK_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
-require 'dor-services'
-
-# require 'lyber_core'
-ENV_FILE = GEOMDTK_ROOT + "/config/environments/#{environment}.rb"
+require 'confstruct'
+ENV_FILE = GEOMDTK_ROOT + "/config/environments/#{ENV['GEOMDTK_ENVIRONMENT']}.rb"
 require ENV_FILE
 
-# Project dir in load path.
-$LOAD_PATH.unshift(GEOMDTK_ROOT + '/lib')
-
-require GEOMDTK_ROOT + "/../rgeoserver/lib/rgeoserver"
-require 'rgeoserver'
-
 # Development dependencies.
-if ['local', 'development'].include? environment
-  # require 'awesome_print'
-  require 'pp'
+if ['local', 'development'].include? ENV['GEOMDTK_ENVIRONMENT']
+  require 'awesome_print'
 end
 
 # Load the project and its dependencies.

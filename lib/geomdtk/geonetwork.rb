@@ -1,8 +1,6 @@
 require 'rubygems'
 require 'nokogiri'
-require 'dor-services'
 require 'rest_client'
-# require "savon"
 require 'awesome_print'
 
 module GeoMDTK
@@ -14,7 +12,7 @@ module GeoMDTK
     GEONETWORK_INFO_CODES = %w{site users groups sources schemas categories operations regions status}
     
     def initialize options = {}
-      @service_root = options[:service_root] || $config.geonetwork.service_root
+      @service_root = options[:service_root] || GeoMDTK::CONFIG.geonetwork.service_root
     end
     
     def site_info
@@ -110,12 +108,12 @@ module GeoMDTK
   
     def export_csw(uuid, dir = ".")
       res = service("csw", { 
-    	  :request => 'GetRecordById',
-    		:service => 'CSW',
-    		:version => '2.0.2',
-    		:elementSetName => 'full',
-    		:id => uuid 
-  		})
+        :request => 'GetRecordById',
+        :service => 'CSW',
+        :version => '2.0.2',
+        :elementSetName => 'full',
+        :id => uuid 
+      })
       File.open("#{dir}/#{uuid}.csw", 'wb') {|f| f.write(res.body) }
     end
     

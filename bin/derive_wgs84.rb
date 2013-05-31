@@ -3,9 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'druid-tools'
 require 'fileutils'
 
-TMPDIR = $config.geomdtk.tmpdir || 'tmp'
-WORKDIR = $config.geomdtk.workspace || 'workspace'
-STAGEDIR = $config.geomdtk.stage || 'stage'
+TMPDIR = GeoMDTK::CONFIG.geomdtk.tmpdir || 'tmp'
+WORKDIR = GeoMDTK::CONFIG.geomdtk.workspace || 'workspace'
+STAGEDIR = GeoMDTK::CONFIG.geomdtk.stage || 'stage'
 
 # ogr2ogr is using a different WKT than GeoServer -- this one is from GeoServer 2.3.1.
 # As implemented by EPSG database on HSQL:

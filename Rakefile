@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rspec/core/rake_task'
 require 'bundler'
+require 'yard'
 
 begin
   Bundler.setup(:default, :development)
@@ -17,6 +18,11 @@ end
 task :clean do
   puts 'Cleaning old coverage.data'
   FileUtils.rm('coverage.data') if(File.exists? 'coverage.data')
+end
+
+YARD::Rake::YardocTask.new do |t|
+  t.files   = ['lib/**/*.rb']   # optional
+  t.options = ['--any', '--extra', '--opts'] # optional
 end
 
 task :default do

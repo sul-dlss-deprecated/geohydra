@@ -18,9 +18,9 @@
   <xsl:strip-space elements="*"/>
   <!-- The coordinates value for MODS v3 is quite vague, 
        so we have a variety of formats: 
-       GMD, WMS, GML, GeoRSS, MARC034, MARC255 (default)
+       GMD, WKT, WMS, GML, GeoRSS, MARC034, MARC255 (default)
        -->
-  <xsl:variable name="geoformat" select="'GeoRSS'"/>
+  <xsl:variable name="geoformat" select="'WKT'"/>
   <xsl:template match="/">
     <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
           xmlns="http://www.loc.gov/mods/v3" 
@@ -157,6 +157,33 @@
                         </gco:Decimal> 
                       </gmd:northBoundLatitude> 
                     </gmd:EX_GeographicBoundingBox> 
+                  </xsl:when>
+                    <!-- WKT is x y, x y
+                    
+                         POLYGON((sw, nw, ne, se, sw))
+                         -->
+                  <xsl:when test="$geoformat = 'WKT'">
+                    <xsl:text>POLYGON((</xsl:text>
+                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>
+                    <xsl:text>))</xsl:text>
                   </xsl:when>
                   <xsl:when test="$geoformat = 'WMS'">
                     <!-- WMS

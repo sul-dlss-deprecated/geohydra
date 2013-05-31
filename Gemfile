@@ -3,6 +3,6 @@ source 'http://sul-gems.stanford.edu'
 
 gemspec
 
-gem 'dor-services', :path => '../dor-services'
+gem 'mods', :path => '../mods'
 gem 'druid-tools', :path => '../druid-tools'
 gem 'rgeoserver', :path => '../rgeoserver'
