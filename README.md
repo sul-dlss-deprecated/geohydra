@@ -7,12 +7,13 @@ Setup
 -----
 
     % bundle install
+    % rake spec
     % rake yard
 
 Utilities
 ---------
 
-To assemble the workspace, populate the geomdtk.stage directory with _druid_.zip files which contain the
+To assemble the workspace, populate the geomdtk.stage directory with `druid.zip` files which contain the
 Shapefiles files.
 
     % bundle exec bin/assemble.rb

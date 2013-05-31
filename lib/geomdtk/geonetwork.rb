@@ -82,7 +82,7 @@ module GeoMDTK
     
     # @see  http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/system_configuration.html#system-configuration 
     #   System Configuration
-    # @param types [Array] see {::GEONETWORK_INFO_CODES}
+    # @param types [Array] see {GeoMDTK::GeoNetwork::GEONETWORK_INFO_CODES}
     def info(types = GEONETWORK_INFO_CODES)
       r = {}
       types.each do |t|

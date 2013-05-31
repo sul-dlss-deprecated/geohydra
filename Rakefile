@@ -18,10 +18,7 @@ end
 
 desc "Build documentation"
 task :yard do
-  YARD::Rake::YardocTask.new do |t|
-    t.files   = ['lib/**/*.rb']
-    t.options = ['--readme', 'README.rdoc']
-  end
+  YARD::Rake::YardocTask.new 
 end
 
 desc "Runs 'rake spec yard'"
