@@ -1,15 +1,11 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 
-require 'bundler/setup'
-require 'rspec'
-require 'rspec/autorun'
-require 'rspec/mocks'
-
 require 'rubygems'
-require 'geomdtk'
+require 'rspec'
 require 'awesome_print'
+
+require 'geomdtk'
 
 describe GeoMDTK::GeoNetwork do
   

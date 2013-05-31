@@ -11,25 +11,18 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
+desc "Run tests"
 task :spec do
   RSpec::Core::RakeTask.new
 end
 
-task :clean do
-  puts 'Cleaning old coverage.data'
-  FileUtils.rm('coverage.data') if(File.exists? 'coverage.data')
+desc "Build documentation"
+task :yard do
+  YARD::Rake::YardocTask.new do |t|
+    t.files   = ['lib/**/*.rb']
+    t.options = ['--readme', 'README.rdoc']
+  end
 end
 
-YARD::Rake::YardocTask.new do |t|
-  t.files   = ['lib/**/*.rb']   # optional
-  t.options = ['--any', '--extra', '--opts'] # optional
-end
-
-task :default do
-  $stderr.puts "Targets are spec and clean"
-end
-
-# # To release the gem to the DLSS gemserver, run 'rake dlss_release'
-# require 'dlss/rake/dlss_release'
-# Dlss::Release.new
-
+desc "Runs 'rake spec yard'"
+task :default => [:spec, :yard]
