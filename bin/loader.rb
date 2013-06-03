@@ -7,6 +7,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'mods'
 require 'yaml'
+require 'druid-tools'
 
 ENV['RGEOSERVER_CONFIG'] ||= ENV_FILE + '_rgeoserver.yml'
 require 'rgeoserver'
