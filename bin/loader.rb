@@ -156,7 +156,7 @@ def from_druid druid, flags
       'keywords' => [mods.term_value([:subject, 'topic']),
                      mods.term_value([:subject, 'geographic'])].flatten,
       'metadata_links' => [{
-        'metadataType' => 'TC221',
+        'metadataType' => 'TC211',
         'content' => "http://purl.stanford.edu/#{druid.id}.iso19139.xml"
       }]
     }
