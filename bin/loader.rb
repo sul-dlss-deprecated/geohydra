@@ -98,17 +98,16 @@ def main catalog, ws, layers, flags = {}
       ds.description = v['description']
       ds.save
       
-      # puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
-      # # ft = catalog.get_feature_type ws, ds, layername 
-      # ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
-      # ap ft
-      # # raise Exception, "FeatureType already exists #{ft}" unless ft.new?
-      # ft.enabled = 'true'
-      # ft.title = v['title'] 
-      # ft.description = v['description']
-      # ft.keywords = v['keywords']
-      # ft.metadata_links = v['metadata_links']
-      # ft.save
+      puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
+      ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
+      ap ft
+      # raise Exception, "FeatureType already exists #{ft}" unless ft.new?
+      ft.enabled = 'true'
+      ft.title = v['title'] 
+      ft.description = v['description']
+      ft.keywords = v['keywords']
+      ft.metadata_links = v['metadata_links']
+      ft.save
     else
       raise NotImplementedError, "Unsupported format #{format}"    
     end
@@ -146,7 +145,7 @@ def from_druid druid, flags
     'vector' => {
       'remote' => false,
       'format' => 'Shapefile',
-      'layername' => druid.id,
+      'layername' => File.basename(zipfn, '.zip'),
       'filename' => zipfn,
       'title' => mods.full_titles.first,
       'description' => mods.term_value(:abstract),
