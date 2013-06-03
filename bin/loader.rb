@@ -122,7 +122,7 @@ end
 
 def from_druid druid, flags
   prj = flags[:projection] || "EPSG:4326"
-  prj = prj.sub(':', '_')
+  prj = prj.split(':').join('_')
   druid = DruidTools::Druid.new(druid, flags[:datadir])
   ap druid
   mods_fn = druid.path('metadata/descMetadata.xml')
