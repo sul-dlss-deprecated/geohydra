@@ -134,10 +134,10 @@ def from_druid druid, flags
   Dir.glob(druid.content_dir + "/*_#{prj}.zip") do |fn|
     puts "Found EPSG 4326 zip: #{fn}"
     zipfn = fn
-    layername = File.basename(zipfn, '_#{prj}.zip')
+    layername = File.basename(zipfn, "_#{prj}.zip")
+    puts "Derived layername #{zipfn} -> #{layername}"
   end
   if not zipfn
-    puts "NOT found EPSG 4326 zip"
     Dir.glob(druid.content_dir + "/*.zip") do |fn|
       zipfn = fn
       layername = File.basename(zipfn, '.zip')
