@@ -39,18 +39,8 @@ SEED_OPTIONS = {
   :threadCount => (GeoMDTK::CONFIG.geowebcache.threadCount || '1').to_i
 }
 
-def main layers, flags = {}
+def main catalog, ws, layers, flags = {}
   raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
-  
-  # Connect to the GeoServer catalog
-  catalog = RGeoServer::catalog
-
-  # Obtain a handle to the workspace and clean it up. 
-  ws = RGeoServer::Workspace.new catalog, :name => WORKSPACE_NAME
-  puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:verbose]
-  ws.delete :recurse => true if flags[:delete] and not ws.new?
-  ws.enabled = 'true'
-  ws.save
 
   # Iterate over all records in YAML file and create stores in the catalog
   layers.each do |k, v|
@@ -108,18 +98,17 @@ def main layers, flags = {}
       ds.description = v['description']
       ds.save
       
-
-      puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
-      # ft = catalog.get_feature_type ws, ds, layername 
-      ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
-      ap ft
-      # raise Exception, "FeatureType already exists #{ft}" unless ft.new?
-      ft.enabled = 'true'
-      ft.title = v['title'] 
-      ft.description = v['description']
-      ft.keywords = v['keywords']
-      ft.metadata_links = v['metadata_links']
-      ft.save
+      # puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
+      # # ft = catalog.get_feature_type ws, ds, layername 
+      # ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
+      # ap ft
+      # # raise Exception, "FeatureType already exists #{ft}" unless ft.new?
+      # ft.enabled = 'true'
+      # ft.title = v['title'] 
+      # ft.description = v['description']
+      # ft.keywords = v['keywords']
+      # ft.metadata_links = v['metadata_links']
+      # ft.save
     else
       raise NotImplementedError, "Unsupported format #{format}"    
     end
@@ -202,23 +191,34 @@ begin
       flags[:format] = v.upcase
     end
   end.parse!
+  
+  # init
+  # Connect to the GeoServer catalog
+  catalog = RGeoServer::catalog
+
+  # Obtain a handle to the workspace and clean it up. 
+  ws = RGeoServer::Workspace.new catalog, :name => WORKSPACE_NAME
+  puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:verbose]
+  ws.delete :recurse => true if flags[:delete] and not ws.new?
+  ws.enabled = 'true'
+  ws.save
 
   if ARGV.size > 0
     ARGV.each do |v|
       case flags[:format]
       when 'YAML' then
-        main(YAML::load_file(v), flags)
+        main(catalog, ws, YAML::load_file(v), flags)
       when 'MODS' then
-        main(from_druid(v, flags), flags)
+        main(catalog, ws, from_druid(v, flags), flags)
       end
     end
   else
     case flags[:format]
     when 'YAML' then
-      main(YAML::load($stdin), flags)
+      main(catalog, ws, YAML::load($stdin), flags)
     when 'MODS' then
       $stdin.readlines.each do |line|
-        main(from_druid(line.strip, flags), flags)
+        main(catalog, ws, from_druid(line.strip, flags), flags)
       end
     end
   end
