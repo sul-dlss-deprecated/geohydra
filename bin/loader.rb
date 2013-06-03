@@ -131,12 +131,12 @@ def from_druid druid, flags
   mods.from_url(mods_fn)
   zipfn = nil
   layername = nil
-  Dir.glob(druid.content_dir + "/**/*_#{prj}.zip") do |fn|
+  Dir.glob(druid.content_dir + "/*_#{prj}.zip") do |fn|
     zipfn = fn
     layername = File.basename(zipfn, '_#{prj}.zip')
   end
   if not zipfn
-    Dir.glob(druid.content_dir + "/**/*.zip") do |fn|
+    Dir.glob(druid.content_dir + "/*.zip") do |fn|
       zipfn = fn
       layername = File.basename(zipfn, '.zip')
     end
