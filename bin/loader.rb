@@ -77,7 +77,7 @@ def main catalog, ws, layers, flags = {}
     elsif format == 'Shapefile'
       # Create data stores for shapefiles
       puts "DataStore: #{ws.name}/#{layername} (#{format} #{v['remote']})" if flags[:verbose]
-      ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => layername
+      ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => v['druid'].id
       ds.enabled = 'true'
       ds.data_type = :shapefile
       if v['remote']
@@ -122,6 +122,7 @@ end
 
 def from_druid druid, flags
   prj = flags[:projection] || "EPSG:4326"
+  prj = prj.sub(':', '_')
   druid = DruidTools::Druid.new(druid, flags[:datadir])
   ap druid
   mods_fn = druid.path('metadata/descMetadata.xml')
@@ -129,21 +130,25 @@ def from_druid druid, flags
   mods = Mods::Record.new
   mods.from_url(mods_fn)
   zipfn = nil
-  Dir.glob(druid.content_dir + "**/*#{prj.gsub(':', '/')}.zip") do |fn|
+  layername = nil
+  Dir.glob(druid.content_dir + "**/*_#{prj}.zip") do |fn|
     zipfn = fn
+    layername = File.basename(zipfn, '_#{prj}.zip')
   end
   if not zipfn
     Dir.glob(druid.content_dir + "**/*.zip") do |fn|
       zipfn = fn
+      layername = File.basename(zipfn, '.zip')
     end
   end
-  raise ArgumentError, zipfn unless File.exist?(zipfn)
-  ap zipfn
+  raise ArgumentError, zipfn unless File.exist?(zipfn) and layername
+  ap({:zipfn => zipfn, :layername => layername})
   r = { 
     'vector' => {
+      'druid' => druid,
       'remote' => false,
       'format' => 'Shapefile',
-      'layername' => File.basename(zipfn, '_EPSG_4326.zip'),
+      'layername' => layername,
       'filename' => zipfn,
       'title' => mods.full_titles.first,
       'description' => mods.term_value(:abstract),
