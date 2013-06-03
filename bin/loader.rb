@@ -94,14 +94,12 @@ def main catalog, ws, layers, flags = {}
         "filetype" => 'shapefile',
         "memory mapped buffer" => 'false'
       })
-      ap ds
       ds.description = v['description']
       ds.save
       
       puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
       ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
-      ap ft
-      # raise Exception, "FeatureType already exists #{ft}" unless ft.new?
+      raise Exception, "FeatureType doesn't already exists #{ft}" if ft.new?
       ft.enabled = 'true'
       ft.title = v['title'] 
       ft.description = v['description']
