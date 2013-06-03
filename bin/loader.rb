@@ -143,7 +143,7 @@ def from_druid druid, flags
     'vector' => {
       'remote' => false,
       'format' => 'Shapefile',
-      'layername' => File.basename(zipfn, '.zip'),
+      'layername' => File.basename(zipfn, '_EPSG_4326.zip'),
       'filename' => zipfn,
       'title' => mods.full_titles.first,
       'description' => mods.term_value(:abstract),
