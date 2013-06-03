@@ -76,15 +76,15 @@ def main catalog, ws, layers, flags = {}
 
     elsif format == 'Shapefile'
       # Create data stores for shapefiles
-      puts "DataStore: #{ws.name}/#{layername} (#{format} #{v['remote']})" if flags[:verbose]
       ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => v['druid'].id
-      ds.enabled = 'true'
-      ds.data_type = :shapefile
+      puts "DataStore: #{ws.name}/#{ds.name} (#{v['remote']})" if flags[:verbose]
       if v['remote']
         ds.upload_external v['filename']
       else
         ds.upload_file v['filename']
       end
+      # modify DataStore with rest of parameters
+      ds.enabled = 'true'
       ds.connection_parameters = ds.connection_parameters.merge({
         "namespace" => NAMESPACE,
         "charset" => 'UTF-8',
