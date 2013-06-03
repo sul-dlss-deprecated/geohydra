@@ -1,5 +1,9 @@
 module GeoMDTK
   CONFIG = Confstruct::Configuration.new do
+    geomdtk do
+      workspace "/var/geomdtk/current/workspace"
+      stage "/var/geomdtk/current/stage"
+    end
 
     geonetwork do
       service_root 'http://geomdtk.stanford.edu/geonetwork'
@@ -23,12 +27,6 @@ module GeoMDTK
       zoom '1:10'
       format 'image/png'
       threadCount 1
-    end
-
-    geomdtk do
-      workspace "/var/geomdtk/current/workspace"
-      stage "/var/geomdtk/current/stage"
-    end
-    
+    end  
   end.freeze
 end

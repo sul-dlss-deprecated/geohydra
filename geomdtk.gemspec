@@ -1,5 +1,4 @@
 require File.join(File.dirname(__FILE__), "lib/geomdtk/version")
-
 Gem::Specification.new do |s|
   s.name = "geomdtk"
   s.version = GeoMDTK::VERSION

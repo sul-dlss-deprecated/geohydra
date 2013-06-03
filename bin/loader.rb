@@ -4,14 +4,12 @@
 # RGeoServer Batch load layers (batch_demo.rb)
 # Usage: #{File.basename(__FILE__)} [input.yml]
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
-
-require 'yaml'
-require 'rgeoserver'
 require 'optparse'
 require 'mods'
-require 'druid-tools'
+require 'yaml'
 
-ENV['RGEOSERVER_CONFIG'] ||= 'config/environments/#{environment}_rgeoserver.yml'
+ENV['RGEOSERVER_CONFIG'] ||= ENV_FILE + '_rgeoserver.yml'
+require 'rgeoserver'
 
 #=  Input data. *See DATA section at end of file*
 # The input file is in YAML syntax with each record is a Hash with keys:
@@ -28,7 +26,6 @@ ENV['RGEOSERVER_CONFIG'] ||= 'config/environments/#{environment}_rgeoserver.yml'
 WORKSPACE_NAME = GeoMDTK::CONFIG.geoserver.workspace || 'druid'
 NAMESPACE = GeoMDTK::CONFIG.geoserver.namespace || 'http://purl.stanford.edu'
 
-
 # GeoWebCache configuration
 SEED = GeoMDTK::CONFIG.geowebcache
 SEED_OPTIONS = {
@@ -42,14 +39,13 @@ SEED_OPTIONS = {
 }
 
 def main layers, flags = {}
-  ap layers
-  raise ArgumentError, "Layer is malformed" unless layers and layers.is_a? Hash
+  raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
   
   # Connect to the GeoServer catalog
-  cat = RGeoServer::Catalog.new
+  catalog = RGeoServer::Catalog.new
 
   # Obtain a handle to the workspace and clean it up. 
-  ws = RGeoServer::Workspace.new cat, :name => WORKSPACE_NAME
+  ws = RGeoServer::Workspace.new catalog, :name => WORKSPACE_NAME
   puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:verbose]
   ws.delete :recurse => true if flags[:delete] and not ws.new?
   ws.enabled = 'true'
@@ -67,7 +63,7 @@ def main layers, flags = {}
     if format == 'GeoTIFF'
       # Create of a coverage store
       puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
-      cs = RGeoServer::CoverageStore.new cat, :workspace => ws, :name => layername
+      cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => layername
       if v['filename'] =~ %r{^/}
         cs.url = "file://" + v['filename']
       else
@@ -80,7 +76,7 @@ def main layers, flags = {}
 
       # Now create the actual coverage
       puts "Coverage: #{ws.name}/#{cs.name}/#{layername}" if flags[:verbose]
-      cv = RGeoServer::Coverage.new cat, :workspace => ws, :coverage_store => cs, :name => layername 
+      cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => layername 
       cv.enabled = 'true'
       cv.title = v['title'] 
       cv.keywords = v['keywords']
@@ -89,34 +85,34 @@ def main layers, flags = {}
 
     elsif format == 'Shapefile'
       # Create data stores for shapefiles
-      puts "DataStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
-      ds = RGeoServer::DataStore.new cat, :workspace => ws, :name => layername
+      puts "DataStore: #{ws.name}/#{layername} (#{format} #{v['remote']})" if flags[:verbose]
+      ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => layername
       ds.enabled = 'true'
-      ds.data_type = format
+      ds.data_type = :shapefile
       if v['remote']
-        ds.description = v['description']
-        ds.connection_parameters = {
-          "namespace" => NAMESPACE,
-          "charset" => 'UTF-8',
-          "create spatial index" => 'true',
-          "cache and reuse memory maps" => 'true',
-          "enable spatial index" => 'true',
-          "filetype" => 'shapefile',
-          "memory mapped buffer" => 'false'
-        }
-        if v['filename'] =~ %r{^/}
-          ds.connection_parameters['url'] = 'file:' + v['filename']
-        else
-          ds.connection_parameters['url'] = 'file:' + File.join(flags[:datadir], v['filename'])
-        end
-        ap ds.connection_parameters
-        ds.save
+        ds.upload_external v['filename']
       else
-        ds.upload_file v['filename'], :title => v['title'], :description => v['description']
+        ds.upload_file v['filename']
       end
+      ds.connection_parameters = ds.connection_parameters.merge({
+        "namespace" => NAMESPACE,
+        "charset" => 'UTF-8',
+        "create spatial index" => 'true',
+        "cache and reuse memory maps" => 'true',
+        "enable spatial index" => 'true',
+        "filetype" => 'shapefile',
+        "memory mapped buffer" => 'false'
+      })
+      ap ds
+      ds.description = v['description']
+      ds.save
+      
 
       puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
-      ft = RGeoServer::FeatureType.new cat, :workspace => ws, :data_store => ds, :name => layername 
+      # ft = catalog.get_feature_type ws, ds, layername 
+      ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
+      ap ft
+      # raise Exception, "FeatureType already exists #{ft}" unless ft.new?
       ft.enabled = 'true'
       ft.title = v['title'] 
       ft.description = v['description']
@@ -129,7 +125,7 @@ def main layers, flags = {}
 
     # If the layer has been create, start the seeding process
     puts "Layer: #{layername}" if flags[:verbose]
-    lyr = RGeoServer::Layer.new cat, :name => layername
+    lyr = RGeoServer::Layer.new catalog, :name => layername
     if not lyr.new? and SEED
       puts "Layer: seeding with #{SEED_OPTIONS}" if flags[:verbose]
       lyr.seed :issue, SEED_OPTIONS
@@ -145,15 +141,23 @@ def from_druid druid, flags
   puts "Extracting load parameters from #{druid.id} #{mods_fn}"
   mods = Mods::Record.new
   mods.from_url(mods_fn)
-  # fn = Dir.glob(druid.content_dir + '/' + prj.gsub(':', '/') + '/*.shp').first
-  fn = Dir.glob(druid.content_dir + '/' + prj.gsub(':', '/') + '/*.zip').first
-  ap fn
+  zipfn = nil
+  Dir.glob(druid.content_dir + "**/*#{prj.gsub(':', '/')}.zip") do |fn|
+    zipfn = fn
+  end
+  if not zipfn
+    Dir.glob(druid.content_dir + "**/*.zip") do |fn|
+      zipfn = fn
+    end
+  end
+  raise ArgumentError, zipfn unless File.exist?(zipfn)
+  ap zipfn
   r = { 
     'vector' => {
       'remote' => false,
       'format' => 'Shapefile',
       'layername' => druid.id,
-      'filename' => fn,
+      'filename' => zipfn,
       'title' => mods.full_titles.first,
       'description' => mods.term_value(:abstract),
       'keywords' => [mods.term_value([:subject, 'topic']),
