@@ -97,9 +97,9 @@ def main catalog, ws, layers, flags = {}
       ds.description = v['description']
       ds.save
       
-      puts "FeatureType: #{ws.name}/#{ds.name}/#{layername}" if flags[:verbose]
       ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
       raise Exception, "FeatureType doesn't already exists #{ft}" if ft.new?
+      puts "FeatureType: #{ws.name}/#{ds.name}/#{ft.name}" if flags[:verbose]
       ft.enabled = 'true'
       ft.title = v['title'] 
       ft.description = v['description']
@@ -124,7 +124,6 @@ def from_druid druid, flags
   prj = flags[:projection] || "EPSG:4326"
   prj = prj.split(':').join('_')
   druid = DruidTools::Druid.new(druid, flags[:datadir])
-  ap druid
   mods_fn = druid.path('metadata/descMetadata.xml')
   puts "Extracting load parameters from #{druid.id} #{mods_fn}"
   mods = Mods::Record.new
@@ -162,7 +161,6 @@ def from_druid druid, flags
       }]
     }
   }
-  ap r
   r
 end
 
