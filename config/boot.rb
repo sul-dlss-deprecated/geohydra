@@ -5,7 +5,7 @@ ENV['GEOMDTK_ENVIRONMENT'] ||= 'development'
 GEOMDTK_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
 require 'confstruct'
-ENV_FILE = GEOMDTK_ROOT + "/config/environments/#{ENV['GEOMDTK_ENVIRONMENT']}.rb"
+ENV_FILE = GEOMDTK_ROOT + "/config/environments/#{ENV['GEOMDTK_ENVIRONMENT']}"
 require ENV_FILE
 
 # Development dependencies.

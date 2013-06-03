@@ -43,7 +43,7 @@ def main layers, flags = {}
   raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
   
   # Connect to the GeoServer catalog
-  catalog = RGeoServer::Catalog.new
+  catalog = RGeoServer::catalog
 
   # Obtain a handle to the workspace and clean it up. 
   ws = RGeoServer::Workspace.new catalog, :name => WORKSPACE_NAME
