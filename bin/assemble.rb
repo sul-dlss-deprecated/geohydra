@@ -49,11 +49,10 @@ def main flags
       puts "Copying #{fn} => #{xfn}"
       FileUtils.install fn, xfn
       File.delete fn
-
-      yfn = File.join(druid.metadata_dir, 'descMetadata.xml')
-      xslt = File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/iso19139_to_mods.xsl')
-      puts "Transforming[#{xslt}] #{xfn} => #{yfn}"
-      do_system(['xsltproc', '--output', yfn, xslt, xfn])
+      
+      File.open(File.join(druid.metadata_dir, 'descMetadata.xml'), "w") do |f|
+        f << GeoMDTK::Transform.to_mods(File.read(xfn))
+      end
       break
     end
     raise ArgumentError, "Cannot export MEF metadata: #{uuid}: Missing #{flags[:tmpdir]}/metadata.xml" unless found_metadata

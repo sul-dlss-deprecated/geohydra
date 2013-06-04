@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+  <identifier type="local" displayLabel="file_identifier_id">geonetwork:01F8FFDA-6569-4872-8A3F-206CAF51C825</identifier>
+  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/ks297fy1411</identifier>
+  <identifier type="local" displayLabel="druid">druid:ks297fy1411</identifier>
+  <location>
+    <url displayLabel="PURL">http://purl.stanford.edu/ks297fy1411</url>
+  </location>
+  <titleInfo>
+    <title type="main">Offshore Lease Blocks in the Gulf of Mexico, 2011</title>
+  </titleInfo>
+  <name type="corporate">
+    <namePart>United States. Minerals Management Service.</namePart>
+    <role>
+      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+    </role>
+  </name>
+  <typeOfResource>cartographic</typeOfResource>
+  <typeOfResource>software, multimedia</typeOfResource>
+  <genre>GIS Datasets</genre>
+  <originInfo>
+    <dateIssued encoding="w3cdtf">2011-01-01</dateIssued>
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b"/>
+  </language>
+  <physicalDescription>
+    <form>Shapefile</form>
+    <extent>3.832</extent>
+    <digitalOrigin>born digital</digitalOrigin>
+  </physicalDescription>
+  <subject>
+    <cartographics>
+      <projection>urn:ogc:def:crs:EPSG::4269</projection>
+      <coordinates>POLYGON((-97.238989 23.780775, -97.238989 30.289096, -81.170106 30.289096, -81.170106 23.780775, -97.238989 23.780775))</coordinates>
+    </cartographics>
+  </subject>
+  <abstract displayLabel="abstract" lang="eng">Contains information that defines the Federal lease blocks for the Gulf of Mexico OCS Region.</abstract>
+  <abstract displayLabel="purpose" lang="eng">Locating and analysing information on the Gulf of Mexico's offshore lease blocks</abstract>
+  <subject>
+    <geographic>Gulf of Mexico</geographic>
+  </subject>
+  <subject>
+    <topic>Offshore Blocks</topic>
+  </subject>
+  <location>
+    <url displayLabel="OFFSH_BLOCKS.shp">http://purl.stanford.edu/ks297fy1411</url>
+  </location>
+  <identifier type="local" displayLabel="filename">OFFSH_BLOCKS.shp</identifier>
+  <accessCondition type="restrictionsOnAccess"/>
+  <accessCondition type="useAndReproduction"/>
+  <accessCondition/>
+  <accessCondition type="useLimitation">As allowed under data agreement by Rextag Strategies</accessCondition>
+  <accessCondition>
+          Access is granted to Stanford University affiliates only. 
+          Affiliates are limited to current faculty, staff and students.
+        </accessCondition>
+</mods>

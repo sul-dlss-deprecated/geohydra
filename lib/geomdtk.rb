@@ -2,5 +2,6 @@
 module GeoMDTK
 end
 
-require 'geomdtk/version.rb'
+require 'geomdtk/version'
 require 'geomdtk/geonetwork'
+require 'geomdtk/transform'

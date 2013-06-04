@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+  <identifier type="local" displayLabel="file_identifier_id">geonetwork:E547610A-EB56-41B0-AB19-26E3FC8E1889</identifier>
+  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/vk120xn2474</identifier>
+  <identifier type="local" displayLabel="druid">druid:vk120xn2474</identifier>
+  <location>
+    <url displayLabel="PURL">http://purl.stanford.edu/vk120xn2474</url>
+  </location>
+  <titleInfo>
+    <title type="main">Public Lands Survey System, Section Level, 2010</title>
+  </titleInfo>
+  <name type="corporate">
+    <namePart>Rextag Strategies</namePart>
+    <role>
+      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+    </role>
+  </name>
+  <typeOfResource>cartographic</typeOfResource>
+  <typeOfResource>software, multimedia</typeOfResource>
+  <genre>GIS Datasets</genre>
+  <originInfo>
+    <dateIssued encoding="w3cdtf">2010-12-01</dateIssued>
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b"/>
+  </language>
+  <physicalDescription>
+    <form>Shapefile</form>
+    <extent>660.401</extent>
+    <digitalOrigin>born digital</digitalOrigin>
+  </physicalDescription>
+  <subject>
+    <cartographics>
+      <projection>urn:ogc:def:crs:EPSG::4269</projection>
+      <coordinates>POLYGON((-178.285802 25.138416, -178.285802 71.468273, -80.031491 71.468273, -80.031491 25.138416, -178.285802 25.138416))</coordinates>
+    </cartographics>
+  </subject>
+  <abstract displayLabel="abstract" lang="eng">Dataset represents the Public Land Survey System at the Section level</abstract>
+  <abstract displayLabel="purpose" lang="eng">To identify townships, ranges, and sections within the Public Land Survey System</abstract>
+  <subject>
+    <geographic>United States</geographic>
+  </subject>
+  <subject>
+    <topic>Public lands</topic>
+  </subject>
+  <location>
+    <url displayLabel="PLSS_SEC.shp">http://purl.stanford.edu/vk120xn2474</url>
+  </location>
+  <identifier type="local" displayLabel="filename">PLSS_SEC.shp</identifier>
+  <accessCondition type="restrictionsOnAccess"/>
+  <accessCondition type="useAndReproduction"/>
+  <accessCondition/>
+  <accessCondition>
+          Access is granted to Stanford University affiliates only. 
+          Affiliates are limited to current faculty, staff and students.
+        </accessCondition>
+</mods>

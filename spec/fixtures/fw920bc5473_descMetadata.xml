@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+  <identifier type="local" displayLabel="file_identifier_id">geonetwork:5200B8D2-ADC7-4EC6-A2C3-6EA6A5B340E8</identifier>
+  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/fw920bc5473</identifier>
+  <identifier type="local" displayLabel="druid">druid:fw920bc5473</identifier>
+  <location>
+    <url displayLabel="PURL">http://purl.stanford.edu/fw920bc5473</url>
+  </location>
+  <titleInfo>
+    <title type="main">Public Lands Survey System, Townships and Ranges in the United States, 2011</title>
+  </titleInfo>
+  <name type="corporate">
+    <namePart>Hart Energy</namePart>
+    <role>
+      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+    </role>
+  </name>
+  <typeOfResource>cartographic</typeOfResource>
+  <typeOfResource>software, multimedia</typeOfResource>
+  <genre>GIS Datasets</genre>
+  <originInfo>
+    <dateIssued encoding="w3cdtf">2011-07-05</dateIssued>
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b"/>
+  </language>
+  <physicalDescription>
+    <form>Shapefile</form>
+    <extent>108.017</extent>
+    <digitalOrigin>born digital</digitalOrigin>
+  </physicalDescription>
+  <subject>
+    <cartographics>
+      <projection>urn:ogc:def:crs:EPSG::4269</projection>
+      <coordinates>POLYGON((-178.285802 25.138416, -178.285802 71.468273, -80.031491 71.468273, -80.031491 25.138416, -178.285802 25.138416))</coordinates>
+    </cartographics>
+  </subject>
+  <abstract displayLabel="abstract" lang="eng">Dataset represent the Public Land Survey System at the Township level.</abstract>
+  <abstract displayLabel="purpose" lang="eng">To identify townships and ranges within the Public Land Survey System</abstract>
+  <relatedItem type="preceding">
+    <titleInfo>
+      <title>Hart Energy</title>
+    </titleInfo>
+    <originInfo>
+      <dateIssued>2011-07-05</dateIssued>
+    </originInfo>
+    <physicalDescription>
+      <form/>
+    </physicalDescription>
+  </relatedItem>
+  <subject>
+    <geographic>United States</geographic>
+  </subject>
+  <subject>
+    <topic>Public lands</topic>
+  </subject>
+  <location>
+    <url displayLabel="PLSS_TWN.shp">http://purl.stanford.edu/fw920bc5473</url>
+  </location>
+  <identifier type="local" displayLabel="filename">PLSS_TWN.shp</identifier>
+  <accessCondition type="restrictionsOnAccess"/>
+  <accessCondition type="useAndReproduction"/>
+  <accessCondition/>
+  <accessCondition>
+          Access is granted to Stanford University affiliates only. 
+          Affiliates are limited to current faculty, staff and students.
+        </accessCondition>
+</mods>

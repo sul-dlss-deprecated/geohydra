@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+  <identifier type="local" displayLabel="file_identifier_id">geonetwork:E8871100-B250-4007-84F3-272D3D791E28</identifier>
+  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/zv925hd6723</identifier>
+  <identifier type="local" displayLabel="druid">druid:zv925hd6723</identifier>
+  <location>
+    <url displayLabel="PURL">http://purl.stanford.edu/zv925hd6723</url>
+  </location>
+  <titleInfo>
+    <title type="main">Oil and Gas Wells in the United States, 2011</title>
+  </titleInfo>
+  <name type="corporate">
+    <namePart>Hart Energy</namePart>
+    <role>
+      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+    </role>
+  </name>
+  <typeOfResource>cartographic</typeOfResource>
+  <typeOfResource>software, multimedia</typeOfResource>
+  <genre>GIS Datasets</genre>
+  <originInfo>
+    <dateIssued encoding="w3cdtf">2011-07-05</dateIssued>
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b"/>
+  </language>
+  <physicalDescription>
+    <form>Shapefile</form>
+    <extent>98.011</extent>
+    <digitalOrigin>born digital</digitalOrigin>
+  </physicalDescription>
+  <subject>
+    <cartographics>
+      <projection>urn:ogc:def:crs:EPSG::4269</projection>
+      <coordinates>POLYGON((-124.646 24.421389, -124.646 48.998656, -73.38717 48.998656, -73.38717 24.421389, -124.646 24.421389))</coordinates>
+    </cartographics>
+  </subject>
+  <abstract displayLabel="abstract" lang="eng">This layer is based on data provided by numerous sources in a variety of digital formats, collected at the state or county level.</abstract>
+  <abstract displayLabel="purpose" lang="eng">The purpose of this file is to combine multiple well data sources into one national file.</abstract>
+  <subject>
+    <geographic>United States</geographic>
+  </subject>
+  <subject>
+    <topic>Oil wells</topic>
+  </subject>
+  <location>
+    <url displayLabel="OGWELLS.shp">http://purl.stanford.edu/zv925hd6723</url>
+  </location>
+  <identifier type="local" displayLabel="filename">OGWELLS.shp</identifier>
+  <accessCondition type="restrictionsOnAccess"/>
+  <accessCondition type="useAndReproduction"/>
+  <accessCondition/>
+  <accessCondition>
+          Access is granted to Stanford University affiliates only. 
+          Affiliates are limited to current faculty, staff and students.
+        </accessCondition>
+</mods>

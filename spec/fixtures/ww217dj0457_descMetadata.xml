@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+  <identifier type="local" displayLabel="file_identifier_id">geonetwork:FA6ED959-7DED-4722-B1FB-A85FB79725BA</identifier>
+  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/ww217dj0457</identifier>
+  <identifier type="local" displayLabel="druid">druid:ww217dj0457</identifier>
+  <location>
+    <url displayLabel="PURL">http://purl.stanford.edu/ww217dj0457</url>
+  </location>
+  <titleInfo>
+    <title type="main">Carbon Dioxide (CO2) Pipelines in the United States, 2011</title>
+  </titleInfo>
+  <name type="corporate">
+    <namePart>Hart Energy</namePart>
+    <role>
+      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+    </role>
+  </name>
+  <typeOfResource>cartographic</typeOfResource>
+  <typeOfResource>software, multimedia</typeOfResource>
+  <genre>GIS Datasets</genre>
+  <originInfo>
+    <dateIssued encoding="w3cdtf">2012-01-01</dateIssued>
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b"/>
+  </language>
+  <physicalDescription>
+    <form>Shapefile</form>
+    <extent>0.178</extent>
+    <digitalOrigin>born digital</digitalOrigin>
+  </physicalDescription>
+  <subject>
+    <cartographics>
+      <projection>urn:ogc:def:crs:EPSG::4269</projection>
+      <coordinates>POLYGON((-109.758319 29.423028, -109.758319 48.999336, -88.990844 48.999336, -88.990844 29.423028, -109.758319 29.423028))</coordinates>
+    </cartographics>
+  </subject>
+  <abstract displayLabel="abstract" lang="eng">Dataset represents locations of existing and proposed CO2 pipelines. Includes all interstate pipelines and major intrastate pipelines.</abstract>
+  <abstract displayLabel="purpose" lang="eng">Locating Carbon Dioxide (CO2) pipelines in the United States.</abstract>
+  <note displayLabel="quality" lang="eng">The accuracy of Rextag’s GIS Data varies per area and pipeline operator. In a study conducted from random locations in rural well as in urban areas in the US we overplayed our pipeline data on various high resolution area photography tiles to compare the centerline with the ROW “scars” on the ground. We then tallied the offset distances in feet per all the pipelines shown in that area. This exercise was repeated multiple times to reach a sample size of 1000.</note>
+  <relatedItem type="preceding">
+    <titleInfo>
+      <title>Hart Energy</title>
+    </titleInfo>
+    <originInfo>
+      <dateIssued>2011-07-01</dateIssued>
+    </originInfo>
+    <physicalDescription>
+      <form/>
+    </physicalDescription>
+  </relatedItem>
+  <subject>
+    <geographic>United States</geographic>
+  </subject>
+  <subject>
+    <topic>Carbon Dioxode</topic>
+  </subject>
+  <location>
+    <url displayLabel="CO2_PIPE.shp">http://purl.stanford.edu/ww217dj0457</url>
+  </location>
+  <identifier type="local" displayLabel="filename">CO2_PIPE.shp</identifier>
+  <accessCondition type="restrictionsOnAccess"/>
+  <accessCondition type="useAndReproduction"/>
+  <accessCondition/>
+  <accessCondition>
+          Access is granted to Stanford University affiliates only. 
+          Affiliates are limited to current faculty, staff and students.
+        </accessCondition>
+</mods>

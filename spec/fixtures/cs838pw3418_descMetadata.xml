@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+  <identifier type="local" displayLabel="file_identifier_id">geonetwork:BBF1AEBF-51A8-46CD-8913-95B63390A2D0</identifier>
+  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/cs838pw3418</identifier>
+  <identifier type="local" displayLabel="druid">druid:cs838pw3418</identifier>
+  <location>
+    <url displayLabel="PURL">http://purl.stanford.edu/cs838pw3418</url>
+  </location>
+  <titleInfo>
+    <title type="main">Oil and Gas Fields in the United States, 2011</title>
+  </titleInfo>
+  <name type="corporate">
+    <namePart>Hart Energy</namePart>
+    <role>
+      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+    </role>
+  </name>
+  <typeOfResource>cartographic</typeOfResource>
+  <typeOfResource>software, multimedia</typeOfResource>
+  <genre>GIS Datasets</genre>
+  <originInfo>
+    <dateIssued encoding="w3cdtf">2011-01-01</dateIssued>
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b"/>
+  </language>
+  <physicalDescription>
+    <form>Shapefile</form>
+    <extent>0.128</extent>
+    <digitalOrigin>born digital</digitalOrigin>
+  </physicalDescription>
+  <subject>
+    <cartographics>
+      <projection>urn:ogc:def:crs:EPSG::4269</projection>
+      <coordinates>POLYGON((-151.479444 26.071745, -151.479444 69.4325, -78.085007 69.4325, -78.085007 26.071745, -151.479444 26.071745))</coordinates>
+    </cartographics>
+  </subject>
+  <abstract displayLabel="abstract" lang="eng">Shows the locations and extents of oil and gas fields in the United States</abstract>
+  <abstract displayLabel="purpose" lang="eng">Locating and analysing United States oil and gas field data for use in geographic information systems.</abstract>
+  <relatedItem type="preceding">
+    <titleInfo>
+      <title>Rextag Strategies</title>
+    </titleInfo>
+    <originInfo>
+      <dateIssued>2011-07-05</dateIssued>
+    </originInfo>
+    <physicalDescription>
+      <form/>
+    </physicalDescription>
+  </relatedItem>
+  <subject>
+    <geographic>United States</geographic>
+  </subject>
+  <subject>
+    <topic>Oil fields</topic>
+  </subject>
+  <location>
+    <url displayLabel="OIL_GAS_FIELDS.shp">http://purl.stanford.edu/cs838pw3418</url>
+  </location>
+  <identifier type="local" displayLabel="filename">OIL_GAS_FIELDS.shp</identifier>
+  <accessCondition type="restrictionsOnAccess"/>
+  <accessCondition type="useAndReproduction"/>
+  <accessCondition/>
+  <accessCondition>
+          Access is granted to Stanford University affiliates only. 
+          Affiliates are limited to current faculty, staff and students.
+        </accessCondition>
+</mods>
