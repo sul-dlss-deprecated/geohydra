@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "awesome_print"
   s.add_development_dependency "rspec"
   s.add_development_dependency "yard"
-  s.add_development_dependency "rdoc" # provides Markdown
+  s.add_development_dependency "rdoc"
+  s.add_development_dependency "redcarpet" # provides Markdown
   
 end
