@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+  <doc>
+    <field name="_version_">1</field>
+    <field name="id">geonetwork:BBF1AEBF-51A8-46CD-8913-95B63390A2D0</field>
+    <field name="uuid_ssi">geonetwork:BBF1AEBF-51A8-46CD-8913-95B63390A2D0</field>
+    <field name="projection_ssi">EPSG_4269</field>
+    <field name="title_ssi">Oil and Gas Fields in the United States, 2011 - 1007 Update</field>
+    <field name="publisher_ssi">Hart Energy</field>
+    <field name="place_ssim">, , </field>
+    <field name="publication_dsi">2011-01-01</field>
+    <field name="abstract_tsi">Shows the locations and extents of oil and gas fields in the United States</field>
+    <field name="purpose_tsi">Locating and analysing United States oil and gas field data for use in geographic information systems.</field>
+    <field name="place_ssim">United States</field>
+    <field name="subject_ssim">Oil fields</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">utilitiesCommunication</field>
+    <field name="nw_llsi">69.4325,
+          -151.479444</field>
+    <field name="se_llsi">26.071745,
+          -78.085007</field>
+    <field name="distribution_format_ssim">Shapefile</field>
+    <field name="provenance_tsi">
+        Source: 
+        .
+        Rextag Strategies.
+        2011-07-05.
+        publication.
+      </field>
+    <field name="quality_tsi"/>
+  </doc>
+</add>

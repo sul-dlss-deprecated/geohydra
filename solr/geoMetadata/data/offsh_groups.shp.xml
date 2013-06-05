@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+  <doc>
+    <field name="_version_">1</field>
+    <field name="id">geonetwork:66D4C75B-2E4D-4904-8CB7-58A16CE99536</field>
+    <field name="uuid_ssi">geonetwork:66D4C75B-2E4D-4904-8CB7-58A16CE99536</field>
+    <field name="projection_ssi">EPSG_4269</field>
+    <field name="title_ssi">Offshore Block Groups in the Gulf of Mexico, 2011 - 1007 Update</field>
+    <field name="publisher_ssi">Minerals Management Service</field>
+    <field name="place_ssim">, , </field>
+    <field name="publication_dsi">2011-01-01</field>
+    <field name="abstract_tsi">Contains information that defines the Federal lease blocks for the Gulf of Mexico Outer Continental Shelf Region.</field>
+    <field name="purpose_tsi">Locating and analysing information on the Gulf of Mexico's offshore lease blocks</field>
+    <field name="place_ssim">Gulf of Mexico</field>
+    <field name="subject_ssim">Offshore Blocks</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="genre_ssim">utilitiesCommunication</field>
+    <field name="nw_llsi">30.289096,
+          -97.238989</field>
+    <field name="se_llsi">23.780775,
+          -81.170106</field>
+    <field name="distribution_format_ssim">Shapefile</field>
+    <field name="provenance_tsi">
+        Source: 
+        .
+        Environmental Protection Agency.
+        2008-01-01.
+        publication.
+      </field>
+    <field name="quality_tsi"/>
+  </doc>
+</add>

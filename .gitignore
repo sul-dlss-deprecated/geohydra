@@ -16,7 +16,6 @@ lib/bundler/man
 pkg
 private
 rdoc
-solr/
 spec/reports
 test/tmp
 test/version_tmp

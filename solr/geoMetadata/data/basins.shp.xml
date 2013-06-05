@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+  <doc>
+    <field name="_version_">1</field>
+    <field name="id">geonetwork:580DF91B-4A24-4E3C-9C1D-D62C0389932C</field>
+    <field name="uuid_ssi">geonetwork:580DF91B-4A24-4E3C-9C1D-D62C0389932C</field>
+    <field name="projection_ssi">EPSG_4269</field>
+    <field name="title_ssi">Oil and Gas Basins in North America, 2008 - 1007 UPDATE</field>
+    <field name="publisher_ssi">Rextag Strategies</field>
+    <field name="place_ssim">, , </field>
+    <field name="publication_dsi">2008-01-01</field>
+    <field name="abstract_tsi">Oil and Gas Basins in North America</field>
+    <field name="purpose_tsi">Locating Oil and Gas Basins in North America</field>
+    <field name="place_ssim">United States</field>
+    <field name="subject_ssim">Oil Fields</field>
+    <field name="subject_ssim">Gas fields</field>
+    <field name="genre_ssim">002</field>
+    <field name="genre_ssim">002</field>
+    <field name="genre_ssim">Downloadable Data</field>
+    <field name="nw_llsi">77.614132,
+          -164.196401</field>
+    <field name="se_llsi">16.709076,
+          -44.096585</field>
+    <field name="distribution_format_ssim">Shapefile</field>
+  </doc>
+</add>
