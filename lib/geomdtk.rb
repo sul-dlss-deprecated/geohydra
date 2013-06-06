@@ -5,3 +5,4 @@ end
 require 'geomdtk/version'
 require 'geomdtk/geonetwork'
 require 'geomdtk/transform'
+require 'geomdtk/solr'

@@ -1,4 +1,5 @@
-c=dlss-dev-drh-geo
+#!/bin/bash
+c=dlss-dev-drh-geo-jun6
 d=/home/drh/dlss-dev-drh-geo
 cd $d/conf || exit -1
 
@@ -7,4 +8,7 @@ java -cp "/usr/share/tomcat6/webapps/solr/WEB-INF/lib/*" \
   -confdir . -confname $c \
   -solrhome /home/lyberadmin/solr-home
 
-echo curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=CREATE&name=${c}&numShards=1&replicationFactor=3"
+set -x
+curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=DELETE&name=${c}"
+sleep 5
+curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=CREATE&name=${c}&numShards=1&replicationFactor=3"
