@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+  <doc>
+    <field name="id">http://purl.stanford.edu/cs838pw3418</field>
+    <field name="druid">cs838pw3418</field>
+    <field name="file_id_s">BBF1AEBF-51A8-46CD-8913-95B63390A2D0</field>
+    <field name="format_s">Shapefile</field>
+    <field name="language_s">eng</field>
+    <field name="title_t">Oil and Gas Fields in the United States, 2011</field>
+    <field name="abstract_t">Shows the locations and extents of oil and gas fields in the United States</field>
+    <field name="purpose_t">Locating and analysing United States oil and gas field data for use in geographic information systems.</field>
+    <field name="text">Oil and Gas Fields in the United States, 2011;
+      Shows the locations and extents of oil and gas fields in the United States;
+      Locating and analysing United States oil and gas field data for use in geographic information systems.</field>
+    <field name="geo_bbox">-151.479444 26.071745 -78.085007 69.4325</field>
+    <field name="geo_location">47.7521225,-114.78222550000001</field>
+    <field name="geo_point">47.7521225,-114.78222550000001</field>
+  </doc>
+</add>
