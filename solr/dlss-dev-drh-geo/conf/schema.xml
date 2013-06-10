@@ -4,13 +4,15 @@
   <uniqueKey>id</uniqueKey>
 
   <fields>
-
-    <!-- field names -->
-    <field name="id" type="long" stored="true" indexed="true" multiValued="false" required="true"/>
+    <!-- Solr internal fields -->
     <field name="_version_" type="long" stored="true" indexed="true" multiValued="false"/>
     <field name="timestamp" type="date" stored="true" indexed="true" multiValued="false" default="NOW"/>
-    <field name="text" type="text" stored="false" indexed="true" multiValued="false"/>
-    <field name="druid" type="string" stored="true" indexed="true" multiValued="false"/>
+    
+
+    <!-- required fields -->
+    <field name="id" type="string" stored="true" indexed="true" multiValued="false" required="true"/>
+    <field name="druid" type="string" stored="true" indexed="true" multiValued="false" required="true"/>
+    <field name="text" type="text" stored="false" indexed="true" multiValued="false" required="true"/>
 
     <!-- field names by suffix -->
     
@@ -113,10 +115,10 @@
 
          Solr4:
            <field name="my_point">-117.312 83.1</field> 
-             as (x y)
+             as (x y) -- INVALID?
              
            <field name="my_location">-117.312 83.1</field> 
-             as (x y)
+             as (x y) -- INVALID?
              
            <field name="my_geohash">u4pruydqqvj</field>
              see http://en.wikipedia.org/wiki/Geohash
@@ -174,14 +176,18 @@
       The subFields are an implementation detail of the fieldType, and end
       users normally should not need to know about them.
      -->
-    <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
+    <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_f"/>
     
-    <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
-    <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+    <!-- A specialized field for geospatial search. 
+         If indexed, this fieldType must not be multivalued. 
+    -->
+    <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_f"/>
     
-    <!-- An alternative geospatial field type new to Solr 4.  It supports multiValued and polygon shapes.
-      For more information about this and other Spatial fields new to Solr 4, see:
-      http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
+    <!-- An alternative geospatial field type new to Solr 4.  
+         It supports multiValued and polygon shapes.
+         
+         For more information about this and other Spatial fields new to Solr 4, see:
+         http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
     -->
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
       geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees" />

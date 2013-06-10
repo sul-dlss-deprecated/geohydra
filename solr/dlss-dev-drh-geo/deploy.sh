@@ -1,6 +1,7 @@
 #!/bin/bash
-c=dlss-dev-drh-geo-jun6
+c=dlss-dev-drh-geo-201306
 d=/home/drh/dlss-dev-drh-geo
+n=3
 cd $d/conf || exit -1
 
 java -cp "/usr/share/tomcat6/webapps/solr/WEB-INF/lib/*" \
@@ -11,4 +12,4 @@ java -cp "/usr/share/tomcat6/webapps/solr/WEB-INF/lib/*" \
 set -x
 curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=DELETE&name=${c}"
 sleep 5
-curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=CREATE&name=${c}&numShards=1&replicationFactor=3"
+curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=CREATE&name=${c}&numShards=1&replicationFactor=${n}"

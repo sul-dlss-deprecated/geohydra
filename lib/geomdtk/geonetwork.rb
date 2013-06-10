@@ -124,6 +124,7 @@ module GeoMDTK
       fn = "#{dir}/#{uuid}.mef"
       File.open(fn, 'wb') {|f| f.puts(res.body) }
       raise ArgumentError, "MEF #{fn} is missing" unless File.exist? fn
+      fn
     end
   
     def export_csw(uuid, dir = ".")
@@ -134,7 +135,10 @@ module GeoMDTK
         :elementSetName => 'full',
         :id => uuid 
       })
-      File.open("#{dir}/#{uuid}.csw", 'wb') {|f| f.write(res.body) }
+      fn = "#{dir}/#{uuid}.csw"
+      File.open(fn, 'wb') {|f| f.write(res.body) }
+      raise ArgumentError, "CSW #{fn} is missing" unless File.exist? fn
+      fn
     end
     
     def to_druid(purl)
