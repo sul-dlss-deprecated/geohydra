@@ -113,13 +113,7 @@
            <field name="my_location">83.1,-117.312</field> 
              as (y,x)
 
-         Solr4:
-           <field name="my_point">-117.312 83.1</field> 
-             as (x y) -- INVALID?
-             
-           <field name="my_location">-117.312 83.1</field> 
-             as (x y) -- INVALID?
-             
+         Solr4:             
            <field name="my_geohash">u4pruydqqvj</field>
              see http://en.wikipedia.org/wiki/Geohash
              

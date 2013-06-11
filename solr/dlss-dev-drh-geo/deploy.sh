@@ -10,6 +10,6 @@ java -cp "/usr/share/tomcat6/webapps/solr/WEB-INF/lib/*" \
   -solrhome /home/lyberadmin/solr-home
 
 set -x
-curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=DELETE&name=${c}"
+curl "http://127.0.0.1:8080/solr/admin/collections?action=DELETE&name=${c}"
 sleep 5
-curl "http://sul-solr-a.stanford.edu/solr/admin/collections?action=CREATE&name=${c}&numShards=1&replicationFactor=${n}"
+curl "http://127.0.0.1:8080/solr/admin/collections?action=CREATE&name=${c}&numShards=1&replicationFactor=${n}"
