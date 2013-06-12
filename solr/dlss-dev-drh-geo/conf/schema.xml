@@ -123,7 +123,7 @@
            <field name="my_polygon">POLYGON((-117.312 83.1, -117.312 84.31, ...))</field> 
              as WKT which requires JTS installed
       -->
-    <dynamicField name="*_point" type="point" stored="true" indexed="true" multiValued="false"/>
+    <dynamicField name="*_point" type="location" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_location" type="location" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_geohash" type="geohash" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_bbox" type="location_rpt" stored="true" indexed="true" multiValued="false"/>
@@ -157,21 +157,7 @@
     <fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
     <!-- A Trie based date field for faster date range queries and date faceting. -->
     <fieldType name="tdate" class="solr.TrieDateField" precisionStep="6" positionIncrementGap="0"/>
-    
-    
-    <!-- This point type indexes the coordinates as separate fields (subFields)
-      If subFieldType is defined, it references a type, and a dynamic field
-      definition is created matching *___<typename>.  Alternately, if 
-      subFieldSuffix is defined, that is used to create the subFields.
-      Example: if subFieldType="double", then the coordinates would be
-        indexed in fields myloc_0___double,myloc_1___double.
-      Example: if subFieldSuffix="_d" then the coordinates would be indexed
-        in fields myloc_0_d,myloc_1_d
-      The subFields are an implementation detail of the fieldType, and end
-      users normally should not need to know about them.
-     -->
-    <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_f"/>
-    
+        
     <!-- A specialized field for geospatial search. 
          If indexed, this fieldType must not be multivalued. 
     -->

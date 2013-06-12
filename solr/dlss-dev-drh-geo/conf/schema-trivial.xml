@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="GeoBlacklight" version="1.5">
+  <uniqueKey>id</uniqueKey>
+  <fields>
+    <field name="_version_" type="long" stored="true" indexed="true" multiValued="false"/>
+    <field name="timestamp" type="date" stored="true" indexed="true" multiValued="false" default="NOW"/>
+    <field name="id" type="string" stored="true" indexed="true" multiValued="false" required="true"/>
+    <field name="druid" type="string" stored="true" indexed="true" multiValued="false" required="true"/>
+    <field name="text" type="text" stored="false" indexed="true" multiValued="false" required="true"/>
+    <dynamicField name="*_t" type="text"/>
+    <dynamicField name="*_s" type="string"/>
+    <dynamicField name="*_i" type="int"/>
+    <dynamicField name="*_l" type="long"/>
+    <dynamicField name="*_f" type="double"/>
+    <dynamicField name="*_dt" type="date"/>
+    
+    <!-- Spatial field types:
+    
+         Solr3:
+           <field name="my_point">83.1,-117.312</field> 
+             as (y,x)
+             
+           <field name="my_location">83.1,-117.312</field> 
+             as (y,x)
+
+         Solr4:             
+           <field name="my_geohash">u4pruydqqvj</field>
+             see http://en.wikipedia.org/wiki/Geohash
+             
+           <field name="my_bbox">-117.312 83.1 -115.39 84.31</field> 
+             as (minx miny maxx maxy)
+             
+           <field name="my_polygon">POLYGON((-117.312 83.1, -117.312 84.31, ...))</field> 
+             as WKT which requires JTS installed
+      -->
+    <dynamicField name="*_point" type="location" stored="true" indexed="true" multiValued="false"/>
+    <dynamicField name="*_latlon" type="location" stored="true" indexed="true" multiValued="false"/>
+    <dynamicField name="*_bbox" type="location_rpt" stored="true" indexed="true" multiValued="false"/>
+    <dynamicField name="*_polygon" type="location_rpt" stored="true" indexed="true" multiValued="false"/>
+  </fields>
+  <types>
+    <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
+    <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
+    <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" positionIncrementGap="0"/>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
+    <fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+    <fieldType name="text" class="solr.TextField" omitNorms="false"/>
+    
+    <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_f"/>
+    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" 
+      spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+      geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/>
+  </types>
+</schema>
