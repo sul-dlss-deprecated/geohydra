@@ -13,11 +13,14 @@
     <field name="title_t">Oil and Gas Fields in the United States, 2011</field>
     <field name="abstract_t">Shows the locations and extents of oil and gas fields in the United States</field>
     <field name="purpose_t">Locating and analysing United States oil and gas field data for use in geographic information systems.</field>
-    <field name="geo_bbox">-151.479444 26.071745 -78.085007 69.4325</field>
     <field name="geo_latlon">47.7521225,-114.7822255</field>
-    <field name="geo_point">47.7521225,-114.7822255</field>
-    <field name="geo_sw_point">26.071745,-151.479444</field>
-    <field name="geo_ne_point">69.4325,-78.085007</field>    
+    <field name="geo_sw_latlon">26.071745,-151.479444</field>
+    <field name="geo_ne_latlon">69.4325,-78.085007</field>    
+    <field name="geo_sw_pt">-151.479444 26.071745</field>
+    <field name="geo_ne_pt">-78.085007 69.4325</field>    
+    <field name="geo_pt">POINT(-78.085007 69.4325)</field>
+    <field name="geo_bbox">POLYGON((-151 26, -151 69, -78 69, -78 26, -151 26))</field>
+      
     <!-- <field name="geo_geohash">u4pruydqqvj</field> -->
   </doc>
 </add>
