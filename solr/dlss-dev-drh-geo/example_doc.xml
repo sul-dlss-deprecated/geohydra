@@ -21,7 +21,5 @@
     <field name="geo_pt">POINT(-78.085007 69.4325)</field>
     <field name="geo_bbox">POLYGON((-151 26, -151 69, -78 69, -78 26, -151 26))</field>
     <field name="geo3_bbox">-151 26 -78 69</field>
-      
-    <!-- <field name="geo_geohash">u4pruydqqvj</field> -->
   </doc>
 </add>

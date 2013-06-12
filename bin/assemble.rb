@@ -40,21 +40,52 @@ def main flags
                "#{uuid}/metadata/metadata*.xml",
                 "-d", flags[:tmpdir]])
     found_metadata = false
-    %w{metadata.iso19139.xml metadata.xml}.each do |fn|
-      fn = File.join(flags[:tmpdir], fn)
-      next unless File.exist? fn
+    %w{metadata.iso19139.xml metadata.xml}.each do |fn| # priority order
+      unless found_metadata
+        fn = File.join(flags[:tmpdir], fn)
+        next unless File.exist? fn
       
-      found_metadata = true
-      xfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
-      puts "Copying #{fn} => #{xfn}"
-      FileUtils.install fn, xfn
-      File.delete fn
+        found_metadata = true
+        
+        # original ISO 19139
+        ifn = File.join(druid.temp_dir, 'iso19139.xml')
+        puts "Copying #{fn} => #{ifn}"
+        FileUtils.install fn, ifn
+        File.delete fn
+
+        # GeoMetadataDS
+        gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
+        puts "Generating #{gfn}"      
+        File.open(gfn, "w") do |f|
+          f << GeoMDTK::Transform.to_geoMetadataDS(ifn)
+        end
       
-      File.open(File.join(druid.metadata_dir, 'descMetadata.xml'), "w") do |f|
-        f << GeoMDTK::Transform.to_mods(File.read(xfn))
+        # MODS from GeoMetadataDS
+        dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
+        puts "Generating #{dfn}"      
+        File.open(dfn, "w") do |f|
+          f << GeoMDTK::Transform.to_mods(gfn)
+        end
+      
+        # Solr document from GeoMetadataDS
+        sfn = File.join(druid.temp_dir, 'solr.xml')
+        puts "Generating #{sfn}"
+        h = GeoMDTK::Transform.to_solr(gfn)
+        doc = Nokogiri::XML::Builder.new do |xml|
+          xml.add {
+            xml.doc_ {
+              h.keys.each do |k|
+                h[k].each do |v|
+                  xml.field v, :name => k
+                end
+              end
+            }
+          }
+        end
+        File.open(sfn, "w") { |f| f << doc.to_xml }
       end
-      break
     end
+    
     raise ArgumentError, "Cannot export MEF metadata: #{uuid}: Missing #{flags[:tmpdir]}/metadata.xml" unless found_metadata
     
     # export content into zip files
