@@ -9,3 +9,6 @@ find -L /var/geomdtk/current/workspace -name 'solr.xml' | while read f; do
 	      --data-binary @$f \
 	      "http://${h}/solr/${c}/update?commit=true"
 done
+
+curl "http://${h}/solr/${c}/update?optimize=true"
+
