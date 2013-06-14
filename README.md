@@ -30,6 +30,10 @@ To upload the druid packages to GeoServer:
 
     % bundle exec bin/loader.rb druid1 [druid2 druid3...]
     
+To enable logging for the Rest client, use
+
+    % RESTCLIENT_LOG=stdout bundle exec ...
+    
 GeoHydra Head
 =============
 
