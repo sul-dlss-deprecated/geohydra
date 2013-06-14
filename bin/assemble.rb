@@ -105,9 +105,9 @@ begin
   File.umask(002)
   flags = {
     :verbose => true,
-    :stagedir => GeoMDTK::CONFIG.geomdtk.stage || 'stage',
-    :workspacedir => GeoMDTK::CONFIG.geomdtk.workspace || 'workspace',
-    :tmpdir => GeoMDTK::CONFIG.geomdtk.tmpdir || 'tmp'
+    :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
+    :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',
+    :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp'
   }
   
   OptionParser.new do |opts|

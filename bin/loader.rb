@@ -24,19 +24,19 @@ require 'rgeoserver'
 # - metadata_links
 
 #= Configuration constants
-WORKSPACE_NAME = GeoMDTK::CONFIG.geoserver.workspace || 'druid'
-NAMESPACE = GeoMDTK::CONFIG.geoserver.namespace || 'http://purl.stanford.edu'
+WORKSPACE_NAME = GeoMDTK::Config.geoserver.workspace || 'druid'
+NAMESPACE = GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
 
 # GeoWebCache configuration
-SEED = GeoMDTK::CONFIG.geowebcache
+SEED = GeoMDTK::Config.geowebcache
 SEED_OPTIONS = {
   :srs => {
-    :number => GeoMDTK::CONFIG.geowebcache.srs.gsub(%r{^EPSG:}, '').to_i
+    :number => GeoMDTK::Config.geowebcache.srs.gsub(%r{^EPSG:}, '').to_i
   },
-  :zoomStart => GeoMDTK::CONFIG.geowebcache.zoom.gsub(%r{:\d$}, '').to_i,
-  :zoomStop => GeoMDTK::CONFIG.geowebcache.zoom.gsub(%r{^\d:}, '').to_i,
-  :format => GeoMDTK::CONFIG.geowebcache.format || 'image/png',
-  :threadCount => (GeoMDTK::CONFIG.geowebcache.threadCount || '1').to_i
+  :zoomStart => GeoMDTK::Config.geowebcache.zoom.gsub(%r{:\d$}, '').to_i,
+  :zoomStop => GeoMDTK::Config.geowebcache.zoom.gsub(%r{^\d:}, '').to_i,
+  :format => GeoMDTK::Config.geowebcache.format || 'image/png',
+  :threadCount => (GeoMDTK::Config.geowebcache.threadCount || '1').to_i
 }
 
 def main catalog, ws, layers, flags = {}

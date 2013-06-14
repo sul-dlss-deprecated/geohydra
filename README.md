@@ -22,13 +22,19 @@ To project all Shapefiles into EPSG:4326 (WGS84):
 
     % bundle exec bin/derive_wgs84.rb
 
+To upload the druid metadata to DOR:
+
+   % bundle exec bin/accession.rb
+
 To upload the druid packages to GeoServer:
 
     % bundle exec bin/loader.rb druid1 [druid2 druid3...]
     
-    
-GeoHydra head example
-----
+GeoHydra Head
+=============
+
+GeoServer
+---------
 
     >> c = RGeoServer::Catalog.new
     Catalog: http://localhost:8080/geoserver/rest
