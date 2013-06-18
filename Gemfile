@@ -5,6 +5,5 @@ gemspec
 
 gem 'rsolr'
 gem 'mods', :git => 'https://github.com/sul-dlss/mods.git'
-gem 'rgeoserver', :path => '../rgeoserver'
-#gem 'dor-services', :path => '../dor-services'
-gem 'dor-services', :git => 'https://github.com/sul-dlss/dor-services.git'
+gem 'rgeoserver', :git => 'https://github.com/sul-dlss/rgeoserver.git', :branch => '0.6.x'
+gem 'dor-services', :git => 'https://github.com/sul-dlss/dor-services.git', :branch => 'geoMetadata'
