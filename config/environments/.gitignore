@@ -1,2 +1,8 @@
 development.rb
 development_rgeoserver.yml
+local.rb
+local_rgeoserver.yml
+production.rb
+production_rgeoserver.yml
+testing.rb
+testing_rgeoserver.yml
