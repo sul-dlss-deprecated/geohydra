@@ -92,7 +92,7 @@ def main flags
     Dir.glob(File.join(flags[:stagedir], "#{druid.id}.zip")) do |fn|
       # extract shapefile name using filename pattern from
       # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
-      k = %r{([a-zA-Z0-9_-]+)\.shp$}.match(`unzip -l #{fn}`)[1] 
+      k = %r{([a-zA-Z0-9_-]+)\.shp$}i.match(`unzip -l #{fn}`)[1] 
       ofn = "#{druid.content_dir}/#{k}.zip"
       puts "Copying GIS data: #{fn} -> #{ofn}"
       FileUtils.install fn, ofn
@@ -112,7 +112,7 @@ begin
   
   OptionParser.new do |opts|
     opts.banner = <<EOM
-Usage: #{File.basename(__FILE__)} [-v] [--stage DIR]
+Usage: #{File.basename(__FILE__)} [options]
 EOM
     opts.on("-v", "--[no-]verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
       flags[:verbose] = v
