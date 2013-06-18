@@ -1,25 +1,12 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require 'nokogiri'
-require 'base64'
-require 'awesome_print'
-
-def extract_thumbnail fn, ofn
-  doc = Nokogiri::XML(File.read(fn))
-  doc.xpath('/metadata/Binary/Thumbnail/Data').each do |node|
-    if node['EsriPropertyType'] == 'PictureX'
-      image = Base64.decode64(node.text)
-      puts "Writing #{ofn}"
-      File.open(ofn, 'wb') {|f| f << image }
-      return ofn
-    end
-  end
-end
+require 'geomdtk'
 
 def do_file fn
   if File.basename(fn) =~ %r{^(.*).(shp|tif).xml$}
-    extract_thumbnail fn, File.join(File.dirname(fn), "#{$1}.jpg")
+    puts "Processing #{$1}"
+    GeoMDTK::Transform.extract_thumbnail fn, File.join(File.dirname(fn), "#{$1}.jpg")
   else
     raise OptionParser::InvalidOption, "File <#{fn}> is not ESRI metadata format"
   end
@@ -45,6 +32,7 @@ end
 begin
   optparse.parse!  
   if ARGV.empty?
+    raise OptionParser::InvalidOption, flags[:datadir] + ' not a directory' unless File.directory?(flags[:datadir])
     Dir.glob(flags[:datadir] + '/*.xml').each {|fn| do_file fn }
   else
     ARGV.each {|fn| do_file fn }

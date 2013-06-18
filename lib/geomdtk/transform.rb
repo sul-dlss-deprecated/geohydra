@@ -1,3 +1,5 @@
+require 'base64'
+
 module GeoMDTK
   # Facilitates XSLT stylesheet transformations for ISO 19139 import/export
   module Transform
@@ -38,6 +40,22 @@ module GeoMDTK
       doc.to_solr
     end
     
+    # Extracts an inline thumbnail from the ESRI ArcCatalog metadata format
+    # @param [String] fn the metadata
+    # @param [String] thumbnail_fn the file into which to write JPEG image
+    # @param [String] property_type is the EsriPropertyType to select
+    # @raise [ArgumentError] if cannot find a thumbnail
+    def self.extract_thumbnail fn, thumbnail_fn, property_type = 'PictureX'
+      doc = Nokogiri::XML(File.read(fn))
+      doc.xpath('/metadata/Binary/Thumbnail/Data').each do |node|
+        if node['EsriPropertyType'] == property_type
+          image = Base64.decode64(node.text)
+          File.open(thumbnail_fn, 'wb') {|f| f << image }
+          return
+        end
+      end
+      raise ArgumentError, "No thumbnail embedded within #{fn}"
+    end
     
     # Converts a ISO 19139 into RDF geoMetadataDS
     # @param [String] geoMetadata Input data as ISO 19139 XML.
