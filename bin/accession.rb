@@ -132,7 +132,7 @@ EOM
     opts.on("--configtest", "Verify configuration then exit (default: #{flags[:configtest]})") do |v|
       flags[:configtest] = v
     end
-    opts.on("--[no]-purge", "Purge items before accessioning (default: #{flags[:purge]})") do |v|
+    opts.on("--[no-]purge", "Purge items before accessioning (default: #{flags[:purge]})") do |v|
       flags[:purge] = v
     end
   end.parse!
