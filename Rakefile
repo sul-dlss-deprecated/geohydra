@@ -11,6 +11,12 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
+desc "Run console; defaults to IRB='pry'"
+task :console, :IRB do |t, args|
+  irb = args[:IRB].nil?? 'pry' : args[:IRB]
+  sh irb, "-r", "#{File.dirname(__FILE__)}/config/boot.rb"
+end
+
 desc "Run tests"
 task :spec do
   RSpec::Core::RakeTask.new
