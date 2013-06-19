@@ -4,9 +4,9 @@ require 'druid-tools'
 require 'optparse'
 require 'geomdtk'
 
-
 def do_accession druid, flags = {}
-  raise ArgumentError unless druid.is_a? DruidTools::Druid
+  raise ArgumentError, "Invalid druid: #{druid}" unless druid.is_a? DruidTools::Druid
+  raise ArgumentError, "Invalid rights: #{flags[:rights]}" unless ['world','stanford','none', 'dark'].include? flags[:rights]
   xml = File.read(druid.path('metadata/geoMetadata.xml'))
   ds = Dor::GeoMetadataDS.from_xml(xml)
   
@@ -30,23 +30,45 @@ def do_accession druid, flags = {}
   flags[:tags].each {|t| opts[:tags] << t } unless flags[:tags].nil?
     
   ap({:all => opts})
+  item = nil
   
-  # purge item if needed
   if flags[:purge]
     begin
-      # item = Dor::SearchService.query_by_id(opts[:pid])
-      item = Dor::find(opts[:pid])
+      item = Dor::Item.find(druid.druid)
+      $stderr.puts "Purging #{item.id}" if flags[:verbose]
       item.delete
+      item = nil
     rescue ActiveFedora::ObjectNotFoundError => e
-      # noop
+      # no object to delete
     end
   end
-  item = Dor::RegistrationService.register_object opts
-  ap item
   
-  item.datastreams['geoMetadata'].content = ds
-  item.datastreams['descMetadata'].content = ds.to_mods
+  begin
+    $stderr.puts "Registering #{opts[:pid]}" if flags[:verbose]
+    item = Dor::RegistrationService.register_object opts
+  rescue Dor::DuplicateIdError => e
+    begin
+      $stderr.puts "Fallback #{opts[:pid]} #{druid.id}" if flags[:verbose]
+      item = Dor::Item.find(druid.id)
+    rescue ActiveFedora::ObjectNotFoundError => e
+      $stderr.puts "ABORTING: Missing object claimed to be registered???? #{druid.druid}"
+      return
+    end
+  end
+  
+  $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
+  item.datastreams['geoMetadata'].content = ds.ng_xml.to_xml
+  item.datastreams['descMetadata'].content = item.generate_mods.to_xml
+
+  $stderr.puts "Saving #{item.id}" if flags[:verbose]
   item.save
+  
+  if flags[:upload]
+    Dir.glob("#{druid.content_dir}/*.zip").each do |fn|
+      $stderr.puts "Uploading content #{fn}"
+      objectfile = Assembly::ObjectFile.new(fn)
+    end
+  end
 end
 
 
@@ -55,11 +77,13 @@ begin
   File.umask(002)
   flags = {
     :admin_policy => 'druid:cb854wz7157',
+    :rights => 'stanford',
     :tags => [],
     :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp',
     :verbose => true,
     :configtest => false,
-    :purge => true,
+    :purge => false,
+    :upload => false,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace'
   }
   
@@ -69,9 +93,6 @@ Usage: #{File.basename(__FILE__)} [options] [druid [druid...]]
 EOM
     opts.on("-v", "--[no-]verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
       flags[:verbose] = v
-    end
-    opts.on("--[no-]purge", "Delete existing druids (default: #{flags[:purge]})") do |v|
-      flags[:purge] = v
     end
     opts.on("--workspace DIR", "Workspace directory for assembly (default: #{flags[:workspacedir]})") do |v|
       flags[:workspacedir] = v
@@ -93,6 +114,9 @@ EOM
     end
     opts.on("--configtest", "Verify configuration then exit (default: #{flags[:configtest]})") do |v|
       flags[:configtest] = v
+    end
+    opts.on("--[no]-purge", "Purge items before accessioning (default: #{flags[:purge]})") do |v|
+      flags[:purge] = v
     end
   end.parse!
   
