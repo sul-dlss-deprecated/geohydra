@@ -8,18 +8,18 @@ require 'geomdtk'
 def do_accession druid, flags = {}
   raise ArgumentError unless druid.is_a? DruidTools::Druid
   xml = File.read(druid.path('metadata/geoMetadata.xml'))
-  # ds = Dor::GeoMetadataDS.from_xml(xml)
+  ds = Dor::GeoMetadataDS.from_xml(xml)
   
   # required parameters
   opts = {
       :object_type  => 'item',
-      :label        => 'hi' #ds.title.first
+      :label        => ds.title.first
   }
   # optional parameters
   opts.merge! ({
     # :metadata_source  => 'GeoMDTK',
     :pid              => druid.druid, # druid:xx111xx1111
-    :source_id        => { 'geomdtk' => 'foobar' },#ds.file_id.first.to_s },
+    :source_id        => { 'geomdtk' => ds.file_id.first.to_s },
     :tags             => ["Project : GIS", "Registered By : #{%x{whoami}.strip} (GeoMDTK)"]
     })
 
@@ -30,13 +30,23 @@ def do_accession druid, flags = {}
   flags[:tags].each {|t| opts[:tags] << t } unless flags[:tags].nil?
     
   ap({:all => opts})
+  
+  # purge item if needed
+  if flags[:purge]
+    begin
+      # item = Dor::SearchService.query_by_id(opts[:pid])
+      item = Dor::find(opts[:pid])
+      item.delete
+    rescue ActiveFedora::ObjectNotFoundError => e
+      # noop
+    end
+  end
   item = Dor::RegistrationService.register_object opts
   ap item
   
-  # item.datastreams['geoMetadata'] = ds
-  # item.save
-  
-  ap item
+  item.datastreams['geoMetadata'].content = ds
+  item.datastreams['descMetadata'].content = ds.to_mods
+  item.save
 end
 
 
@@ -49,6 +59,7 @@ begin
     :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp',
     :verbose => true,
     :configtest => false,
+    :purge => true,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace'
   }
   
@@ -58,6 +69,9 @@ Usage: #{File.basename(__FILE__)} [options] [druid [druid...]]
 EOM
     opts.on("-v", "--[no-]verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
       flags[:verbose] = v
+    end
+    opts.on("--[no-]purge", "Delete existing druids (default: #{flags[:purge]})") do |v|
+      flags[:purge] = v
     end
     opts.on("--workspace DIR", "Workspace directory for assembly (default: #{flags[:workspacedir]})") do |v|
       flags[:workspacedir] = v
