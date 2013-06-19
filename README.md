@@ -1,19 +1,19 @@
 GeoMDTK
 =======
 
-Geospatial MetaData ToolKit
+Geospatial MetaData ToolKit for use in a GeoHydra head.
 
 Setup
 -----
 
     % bundle install
-    % rake spec
-    % rake yard
+    % bundle exec rake spec
+    % bundle exec rake yard
 
 Utilities
 ---------
 
-To assemble the workspace, populate the geomdtk.stage directory with `druid.zip` files which contain the
+To assemble the workspace, populate the geomdtk.stage directory with `_druid_.zip` files which contain the
 Shapefiles files.
 
     % bundle exec bin/assemble.rb
@@ -24,7 +24,7 @@ To project all Shapefiles into EPSG:4326 (WGS84):
 
 To upload the druid metadata to DOR:
 
-   % bundle exec bin/accession.rb
+    % bundle exec bin/accession.rb druid1 [druid2 druid3...]
 
 To upload the druid packages to GeoServer:
 
