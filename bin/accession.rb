@@ -1,37 +1,50 @@
 #!/usr/bin/env ruby
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
-require 'druid-tools'
 require 'optparse'
+
+require 'druid-tools'
 require 'geomdtk'
 
 def do_accession druid, flags = {}
-  raise ArgumentError, "Invalid druid: #{druid}" unless druid.is_a? DruidTools::Druid
-  raise ArgumentError, "Invalid rights: #{flags[:rights]}" unless ['world','stanford','none', 'dark'].include? flags[:rights]
+  # validate parameters
+  unless druid.is_a? DruidTools::Druid
+    raise ArgumentError, "Invalid druid: #{druid}" 
+  end
+  unless ['world','stanford','none', 'dark'].include? flags[:rights]
+    raise ArgumentError, "Invalid rights: #{flags[:rights]}" 
+  end
+
+  # setup input metadata
   xml = File.read(druid.path('metadata/geoMetadata.xml'))
-  ds = Dor::GeoMetadataDS.from_xml(xml)
-  
+  geoMetadata = Dor::GeoMetadataDS.from_xml(xml)
+
   # required parameters
   opts = {
       :object_type  => 'item',
-      :label        => ds.title.first
+      :label        => geoMetadata.title.first.to_s
   }
-  # optional parameters
-  opts.merge! ({
-    # :metadata_source  => 'GeoMDTK',
-    :pid              => druid.druid, # druid:xx111xx1111
-    :source_id        => { 'geomdtk' => ds.file_id.first.to_s },
-    :tags             => ["Project : GIS", "Registered By : #{%x{whoami}.strip} (GeoMDTK)"]
-    })
 
+  # optional parameters
+  opts.merge!({
+    :pid              => druid.druid, # druid:xx111xx1111
+    :source_id        => { 'geomdtk' => geoMetadata.file_id.first.to_s },
+    :tags             => [
+      "Project : GIS", 
+      "Registered By : #{%x{whoami}.strip} (GeoMDTK)"]
+  })
+  
+  # copy other optional parameters from input flags
   [:admin_policy, :collection, :rights].each do |k|
     opts[k] = flags[k] unless flags[k].nil?
   end
-    
-  flags[:tags].each {|t| opts[:tags] << t } unless flags[:tags].nil?
-    
-  ap({:all => opts})
-  item = nil
+  unless flags[:tags].nil?
+    flags[:tags].each { |t| opts[:tags] << t } 
+  end
+
+  ap({:item_options => opts}) if flags[:verbose]
   
+  # Purge item if needed
+  item = nil
   if flags[:purge]
     begin
       item = Dor::Item.find(druid.druid)
@@ -43,6 +56,7 @@ def do_accession druid, flags = {}
     end
   end
   
+  # Register item
   begin
     $stderr.puts "Registering #{opts[:pid]}" if flags[:verbose]
     item = Dor::RegistrationService.register_object opts
@@ -51,26 +65,29 @@ def do_accession druid, flags = {}
       $stderr.puts "Fallback #{opts[:pid]} #{druid.id}" if flags[:verbose]
       item = Dor::Item.find(druid.id)
     rescue ActiveFedora::ObjectNotFoundError => e
-      $stderr.puts "ABORTING: Missing object claimed to be registered???? #{druid.druid}"
-      return
+      $stderr.puts "ABORT: Missing object claimed to be registered???? #{druid.druid}"
+      return nil
     end
   end
   
+  # now item is registered, so generate mods
   $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
-  item.datastreams['geoMetadata'].content = ds.ng_xml.to_xml
+  item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
   item.datastreams['descMetadata'].content = item.generate_mods.to_xml
 
+  # save changes
   $stderr.puts "Saving #{item.id}" if flags[:verbose]
   item.save
   
+  # upload data files to contentMetadata if required
   if flags[:upload]
-    Dir.glob("#{druid.content_dir}/*.zip").each do |fn|
+    Dir.glob("#{druid.content_dir}/*.{png,jpg,gif,zip}").each do |fn|
       $stderr.puts "Uploading content #{fn}"
       objectfile = Assembly::ObjectFile.new(fn)
+      # XXX tbd
     end
   end
 end
-
 
 # __MAIN__
 begin
@@ -138,11 +155,11 @@ EOM
   end
 
   if ARGV.empty?
-    Dir.glob("#{flags[:workspacedir]}/**/geoMetadata.xml") do |fn|
-      puts fn
-      pid = %r{/([a-z0-9]+)/metadata/geoMetadata.xml}.match(fn)[1]
-      druid = DruidTools::Druid.new(pid, flags[:workspacedir])
-      do_accession druid, flags
+    Dir.glob("#{flags[:workspacedir]}/**/metadata/geoMetadata.xml") do |fn|
+      if fn =~ %r{/([a-z0-9]+)/metadata/geoMetadata.xml}
+        druid = DruidTools::Druid.new($1, flags[:workspacedir])
+        do_accession druid, flags
+      end
     end
   else
     ARGV.each do |pid|
