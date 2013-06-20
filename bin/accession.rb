@@ -2,6 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'fastimage'
+require 'mime/types'
 require 'druid-tools'
 require 'assembly-objectfile'
 require 'geomdtk'
@@ -11,6 +12,7 @@ FILE_ATTRIBUTES = Assembly::FILE_ATTRIBUTES.merge(
   'image/png' => Assembly::FILE_ATTRIBUTES['image/jp2'], # preview image
   'application/zip' => Assembly::FILE_ATTRIBUTES['default'] # data file
 )
+
 
 # @see [Assembly::ContentMetadata]
 # @return [Nokogiri::XML::Document]
@@ -41,7 +43,7 @@ FILE_ATTRIBUTES = Assembly::FILE_ATTRIBUTES.merge(
 #     </file>
 #   </resource>
 # </contentMetadata>
-def create_content_metadata druid, objects, content_type = :image
+def create_content_metadata druid, objects, content_type = :file
   Nokogiri::XML::Builder.new do |xml|
     xml.contentMetadata(:objectId => "#{druid}",:type => content_type) do
       seq = 1
@@ -60,25 +62,27 @@ def create_content_metadata druid, objects, content_type = :image
           :label => o.label,
           :file_attributes => o.file_attributes,
           :path => o.path,
-          :imagesize => FastImage.size(o.path),
-          :imagetype => FastImage.type(o.path)
+          :image_size => FastImage.size(o.path),
+          :image_type => FastImage.type(o.path),
+          :image_mimetype => MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first
         })
         xml.resource(
           :id => "#{druid}_#{seq}",
           :sequence => seq,
           :type => o.object_type == :application ? :object : o.object_type
         ) do
-          o.file_attributes ||= FILE_ATTRIBUTES[o.mimetype] || FILE_ATTRIBUTES['default']
+          mimetype = o.image?? MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first.to_s : o.mimetype
+          o.file_attributes ||= FILE_ATTRIBUTES[mimetype] || FILE_ATTRIBUTES['default']
           xml.label o.label
           xml.file  o.file_attributes.merge(
                     :id => o.filename,
-                    :mimetype => o.mimetype, 
+                    :mimetype => mimetype, 
                     :size => o.filesize) do
             xml.checksum(o.sha1, :type => 'sha1')
             xml.checksum(o.md5, :type => 'md5')
             if o.image?
-              img = FastImage.size(o.path)
-              xml.imageData :width => img[0], :height => img[1]
+              wh = FastImage.size(o.path)
+              xml.imageData :width => wh[0], :height => wh[1]
             end
           end
         end
@@ -121,9 +125,7 @@ def do_accession druid, flags = {}
   opts.merge!({
     :pid              => druid.druid, # druid:xx111xx1111
     :source_id        => { 'geomdtk' => geoMetadata.file_id.first.to_s },
-    :tags             => [
-      "Project : GIS", 
-      "Registered By : #{%x{whoami}.strip} (GeoMDTK)"]
+    :tags             => []
   })
   
   # copy other optional parameters from input flags
@@ -196,6 +198,7 @@ def do_accession druid, flags = {}
     
     xml = create_content_metadata opts[:pid], objects
     item.datastreams['contentMetadata'].content = xml.to_xml
+    ap({:content_metadata => xml}) if flags[:verbose]
   end
   
   # save changes
@@ -210,7 +213,10 @@ begin
   flags = {
     :admin_policy => 'druid:cb854wz7157',
     :rights => 'stanford',
-    :tags => [],
+    :tags => [
+      "Registered With : GeoMDTK",
+      "Registered By : #{%x{whoami}.strip}"
+    ],
     :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp',
     :verbose => false,
     :configtest => false,
@@ -225,16 +231,16 @@ begin
     opts.banner = <<EOM
 Usage: #{File.basename(__FILE__)} [options] [druid [druid...]]
 EOM
-    opts.on("--apo DRUID", "APO for collection to accession (default: #{flags[:admin_policy]})") do |druid|
+    opts.on("--apo DRUID", "APO for collection to accession" + (flags[:admin_policy] ? " (default: #{flags[:admin_policy]})" : '')) do |druid|
       flags[:admin_policy] = DruidTools::Druid.new(druid).druid
     end
-    opts.on("--collection DRUID", "Collection for accession (default: #{flags[:collection]})") do |druid|
+    opts.on("--collection DRUID", "Collection for accession" + (flags[:collection] ? " (default: #{flags[:collection]})" : '')) do |druid|
       flags[:collection] = DruidTools::Druid.new(druid).druid
     end
-    opts.on("--purge", "--no-purge", "Purge items before accessioning (default: #{flags[:purge]})") do |b|
-      flags[:purge] = b
+    opts.on("--purge", "Purge items before accessioning") do |b|
+      flags[:purge] = true
     end
-    opts.on("-q", "--quiet", "Run quietly (default: #{not flags[:verbose]})") do
+    opts.on("-q", "--quiet", "Run quietly") do
       flags[:verbose] = false
     end
     opts.on("--rights KEYWORD", "Rights keyword (default: #{flags[:rights]})") do |keyword|
@@ -243,17 +249,17 @@ EOM
     opts.on("--tag TAG", "Tag for each object - multiple tags allowed") do |tag|
       flags[:tags] << tag
     end
-    opts.on("--test", "Verify configuration then exit (default: #{flags[:configtest]})") do 
+    opts.on("--test", "Verify configuration then exit") do 
       flags[:configtest] = true
     end
     opts.on("--tmpdir DIR", "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |d|
       flags[:tmpdir] = d
     end
-    opts.on("--upload [MB]", "Upload content files less than maximum MB (default: #{flags[:upload]}; #{flags[:upload_max]} MB max)") do |mb|
+    opts.on("--upload[=MB]", "Upload content files less than MB (default: <= #{flags[:upload_max]} MB)") do |mb|
       flags[:upload] = true
       flags[:upload_max] = mb.to_f unless mb.nil?
     end
-    opts.on("-v", "--verbose", "Run verbosely (default: #{flags[:verbose]})") do 
+    opts.on("-v", "--verbose", "Run verbosely") do 
       flags[:verbose] = true
     end
     opts.on("--workspace DIR", "Workspace directory for assembly (default: #{flags[:workspacedir]})") do |d|
@@ -264,6 +270,8 @@ EOM
   [flags[:tmpdir], flags[:workspacedir]].each do |d|
     raise ArgumentError, "Missing directory #{d}" unless File.directory? d
   end
+  
+  ap({:flags => flags}) if flags[:verbose]
   
   # Verify configuation
   if flags[:configtest]
