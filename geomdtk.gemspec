@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = 'geomdtk'
   s.version = GeoMDTK::VERSION
   s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '>=1.9.3'
+  s.required_ruby_version = '~> 1.9.3'
   s.authors = ['Darren Hardy']
   s.email = ['drh@stanford.edu']
   s.summary = %q{GeoMDTK}
@@ -18,9 +18,17 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'confstruct'
+  s.add_dependency 'fastimage'  
   s.add_dependency 'nokogiri'
   s.add_dependency 'rest-client'
+  s.add_dependency 'rsolr'
+  
+  # SUL-DLSS gems
+  s.add_dependency 'assembly-objectfile'
+  s.add_dependency 'dor-services'
   s.add_dependency 'druid-tools'
+  s.add_dependency 'mods'
+  s.add_dependency 'rgeoserver'
 
   s.add_development_dependency 'awesome_print'
   s.add_development_dependency 'equivalent-xml'
