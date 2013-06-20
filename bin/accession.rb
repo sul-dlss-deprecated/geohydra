@@ -73,6 +73,13 @@ def create_content_metadata druid, objects, content_type = :file
         ) do
           mimetype = o.image?? MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first.to_s : o.mimetype
           o.file_attributes ||= FILE_ATTRIBUTES[mimetype] || FILE_ATTRIBUTES['default']
+          if mimetype == 'application/zip'
+            o.file_attributes[:publish] = 'yes'
+            o.file_attributes[:shelve] = 'yes'
+            if o.path.include?('_EPSG_') # derivative
+              o.file_attributes[:preserve] = 'no'
+            end
+          end
           xml.label o.label
           xml.file  o.file_attributes.merge(
                     :id => o.filename,
