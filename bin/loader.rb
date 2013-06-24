@@ -177,6 +177,7 @@ begin
   
   # init
   # Connect to the GeoServer catalog
+  puts "Connecting to catalog..." if flags[:verbose]
   catalog = RGeoServer::catalog
 
   # Obtain a handle to the workspace and clean it up. 
@@ -207,5 +208,6 @@ begin
   end
 rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"
+  $stderr.puts e.backtrace
   exit(-1)
 end
