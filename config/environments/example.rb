@@ -10,17 +10,23 @@ module GeoMDTK
     end
     
     geoserver do
-      service_root 'http://admin:mypassword@host/geoserver'
       workspace 'druid'
       namespace 'http://mynamespace'
     end
 
     geowebcache do
-      service_root 'http://admin:mypassword@host/geoserver/gwc'
-      srs 'EPSG:4326'
-      zoom '1:10'
-      format 'image/png'
-      threadCount 1
+      seed do # one or more seeding options
+        basic do
+          gridSetId 'EPSG:4326' # required
+          zoom '1:10' # required
+          tileFormat 'image/png' # optional, defaults to image/png
+          threadCount 2 # optional, defaults to 1
+        end
+        google_toponly do
+          gridSetId 'EPSG:900913'
+          zoom '1:3'
+        end
+      end
     end 
   end
 end

@@ -27,18 +27,6 @@ require 'rgeoserver'
 WORKSPACE_NAME = GeoMDTK::Config.geoserver.workspace || 'druid'
 NAMESPACE = GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
 
-# GeoWebCache configuration
-SEED = GeoMDTK::Config.geowebcache
-SEED_OPTIONS = {
-  :srs => {
-    :number => GeoMDTK::Config.geowebcache.srs.gsub(%r{^EPSG:}, '').to_i
-  },
-  :zoomStart => GeoMDTK::Config.geowebcache.zoom.gsub(%r{:\d$}, '').to_i,
-  :zoomStop => GeoMDTK::Config.geowebcache.zoom.gsub(%r{^\d:}, '').to_i,
-  :format => GeoMDTK::Config.geowebcache.format || 'image/png',
-  :threadCount => (GeoMDTK::Config.geowebcache.threadCount || '1').to_i
-}
-
 def main catalog, ws, layers, flags = {}
   raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
 
@@ -108,14 +96,6 @@ def main catalog, ws, layers, flags = {}
       ft.save
     else
       raise NotImplementedError, "Unsupported format #{format}"    
-    end
-
-    # If the layer has been create, start the seeding process
-    puts "Layer: #{layername}" if flags[:verbose]
-    lyr = RGeoServer::Layer.new catalog, :name => layername
-    if not lyr.new? and SEED
-      puts "Layer: seeding with #{SEED_OPTIONS}" if flags[:verbose]
-      lyr.seed :issue, SEED_OPTIONS
     end
   end
 end
