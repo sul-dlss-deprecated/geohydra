@@ -6,6 +6,15 @@ Geospatial MetaData ToolKit for use in a GeoHydra head.
 Setup
 -----
 
+If needed, configure host to use Ruby 1.9.3:
+
+    % rvm_path=$HOME/.rvm rvm-installer --auto-dotfiles
+    % source ~/.bashrc
+    % rvm use 1.9.3@geomdtk
+    % rvm rvmrc create
+
+Run setup:
+
     % bundle install
     % bundle exec rake spec
     % bundle exec rake yard
