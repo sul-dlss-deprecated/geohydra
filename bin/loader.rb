@@ -167,7 +167,7 @@ end
 # __MAIN__
 begin
   flags = {
-    :delete => true,
+    :delete => false,
     :verbose => true,
     :datadir => '/var/geomdtk/current/workspace',
     :format => 'MODS'
@@ -175,17 +175,18 @@ begin
   
   OptionParser.new do |opts|
     opts.banner = "
-    Usage: #{File.basename(__FILE__)} -f MODS [-v] [--delete] druid [druid...]
-           #{File.basename(__FILE__)} -f YAML [-v] [--delete] [input.yaml ...]
+    Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ...]
+           #{File.basename(__FILE__)} [-v] [--delete] -f YAML [input.yaml ...]
            
     "
-    opts.on("-v", "--[no-]verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
-      flags[:verbose] = v
+    opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+      flags[:verbose] = true
     end
-    opts.on(nil, "--[no-]delete", "Delete workspaces recursively (default: #{flags[:delete]})") do |v|
-      flags[:delete] = v
+    opts.on("--delete", "Delete workspaces recursively") do |v|
+      flags[:delete] = true
     end
     opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]})") do |v|
+      raise ArgumentError, "Invalid directory #{v}" unless File.directory?(v)
       flags[:datadir] = v
     end
     opts.on("-f FORMAT", "--format=FORMAT", "Input file format of MODS or YAML (default: #{flags[:format]})") do |v|

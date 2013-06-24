@@ -6,5 +6,11 @@ geoserver:
   password: "mypassword"
   # Set to your GWC server, or "builtin" for the one bundled with GeoServer
   geowebcache_url: "builtin"
-  # Set to false to disable or stdout/stderr or 'filename.out'
-  logfile: 'rgeoserver.log' #stdout #false
+  # RestClient: 
+  restclient:
+    # Set to false to disable or stdout/stderr or 'filename.out'
+    logfile: 'rgeoserver.log' #stdout
+    # Timeout (in seconds)
+    timeout: 300
+    # Open Timeout (in seconds)
+    open_timeout: 60
