@@ -69,4 +69,17 @@ Dor::Config.configure do
     url 'http://user:mypassword@host/workflow/'
   end
   
+  content do
+    content_user 'myuser'
+    content_base_dir '/my/content'
+    content_server 'my.content.host'
+  end
+  
+  stacks do
+    local_workspace_root '/my/local/workspace'
+    storage_root '/my/remote/stacks'
+    host 'my.stacks.host'
+    user 'my.stacks.user'
+  end
+  
 end
