@@ -2,7 +2,7 @@ require 'base64'
 
 module GeoMDTK
   # Facilitates XSLT stylesheet transformations for ISO 19139 import/export
-  module Transform
+  class Transform
     # XSLT file locations
     XSLT = {
       :rdf => File.join(File.dirname(__FILE__), 'rdf_bundle.xsl'),
@@ -16,7 +16,7 @@ module GeoMDTK
     XMLLINT = 'xmllint --format --xinclude --nsclean'
     
     # Converts a ISO 19139 into MODS v3
-    # @param [String] file with data as ISO 19139 XML.
+    # @param [String] fn with data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the MODS v3 metadata
     def self.to_mods fn
       doc = Dor::GeoMetadataDS.from_xml File.read(fn)
@@ -58,8 +58,7 @@ module GeoMDTK
     end
     
     # Converts a ISO 19139 into RDF geoMetadataDS
-    # @param [String] geoMetadata Input data as ISO 19139 XML.
-    # @param [Boolean] validate - if true, uses Nokogiri::XML to parse the geoMetadata before transforming
+    # @param [String] fn Input data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
     def self.to_geoMetadataDS fn
       do_xslt XSLT[:rdf], fn
