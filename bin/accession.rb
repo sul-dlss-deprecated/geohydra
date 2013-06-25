@@ -137,7 +137,7 @@ class Accession
                 if resource_type == :main
                   if geoData and roletype == 'master'
                     xml.geoData :srsName => geoData['srsName'] do 
-                      xml.__send__ :insert, geoData
+                      xml.__send__ :insert, geoData # XXX: doesn't handle namespaces properly
                       geoData = nil # only once                  
                     end
                   else
