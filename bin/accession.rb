@@ -32,7 +32,7 @@ class Accession
   #
   #    <?xml version="1.0" encoding="UTF-8"?>
   #    <contentMetadata objectId="druid:zz943vx1492" type="dataset">
-  #      <resource id="druid:zz943vx1492_1" sequence="1" type="object">
+  #      <resource id="druid:zz943vx1492_1" sequence="1" type="main">
   #        <label>Data</label>
   #        <file preserve="yes" shelve="yes" publish="yes" id="BASINS.zip" mimetype="application/zip" size="490949" role="master">
   #          <geoData>
@@ -45,9 +45,9 @@ class Accession
   #          <checksum type="md5">b9f1179bf4182f2b8c7aed87b23777f9</checksum>
   #        </file>
   #      </resource>
-  #      <resource id="druid:zz943vx1492_2" sequence="2" type="image">
+  #      <resource id="druid:zz943vx1492_2" sequence="2" type="supplement">
   #        <label>Preview</label>
-  #        <file preserve="no" shelve="yes" publish="yes" id="BASINS.png" mimetype="image/png" size="14623" role="master">
+  #        <file preserve="yes" shelve="yes" publish="yes" id="BASINS.png" mimetype="image/png" size="14623" role="master">
   #          <checksum type="sha1">3c0b832ab6bd3c824e02bef6e24fed1cc0cb8888</checksum>
   #          <checksum type="md5">5c056296472c081e80742fc2240369ef</checksum>
   #          <imageData width="800" height="532"/>
@@ -102,26 +102,32 @@ class Accession
                 :image_type => FastImage.type(o.path),
                 :image_mimetype => MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first
               }) if flags[:debug]
+              
               mimetype = o.image?? MIME::Types.type_for("xxx.#{FastImage.type(o.path)}").first.to_s : o.mimetype
               o.file_attributes ||= FILE_ATTRIBUTES[mimetype] || FILE_ATTRIBUTES['default']
-              roletype = nil
-              if mimetype == 'application/zip'
-                o.file_attributes[:publish] = 'yes'
-                o.file_attributes[:shelve] = 'yes'
-                if o.path =~ %r{_(EPSG_\d+)}i # derivative
-                  o.file_attributes[:preserve] = 'no'
-                  roletype = 'derivative'
-                else
-                  roletype = 'master'
-                end
+              [:publish, :shelve].each {|t| o.file_attributes[t] = 'yes'}
+              
+              roletype = if mimetype == 'application/zip'
+                           if o.path =~ %r{_(EPSG_\d+)}i # derivative
+                             'derivative'
+                           else
+                             'master'
+                           end
+                         elsif o.image?
+                             if o.path =~ %r{_small.png$}
+                               'derivative'
+                             else
+                               'master'
+                             end
+                         end || nil
+              
+              case roletype
+              when 'master'
+                o.file_attributes[:preserve] = 'yes'
+              else
+                o.file_attributes[:preserve] = 'no'
               end
-              if o.image?
-                if o.path =~ %r{_small.png$}
-                  roletype = 'derivative' 
-                else
-                  o.file_attributes[:preserve] = 'yes'
-                end
-              end
+                            
               xml.file o.file_attributes.merge(
                          :id => o.filename,
                          :mimetype => mimetype, 
@@ -331,11 +337,11 @@ EOM
     opts.on("--tmpdir DIR", "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |d|
       flags[:tmpdir] = d
     end
-    opts.on("--upload[=MB]", "Upload content files less than MB (default: <= #{flags[:upload_max]} MB)") do |mb|
+    opts.on("--upload[=MB]", "Upload content files less than MB (default: <= #{flags[:upload_max]} MB) or -1 for unrestricted") do |mb|
       flags[:upload] = true
-      flags[:upload_max] = mb.to_f unless mb.nil?
+      flags[:upload_max] = (mb.to_f < 0 ? Float::INFINITY : mb.to_f) unless mb.nil?
     end
-    opts.on("-v", "--verbose", "Run verbosely") do 
+    opts.on("-v", "--verbose", "Run verbosely, use multiple times for debug level output") do 
       flags[:debug] = true if flags[:verbose]  # -vv
       flags[:verbose] = true
     end
