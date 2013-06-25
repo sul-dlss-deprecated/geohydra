@@ -134,10 +134,16 @@ class Accession
                          :size => o.filesize,
                          :role => roletype || 'master') do
 
-                xml.geoData do 
-                  xml.__send__ :insert, geoData                    
-                end if geoData and resource_type == :main
-                
+                if resource_type == :main
+                  if geoData and roletype == 'master'
+                    xml.geoData :srsName => geoData['srsName'] do 
+                      xml.__send__ :insert, geoData
+                      geoData = nil # only once                  
+                    end
+                  else
+                    xml.geoData :srsName => 'EPSG:4236'
+                  end
+                end
                 xml.checksum(o.sha1, :type => 'sha1')
                 xml.checksum(o.md5, :type => 'md5')
                 if o.image?
@@ -303,7 +309,7 @@ begin
     :configtest => false,
     :purge => false,
     :upload => false,
-    :upload_max => 10, # in Megabytes
+    :upload_max => Float::INFINITY, # unrestricted
     :debug => false,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace'
   }
@@ -337,7 +343,7 @@ EOM
     opts.on("--tmpdir DIR", "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |d|
       flags[:tmpdir] = d
     end
-    opts.on("--upload[=MB]", "Upload content files less than MB (default: <= #{flags[:upload_max]} MB) or -1 for unrestricted") do |mb|
+    opts.on("--upload[=MAX]", "Upload content files -- MAX restricts to files smaller than MAX MB") do |mb|
       flags[:upload] = true
       flags[:upload_max] = (mb.to_f < 0 ? Float::INFINITY : mb.to_f) unless mb.nil?
     end
