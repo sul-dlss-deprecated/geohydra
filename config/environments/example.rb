@@ -73,13 +73,17 @@ Dor::Config.configure do
     content_user 'myuser'
     content_base_dir '/my/content'
     content_server 'my.content.host'
+    ssh_auth 'gssapi-with-mic'
   end
   
   stacks do
+    document_cache_storage_root '/my/document/cache'
+    document_cache_host 'my.document.cache.host'
+    document_cache_user 'my.document.cache.user'
     local_workspace_root '/my/local/workspace'
     storage_root '/my/remote/stacks'
     host 'my.stacks.host'
     user 'my.stacks.user'
+    ssh_auth 'gssapi-with-mic'
   end
-  
 end
