@@ -225,6 +225,10 @@ module GeoMDTK
       begin
         # Load item
         item = Dor::Item.find(druid.druid)
+        # add collection when we don't use registration service
+        unless opts[:collection].nil?
+          item.add_collection(opts[:collection]) 
+        end
       rescue ActiveFedora::ObjectNotFoundError => e
         # Register item
         begin
