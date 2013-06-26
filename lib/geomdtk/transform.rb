@@ -18,6 +18,7 @@ module GeoMDTK
     # Converts a ISO 19139 into MODS v3
     # @param [String] fn with data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the MODS v3 metadata
+    # @deprecated
     def self.to_mods fn
       doc = Dor::GeoMetadataDS.from_xml File.read(fn)
       doc.to_mods
@@ -35,6 +36,7 @@ module GeoMDTK
     end
     
     # @return [Hash]
+    # @deprecated
     def self.to_solr fn
       doc = Dor::GeoMetadataDS.from_xml File.read(fn)
       doc.to_solr
@@ -57,7 +59,7 @@ module GeoMDTK
       raise ArgumentError, "No thumbnail embedded within #{fn}"
     end
     
-    # Converts a ISO 19139 into RDF geoMetadataDS
+    # Converts a ISO 19139 into RDF-bundled document geoMetadataDS
     # @param [String] fn Input data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
     def self.to_geoMetadataDS fn

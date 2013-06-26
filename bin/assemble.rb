@@ -45,33 +45,37 @@ def doit client, uuid, obj, flags
       # GeoMetadataDS
       gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
       puts "Generating #{gfn}" if flags[:verbose] 
-      File.open(gfn, "w") do |f|
-        f << GeoMDTK::Transform.to_geoMetadataDS(ifn)
-      end
+      File.open(gfn, 'w') { |f| f << GeoMDTK::Transform.to_geoMetadataDS(ifn) }
 
       # MODS from GeoMetadataDS
+      geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
+      ap({:geoMetadata => geoMetadata.ng_xml, :descMetadata => geoMetadata.to_mods}) if flags[:verbose]
       dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
       puts "Generating #{dfn}" if flags[:verbose]   
-      File.open(dfn, "w") do |f|
-        f << GeoMDTK::Transform.to_mods(gfn)
-      end
+      File.open(dfn, 'w') { |f| f << geoMetadata.to_mods.to_xml }
 
       # Solr document from GeoMetadataDS
       sfn = File.join(druid.temp_dir, 'solr.xml')
       puts "Generating #{sfn}" if flags[:verbose]
-      h = GeoMDTK::Transform.to_solr(gfn)
+      h = geoMetadata.to_solr_spatial
+      ap({:to_solr_spatial => h})
       doc = Nokogiri::XML::Builder.new do |xml|
         xml.add {
           xml.doc_ {
-            h.keys.each do |k|
-              h[k].each do |v|
-                xml.field v, :name => k
+            h.each do |k, v|
+              v.each do |s|
+                xml.field s, :name => k
               end
             end
           }
         }
       end
-      File.open(sfn, "w") { |f| f << doc.to_xml }
+      File.open(sfn, 'w') { |f| f << doc.to_xml }
+
+      # Solr document from GeoMetadataDS
+      dcfn = File.join(druid.temp_dir, 'dc.xml')
+      puts "Generating #{dcfn}" if flags[:verbose]
+      File.open(dcfn, 'w') { |f| f << geoMetadata.to_dublin_core.to_xml }
     end
   end
 

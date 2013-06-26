@@ -135,8 +135,8 @@ module GeoMDTK
 
                   if resource_type == :main
                     if geoData and roletype == 'master'
-                      xml.geoData :srsName => geoData['srsName'] do 
-                        xml.__send__ :insert, geoData # XXX: doesn't handle namespaces properly
+                      xml.geoData :srsName => geoData['srsName'] do
+                        xml.parent.add_child geoData
                         geoData = nil # only once                  
                       end
                     else
@@ -247,7 +247,8 @@ module GeoMDTK
       # now item is registered, so generate mods
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
       item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
-      item.datastreams['descMetadata'].content = item.generate_mods.to_xml
+      item.datastreams['descMetadata'].content = geoMetadata.to_mods.to_xml
+      ap({:descMetadata => item.datastreams['descMetadata'].ng_xml}) if flags[:debug]
 
       # upload data files to contentMetadata if required
       if flags[:upload]
@@ -268,7 +269,7 @@ module GeoMDTK
         geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension/rdf:RDF/rdf:Description[starts-with(@rdf:about, "geo")]/*', 
           'xmlns:mods' => 'http://www.loc.gov/mods/v3',
           'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#').first
-        ap({:geoData => geoData}) if flags[:debug]
+        ap({:geoData => geoData, :geoDataNS => geoData.namespaces}) if flags[:debug]
 
         $stderr.puts "Creating content..." if flags[:verbose]
         xml = create_content_metadata objects, geoData, flags

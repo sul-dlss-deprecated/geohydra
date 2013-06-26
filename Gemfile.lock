@@ -9,10 +9,10 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 1af9c5de55c9de2d8554838b824e5a49e0cdba78
+  revision: 09ff77c84211631ca523e78c1b8137d421b39cf5
   branch: geoMetadata
   specs:
-    dor-services (4.3.0.3)
+    dor-services (4.3.0.rc6)
       active-fedora (~> 5.6, >= 5.6.3)
       confstruct (>= 0.2.2)
       dor-workflow-service (~> 1.3)
@@ -66,16 +66,16 @@ GIT
 PATH
   remote: .
   specs:
-    geomdtk (0.1.7)
+    geomdtk (0.1.8)
       assembly-objectfile
       confstruct
-      dor-services
+      dor-services (~> 4.3.0.rc1)
       druid-tools
       fastimage
       mods
       nokogiri
       rest-client
-      rgeoserver
+      rgeoserver (~> 0.6.0)
       rsolr
 
 GEM
