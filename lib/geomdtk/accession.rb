@@ -135,16 +135,14 @@ module GeoMDTK
 
                   if resource_type == :main
                     if geoData and roletype == 'master'
-                      xml.geoData :srsName => geoData['srsName'] do
-                        if geoData.namespaces['xmlns:gml'].nil?
+                      if flags[:experimental]
+                        xml.geoData :srsName => geoData['srsName'], 'xmlns:gml' => Dor::GeoMetadataDS::NS[:gml] do
                           xml.parent.add_child geoData
-                        else
-                          xml.parent.add_namespace 'gml', geoData.namespaces['xmlns:gml']
-                          ap({:namespaces => geoData.namespaces}) if flags[:debug]
-                          xml['gml'].parent.add_child geoData
                         end
-                        geoData = nil # only once                  
+                      else
+                        xml.geoData :srsName => geoData['srsName']
                       end
+                      geoData = nil # only once                  
                     else
                       xml.geoData :srsName => 'EPSG:4236'
                     end
@@ -272,11 +270,20 @@ module GeoMDTK
         end
         ap({:content_metadata_objects => objects}) if flags[:debug]
 
-        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension/rdf:RDF/rdf:Description[starts-with(@rdf:about, "geo")]/*', 
-          'xmlns:mods' => 'http://www.loc.gov/mods/v3',
-          'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#').first
-        ap({:geoData => geoData, :geoDataNS => geoData.namespaces}) if flags[:debug]
+        # extract the MODS extension cleanly
+        doc = item.datastreams['descMetadata'].ng_xml
+        ns = {}
+        doc.collect_namespaces.each do |k, v|
+          if k =~ %r{^xmlns:(.*)}i
+            ns[$1] = v 
+          else
+            ns['mods'] = v
+          end
+        end
+        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension/rdf:RDF/rdf:Description[starts-with(@rdf:about, "geo")]/*', ns).first
+        ap({:geoData => geoData, :geoDataClass => geoData.class}) if flags[:debug]
 
+        # Create the contentMetadata
         $stderr.puts "Creating content..." if flags[:verbose]
         xml = create_content_metadata objects, geoData, flags
         item.datastreams['contentMetadata'].content = xml
