@@ -30,11 +30,11 @@ module GeoMDTK
     #      <resource id="druid:ks297fy1411_1" sequence="1" type="main">
     #        <label>Data</label>
     #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.zip" mimetype="application/zip" size="2191447" role="master">
-    #          <geoData srsName="EPSG:4269">
-    #            <Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269">
+    #          <geoData xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269">
+    #            <gml:Envelope srsName="EPSG:4269">
     #              <gml:lowerCorner>-97.238989 23.780775</gml:lowerCorner>
     #              <gml:upperCorner>-81.170106 30.289096</gml:upperCorner>
-    #            </Envelope>
+    #            </gml:Envelope>
     #          </geoData>
     #          <checksum type="sha1">9a08212a815902ebcd14c83bc258bfd830e86b58</checksum>
     #          <checksum type="md5">a89191324c24ead1f1bc0fced4e0f75d</checksum>
@@ -136,9 +136,12 @@ module GeoMDTK
                   if resource_type == :main
                     if geoData and roletype == 'master'
                       xml.geoData :srsName => geoData['srsName'] do
-                        xml.parent.add_child geoData
-                        unless geoData.namespaces['xmlns:gml'].nil?
+                        if geoData.namespaces['xmlns:gml'].nil?
+                          xml.parent.add_child geoData
+                        else
                           xml.parent.add_namespace 'gml', geoData.namespaces['xmlns:gml']
+                          ap({:namespaces => geoData.namespaces}) if flags[:debug]
+                          xml['gml'].parent.add_child geoData
                         end
                         geoData = nil # only once                  
                       end
@@ -277,12 +280,7 @@ module GeoMDTK
         $stderr.puts "Creating content..." if flags[:verbose]
         xml = create_content_metadata objects, geoData, flags
         item.datastreams['contentMetadata'].content = xml
-        ap({
-          :content_metadataClass => xml.class,
-          :content_metadata => Nokogiri::XML(xml), 
-          :contentMetadataDS => item.datastreams['contentMetadata'],
-          :contentMetadataDS_public_xml => item.datastreams['contentMetadata'].public_xml
-        }) if flags[:debug]
+        ap({:contentMetadataDS => item.datastreams['contentMetadata'].ng_xml}) if flags[:debug]
 
         $stderr.puts "Shelving to stacks content..." if flags[:verbose]
         files = []
