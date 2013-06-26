@@ -66,7 +66,7 @@ GIT
 PATH
   remote: .
   specs:
-    geomdtk (0.1.6)
+    geomdtk (0.1.7)
       assembly-objectfile
       confstruct
       dor-services
