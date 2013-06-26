@@ -137,6 +137,9 @@ module GeoMDTK
                     if geoData and roletype == 'master'
                       xml.geoData :srsName => geoData['srsName'] do
                         xml.parent.add_child geoData
+                        unless geoData.namespaces['xmlns:gml'].nil?
+                          xml.parent.add_namespace 'gml', geoData.namespaces['xmlns:gml']
+                        end
                         geoData = nil # only once                  
                       end
                     else
@@ -155,7 +158,7 @@ module GeoMDTK
             end
           end
         end
-      end.doc
+      end.doc.canonicalize
     end
 
     def each_upload fn, label, flags
@@ -273,9 +276,10 @@ module GeoMDTK
 
         $stderr.puts "Creating content..." if flags[:verbose]
         xml = create_content_metadata objects, geoData, flags
-        item.datastreams['contentMetadata'].content = xml.to_xml
+        item.datastreams['contentMetadata'].content = xml
         ap({
-          :content_metadata => xml, 
+          :content_metadataClass => xml.class,
+          :content_metadata => Nokogiri::XML(xml), 
           :contentMetadataDS => item.datastreams['contentMetadata'],
           :contentMetadataDS_public_xml => item.datastreams['contentMetadata'].public_xml
         }) if flags[:debug]
