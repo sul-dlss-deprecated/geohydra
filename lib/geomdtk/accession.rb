@@ -135,16 +135,16 @@ module GeoMDTK
 
                   if resource_type == :main
                     if geoData and roletype == 'master'
-                      if flags[:experimental]
-                        xml.geoData :srsName => geoData['srsName'], 'xmlns:gml' => Dor::GeoMetadataDS::NS[:gml] do
-                          xml.parent.add_child geoData
-                        end
-                      else
-                        xml.geoData :srsName => geoData['srsName']
+                      xml.geoData :srsName => geoData['srsName'] do
+                        xml.parent.add_child geoData
                       end
                       geoData = nil # only once                  
                     else
-                      xml.geoData :srsName => 'EPSG:4236'
+                      if o.filename =~ %r{_EPSG_(\d+)\.zip}i
+                        xml.geoData :srsName => "EPSG:#{1}"
+                      else
+                        xml.geoData :srsName => 'EPSG:4236'
+                      end
                     end
                   end
                   xml.checksum(o.sha1, :type => 'sha1')
