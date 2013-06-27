@@ -141,7 +141,7 @@ module GeoMDTK
                       geoData = nil # only once                  
                     else
                       if o.filename =~ %r{_EPSG_(\d+)\.zip}i
-                        xml.geoData :srsName => "EPSG:#{1}"
+                        xml.geoData :srsName => "EPSG:#{$1}"
                       else
                         xml.geoData :srsName => 'EPSG:4236'
                       end
