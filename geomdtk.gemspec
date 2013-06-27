@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'confstruct'
   s.add_dependency 'fastimage'  
-  s.add_dependency 'nokogiri'
+  s.add_dependency 'nokogiri', '~> 1.6.0' # need libxml2 >= 2.7.8 and 1.6 bundles latest libxml2
   s.add_dependency 'rest-client'
   s.add_dependency 'rsolr'
   
