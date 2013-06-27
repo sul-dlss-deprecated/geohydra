@@ -30,8 +30,8 @@ module GeoMDTK
     #      <resource id="druid:ks297fy1411_1" sequence="1" type="main">
     #        <label>Data</label>
     #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.zip" mimetype="application/zip" size="2191447" role="master">
-    #          <geoData xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269">
-    #            <gml:Envelope srsName="EPSG:4269">
+    #          <geoData srsName="EPSG:4269">
+    #            <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269">
     #              <gml:lowerCorner>-97.238989 23.780775</gml:lowerCorner>
     #              <gml:upperCorner>-81.170106 30.289096</gml:upperCorner>
     #            </gml:Envelope>
