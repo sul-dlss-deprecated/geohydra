@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 09ff77c84211631ca523e78c1b8137d421b39cf5
+  revision: 3c9258437cc5dca1c4c439463690fb516e2d4695
   branch: geoMetadata
   specs:
     dor-services (4.3.0.rc6)
@@ -24,7 +24,7 @@ GIT
       net-sftp
       net-ssh
       net-ssh-krb (>= 0.3.0)
-      nokogiri (~> 1.5.6)
+      nokogiri (~> 1.5)
       om
       progressbar
       rest-client
@@ -73,7 +73,7 @@ PATH
       druid-tools
       fastimage
       mods
-      nokogiri
+      nokogiri (~> 1.6)
       rest-client
       rgeoserver (~> 0.6.0)
       rsolr
@@ -104,7 +104,7 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
-    addressable (2.3.4)
+    addressable (2.3.5)
     awesome_print (1.1.0)
     bagit (0.3.1)
       docopt (~> 0.5.0)
@@ -148,7 +148,8 @@ GEM
     mediashelf-loggable (0.4.9)
     method_source (0.8.1)
     mime-types (1.23)
-    mini_exiftool (2.1.0)
+    mini_exiftool (2.2.0)
+    mini_portile (0.5.0)
     moab-versioning (1.2.7)
       confstruct
       happymapper
@@ -163,7 +164,8 @@ GEM
     net-ssh-krb (0.3.0)
       gssapi (~> 1.1.2)
       net-ssh (>= 2.0)
-    nokogiri (1.5.10)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
     nom-xml (0.5.1)
       activesupport
       i18n
