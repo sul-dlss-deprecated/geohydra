@@ -58,7 +58,7 @@ def doit client, uuid, obj, flags
       sfn = File.join(druid.temp_dir, 'solr.xml')
       puts "Generating #{sfn}" if flags[:verbose]
       h = geoMetadata.to_solr_spatial
-      ap({:to_solr_spatial => h})
+      ap({:to_solr_spatial => h}) if flags[:verbose]
       doc = Nokogiri::XML::Builder.new do |xml|
         xml.add {
           xml.doc_ {
