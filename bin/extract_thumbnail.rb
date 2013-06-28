@@ -4,9 +4,9 @@ require 'optparse'
 require 'geomdtk'
 
 def do_file fn
-  if fn =~ %r{^(.*).(shp|tif).xml$}
-    puts "Processing #{$1}"
-    GeoMDTK::Transform.extract_thumbnail fn, File.join(File.dirname(fn), "#{$1}.jpg")
+  if fn =~ %r{^(.*)\.(shp|tif)\.xml$}i
+    puts "Processing #{fn}"
+    GeoMDTK::Transform.extract_thumbnail fn, "#{$1}.jpg"
   else
     raise OptionParser::InvalidOption, "File <#{fn}> is not ESRI metadata format"
   end
@@ -38,7 +38,7 @@ begin
   optparse.parse!  
   if ARGV.empty?
     raise OptionParser::InvalidOption, flags[:datadir] + ' not a directory' unless File.directory?(flags[:datadir])
-    Dir.glob(flags[:datadir] + (flags[:recurse] ? '/**/*.xml' : '/*.xml')).each {|fn| do_file fn }
+    Dir.glob(flags[:datadir] + (flags[:recurse] ? '/**/*.shp.xml' : '/*.shp.xml')).each {|fn| do_file fn }
   else
     ARGV.each {|fn| do_file fn }
   end
