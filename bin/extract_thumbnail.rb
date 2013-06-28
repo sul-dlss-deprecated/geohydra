@@ -4,7 +4,7 @@ require 'optparse'
 require 'geomdtk'
 
 def do_file fn
-  if File.basename(fn) =~ %r{^(.*).(shp|tif).xml$}
+  if fn =~ %r{^(.*).(shp|tif).xml$}
     puts "Processing #{$1}"
     GeoMDTK::Transform.extract_thumbnail fn, File.join(File.dirname(fn), "#{$1}.jpg")
   else
@@ -24,8 +24,8 @@ EOM
   opts.on("-d", "--dir DIR", "Process all files in DIR (default: #{flags[:datadir]})") do |v|
     flags[:datadir] = v
   end
-  opts.on("-v", "--[no-]verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
-    flags[:verbose] = v
+  opts.on("-v", "--verbose", "Run verbosely") do |v|
+    flags[:verbose] = t
   end
 end
 
