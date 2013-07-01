@@ -21,7 +21,7 @@ def reproject druid, fn, flags
     puts "Projecting #{fn} into #{ofn}"
     FileUtils.mkdir_p odir unless File.directory? odir
     unless File.exist? ofn and test(?<, fn, ofn) # ofn exists and is older than fn
-      system("ogr2ogr -progress -t_srs '#{WKT}' '#{ofn}' '#{tmp}/#{shp}'") 
+      system("ogr2ogr -progress -t_srs '#{flags[:wkt][srid.to_s]}' '#{ofn}' '#{tmp}/#{shp}'") 
       if flags[:overwrite_prj]
         File.open(ofn.gsub(%r{shp$}, 'prj'), 'w') {|f| f.write(flags[:wkt][srid.to_s])}
       end
