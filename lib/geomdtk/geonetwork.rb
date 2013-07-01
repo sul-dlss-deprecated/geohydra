@@ -40,27 +40,30 @@ module GeoMDTK
     # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/metadata_xml_status.html Metadata status: `xml.metadata.status.get`
     #
     # @param  [String] uuid the UUID (fileIdentifier) in the GeoNetwork database
+    # @param  [Boolean] include_status 
     # @return [Struct] with the following fields:
     #    * `:content` as the XML metadata
     #    * `:status` as the status value, 
     #    * `:druid` as the druid identifier
-    def fetch(uuid)
+    def fetch(uuid, include_status = false)
       status = nil
-      xml = service("xml.metadata.status.get", { :uuid => uuid })
-      if xml.xpath('/response/record')
-        id = xml.xpath('/response/record/statusid').first.to_i
-        status = GEONETWORK_STATUS_CODES[id]
+      if include_status
+        xml = service('xml.metadata.status.get', { :uuid => uuid })
+        xml.xpath('/response/record/statusid') do |id|
+          status = GEONETWORK_STATUS_CODES[id.to_i]
+        end
       end
-      doc = service("xml.metadata.get", { :uuid => uuid })
-      if not doc.xpath('/gmd:MD_Metadata')
-        raise ArgumentError, "#{uuid} not found"
+      doc = service('xml.metadata.get', { :uuid => uuid })
+      if doc.xpath('//geonet:info/schema[text()="iso19139"]').empty?
+        raise ArgumentError, "#{uuid} not in ISO 19139 format"
       end
-      doc.xpath('/gmd:MD_Metadata/geonet:info').each { |x| x.remove }
       
       druid = nil
-      doc.xpath('//gmd:dataSetURI/gco:CharacterString/text()').each do |i|
+      doc.xpath('//gmd:dataSetURI/gco:CharacterString[starts-with(text(), "http://purl.stanford.edu")]/text()').each do |i|
         druid = to_druid(i.to_s)
       end
+      raise ArgumentError, "Cannot extract DRUID: #{uuid}" if druid.nil?
+      doc.xpath('/gmd:MD_Metadata/geonet:info').each { |x| x.remove }
       Struct.new(:content, :status, :druid).new(doc, status, druid)
     end
     
@@ -142,7 +145,7 @@ module GeoMDTK
     end
     
     def to_druid(purl)
-      purl.to_s.gsub(%r{^(http://purl.stanford.edu.*)/([a-z0-9]{11})$}, "\\2")
+      purl.to_s.downcase.gsub(%r{^(http://purl.stanford.edu.*)/([a-z0-9]{11})$}, "\\2")
     end
   end  
 end
