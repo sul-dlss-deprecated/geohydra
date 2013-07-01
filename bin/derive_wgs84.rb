@@ -24,7 +24,7 @@ GEOGCS["WGS 84",
         AUTHORITY["EPSG","9122"]],
     AUTHORITY["EPSG","4326"]]
 EOM
-.split.join.freeze
+WKT = WKT.split.join.freeze
 
 def do_system cmd, dry_run = false
   puts "RUNNING: #{cmd}"
@@ -48,7 +48,7 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = true)
     odir = File.dirname(ofn)
     puts "Projecting #{fn} into #{ofn}"
     FileUtils.mkdir_p odir unless File.directory? odir
-    unless File.exist? ofn
+    unless File.exist? ofn and test(?<, fn, ofn) # ofn exists and is older than fn
       do_system("ogr2ogr -progress -t_srs '#{WKT}' '#{ofn}' '#{tmp}/#{shp}'") 
       if overwrite_prj
         File.open(ofn.gsub(%r{shp$}, 'prj'), 'w') {|f| f.write(WKT)}
@@ -56,6 +56,8 @@ def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = true)
       FileUtils.rm_rf tmp
       do_system("zip -Dj #{fn.gsub(%r{\.zip}, '_EPSG_4326.zip')} #{odir}/#{k}.*")
       FileUtils.rm_rf(File.join(File.dirname(fn), 'EPSG'))
+    else
+      puts "#{ofn} already generated"
     end
   end
 end
