@@ -63,16 +63,15 @@ EOM
     Dir.glob(flags[:workspacedir] + '/??/???/??/????/???????????/content/*.zip').each do |fn| 
       druid = DruidTools::Druid.new(File.dirname(fn), flags[:workspacedir])
       puts "Processing #{druid.id} #{fn}"
-      reproject druid, fn, flags unless fn =~ %r{_EPSG_}i
+      GeoMDTK::Transform.reproject druid, fn, flags unless fn =~ %r{_EPSG_}i
     end
   else
     ARGV.each do |id|
       druid = DruidTools::Druid.new(id, flags[:workspacedir])
       Dir.glob(druid.content_dir + '/*.zip').each do |fn|
         puts "Processing #{druid.id} #{fn}"
-        reproject druid, fn, flags unless fn =~ %r{_EPSG_}i
+        GeoMDTK::Transform.reproject druid, fn, flags unless fn =~ %r{_EPSG_}i
       end
-      
     end
   end
 rescue SystemCallError => e
