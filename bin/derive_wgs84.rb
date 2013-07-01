@@ -10,8 +10,8 @@ def reproject druid, fn, flags
   k = File.basename(fn, '.zip')
   shpfn = k + '.shp'
   
-  puts "Extracting #{druid.id} #{fn}"
-  tmp = "#{flags[:tmpdir]}/#{k}"
+  puts "Extracting #{druid.id} #{fn}" if flags[:verbose]
+  tmp = "#{flags[:tmpdir]}/#{druid.id}"
   FileUtils.rm_rf tmp if File.directory? tmp
   FileUtils.mkdir_p tmp
   system("unzip -j '#{fn}' -d '#{tmp}'")
@@ -20,7 +20,7 @@ def reproject druid, fn, flags
     ifn = File.join(tmp, shpfn)
     odr = File.join(flags[:tmpdir], 'EPSG_' + srid.to_s)
     ofn = File.join(odr, shpfn)
-    puts "Projecting #{ifn} -> #{odr}/#{ofn}"
+    puts "Projecting #{ifn} -> #{odr}/#{ofn}" if flags[:verbose]
     
     # reproject
     FileUtils.mkdir_p odr unless File.directory? odr
@@ -29,11 +29,13 @@ def reproject druid, fn, flags
     # normalize prj file
     if flags[:overwrite_prj] and not flags[:wkt][srid.to_s].nil?
       prj_fn = ofn.gsub(%r{\.shp}, '.prj')
+      puts "Overwriting #{prj_fn}" if flags[:verbose]
       File.open(prj_fn, 'w') {|f| f.write(flags[:wkt][srid.to_s])}
     end
     
     # package up reprojection
     ozip = File.join(druid.content_dir, k + "_EPSG_#{srid}.zip")
+    puts "Repacking #{ozip}" if flags[:verbose]
     system("zip -Dj '#{ozip}' #{odr}/#{File.basename(k, '.shp')}.*")
     
     # cleanup
