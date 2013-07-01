@@ -5,9 +5,10 @@ require 'fileutils'
 require 'optparse'
 
 # @param overwrite_prj [Boolean] ogr2ogr writes a .prj file that GeoServer doesn't recognize as EPSG:4326
+
 def reproject druid, fn, flags
   k = File.basename(fn, '.zip')
-  shp = k + '.shp'
+  shpfn = k + '.shp'
   
   puts "Extracting #{druid.id} #{fn}"
   tmp = "#{flags[:tmpdir]}/#{k}"
@@ -16,23 +17,31 @@ def reproject druid, fn, flags
   system("unzip -j '#{fn}' -d '#{tmp}'")
   
   [4326].each do |srid|
-    ofn = File.join(File.dirname(fn), 'EPSG', srid.to_s, shp)
-    odir = File.dirname(ofn)
-    puts "Projecting #{fn} into #{ofn}"
-    FileUtils.mkdir_p odir unless File.directory? odir
-    unless File.exist? ofn and test(?<, fn, ofn) # ofn exists and is older than fn
-      system("ogr2ogr -progress -t_srs '#{flags[:wkt][srid.to_s]}' '#{ofn}' '#{tmp}/#{shp}'") 
-      if flags[:overwrite_prj]
-        File.open(ofn.gsub(%r{shp$}, 'prj'), 'w') {|f| f.write(flags[:wkt][srid.to_s])}
-      end
-      ozip = fn.gsub(%r{\.zip}, "_EPSG_#{srid}.zip")
-      FileUtils.rm_rf tmp
-      system("zip -Dj '#{ozip}' #{odir}/#{k}.*")
-      FileUtils.rm_rf(File.join(File.dirname(fn), 'EPSG'))
-    else
-      puts "#{ofn} already generated"
+    ifn = File.join(tmp, shpfn)
+    odr = File.join(tmp, 'EPSG_' + srid.to_s)
+    ofn = File.join(odr, shpfn)
+    puts "Projecting #{ifn} -> #{odr}/#{ofn}"
+    
+    # reproject
+    FileUtils.mkdir_p odr unless File.directory? odr
+    system("ogr2ogr -progress -t_srs '#{flags[:wkt][srid.to_s]}' '#{ofn}' '#{ifn}'") 
+    
+    # normalize prj file
+    if flags[:overwrite_prj] and not flags[:wkt][srid.to_s].nil?
+      prj_fn = ofn.gsub(%r{\.shp}, '.prj')
+      File.open(prj_fn, 'w') {|f| f.write(flags[:wkt][srid.to_s])}
     end
+    
+    # package up reprojection
+    ozip = File.join(druid.content_dir, k + "_EPSG_#{srid}.zip")
+    system("zip -Dj '#{ozip}' #{odr}/#{File.basename(k, '.shp')}.*")
+    
+    # cleanup
+    FileUtils.rm_rf odr
   end
+  
+  # cleanup
+  FileUtils.rm_rf tmp
 end
 
 # __MAIN__
