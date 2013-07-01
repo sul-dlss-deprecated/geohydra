@@ -66,6 +66,49 @@ module GeoMDTK
       do_xslt XSLT[:rdf], fn
     end
     
+    # @param zipfn [String] ZIP file
+    def self.reproject druid, zipfn, flags
+      k = File.basename(zipfn, '.zip')
+      shpfn = k + '.shp'
+
+      puts "Extracting #{druid.id} data from #{zipfn}" if flags[:verbose]
+      tmp = "#{flags[:tmpdir]}/#{druid.id}"
+      FileUtils.rm_rf tmp if File.directory? tmp
+      FileUtils.mkdir_p tmp
+      system("unzip -q -j '#{zipfn}' -d '#{tmp}'")
+
+      [4326].each do |srid|
+        ifn = File.join(tmp, shpfn)
+        raise ArgumentError, "#{ifn} is missing" unless File.exist? ifn
+        
+        odr = File.join(flags[:tmpdir], 'EPSG_' + srid.to_s)
+        ofn = File.join(odr, shpfn)
+        puts "Projecting #{ifn} -> #{odr}/#{ofn}" if flags[:verbose]
+
+        # reproject
+        FileUtils.mkdir_p odr unless File.directory? odr
+        system("ogr2ogr -progress -t_srs '#{flags[:wkt][srid.to_s]}' '#{ofn}' '#{ifn}'") 
+
+        # normalize prj file
+        if flags[:overwrite_prj] and not flags[:wkt][srid.to_s].nil?
+          prj_fn = ofn.gsub(%r{\.shp}, '.prj')
+          puts "Overwriting #{prj_fn}" if flags[:verbose]
+          File.open(prj_fn, 'w') {|f| f.write(flags[:wkt][srid.to_s])}
+        end
+
+        # package up reprojection
+         ozip = File.join(druid.content_dir, k + "_EPSG_#{srid}.zip")
+        puts "Repacking #{ozip}" if flags[:verbose]
+        system("zip -q -Dj '#{ozip}' #{odr}/#{File.basename(k, '.shp')}.*")
+
+        # cleanup
+        FileUtils.rm_rf odr
+      end
+
+      # cleanup
+      FileUtils.rm_rf tmp
+    end
+    
     private
     def self.do_xslt xslt, fn
       IO::popen("#{XSLTPROC} #{xslt} #{fn} | #{XMLLINT} -", 'r') do |f|
