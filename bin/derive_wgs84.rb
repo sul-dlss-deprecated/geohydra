@@ -18,7 +18,7 @@ def reproject druid, fn, flags
   
   [4326].each do |srid|
     ifn = File.join(tmp, shpfn)
-    odr = File.join(tmp, 'EPSG_' + srid.to_s)
+    odr = File.join(flags[:tmpdir], 'EPSG_' + srid.to_s)
     ofn = File.join(odr, shpfn)
     puts "Projecting #{ifn} -> #{odr}/#{ofn}"
     
