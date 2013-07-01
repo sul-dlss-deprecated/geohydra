@@ -34,6 +34,7 @@ end
 # @param overwrite_prj [Boolean] ogr2ogr writes a .prj file that GeoServer doesn't recognize as EPSG:4326
 def main(workdir = WORKDIR, tmpdir = TMPDIR, overwrite_prj = true)
   Dir.glob(workdir + "/??/???/??/????/???????????/content/*.zip").each do |fn| # matches druid workspace structure
+    next if fn =~ %r{_EPSG_}i
     puts "Processing #{fn}"
     k = File.basename(fn, '.zip')
     shp = k + '.shp'
