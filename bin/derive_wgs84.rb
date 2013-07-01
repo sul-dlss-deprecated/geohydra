@@ -61,7 +61,7 @@ EOM
   if ARGV.empty?
     # matches druid workspace structure
     Dir.glob(flags[:workspacedir] + '/??/???/??/????/???????????/content/*.zip').each do |fn| 
-      druid = DruidTools::Druid.new(File.dirname(fn), flags[:workspacedir])
+      druid = DruidTools::Druid.new(File.dirname(File.dirname(fn)), flags[:workspacedir])
       puts "Processing #{druid.id} #{fn}"
       GeoMDTK::Transform.reproject druid, fn, flags unless fn =~ %r{_EPSG_}i
     end
