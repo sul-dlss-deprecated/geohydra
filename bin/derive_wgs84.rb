@@ -63,15 +63,19 @@ EOM
     Dir.glob(flags[:workspacedir] + '/??/???/??/????/???????????/content/*.zip').each do |fn| 
       id = File.basename(File.dirname(File.dirname(fn)))
       druid = DruidTools::Druid.new(id, flags[:workspacedir])
-      puts "Processing #{druid.id} #{fn}"
-      GeoMDTK::Transform.reproject druid, fn, flags unless fn =~ %r{_EPSG_}i
+      unless fn =~ %r{_EPSG_}i
+        puts "Processing #{druid.id} #{fn}"
+        GeoMDTK::Transform.reproject druid, fn, flags 
+      end
     end
   else
     ARGV.each do |id|
       druid = DruidTools::Druid.new(id, flags[:workspacedir])
       Dir.glob(druid.content_dir + '/*.zip').each do |fn|
-        puts "Processing #{druid.id} #{fn}"
-        GeoMDTK::Transform.reproject druid, fn, flags unless fn =~ %r{_EPSG_}i
+        unless fn =~ %r{_EPSG_}i
+          puts "Processing #{druid.id} #{fn}"
+          GeoMDTK::Transform.reproject druid, fn, flags 
+        end
       end
     end
   end
