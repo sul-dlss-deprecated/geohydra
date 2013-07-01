@@ -14,7 +14,7 @@ def reproject druid, fn, flags
   tmp = "#{flags[:tmpdir]}/#{druid.id}"
   FileUtils.rm_rf tmp if File.directory? tmp
   FileUtils.mkdir_p tmp
-  system("unzip -j '#{fn}' -d '#{tmp}'")
+  system("unzip -q -j '#{fn}' -d '#{tmp}'")
   
   [4326].each do |srid|
     ifn = File.join(tmp, shpfn)
@@ -36,7 +36,7 @@ def reproject druid, fn, flags
     # package up reprojection
     ozip = File.join(druid.content_dir, k + "_EPSG_#{srid}.zip")
     puts "Repacking #{ozip}" if flags[:verbose]
-    system("zip -Dj '#{ozip}' #{odr}/#{File.basename(k, '.shp')}.*")
+    system("zip -q -Dj '#{ozip}' #{odr}/#{File.basename(k, '.shp')}.*")
     
     # cleanup
     FileUtils.rm_rf odr
