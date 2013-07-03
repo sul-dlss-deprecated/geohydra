@@ -1,3 +1,0 @@
-[submodule "solr/ogpSolrConfig"]
-	path = solr/ogpSolrConfig
-	url = https://github.com/OpenGeoportal/ogpSolrConfig.git
