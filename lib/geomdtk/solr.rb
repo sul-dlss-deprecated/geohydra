@@ -1,41 +1,44 @@
+# encoding: UTF-8
+
 require 'dor-services'
 require 'rsolr'
 
 module GeoMDTK
+  # API for uploading Solr documents
   class Solr
-    
+
     # @param [String] url to solr server
-    def initialize url
-      @solr = RSolr.connect :url => url
+    def initialize(url)
+      @solr = url.nil? ? nil : RSolr.connect(:url => url)
       ap @solr
-      @geoMetadata = []
+      @geo_metadata = []
     end
-    
-    def add xml
+
+    def add(xml)
       if xml.is_a? Dor::GeoMetadataDS
-        @geoMetadata << xml
+        @geo_metadata << xml
       else
-        @geoMetadata << Dor::GeoMetadataDS.from_xml(xml)
+        @geo_metadata << Dor::GeoMetadataDS.from_xml(xml)
       end
     end
-    
-    def upload optimize = false
-      @geoMetadata.each do |ds|
+
+    def upload(optimize = false)
+      @geo_metadata.each do |ds|
         puts "Uploading #{ds.title}"
         @solr.add ds.to_solr
       end
       commit
       @solr.optimize if optimize
     end
-    
+
     def reset
-      @geoMetadata = []
+      @geo_metadata = []
     end
-    
+
     def commit
       @solr.commit
     end
-    
+
     def delete_all
       @solr.delete_by_query '*:*'
       commit
