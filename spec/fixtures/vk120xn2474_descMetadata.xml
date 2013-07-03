@@ -31,8 +31,8 @@
   </physicalDescription>
   <subject>
     <cartographics>
-      <projection>urn:ogc:def:crs:EPSG::4269</projection>
-      <coordinates>POLYGON((-178.285802 25.138416, -178.285802 71.468273, -80.031491 71.468273, -80.031491 25.138416, -178.285802 25.138416))</coordinates>
+      <projection>North American Datum (NAD83)</projection>
+      <coordinates>W 178° 17' 9" -- W 80° 1' 53"/N 71° 28' 6" -- N 25° 8' 18"</coordinates>
     </cartographics>
   </subject>
   <abstract displayLabel="abstract" lang="eng">Dataset represents the Public Land Survey System at the Section level</abstract>
@@ -42,6 +42,9 @@
   </subject>
   <subject>
     <topic>Public lands</topic>
+  </subject>
+  <subject>
+    <geographic/>
   </subject>
   <location>
     <url displayLabel="PLSS_SEC.shp">http://purl.stanford.edu/vk120xn2474</url>
@@ -54,4 +57,14 @@
           Access is granted to Stanford University affiliates only. 
           Affiliates are limited to current faculty, staff and students.
         </accessCondition>
+  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2">
+    <rdf:RDF>
+      <rdf:Description rdf:about="geo#envelope">
+        <gml:Envelope srsName="EPSG:4269">
+          <gml:lowerCorner>-178.285802 25.138416</gml:lowerCorner>
+          <gml:upperCorner>-80.031491 71.468273</gml:upperCorner>
+        </gml:Envelope>
+      </rdf:Description>
+    </rdf:RDF>
+  </extension>
 </mods>

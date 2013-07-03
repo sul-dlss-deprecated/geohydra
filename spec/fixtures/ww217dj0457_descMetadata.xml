@@ -31,8 +31,8 @@
   </physicalDescription>
   <subject>
     <cartographics>
-      <projection>urn:ogc:def:crs:EPSG::4269</projection>
-      <coordinates>POLYGON((-109.758319 29.423028, -109.758319 48.999336, -88.990844 48.999336, -88.990844 29.423028, -109.758319 29.423028))</coordinates>
+      <projection>North American Datum (NAD83)</projection>
+      <coordinates>W 109° 45' 30" -- W 88° 59' 27"/N 48° 59' 58" -- N 29° 25' 23"</coordinates>
     </cartographics>
   </subject>
   <abstract displayLabel="abstract" lang="eng">Dataset represents locations of existing and proposed CO2 pipelines. Includes all interstate pipelines and major intrastate pipelines.</abstract>
@@ -66,4 +66,14 @@
           Access is granted to Stanford University affiliates only. 
           Affiliates are limited to current faculty, staff and students.
         </accessCondition>
+  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2">
+    <rdf:RDF>
+      <rdf:Description rdf:about="geo#envelope">
+        <gml:Envelope srsName="EPSG:4269">
+          <gml:lowerCorner>-109.758319 29.423028</gml:lowerCorner>
+          <gml:upperCorner>-88.990844 48.999336</gml:upperCorner>
+        </gml:Envelope>
+      </rdf:Description>
+    </rdf:RDF>
+  </extension>
 </mods>

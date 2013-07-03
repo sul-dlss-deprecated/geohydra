@@ -31,8 +31,8 @@
   </physicalDescription>
   <subject>
     <cartographics>
-      <projection>urn:ogc:def:crs:EPSG::4269</projection>
-      <coordinates>POLYGON((-97.119945 25.467075, -97.119945 30.665492, -82.307619 30.665492, -82.307619 25.467075, -97.119945 25.467075))</coordinates>
+      <projection>North American Datum (NAD83)</projection>
+      <coordinates>W 97° 7' 12" -- W 82° 18' 27"/N 30° 39' 56" -- N 25° 28' 1"</coordinates>
     </cartographics>
   </subject>
   <abstract displayLabel="abstract" lang="eng">Contains the major shipping fairways for the Gulf of Mexico Region. Shipping Safety Fairways: A lane or corridor in which no artificial island or fixed structure, whether temporary or permanent, will be permitted.</abstract>
@@ -54,4 +54,14 @@
           Access is granted to Stanford University affiliates only. 
           Affiliates are limited to current faculty, staff and students.
         </accessCondition>
+  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2">
+    <rdf:RDF>
+      <rdf:Description rdf:about="geo#envelope">
+        <gml:Envelope srsName="EPSG:4269">
+          <gml:lowerCorner>-97.119945 25.467075</gml:lowerCorner>
+          <gml:upperCorner>-82.307619 30.665492</gml:upperCorner>
+        </gml:Envelope>
+      </rdf:Description>
+    </rdf:RDF>
+  </extension>
 </mods>

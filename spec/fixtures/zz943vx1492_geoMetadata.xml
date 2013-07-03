@@ -1,401 +1,433 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geonet="http://www.fao.org/geonetwork">
-  <gmd:fileIdentifier>
-    <gco:CharacterString>580DF91B-4A24-4E3C-9C1D-D62C0389932C</gco:CharacterString>
-  </gmd:fileIdentifier>
-  <gmd:language>
-    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" codeSpace="ISO639-2" />
-  </gmd:language>
-  <gmd:characterSet>
-    <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf16" codeSpace="ISOTC211/19115" />
-  </gmd:characterSet>
-  <gmd:hierarchyLevel>
-    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115" />
-  </gmd:hierarchyLevel>
-  <gmd:hierarchyLevelName>
-    <gco:CharacterString>dataset</gco:CharacterString>
-  </gmd:hierarchyLevelName>
-  <gmd:contact>
-    <gmd:CI_ResponsibleParty>
-      <gmd:organisationName>
-        <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
-      </gmd:organisationName>
-      <gmd:positionName>
-        <gco:CharacterString>Metadata Analyst</gco:CharacterString>
-      </gmd:positionName>
-      <gmd:contactInfo>
-        <gmd:CI_Contact>
-          <gmd:phone>
-            <gmd:CI_Telephone>
-              <gmd:voice>
-                <gco:CharacterString>650-723-2746</gco:CharacterString>
-              </gmd:voice>
-            </gmd:CI_Telephone>
-          </gmd:phone>
-          <gmd:address>
-            <gmd:CI_Address>
-              <gmd:deliveryPoint>
-                <gco:CharacterString>Branner Earth Scinces Library</gco:CharacterString>
-              </gmd:deliveryPoint>
-              <gmd:deliveryPoint>
-                <gco:CharacterString>Mitchell Buillding, 2nd Floor</gco:CharacterString>
-              </gmd:deliveryPoint>
-              <gmd:deliveryPoint>
-                <gco:CharacterString>397 Panama Mall</gco:CharacterString>
-              </gmd:deliveryPoint>
-              <gmd:city>
-                <gco:CharacterString>Stanford</gco:CharacterString>
-              </gmd:city>
-              <gmd:administrativeArea>
-                <gco:CharacterString>California</gco:CharacterString>
-              </gmd:administrativeArea>
-              <gmd:postalCode>
-                <gco:CharacterString>94305</gco:CharacterString>
-              </gmd:postalCode>
-              <gmd:country>
-                <gco:CharacterString>US</gco:CharacterString>
-              </gmd:country>
-              <gmd:electronicMailAddress>
-                <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
-              </gmd:electronicMailAddress>
-            </gmd:CI_Address>
-          </gmd:address>
-        </gmd:CI_Contact>
-      </gmd:contactInfo>
-      <gmd:role>
-        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115" />
-      </gmd:role>
-    </gmd:CI_ResponsibleParty>
-  </gmd:contact>
-  <gmd:dateStamp>
-    <gco:DateTime>2013-05-29T09:46:06</gco:DateTime>
-  </gmd:dateStamp>
-  <gmd:metadataStandardName>
-    <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
-  </gmd:metadataStandardName>
-  <gmd:metadataStandardVersion>
-    <gco:CharacterString>2007</gco:CharacterString>
-  </gmd:metadataStandardVersion>
-  <gmd:dataSetURI>
-    <gco:CharacterString>http://purl.stanford.edu/zz943vx1492</gco:CharacterString>
-  </gmd:dataSetURI>
-  <gmd:spatialRepresentationInfo>
-    <gmd:MD_VectorSpatialRepresentation>
-      <gmd:topologyLevel>
-        <gmd:MD_TopologyLevelCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_TopologyLevelCode" codeListValue="geometryOnly" codeSpace="ISOTC211/19115" />
-      </gmd:topologyLevel>
-      <gmd:geometricObjects>
-        <gmd:MD_GeometricObjects>
-          <gmd:geometricObjectType>
-            <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="composite" codeSpace="ISOTC211/19115" />
-          </gmd:geometricObjectType>
-          <gmd:geometricObjectCount>
-            <gco:Integer>47</gco:Integer>
-          </gmd:geometricObjectCount>
-        </gmd:MD_GeometricObjects>
-      </gmd:geometricObjects>
-    </gmd:MD_VectorSpatialRepresentation>
-  </gmd:spatialRepresentationInfo>
-  <gmd:referenceSystemInfo>
-    <gmd:MD_ReferenceSystem>
-      <gmd:referenceSystemIdentifier>
-        <gmd:RS_Identifier>
-          <gmd:code>
-            <gco:CharacterString>4269</gco:CharacterString>
-          </gmd:code>
-          <gmd:codeSpace>
-            <gco:CharacterString>EPSG</gco:CharacterString>
-          </gmd:codeSpace>
-          <gmd:version>
-            <gco:CharacterString>7.11.2</gco:CharacterString>
-          </gmd:version>
-        </gmd:RS_Identifier>
-      </gmd:referenceSystemIdentifier>
-    </gmd:MD_ReferenceSystem>
-  </gmd:referenceSystemInfo>
-  <gmd:identificationInfo>
-    <gmd:MD_DataIdentification>
-      <gmd:citation>
-        <gmd:CI_Citation>
-          <gmd:title>
-            <gco:CharacterString>Oil and Gas Basins in North America, 2008</gco:CharacterString>
-          </gmd:title>
-          <gmd:date>
-            <gmd:CI_Date>
-              <gmd:date>
-                <gco:Date>2008-01-01</gco:Date>
-              </gmd:date>
-              <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115" />
-              </gmd:dateType>
-            </gmd:CI_Date>
-          </gmd:date>
-          <gmd:citedResponsibleParty>
-            <gmd:CI_ResponsibleParty>
-              <gmd:organisationName>
-                <gco:CharacterString>Rextag Strategies</gco:CharacterString>
-              </gmd:organisationName>
-              <gmd:role>
-                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115" />
-              </gmd:role>
-            </gmd:CI_ResponsibleParty>
-          </gmd:citedResponsibleParty>
-          <gmd:presentationForm>
-            <gmd:CI_PresentationFormCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" codeSpace="ISOTC211/19115" />
-          </gmd:presentationForm>
-        </gmd:CI_Citation>
-      </gmd:citation>
-      <gmd:abstract>
-        <gco:CharacterString>Oil and Gas Basins in North America</gco:CharacterString>
-      </gmd:abstract>
-      <gmd:purpose>
-        <gco:CharacterString>Locating Oil and Gas Basins in North America</gco:CharacterString>
-      </gmd:purpose>
-      <gmd:status>
-        <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ProgressCode" codeListValue="onGoing" codeSpace="ISOTC211/19115" />
-      </gmd:status>
-      <gmd:resourceMaintenance>
-        <gmd:MD_MaintenanceInformation>
-          <gmd:maintenanceAndUpdateFrequency>
-            <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" codeSpace="ISOTC211/19115" />
-          </gmd:maintenanceAndUpdateFrequency>
-        </gmd:MD_MaintenanceInformation>
-      </gmd:resourceMaintenance>
-      <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords>
-          <gmd:keyword>
-            <gco:CharacterString>United States</gco:CharacterString>
-          </gmd:keyword>
-          <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="place" codeSpace="ISOTC211/19115" />
-          </gmd:type>
-          <gmd:thesaurusName>
-            <gmd:CI_Citation>
-              <gmd:title>
-                <gco:CharacterString>GeoNames</gco:CharacterString>
-              </gmd:title>
-              <gmd:date>
-                <gmd:CI_Date>
-                  <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="" />
-                  </gmd:dateType>
-                </gmd:CI_Date>
-              </gmd:date>
-            </gmd:CI_Citation>
-          </gmd:thesaurusName>
-        </gmd:MD_Keywords>
-      </gmd:descriptiveKeywords>
-      <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords>
-          <gmd:keyword>
-            <gco:CharacterString>Oil Fields</gco:CharacterString>
-          </gmd:keyword>
-          <gmd:keyword>
-            <gco:CharacterString>Gas Fields</gco:CharacterString>
-          </gmd:keyword>
-          <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" codeSpace="ISOTC211/19115" />
-          </gmd:type>
-          <gmd:thesaurusName>
-            <gmd:CI_Citation>
-              <gmd:title>
-                <gco:CharacterString>LCSH</gco:CharacterString>
-              </gmd:title>
-              <gmd:date>
-                <gmd:CI_Date>
-                  <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="" />
-                  </gmd:dateType>
-                </gmd:CI_Date>
-              </gmd:date>
-            </gmd:CI_Citation>
-          </gmd:thesaurusName>
-        </gmd:MD_Keywords>
-      </gmd:descriptiveKeywords>
-      <gmd:resourceConstraints>
-        <gmd:MD_Constraints>
-          <gmd:useLimitation>
-            <gco:CharacterString>As allowed under data agreement by Rextag Strategies</gco:CharacterString>
-          </gmd:useLimitation>
-        </gmd:MD_Constraints>
-      </gmd:resourceConstraints>
-      <gmd:resourceConstraints>
-        <gmd:MD_LegalConstraints>
-          <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115" />
-          </gmd:accessConstraints>
-          <gmd:useConstraints>
-            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115" />
-          </gmd:useConstraints>
-          <gmd:otherConstraints>
-            <gco:CharacterString>Access is granted to Stanford University affiliates only. Affiliates are limited to current faculty, staff and students.</gco:CharacterString>
-          </gmd:otherConstraints>
-        </gmd:MD_LegalConstraints>
-      </gmd:resourceConstraints>
-      <gmd:spatialRepresentationType>
-        <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" codeSpace="ISOTC211/19115" />
-      </gmd:spatialRepresentationType>
-      <gmd:language>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" codeSpace="ISO639-2" />
-      </gmd:language>
-      <gmd:characterSet>
-        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115" />
-      </gmd:characterSet>
-      <gmd:topicCategory>
-        <gmd:MD_TopicCategoryCode>utilitiesCommunication</gmd:MD_TopicCategoryCode>
-      </gmd:topicCategory>
-      <gmd:environmentDescription>
-        <gco:CharacterString>Microsoft Windows 7 Version 6.1 (Build 7601) Service Pack 1; Esri ArcGIS 10.1.1.3143</gco:CharacterString>
-      </gmd:environmentDescription>
-      <gmd:extent>
-        <gmd:EX_Extent>
-          <gmd:geographicElement>
-            <gmd:EX_GeographicBoundingBox>
-              <gmd:extentTypeCode>
-                <gco:Boolean>true</gco:Boolean>
-              </gmd:extentTypeCode>
-              <gmd:westBoundLongitude>
-                <gco:Decimal>-164.196401</gco:Decimal>
-              </gmd:westBoundLongitude>
-              <gmd:eastBoundLongitude>
-                <gco:Decimal>-44.096585</gco:Decimal>
-              </gmd:eastBoundLongitude>
-              <gmd:southBoundLatitude>
-                <gco:Decimal>16.709076</gco:Decimal>
-              </gmd:southBoundLatitude>
-              <gmd:northBoundLatitude>
-                <gco:Decimal>77.614132</gco:Decimal>
-              </gmd:northBoundLatitude>
-            </gmd:EX_GeographicBoundingBox>
-          </gmd:geographicElement>
-        </gmd:EX_Extent>
-      </gmd:extent>
-      <gmd:extent>
-        <gmd:EX_Extent>
-          <gmd:description>
-            <gco:CharacterString>publication date</gco:CharacterString>
-          </gmd:description>
-          <gmd:temporalElement>
-            <gmd:EX_TemporalExtent>
-              <gmd:extent>
-                <gml:TimeInstant gml:id="d212491e305a1053982">
-                  <gml:timePosition>2008-01-01T00:00:00</gml:timePosition>
-                </gml:TimeInstant>
-              </gmd:extent>
-            </gmd:EX_TemporalExtent>
-          </gmd:temporalElement>
-        </gmd:EX_Extent>
-      </gmd:extent>
-      <gmd:supplementalInformation>
-        <gco:CharacterString>1007 Update</gco:CharacterString>
-      </gmd:supplementalInformation>
-    </gmd:MD_DataIdentification>
-  </gmd:identificationInfo>
-  <gmd:distributionInfo>
-    <gmd:MD_Distribution>
-      <gmd:distributionFormat>
-        <gmd:MD_Format>
-          <gmd:name>
-            <gco:CharacterString>Shapefile</gco:CharacterString>
-          </gmd:name>
-          <gmd:version gco:nilReason="missing" />
-        </gmd:MD_Format>
-      </gmd:distributionFormat>
-      <gmd:distributor>
-        <gmd:MD_Distributor>
-          <gmd:distributorContact>
-            <gmd:CI_ResponsibleParty>
-              <gmd:organisationName>
-                <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
-              </gmd:organisationName>
-              <gmd:contactInfo>
-                <gmd:CI_Contact>
-                  <gmd:phone>
-                    <gmd:CI_Telephone>
-                      <gmd:voice>
-                        <gco:CharacterString>650-723-2746</gco:CharacterString>
-                      </gmd:voice>
-                    </gmd:CI_Telephone>
-                  </gmd:phone>
-                  <gmd:address>
-                    <gmd:CI_Address>
-                      <gmd:deliveryPoint>
-                        <gco:CharacterString>Branner Earth Sciences Library</gco:CharacterString>
-                      </gmd:deliveryPoint>
-                      <gmd:deliveryPoint>
-                        <gco:CharacterString>Mitchell Building, 2nd Floor</gco:CharacterString>
-                      </gmd:deliveryPoint>
-                      <gmd:deliveryPoint>
-                        <gco:CharacterString>307 Panama Mall</gco:CharacterString>
-                      </gmd:deliveryPoint>
-                      <gmd:city>
-                        <gco:CharacterString>Stanford</gco:CharacterString>
-                      </gmd:city>
-                      <gmd:administrativeArea>
-                        <gco:CharacterString>California</gco:CharacterString>
-                      </gmd:administrativeArea>
-                      <gmd:postalCode>
-                        <gco:CharacterString>94305</gco:CharacterString>
-                      </gmd:postalCode>
-                      <gmd:country>
-                        <gco:CharacterString>United States</gco:CharacterString>
-                      </gmd:country>
-                      <gmd:electronicMailAddress>
-                        <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
-                      </gmd:electronicMailAddress>
-                    </gmd:CI_Address>
-                  </gmd:address>
-                </gmd:CI_Contact>
-              </gmd:contactInfo>
-              <gmd:role>
-                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="distributor" />
-              </gmd:role>
-            </gmd:CI_ResponsibleParty>
-          </gmd:distributorContact>
-        </gmd:MD_Distributor>
-      </gmd:distributor>
-      <gmd:transferOptions>
-        <gmd:MD_DigitalTransferOptions>
-          <gmd:transferSize>
-            <gco:Real>0.556</gco:Real>
-          </gmd:transferSize>
-          <gmd:onLine>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://purl.stanford.edu/zz943vx1492</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol gco:nilReason="missing">
-                <gco:CharacterString />
-              </gmd:protocol>
-              <gmd:name>
-                <gco:CharacterString>BASINS.shp</gco:CharacterString>
-              </gmd:name>
-              <gmd:description gco:nilReason="missing">
-                <gco:CharacterString />
-              </gmd:description>
-            </gmd:CI_OnlineResource>
-          </gmd:onLine>
-        </gmd:MD_DigitalTransferOptions>
-      </gmd:transferOptions>
-    </gmd:MD_Distribution>
-  </gmd:distributionInfo>
-  <gmd:dataQualityInfo>
-    <gmd:DQ_DataQuality>
-      <gmd:scope>
-        <gmd:DQ_Scope>
-          <gmd:level>
-            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
-          </gmd:level>
-        </gmd:DQ_Scope>
-      </gmd:scope>
-    </gmd:DQ_DataQuality>
-  </gmd:dataQualityInfo>
-  <gmd:metadataConstraints>
-    <gmd:MD_Constraints>
-      <gmd:useLimitation gco:nilReason="missing">
-        <gco:CharacterString />
-      </gmd:useLimitation>
-    </gmd:MD_Constraints>
-  </gmd:metadataConstraints>
-</gmd:MD_Metadata>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about="http://purl.stanford.edu/zz943vx1492">
+    <rdf:Description rdf:about="http://purl.stanford.edu/zz943vx1492#geoMetadata/MD_Metadata">
+      <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:geonet="http://www.fao.org/geonetwork">
+        <gmd:fileIdentifier>
+          <gco:CharacterString>580DF91B-4A24-4E3C-9C1D-D62C0389932C</gco:CharacterString>
+        </gmd:fileIdentifier>
+        <gmd:language>
+          <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" codeSpace="ISO639-2"/>
+        </gmd:language>
+        <gmd:characterSet>
+          <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf16" codeSpace="ISOTC211/19115"/>
+        </gmd:characterSet>
+        <gmd:hierarchyLevel>
+          <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115"/>
+        </gmd:hierarchyLevel>
+        <gmd:hierarchyLevelName>
+          <gco:CharacterString>dataset</gco:CharacterString>
+        </gmd:hierarchyLevelName>
+        <gmd:contact>
+          <gmd:CI_ResponsibleParty>
+            <gmd:organisationName>
+              <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
+            </gmd:organisationName>
+            <gmd:positionName>
+              <gco:CharacterString>Metadata Analyst</gco:CharacterString>
+            </gmd:positionName>
+            <gmd:contactInfo>
+              <gmd:CI_Contact>
+                <gmd:phone>
+                  <gmd:CI_Telephone>
+                    <gmd:voice>
+                      <gco:CharacterString>650-723-2746</gco:CharacterString>
+                    </gmd:voice>
+                  </gmd:CI_Telephone>
+                </gmd:phone>
+                <gmd:address>
+                  <gmd:CI_Address>
+                    <gmd:deliveryPoint>
+                      <gco:CharacterString>Branner Earth Scinces Library</gco:CharacterString>
+                    </gmd:deliveryPoint>
+                    <gmd:deliveryPoint>
+                      <gco:CharacterString>Mitchell Buillding, 2nd Floor</gco:CharacterString>
+                    </gmd:deliveryPoint>
+                    <gmd:deliveryPoint>
+                      <gco:CharacterString>397 Panama Mall</gco:CharacterString>
+                    </gmd:deliveryPoint>
+                    <gmd:city>
+                      <gco:CharacterString>Stanford</gco:CharacterString>
+                    </gmd:city>
+                    <gmd:administrativeArea>
+                      <gco:CharacterString>California</gco:CharacterString>
+                    </gmd:administrativeArea>
+                    <gmd:postalCode>
+                      <gco:CharacterString>94305</gco:CharacterString>
+                    </gmd:postalCode>
+                    <gmd:country>
+                      <gco:CharacterString>US</gco:CharacterString>
+                    </gmd:country>
+                    <gmd:electronicMailAddress>
+                      <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
+                    </gmd:electronicMailAddress>
+                  </gmd:CI_Address>
+                </gmd:address>
+              </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+              <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115"/>
+            </gmd:role>
+          </gmd:CI_ResponsibleParty>
+        </gmd:contact>
+        <gmd:dateStamp>
+          <gco:DateTime>2013-06-18T12:35:20</gco:DateTime>
+        </gmd:dateStamp>
+        <gmd:metadataStandardName>
+          <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
+        </gmd:metadataStandardName>
+        <gmd:metadataStandardVersion>
+          <gco:CharacterString>2007</gco:CharacterString>
+        </gmd:metadataStandardVersion>
+        <gmd:dataSetURI>
+          <gco:CharacterString>http://purl.stanford.edu/zz943vx1492</gco:CharacterString>
+        </gmd:dataSetURI>
+        <gmd:spatialRepresentationInfo>
+          <gmd:MD_VectorSpatialRepresentation>
+            <gmd:topologyLevel>
+              <gmd:MD_TopologyLevelCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_TopologyLevelCode" codeListValue="geometryOnly" codeSpace="ISOTC211/19115"/>
+            </gmd:topologyLevel>
+            <gmd:geometricObjects>
+              <gmd:MD_GeometricObjects>
+                <gmd:geometricObjectType>
+                  <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="composite" codeSpace="ISOTC211/19115"/>
+                </gmd:geometricObjectType>
+                <gmd:geometricObjectCount>
+                  <gco:Integer>47</gco:Integer>
+                </gmd:geometricObjectCount>
+              </gmd:MD_GeometricObjects>
+            </gmd:geometricObjects>
+          </gmd:MD_VectorSpatialRepresentation>
+        </gmd:spatialRepresentationInfo>
+        <gmd:referenceSystemInfo>
+          <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+              <gmd:RS_Identifier>
+                <gmd:code>
+                  <gco:CharacterString>4269</gco:CharacterString>
+                </gmd:code>
+                <gmd:codeSpace>
+                  <gco:CharacterString>EPSG</gco:CharacterString>
+                </gmd:codeSpace>
+                <gmd:version>
+                  <gco:CharacterString>7.11.2</gco:CharacterString>
+                </gmd:version>
+              </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+          </gmd:MD_ReferenceSystem>
+        </gmd:referenceSystemInfo>
+        <gmd:identificationInfo>
+          <gmd:MD_DataIdentification>
+            <gmd:citation>
+              <gmd:CI_Citation>
+                <gmd:title>
+                  <gco:CharacterString>Oil and Gas Basins in North America, 2008</gco:CharacterString>
+                </gmd:title>
+                <gmd:date>
+                  <gmd:CI_Date>
+                    <gmd:date>
+                      <gco:Date>2008-01-01</gco:Date>
+                    </gmd:date>
+                    <gmd:dateType>
+                      <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115"/>
+                    </gmd:dateType>
+                  </gmd:CI_Date>
+                </gmd:date>
+                <gmd:citedResponsibleParty>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                      <gco:CharacterString>Rextag Strategies</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:role>
+                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:citedResponsibleParty>
+                <gmd:presentationForm>
+                  <gmd:CI_PresentationFormCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" codeSpace="ISOTC211/19115"/>
+                </gmd:presentationForm>
+              </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract>
+              <gco:CharacterString>Oil and Gas Basins in North America</gco:CharacterString>
+            </gmd:abstract>
+            <gmd:purpose>
+              <gco:CharacterString>Locating Oil and Gas Basins in North America</gco:CharacterString>
+            </gmd:purpose>
+            <gmd:status>
+              <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ProgressCode" codeListValue="onGoing" codeSpace="ISOTC211/19115"/>
+            </gmd:status>
+            <gmd:resourceMaintenance>
+              <gmd:MD_MaintenanceInformation>
+                <gmd:maintenanceAndUpdateFrequency>
+                  <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" codeSpace="ISOTC211/19115"/>
+                </gmd:maintenanceAndUpdateFrequency>
+              </gmd:MD_MaintenanceInformation>
+            </gmd:resourceMaintenance>
+            <gmd:graphicOverview>
+              <gmd:MD_BrowseGraphic>
+                <gmd:fileName>
+                  <gco:CharacterString>http://geomdtk.stanford.edu:80/geonetwork/srv/eng/resources.get?uuid=580DF91B-4A24-4E3C-9C1D-D62C0389932C&amp;fname=BASINS_s.png</gco:CharacterString>
+                </gmd:fileName>
+                <gmd:fileDescription>
+                  <gco:CharacterString>thumbnail</gco:CharacterString>
+                </gmd:fileDescription>
+                <gmd:fileType>
+                  <gco:CharacterString>png</gco:CharacterString>
+                </gmd:fileType>
+              </gmd:MD_BrowseGraphic>
+            </gmd:graphicOverview>
+            <gmd:graphicOverview>
+              <gmd:MD_BrowseGraphic>
+                <gmd:fileName>
+                  <gco:CharacterString>http://geomdtk.stanford.edu:80/geonetwork/srv/eng/resources.get?uuid=580DF91B-4A24-4E3C-9C1D-D62C0389932C&amp;fname=BASINS.png</gco:CharacterString>
+                </gmd:fileName>
+                <gmd:fileDescription>
+                  <gco:CharacterString>large_thumbnail</gco:CharacterString>
+                </gmd:fileDescription>
+                <gmd:fileType>
+                  <gco:CharacterString>png</gco:CharacterString>
+                </gmd:fileType>
+              </gmd:MD_BrowseGraphic>
+            </gmd:graphicOverview>
+            <gmd:descriptiveKeywords>
+              <gmd:MD_Keywords>
+                <gmd:keyword>
+                  <gco:CharacterString>United States</gco:CharacterString>
+                </gmd:keyword>
+                <gmd:type>
+                  <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="place" codeSpace="ISOTC211/19115"/>
+                </gmd:type>
+                <gmd:thesaurusName>
+                  <gmd:CI_Citation>
+                    <gmd:title>
+                      <gco:CharacterString>GeoNames</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date>
+                      <gmd:CI_Date>
+                        <gmd:dateType>
+                          <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue=""/>
+                        </gmd:dateType>
+                      </gmd:CI_Date>
+                    </gmd:date>
+                  </gmd:CI_Citation>
+                </gmd:thesaurusName>
+              </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:descriptiveKeywords>
+              <gmd:MD_Keywords>
+                <gmd:keyword>
+                  <gco:CharacterString>Oil Fields</gco:CharacterString>
+                </gmd:keyword>
+                <gmd:keyword>
+                  <gco:CharacterString>Gas Fields</gco:CharacterString>
+                </gmd:keyword>
+                <gmd:type>
+                  <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" codeSpace="ISOTC211/19115"/>
+                </gmd:type>
+                <gmd:thesaurusName>
+                  <gmd:CI_Citation>
+                    <gmd:title>
+                      <gco:CharacterString>LCSH</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date>
+                      <gmd:CI_Date>
+                        <gmd:dateType>
+                          <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue=""/>
+                        </gmd:dateType>
+                      </gmd:CI_Date>
+                    </gmd:date>
+                  </gmd:CI_Citation>
+                </gmd:thesaurusName>
+              </gmd:MD_Keywords>
+            </gmd:descriptiveKeywords>
+            <gmd:resourceConstraints>
+              <gmd:MD_Constraints>
+                <gmd:useLimitation>
+                  <gco:CharacterString>As allowed under data agreement by Rextag Strategies</gco:CharacterString>
+                </gmd:useLimitation>
+              </gmd:MD_Constraints>
+            </gmd:resourceConstraints>
+            <gmd:resourceConstraints>
+              <gmd:MD_LegalConstraints>
+                <gmd:accessConstraints>
+                  <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115"/>
+                </gmd:accessConstraints>
+                <gmd:useConstraints>
+                  <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115"/>
+                </gmd:useConstraints>
+                <gmd:otherConstraints>
+                  <gco:CharacterString>Access is granted to Stanford University affiliates only. Affiliates are limited to current faculty, staff and students.</gco:CharacterString>
+                </gmd:otherConstraints>
+              </gmd:MD_LegalConstraints>
+            </gmd:resourceConstraints>
+            <gmd:spatialRepresentationType>
+              <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" codeSpace="ISOTC211/19115"/>
+            </gmd:spatialRepresentationType>
+            <gmd:language>
+              <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" codeSpace="ISO639-2"/>
+            </gmd:language>
+            <gmd:characterSet>
+              <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115"/>
+            </gmd:characterSet>
+            <gmd:topicCategory>
+              <gmd:MD_TopicCategoryCode>utilitiesCommunication</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:environmentDescription>
+              <gco:CharacterString>Microsoft Windows 7 Version 6.1 (Build 7601) Service Pack 1; Esri ArcGIS 10.1.1.3143</gco:CharacterString>
+            </gmd:environmentDescription>
+            <gmd:extent>
+              <gmd:EX_Extent>
+                <gmd:geographicElement>
+                  <gmd:EX_GeographicBoundingBox>
+                    <gmd:extentTypeCode>
+                      <gco:Boolean>true</gco:Boolean>
+                    </gmd:extentTypeCode>
+                    <gmd:westBoundLongitude>
+                      <gco:Decimal>-164.196401</gco:Decimal>
+                    </gmd:westBoundLongitude>
+                    <gmd:eastBoundLongitude>
+                      <gco:Decimal>-44.096585</gco:Decimal>
+                    </gmd:eastBoundLongitude>
+                    <gmd:southBoundLatitude>
+                      <gco:Decimal>16.709076</gco:Decimal>
+                    </gmd:southBoundLatitude>
+                    <gmd:northBoundLatitude>
+                      <gco:Decimal>77.614132</gco:Decimal>
+                    </gmd:northBoundLatitude>
+                  </gmd:EX_GeographicBoundingBox>
+                </gmd:geographicElement>
+              </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:extent>
+              <gmd:EX_Extent>
+                <gmd:description>
+                  <gco:CharacterString>publication date</gco:CharacterString>
+                </gmd:description>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimeInstant gml:id="d212491e305a1053982">
+                        <gml:timePosition>2008-01-01T00:00:00</gml:timePosition>
+                      </gml:TimeInstant>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </gmd:EX_Extent>
+            </gmd:extent>
+            <gmd:supplementalInformation>
+              <gco:CharacterString>1007 Update</gco:CharacterString>
+            </gmd:supplementalInformation>
+          </gmd:MD_DataIdentification>
+        </gmd:identificationInfo>
+        <gmd:distributionInfo>
+          <gmd:MD_Distribution>
+            <gmd:distributionFormat>
+              <gmd:MD_Format>
+                <gmd:name>
+                  <gco:CharacterString>Shapefile</gco:CharacterString>
+                </gmd:name>
+                <gmd:version gco:nilReason="missing"/>
+              </gmd:MD_Format>
+            </gmd:distributionFormat>
+            <gmd:distributor>
+              <gmd:MD_Distributor>
+                <gmd:distributorContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                      <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:phone>
+                          <gmd:CI_Telephone>
+                            <gmd:voice>
+                              <gco:CharacterString>650-723-2746</gco:CharacterString>
+                            </gmd:voice>
+                          </gmd:CI_Telephone>
+                        </gmd:phone>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:deliveryPoint>
+                              <gco:CharacterString>Branner Earth Sciences Library</gco:CharacterString>
+                            </gmd:deliveryPoint>
+                            <gmd:deliveryPoint>
+                              <gco:CharacterString>Mitchell Building, 2nd Floor</gco:CharacterString>
+                            </gmd:deliveryPoint>
+                            <gmd:deliveryPoint>
+                              <gco:CharacterString>307 Panama Mall</gco:CharacterString>
+                            </gmd:deliveryPoint>
+                            <gmd:city>
+                              <gco:CharacterString>Stanford</gco:CharacterString>
+                            </gmd:city>
+                            <gmd:administrativeArea>
+                              <gco:CharacterString>California</gco:CharacterString>
+                            </gmd:administrativeArea>
+                            <gmd:postalCode>
+                              <gco:CharacterString>94305</gco:CharacterString>
+                            </gmd:postalCode>
+                            <gmd:country>
+                              <gco:CharacterString>United States</gco:CharacterString>
+                            </gmd:country>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="distributor"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:distributorContact>
+              </gmd:MD_Distributor>
+            </gmd:distributor>
+            <gmd:transferOptions>
+              <gmd:MD_DigitalTransferOptions>
+                <gmd:transferSize>
+                  <gco:Real>0.556</gco:Real>
+                </gmd:transferSize>
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL>http://purl.stanford.edu/zz943vx1492</gmd:URL>
+                    </gmd:linkage>
+                    <gmd:protocol gco:nilReason="missing">
+                      <gco:CharacterString/>
+                    </gmd:protocol>
+                    <gmd:name>
+                      <gco:CharacterString>BASINS.shp</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:description gco:nilReason="missing">
+                      <gco:CharacterString/>
+                    </gmd:description>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </gmd:MD_DigitalTransferOptions>
+            </gmd:transferOptions>
+          </gmd:MD_Distribution>
+        </gmd:distributionInfo>
+        <gmd:dataQualityInfo>
+          <gmd:DQ_DataQuality>
+            <gmd:scope>
+              <gmd:DQ_Scope>
+                <gmd:level>
+                  <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset"/>
+                </gmd:level>
+              </gmd:DQ_Scope>
+            </gmd:scope>
+          </gmd:DQ_DataQuality>
+        </gmd:dataQualityInfo>
+        <gmd:metadataConstraints>
+          <gmd:MD_Constraints>
+            <gmd:useLimitation gco:nilReason="missing">
+              <gco:CharacterString/>
+            </gmd:useLimitation>
+          </gmd:MD_Constraints>
+        </gmd:metadataConstraints>
+      </gmd:MD_Metadata>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.stanford.edu/zz943vx1492#geoMetadata/FC_FeatureCatalogue"/>
+  </rdf:Description>
+</rdf:RDF>
