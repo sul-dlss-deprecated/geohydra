@@ -1,1 +1,1 @@
-/home/geostaff/ogp-solr-config/ogpSolrConfig/SolrConfig/synonymsLcsh.txt
+../../ogp-solr-config/ogpSolrConfig/SolrConfig/synonymsLcsh.txt

@@ -1,1 +1,1 @@
-/home/geostaff/ogp-solr-config/ogpSolrConfig/SolrConfig/synonymsIso.txt
+../../ogp-solr-config/ogpSolrConfig/SolrConfig/synonymsIso.txt
