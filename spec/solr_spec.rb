@@ -8,11 +8,11 @@ require 'geomdtk'
 
 describe GeoMDTK::Solr do
   
-  DIGITS2_comma = %r{^\s*[+-]*(\d)+(\.)*(\d)*\s*,\s*[+-]*(\d)+(\.)*(\d)*\s*$}
-  DIGITS4 = %r{^\s*[+-]*(\d)+(\.)*(\d)*\s+[+-]*(\d)+(\.)*(\d)*\s+[+-]*(\d)+(\.)*(\d)*\s+[+-]*(\d)+(\.)*(\d)*\s*$}
+  POINT = /^POINT\([-\s\d\.]+\)/i # no commas
+  POLYGON = /^POLYGON\(\([-\s\d\.,]+\)\)/i
   
   before(:each) do
-    @solr = GeoMDTK::Solr.new 'http://localhost:8080/solr/dlss-dev-drh-geo-jun6'
+    @solr = GeoMDTK::Solr.new 'http://localhost:8983/solr'
     @xml = {}
     @docs = {}
     Dir.glob('spec/fixtures/*_geoMetadata.xml') do |fn|
@@ -23,21 +23,26 @@ describe GeoMDTK::Solr do
   
   describe "#to_solr" do
     it "#convert" do
-      @docs.each do |k,geoMetadata|
-        doc = geoMetadata.to_solr
-        ap doc
+      @docs.each do |k, geoMetadata|
+        # ap({:k => k, :geoMetadata => geoMetadata, :to_solr => geoMetadata.to_solr_spatial})
+        doc = geoMetadata.to_solr_spatial
         doc["format_s"].should == ["Shapefile"]
-        doc["language_s"].should == ["eng"]
-        DIGITS2_comma.match(doc["geo_point"].first).nil?.should == false
-        DIGITS2_comma.match(doc["geo_location"].first).nil?.should == false
-        DIGITS4.match(doc["geo_bbox"].first).nil?.should == false
+        doc["format_s"].should == ["Shapefile"]
+        doc["dc_language_s"].should == ["eng"]
+        %w{geo_pt geo_sw_pt geo_ne_pt}.each do |pt|
+          doc[pt].each do |s|
+            ap({:match => POINT.match(s), :s => s, :re => POINT})
+            POINT.match(s).nil?.should == false
+          end
+        end
+        POLYGON.match(doc["geo_bbox"].first).nil?.should == false
       end
     end
   end
   
   describe "#solr.add" do
     it "upload" do
-      @docs.each do |k,geoMetadata|
+      @docs.each do |k, geoMetadata|
         @solr.add geoMetadata
       end
       @solr.upload

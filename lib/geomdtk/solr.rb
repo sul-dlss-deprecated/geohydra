@@ -24,8 +24,10 @@ module GeoMDTK
 
     def upload(optimize = false)
       @geo_metadata.each do |ds|
-        puts "Uploading #{ds.title}"
-        @solr.add ds.to_solr
+        unless ds.nil?
+          puts "Uploading #{ds.title}"
+          @solr.add ds.to_solr
+        end
       end
       commit
       @solr.optimize if optimize

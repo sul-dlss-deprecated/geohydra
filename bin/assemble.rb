@@ -64,12 +64,17 @@ def doit(client, uuid, obj, flags)
             h.each do |k, v|
               v.each do |s|
                 xml.field s, :name => k
-              end
-            end
+              end unless v.nil?
+            end unless h.nil?
           }
         }
       end
       File.open(sfn, 'w') { |f| f << doc.to_xml }
+
+      # OGP Solr document from GeoMetadataDS
+      sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
+      puts "Generating #{sfn}" if flags[:verbose]
+      system("xsltproc #{File.dirname(__FILE__)}/../lib/geomdtk/mods2ogp.xsl #{dfn} > #{sfn} 2>/dev/null")
 
       # Solr document from GeoMetadataDS
       dcfn = File.join(druid.temp_dir, 'dc.xml')
@@ -113,7 +118,7 @@ def main(flags)
       # end
       doit client, uuid, obj, flags
     rescue Exception => e
-      $stderr.puts e
+      $stderr.puts e, e.backtrace
     end
   end
 end
@@ -132,11 +137,8 @@ begin
     opts.banner = <<EOM
 Usage: #{File.basename(__FILE__)} [options]
 EOM
-    opts.on("-v", "--verbose", "Run verbosely (default: #{flags[:verbose]})") do |v|
-      flags[:verbose] = v
-    end
-    opts.on("-q", "--quiet", "Run quietly (default: #{not flags[:verbose]})") do |v|
-      flags[:verbose] = (not v)
+    opts.on("-v", "--verbose", "Run verbosely") do |v|
+      flags[:verbose] = true
     end
     opts.on("--stagedir DIR", "Staging directory with ZIP files (default: #{flags[:stagedir]})") do |v|
       flags[:stagedir] = v
