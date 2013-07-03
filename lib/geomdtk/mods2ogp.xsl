@@ -29,12 +29,16 @@
     <add>
       <doc>
         <field name="LayerId"><xsl:value-of select="$druid"/></field>
-        <field name="Name"><xsl:value-of select="$druid"/></field>
+        <field name="Name">
+          <xsl:value-of select="substring-before(mods:identifier[@type='local' and @displayLabel='filename']/text(), '.shp')"/>
+        </field>
         <field name="ExternalLayerId"><xsl:value-of select="$purl"/></field>
-        <field name="Access"><xsl:text>Restricted</xsl:text></field>
+        <!-- XXX: set to Public which disables the "login" -->
+        <field name="Access"><xsl:text>Public</xsl:text></field>
         <field name="Institution"><xsl:text>Stanford</xsl:text></field>
         <field name="WorkspaceName"><xsl:text>druid</xsl:text></field>
         <field name="GeoReferenced"><xsl:text>true</xsl:text></field>
+        <field name="Availability"><xsl:text>Online</xsl:text></field>
         <field name="ContentDate"><!-- year only -->
           <xsl:value-of select="substring(mods:originInfo/mods:dateIssued/text(), 0, 5)"/>
           <xsl:text>-01-01T00:00:00Z</xsl:text>
@@ -43,7 +47,10 @@
           <xsl:value-of select="mods:titleInfo/mods:title[@type='main']/text()"/>
         </field>
         <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
-          <field name="DataType"><xsl:text>Vector</xsl:text></field>
+          <field name="DataType">
+            <xsl:text>Polygon</xsl:text>
+            <!-- XXX: this needs to come from the data for Point, Line, Polygon -->
+          </field>
         </xsl:if>
         <xsl:for-each select="mods:name[mods:role/mods:roleTerm/text()='Publisher']">        
           <field name="Publisher">
@@ -104,10 +111,22 @@
           </field>
         </xsl:for-each>
         <field name="FgdcText">
+          <!-- XXX: insert the COMPLETE MD_Metadata here -->
           <xsl:text>See &lt;a href=&quot;</xsl:text>
           <xsl:value-of select="$purl"/>
           <xsl:text>&quot;&gt;ISO 19139 metadata&lt;/a&gt;</xsl:text>
         </field>
+        <field name="Location">
+          <!-- XXX: remove hardcoded links here -->
+          <xsl:text>
+              { 
+              "wms":       ["http://kurma-podd1.stanford.edu/geoserver/wms"],
+              "tilecache": ["http://kurma-podd1.stanford.edu/geoserver/gwc/service/wms"],
+              "download":  "", 
+              "wfs":       ["http://kurma-podd1.stanford.edu/geoserver/wfs"]
+              }
+          </xsl:text>
+      </field>
       </doc>
     </add>
   </xsl:template>
