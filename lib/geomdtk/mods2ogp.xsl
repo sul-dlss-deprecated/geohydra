@@ -26,7 +26,7 @@
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
     <xsl:variable name="geoserver" select="'http://kurma-podd1.stanford.edu/geoserver'"/>
-    <xsl:variable name="stacks" select="'http://geomdtk-dev.stanford.edu/stacks'"/>
+    <xsl:variable name="stacks" select="'http://ogpapp-dev.stanford.edu/stacks'"/>
     <xsl:variable name="druid" select="substring(mods:identifier[@type='local' and @displayLabel='druid']/text(), string-length('druid:')+1)"/>
     <xsl:variable name="purl" select="mods:location/mods:url[@displayLabel='PURL']/text()"/>
     <xsl:variable name="downloadURL">
