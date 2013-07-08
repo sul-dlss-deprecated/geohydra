@@ -18,14 +18,29 @@
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:mods="http://www.loc.gov/mods/v3"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0" 
   exclude-result-prefixes="gmd gco gml mods rdf xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
+    <xsl:variable name="geoserver" select="'http://kurma-podd1.stanford.edu/geoserver'"/>
+    <xsl:variable name="stacks" select="'http://geomdtk-dev.stanford.edu/stacks'"/>
     <xsl:variable name="druid" select="substring(mods:identifier[@type='local' and @displayLabel='druid']/text(), string-length('druid:')+1)"/>
     <xsl:variable name="purl" select="mods:location/mods:url[@displayLabel='PURL']/text()"/>
+    <xsl:variable name="downloadURL">
+      <xsl:value-of select="$stacks"/>
+      <xsl:value-of select="concat('/',$druid)"/>
+      <xsl:text>/content/</xsl:text>
+      <xsl:value-of select="substring-before(mods:identifier[@type='local' and @displayLabel='filename']/text(), '.shp')"/>
+      <xsl:text>.zip</xsl:text>
+    </xsl:variable>
+    <xsl:variable name="metadataURL">
+      <xsl:value-of select="$stacks"/>
+      <xsl:value-of select="concat('/',$druid)"/>
+      <xsl:text>/metadata/geoMetadata.xml</xsl:text>
+    </xsl:variable>
     <add>
       <doc>
         <field name="LayerId"><xsl:value-of select="$druid"/></field>
@@ -110,23 +125,34 @@
             <xsl:value-of select="@srsName"/>
           </field>
         </xsl:for-each>
-        <field name="FgdcText">
-          <!-- XXX: insert the COMPLETE MD_Metadata here -->
-          <xsl:text>See &lt;a href=&quot;</xsl:text>
-          <xsl:value-of select="$purl"/>
-          <xsl:text>&quot;&gt;ISO 19139 metadata&lt;/a&gt;</xsl:text>
-        </field>
         <field name="Location">
           <!-- XXX: remove hardcoded links here -->
           <xsl:text>
               { 
-              "wms":       ["http://kurma-podd1.stanford.edu/geoserver/wms"],
-              "tilecache": ["http://kurma-podd1.stanford.edu/geoserver/gwc/service/wms"],
-              "download":  "", 
-              "wfs":       ["http://kurma-podd1.stanford.edu/geoserver/wfs"]
+              "wms":       ["</xsl:text>
+              <xsl:value-of select="$geoserver"/>
+              <xsl:text>/wms"],
+              "tilecache": ["</xsl:text>
+              <xsl:value-of select="$geoserver"/>
+              <xsl:text>/gwc/service/wms"],
+              "wfs":       ["</xsl:text>
+              <xsl:value-of select="$geoserver"/>
+              <xsl:text>/wfs"],
+              "metadata":  ["</xsl:text>
+              <xsl:value-of select="$metadataURL"/>
+              <xsl:text>"],
+              "download":  ["</xsl:text>
+              <xsl:value-of select="$downloadURL"/>
+                <xsl:text>"]
               }
           </xsl:text>
       </field>
+      <field name="FgdcText" xlink:type="simple">
+        <xsl:attribute name="xlink:href">
+          <xsl:value-of select="$metadataURL"/>
+        </xsl:attribute>
+      </field>
+      
       </doc>
     </add>
   </xsl:template>
