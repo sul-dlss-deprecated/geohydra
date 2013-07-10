@@ -8,6 +8,13 @@ GIT
       nokogiri (~> 1)
 
 GIT
+  remote: https://github.com/drh-stanford/version_bumper.git
+  revision: 0a682b031a6ba6c3de635687b7f1986be5bcd9a5
+  branch: patch_tag
+  specs:
+    version_bumper (0.4.1.pre1)
+
+GIT
   remote: https://github.com/sul-dlss/dor-services.git
   revision: 601deebf35128255d0c59b22798ad1560c588d5e
   branch: geoMetadata
@@ -66,7 +73,7 @@ GIT
 PATH
   remote: .
   specs:
-    geomdtk (0.1.10)
+    geomdtk (0.2.0.beta1)
       assembly-objectfile
       confstruct
       dor-services (~> 4.3.0.rc1)
@@ -261,4 +268,5 @@ DEPENDENCIES
   redcarpet
   rgeoserver!
   rspec
+  version_bumper!
   yard

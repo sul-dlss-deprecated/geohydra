@@ -1,4 +1,3 @@
 module GeoMDTK
-  # version
-  VERSION = '0.1.10'
+  VERSION = File.read(File.join(File.dirname(__FILE__), '..', '..', 'VERSION')).strip
 end

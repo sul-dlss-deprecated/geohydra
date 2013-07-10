@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rspec/core/rake_task'
 require 'bundler'
 require 'yard'
+require 'version_bumper'
 
 begin
   Bundler.setup(:default, :development)
