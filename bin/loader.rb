@@ -31,6 +31,7 @@ def main catalog, ws, layers, flags = {}
     ['layername', 'format', 'filename', 'title'].each do |i|
       raise ArgumentError, "Layer is missing #{i}" unless v.include?(i) and v[i] != nil
     end
+    puts "Processing layer #{k}" if flags[:verbose]
 
     layername = v['layername'].strip
     format = v['format'].strip
@@ -101,16 +102,16 @@ def from_druid druid, flags
   prj = prj.split(':').join('_')
   druid = DruidTools::Druid.new(druid, flags[:datadir])
   mods_fn = druid.path('metadata/descMetadata.xml')
-  puts "Extracting load parameters from #{druid.id} #{mods_fn}"
+  puts "Loading #{mods_fn}" if flags[:verbose]
   mods = Mods::Record.new
   mods.from_url(mods_fn)
   zipfn = nil
   layername = nil
   Dir.glob(druid.content_dir + "/*_#{prj}.zip") do |fn|
-    puts "Found EPSG 4326 zip: #{fn}"
+    puts "Found EPSG 4326 zip: #{fn}" if flags[:verbose]
     zipfn = fn
     layername = File.basename(zipfn, "_#{prj}.zip")
-    puts "Derived layername #{zipfn} -> #{layername}"
+    puts "Derived layername #{zipfn} -> #{layername}" if flags[:verbose]
   end
   if not zipfn
     Dir.glob(druid.content_dir + "/*.zip") do |fn|
@@ -119,7 +120,7 @@ def from_druid druid, flags
     end
   end
   raise ArgumentError, zipfn unless File.exist?(zipfn) and layername
-  ap({:zipfn => zipfn, :layername => layername})
+  ap({:zipfn => zipfn, :layername => layername}) if flags[:verbose]
   r = { 
     'vector' => {
       'druid' => druid,
@@ -153,8 +154,8 @@ begin
   
   OptionParser.new do |opts|
     opts.banner = "
-    Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ...]
-           #{File.basename(__FILE__)} [-v] [--delete] -f YAML [input.yaml ...]
+Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ... | < druids]
+       #{File.basename(__FILE__)} [-v] [--delete] -f YAML [input.yaml ... | <input.yml]
            
     "
     opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
@@ -190,6 +191,7 @@ begin
   ws.delete :recurse => true if flags[:delete] and not ws.new?
   ws.enabled = 'true'
   ws.save
+  puts "Workspace: #{ws.name} ready" if flags[:verbose]
 
   if ARGV.size > 0
     ARGV.each do |v|
