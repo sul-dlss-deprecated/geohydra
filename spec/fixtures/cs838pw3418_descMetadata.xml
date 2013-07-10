@@ -31,8 +31,8 @@
   </physicalDescription>
   <subject>
     <cartographics>
-      <projection>urn:ogc:def:crs:EPSG::4269</projection>
-      <coordinates>POLYGON((-151.479444 26.071745, -151.479444 69.4325, -78.085007 69.4325, -78.085007 26.071745, -151.479444 26.071745))</coordinates>
+      <projection>North American Datum (NAD83)</projection>
+      <coordinates>W 151° 28' 46" -- W 78° 5' 6"/N 69° 25' 57" -- N 26° 4' 18"</coordinates>
     </cartographics>
   </subject>
   <abstract displayLabel="abstract" lang="eng">Shows the locations and extents of oil and gas fields in the United States</abstract>
@@ -65,4 +65,14 @@
           Access is granted to Stanford University affiliates only. 
           Affiliates are limited to current faculty, staff and students.
         </accessCondition>
+  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2">
+    <rdf:RDF>
+      <rdf:Description rdf:about="geo#envelope">
+        <gml:Envelope srsName="EPSG:4269">
+          <gml:lowerCorner>-151.479444 26.071745</gml:lowerCorner>
+          <gml:upperCorner>-78.085007 69.4325</gml:upperCorner>
+        </gml:Envelope>
+      </rdf:Description>
+    </rdf:RDF>
+  </extension>
 </mods>

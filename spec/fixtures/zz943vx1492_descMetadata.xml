@@ -31,8 +31,8 @@
   </physicalDescription>
   <subject>
     <cartographics>
-      <projection>urn:ogc:def:crs:EPSG::4269</projection>
-      <coordinates>POLYGON((-164.196401 16.709076, -164.196401 77.614132, -44.096585 77.614132, -44.096585 16.709076, -164.196401 16.709076))</coordinates>
+      <projection>North American Datum (NAD83)</projection>
+      <coordinates>W 164° 11' 47" -- W 44° 5' 48"/N 77° 36' 51" -- N 16° 42' 33"</coordinates>
     </cartographics>
   </subject>
   <abstract displayLabel="abstract" lang="eng">Oil and Gas Basins in North America</abstract>
@@ -55,4 +55,14 @@
           Access is granted to Stanford University affiliates only. 
           Affiliates are limited to current faculty, staff and students.
         </accessCondition>
+  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2">
+    <rdf:RDF>
+      <rdf:Description rdf:about="geo#envelope">
+        <gml:Envelope srsName="EPSG:4269">
+          <gml:lowerCorner>-164.196401 16.709076</gml:lowerCorner>
+          <gml:upperCorner>-44.096585 77.614132</gml:upperCorner>
+        </gml:Envelope>
+      </rdf:Description>
+    </rdf:RDF>
+  </extension>
 </mods>

@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 3c9258437cc5dca1c4c439463690fb516e2d4695
+  revision: 601deebf35128255d0c59b22798ad1560c588d5e
   branch: geoMetadata
   specs:
     dor-services (4.3.0.rc6)
@@ -66,7 +66,7 @@ GIT
 PATH
   remote: .
   specs:
-    geomdtk (0.1.9)
+    geomdtk (0.1.10)
       assembly-objectfile
       confstruct
       dor-services (~> 4.3.0.rc1)
@@ -148,7 +148,7 @@ GEM
     mediashelf-loggable (0.4.9)
     method_source (0.8.1)
     mime-types (1.23)
-    mini_exiftool (2.2.0)
+    mini_exiftool (2.2.1)
     mini_portile (0.5.0)
     moab-versioning (1.2.7)
       confstruct
@@ -243,7 +243,7 @@ GEM
     uuidtools (2.1.4)
     validatable (1.6.7)
     xml-simple (1.1.2)
-    yard (0.8.6.1)
+    yard (0.8.6.2)
 
 PLATFORMS
   ruby
