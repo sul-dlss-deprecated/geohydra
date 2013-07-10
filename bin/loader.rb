@@ -23,10 +23,6 @@ require 'rgeoserver'
 # - keywords
 # - metadata_links
 
-#= Configuration constants
-WORKSPACE_NAME = GeoMDTK::Config.geoserver.workspace || 'druid'
-NAMESPACE = GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
-
 def main catalog, ws, layers, flags = {}
   raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
 
@@ -74,7 +70,7 @@ def main catalog, ws, layers, flags = {}
       # modify DataStore with rest of parameters
       ds.enabled = 'true'
       ds.connection_parameters = ds.connection_parameters.merge({
-        "namespace" => NAMESPACE,
+        "namespace" => flags[:namespace],
         "charset" => 'UTF-8',
         "create spatial index" => 'true',
         "cache and reuse memory maps" => 'true',
@@ -137,7 +133,7 @@ def from_druid druid, flags
                      mods.term_value([:subject, 'geographic'])].flatten,
       'metadata_links' => [{
         'metadataType' => 'TC211',
-        'content' => "http://purl.stanford.edu/#{druid.id}.iso19139.xml"
+        'content' => "http://purl.stanford.edu/#{druid.id}.iso19139"
       }]
     }
   }
@@ -150,7 +146,9 @@ begin
     :delete => false,
     :verbose => true,
     :datadir => '/var/geomdtk/current/workspace',
-    :format => 'MODS'
+    :format => 'MODS',
+    :workspace => GeoMDTK::Config.geoserver.workspace || 'druid',
+    :namespace => GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
   }
   
   OptionParser.new do |opts|
@@ -173,6 +171,12 @@ begin
       raise ArgumentError, "Invalid format #{v}" unless ['YAML', 'MODS'].include?(v.upcase)
       flags[:format] = v.upcase
     end
+    opts.on("--workspace NAME", "Workspace on GeoServer (default: #{flags[:workspace]})") do |v|
+      flags[:workspace] = v.to_s
+    end
+    opts.on("--namespace NAME", "Namespace on GeoServer (default: #{flags[:namespace]})") do |v|
+      flags[:namespace] = v.to_s
+    end
   end.parse!
   
   # init
@@ -181,7 +185,7 @@ begin
   catalog = RGeoServer::catalog
 
   # Obtain a handle to the workspace and clean it up. 
-  ws = RGeoServer::Workspace.new catalog, :name => WORKSPACE_NAME
+  ws = RGeoServer::Workspace.new catalog, :name => flags[:workspace]
   puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:verbose]
   ws.delete :recurse => true if flags[:delete] and not ws.new?
   ws.enabled = 'true'
