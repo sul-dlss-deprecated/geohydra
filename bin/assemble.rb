@@ -109,13 +109,8 @@ def main(flags)
   client = GeoMDTK::GeoNetwork.new
   client.each do |uuid|
     begin
-      puts "Processing #{uuid}" if flags[:verbose]
+      puts "Processing #{uuid}"
       obj = client.fetch(uuid)
-      # unless obj.druid
-      #   # raise ArgumentError, "uuid #{uuid} missing druid"
-      #   $stderr.puts "WARNING: uuid #{uuid} is missing Druid"
-      #   next
-      # end
       doit client, uuid, obj, flags
     rescue Exception => e
       $stderr.puts e
