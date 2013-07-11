@@ -4,12 +4,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'druid-tools'
 require 'optparse'
 
-def do_system(cmd)
-  cmd = cmd.join(' ') if cmd.is_a? Array
-  puts "RUNNING: #{cmd}" if $DEBUG
-  system(cmd.to_s)
-end
-
 def doit(client, uuid, obj, flags)
   # setup
   druid = DruidTools::Druid.new(obj.druid, flags[:workspacedir])
@@ -24,9 +18,9 @@ def doit(client, uuid, obj, flags)
   # export MEF -- the .iso19139.xml file is preferred
   puts "Exporting MEF for #{uuid}" if flags[:verbose]
   client.export(uuid, flags[:tmpdir])
-  do_system(['unzip', '-oq',
-             "#{flags[:tmpdir]}/#{uuid}.mef",
-             "-d", "#{flags[:tmpdir]}"])
+  system(['unzip', '-oq',
+          "'#{flags[:tmpdir]}/#{uuid}.mef'",
+          '-d', "'#{flags[:tmpdir]}'"].join(' '))
 
   found_metadata = false
   %w{metadata.iso19139.xml metadata.xml}.each do |fn| # priority order
@@ -39,7 +33,6 @@ def doit(client, uuid, obj, flags)
       # original ISO 19139
       ifn = File.join(druid.temp_dir, 'iso19139.xml')
       FileUtils.install fn, ifn, :verbose => flags[:verbose]
-      File.delete fn
 
       # GeoMetadataDS
       gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
@@ -48,7 +41,7 @@ def doit(client, uuid, obj, flags)
 
       # MODS from GeoMetadataDS
       geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
-      ap({:geoMetadata => geoMetadata.ng_xml, :descMetadata => geoMetadata.to_mods}) if flags[:verbose]
+      ap({:geoMetadata => geoMetadata.ng_xml, :descMetadata => geoMetadata.to_mods}) if flags[:debug]
       dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
       puts "Generating #{dfn}" if flags[:verbose]
       File.open(dfn, 'w') { |f| f << geoMetadata.to_mods.to_xml }
@@ -57,7 +50,7 @@ def doit(client, uuid, obj, flags)
       sfn = File.join(druid.temp_dir, 'solr.xml')
       puts "Generating #{sfn}" if flags[:verbose]
       h = geoMetadata.to_solr_spatial
-      ap({:to_solr_spatial => h}) if flags[:verbose]
+      ap({:to_solr_spatial => h}) if flags[:debug]
       doc = Nokogiri::XML::Builder.new do |xml|
         xml.add {
           xml.doc_ {
@@ -74,7 +67,11 @@ def doit(client, uuid, obj, flags)
       # OGP Solr document from GeoMetadataDS
       sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
       puts "Generating #{sfn}" if flags[:verbose]
-      system("xsltproc #{File.dirname(__FILE__)}/../lib/geomdtk/mods2ogp.xsl #{dfn} > #{sfn} 2>/dev/null")
+      system(['xsltproc', 
+              "'#{File.dirname(__FILE__)}/../lib/geomdtk/mods2ogp.xsl'",
+              "'#{dfn}'",
+              "> '#{sfn}'",
+              '2> /dev/null'].join(' '))
 
       # Solr document from GeoMetadataDS
       dcfn = File.join(druid.temp_dir, 'dc.xml')
@@ -87,11 +84,13 @@ def doit(client, uuid, obj, flags)
 
   # export any thumbnail images
   ['png', 'jpg'].each do |fmt|
-    Dir.glob(File.join(flags[:tmpdir], uuid, '{private,public}', ('*.' + fmt))) do |fn|
+    Dir.glob("#{flags[:tmpdir]}/#{uuid}/{private,public}/*.#{fmt}") do |fn|
       ext = '.' + fmt
       tfn = File.basename(fn, ext)
-      tfn += 'mall' if tfn =~ %r{_s$} # convert _s to _small as per GeoNetwork convention
-      FileUtils.install fn, File.join(druid.content_dir, tfn + ext), :verbose => flags[:verbose]
+      # convert _s to _small as per GeoNetwork convention
+      tfn = tfn.gsub(/_s$/, '_small')
+      FileUtils.install fn, File.join(druid.content_dir, tfn + ext), 
+                        :verbose => flags[:debug]
     end
   end
 
@@ -106,10 +105,11 @@ def doit(client, uuid, obj, flags)
 end
 
 def main(flags)
+  File.umask(002)
   client = GeoMDTK::GeoNetwork.new
   client.each do |uuid|
     begin
-      puts "Processing #{uuid}"
+      puts "Processing #{uuid}" if flags[:verbose]
       obj = client.fetch(uuid)
       # unless obj.druid
       #   # raise ArgumentError, "uuid #{uuid} missing druid"
@@ -118,15 +118,16 @@ def main(flags)
       # end
       doit client, uuid, obj, flags
     rescue Exception => e
-      $stderr.puts e, e.backtrace
+      $stderr.puts e
+      $stderr.puts e.backtrace if flags[:debug]
     end
   end
 end
 
 # __MAIN__
 begin
-  File.umask(002)
   flags = {
+    :debug => false,
     :verbose => false,
     :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',
@@ -138,6 +139,7 @@ begin
 Usage: #{File.basename(__FILE__)} [options]
 EOM
     opts.on("-v", "--verbose", "Run verbosely") do |v|
+      flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
     end
     opts.on("--stagedir DIR", "Staging directory with ZIP files (default: #{flags[:stagedir]})") do |v|
