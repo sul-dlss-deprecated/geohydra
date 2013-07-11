@@ -55,16 +55,20 @@ module GeoMDTK
         end
       end
       doc = service('xml.metadata.get', { :uuid => uuid })
-      if doc.xpath('//geonet:info/schema[text()="iso19139"]').empty?
+      if doc.xpath('//gmd:MD_Metadata').empty?
         raise ArgumentError, "#{uuid} not in ISO 19139 format"
       end
+      doc.xpath('//geonet:info').each { |x| x.remove } # GeoNetwork additions
       
       druid = nil
-      doc.xpath('//gmd:dataSetURI/gco:CharacterString[starts-with(text(), "http://purl.stanford.edu")]/text()').each do |i|
+      doc.xpath(
+        '//gmd:MD_Metadata/' + 
+        'gmd:dataSetURI/' + 
+        'gco:CharacterString[starts-with(text(),"http://purl.stanford.edu")]/' + 
+        'text()').each do |i|
         druid = to_druid(i.to_s)
       end
       raise ArgumentError, "Cannot extract DRUID: #{uuid}" if druid.nil?
-      doc.xpath('/gmd:MD_Metadata/geonet:info').each { |x| x.remove }
       Struct.new(:content, :status, :druid).new(doc, status, druid)
     end
     
