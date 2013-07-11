@@ -16,7 +16,7 @@ module GeoMDTK
     # @param [Hash] options provides `:service_root` URL
     def initialize options = {}
       @service_root = options[:service_root] || GeoMDTK::Config.geonetwork.service_root
-      ap({:service_root => @service_root})
+      ap({:service_root => @service_root}) if $DEBUG
     end
     
     # @see  http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/services_site_info_forwarding.html#site-information-xml-info Site Information: `xml.info`
