@@ -1,0 +1,9 @@
+development:
+  adapter: postgresql
+  host: 127.0.0.1
+  port: 5432
+  username: geostaff
+  database: geoserver
+  schema_search_path: druid
+  pool: 5
+  timeout: 5000

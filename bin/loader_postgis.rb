@@ -1,0 +1,312 @@
+#!/usr/bin/env ruby
+# -*- encoding : utf-8 -*-
+#
+# RGeoServer Batch load layers (batch_demo.rb)
+# Usage: #{File.basename(__FILE__)} [input.yml]
+require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
+require 'optparse'
+require 'mods'
+# require 'pg'
+require 'druid-tools'
+
+require 'active_record'
+require 'active_support'
+
+class RegisteredLayer < ActiveRecord::Base
+  attr_accessible :druid, :layername, :title
+  # self.primary_key = 'druid'
+  
+  def find_by_druid(druid)
+    RegisteredLayer.find(:first, :conditions => [ "druid = ?", druid.to_s])
+  end
+end
+
+
+# ENV['RGEOSERVER_CONFIG'] ||= ENV_FILE + '_rgeoserver.yml'
+# require 'rgeoserver'
+
+#=  Input data. *See DATA section at end of file*
+# The input file is in YAML syntax with each record is a Hash with keys:
+# - layername
+# - filename
+# - format
+# - title
+# and optionally
+# - description
+# - keywords
+# - metadata_links
+
+# USAGE: shp2pgsql [<options>] <shapefile> [[<schema>.]<table>]
+# OPTIONS:
+#   -s [<from>:]<srid> Set the SRID field. Defaults to 0.
+#       Optionally reprojects from given SRID (cannot be used with -D).
+#  (-d|a|c|p) These are mutually exclusive options:
+#      -d  Drops the table, then recreates it and populates
+#          it with current shape file data.
+#      -a  Appends shape file into current table, must be
+#          exactly the same table schema.
+#      -c  Creates a new table and populates it, this is the
+#          default if you do not specify any options.
+#      -p  Prepare mode, only creates the table.
+#   -g <geocolumn> Specify the name of the geometry/geography column
+#       (mostly useful in append mode).
+#   -D  Use postgresql dump format (defaults to SQL insert statements).
+#   -e  Execute each statement individually, do not use a transaction.
+#       Not compatible with -D.
+#   -G  Use geography type (requires lon/lat data or -r to reproject).
+#   -k  Keep postgresql identifiers case.
+#   -i  Use int4 type for all integer dbf fields.
+#   -I  Create a spatial index on the geocolumn.
+#   -S  Generate simple geometries instead of MULTI geometries.
+#   -t <dimensionality> Force geometry to be one of '2D', '3DZ', '3DM', or '4D'
+#   -w  Output WKT instead of WKB.  Note that this can result in
+#       coordinate drift.
+#   -W <encoding> Specify the character encoding of Shape's
+#       attribute column. (default: "UTF-8")
+#   -N <policy> NULL geometries handling policy (insert*,skip,abort).
+#   -n  Only import DBF file.
+#   -T <tablespace> Specify the tablespace for the new table.
+#       Note that indexes will still use the default tablespace unless the
+#       -X flag is also used.
+#   -X <tablespace> Specify the tablespace for the table's indexes.
+#       This applies to the primary key, and the spatial index if
+#       the -I flag is used.
+#   -?  Display this help screen.
+
+def main conn, layers, flags = {}
+  ap({:layers => layers, :flags => flags})
+  layers.each do |k, v|
+    %w{layername format filename title}.each do |i|
+      raise ArgumentError, "Layer is missing required '#{i}'" if v[i.to_sym].nil? or not v.include?(i.to_sym)
+    end
+    puts "Processing layer #{k}" if flags[:verbose]
+  
+    layername = v[:layername].strip
+    format = v[:format].downcase.strip.to_sym
+    druid = v[:druid]
+    title = v[:title].strip
+      
+    case format
+    when :shapefile
+      puts "DataStore: druid/postgis" if flags[:verbose]
+      
+      if flags[:register]
+        puts "Registering layer #{druid.id}, #{layername}, #{title}" if flags[:verbose]
+        layer = RegisteredLayer.find_by_druid druid.id
+        ap({:found_layer => layer})        
+        if layer.nil?
+          layer = RegisteredLayer.new( 
+            :druid => druid.id,
+            :layername => layername,
+            :title => title
+          )
+        end
+        layer.layername = layername
+        layer.title = title
+        ap({:updated_layer => layer})
+        layer.save
+#         result = conn.query("
+# SELECT  COUNT(*) 
+# FROM    #{flags[:schema]}.#{flags[:register_table]}
+# WHERE   druid = $1;", [druid.id])
+#         if result.getvalue(0,0).to_i == 1
+#           conn.exec("
+# UPDATE  #{flags[:schema]}.#{flags[:register_table]} 
+# SET     layername = $2, title = $3 
+# WHERE   druid = $1", [druid.id, layername, v[:title]])
+#         else
+#           conn.exec("
+# INSERT INTO #{flags[:schema]}.#{flags[:register_table]} 
+# VALUES ($1, $2, $3)",[druid.id, layername, v[:title]])
+#         end
+      end
+      # if v['remote']
+      #   ds.upload_external v['filename']
+      # else
+      #   ds.upload_file v['filename']
+      # end
+      # # modify DataStore with rest of parameters
+      # ds.enabled = 'true'
+      # ds.connection_parameters = ds.connection_parameters.merge({
+      #   "namespace" => flags[:namespace],
+      #   "charset" => 'UTF-8',
+      #   "create spatial index" => 'true',
+      #   "cache and reuse memory maps" => 'true',
+      #   "enable spatial index" => 'true',
+      #   "filetype" => 'shapefile',
+      #   "memory mapped buffer" => 'false'
+      # })
+      # ds.description = v['description']
+      # ds.save
+      
+      # ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
+      # raise Exception, "FeatureType doesn't already exists #{ft}" if ft.new?
+      # puts "FeatureType: #{ws.name}/#{ds.name}/#{ft.name}" if flags[:verbose]
+      # ft.enabled = 'true'
+      # ft.title = v['title'] 
+      # ft.description = v['description']
+      # ft.keywords = v['keywords']
+      # ft.metadata_links = v['metadata_links']
+      # ft.save
+    else
+      raise NotImplementedError, "Unsupported format #{format}"    
+    end
+  end
+end
+
+def from_druid druid, flags
+  ap({:druid => druid}) if flags[:debug]
+  prj = flags[:projection] || "EPSG:4326"
+  prj = prj.split(':').join('_')
+  druid = DruidTools::Druid.new(druid, flags[:datadir])
+  mods_fn = druid.path('metadata/descMetadata.xml')
+  puts "Loading #{mods_fn}" if flags[:verbose]
+  mods = Mods::Record.new
+  mods.from_url(mods_fn)
+  zipfn = nil
+  layername = nil
+  Dir.glob(druid.content_dir + "/*_#{prj}.zip") do |fn|
+    puts "Found EPSG 4326 zip: #{fn}" if flags[:verbose]
+    zipfn = fn
+    layername = File.basename(zipfn, "_#{prj}.zip")
+    puts "Derived layername #{zipfn} -> #{layername}" if flags[:verbose]
+  end
+  if not zipfn
+    Dir.glob(druid.content_dir + "/*.zip") do |fn|
+      zipfn = fn
+      layername = File.basename(zipfn, '.zip')
+    end
+  end
+  raise ArgumentError, zipfn unless File.exist?(zipfn) and layername
+  ap({:zipfn => zipfn, :layername => layername}) if flags[:verbose]
+  r = { 
+    :vector => {
+      :druid => druid,
+      :format => 'Shapefile',
+      :layername => layername,
+      :filename => zipfn,
+      :title => mods.full_titles.first
+    }
+  }
+  r
+end
+
+# __MAIN__
+begin
+  flags = {
+    :debug => true,
+    :verbose => true,
+    :register => false,
+    :register_drop => false,
+    :register_table => 'registered_layers',
+    :datadir => '/var/geomdtk/current/workspace',
+    :url => GeoMDTK::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
+    :schema => GeoMDTK::Config.postgis.schema || 'public'
+  }
+  
+  OptionParser.new do |opts|
+    opts.banner = "
+Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
+"
+    opts.on("-v", "--verbose", "Run verbosely") do |v|
+      flags[:debug] = true if flags[:verbose]
+      flags[:verbose] = true
+    end
+    opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]})") do |v|
+      raise ArgumentError, "Invalid directory #{v}" unless File.directory?(v)
+      flags[:datadir] = v
+    end
+    opts.on("-R", "--register", "Register shapefile") do |v|
+      flags[:register] = true
+    end
+    
+    %w{url schema}.each do |k|
+      opts.on("--#{k} #{k.upcase}", "PostGIS #{k} (default: #{flags[k.to_sym]})") do |v|
+        flags[k.to_sym] = v
+      end
+    end
+  end.parse!
+
+  ap({:flags => flags})
+  dbflags = YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOMDTK_ENVIRONMENT']||'development']
+  ap({:dbflags => dbflags})
+  
+  ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new($stderr) if flags[:debug]
+  
+  conn = ActiveRecord::Base.establish_connection dbflags
+  conn.with_connection do |db|
+    puts "Connected to PostgreSQL #{db.select_value("SHOW server_version")} " +
+         "using #{db.current_database} database"
+  end if flags[:verbose]
+  # (flags[:url],
+  #         :schema_search_path => flags[:schema],
+  #         :encoding => 'UTF8'
+  #         # :adapter  => 'postgresql',
+  #         # :host     => flags[:host],
+  #         # :port     => flags[:port].to_i,
+  #         # :database => flags[:database],
+  #         # :username => flags[:user],
+  #         # :password => flags[:password],
+  #         # :schema_search_path => flags[:schema],
+  #         # :encoding => 'UTF8'
+  #     )
+
+  
+  # conn = PG.connect dbflags
+  # conn.trace($stderr) if flags[:debug]
+  # ap({:obj => conn, :klass => conn.class, :methods => conn.public_methods}) if flags[:debug]
+  conn.with_connection do |db|
+    # ap({:obj => db, :klass => db.class, :methods => db.public_methods, :schema_search_path => db.schema_search_path})
+    if db.select_value('select default_version from pg_catalog.pg_available_extensions where name = \'postgis\'') =~ /^(2\.[\.\d]*)$/
+      puts "Using PostGIS #{$1}" if flags[:verbose]
+    else
+      raise NotImplementedError, "Database does not have PostGIS support"
+    end
+  end
+  begin
+    # if flags[:debug]
+    #   puts "EXEC #{flags[:schema]}"
+    #   conn.exec("SELECT * FROM pg_tables WHERE schemaname = $1", [flags[:schema]]) do |result|
+    #     result.each do |row|
+    #       ap({:row => row})
+    #     end
+    #   end
+    # end
+    
+    if flags[:register]
+      conn.with_connection do |db|
+      
+        n = db.select_value("SELECT COUNT(*) FROM pg_tables WHERE schemaname = '#{flags[:schema]}' and tablename = '#{flags[:register_table]}'")
+        if n.to_i == 0 or flags[:register_drop]
+          puts "Creating registry table in #{flags[:schema]}.#{flags[:register_table]}" if flags[:verbose]
+          db.execute("DROP TABLE #{flags[:schema]}.#{flags[:register_table]}") if flags[:register_drop]
+          db.execute("
+            CREATE TABLE #{flags[:schema]}.#{flags[:register_table]}
+            (
+              druid character varying NOT NULL PRIMARY KEY,
+              layername character varying NOT NULL,
+              title character varying NOT NULL
+            );      
+            ")
+          end
+      end
+    end
+    
+    if ARGV.size > 0
+      ARGV.each do |v|
+        main(conn, from_druid(v, flags), flags)
+      end
+    else
+      $stdin.each do |line|
+        main(conn, from_druid(line.strip, flags), flags)
+      end
+    end
+    
+  rescue SystemCallError => e
+    $stderr.puts "ERROR: #{e.message}"
+    $stderr.puts e.backtrace
+    exit(-1)
+  ensure
+    conn = nil
+  end
+end
