@@ -11,6 +11,7 @@ require 'druid-tools'
 
 require 'active_record'
 require 'active_support'
+require 'tmpdir'
 
 class RegisteredLayer < ActiveRecord::Base
   attr_accessible :druid, :layername, :title
@@ -89,6 +90,27 @@ def main conn, layers, flags = {}
     case format
     when :shapefile
       puts "DataStore: druid/postgis" if flags[:verbose]
+      
+      ap({:v => v})
+      Dir.mktmpdir('shp', druid.temp_dir) do |d|
+        begin
+          system("unzip -oj '#{v[:filename]}' -d '#{d}'")
+          system("ls -la #{d}")
+          Dir.glob("#{d}/*.shp") do |shp|
+            # XXX: HARD CODED projection here -- extract from MODS or ISO19139
+            # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
+            system("shp2pgsql -s 4269:4326 -I -d -G '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
+            system("psql -X -q " +
+                 "--host='#{flags[:host.to_s]}' " +
+                 "--port='#{flags[:port.to_s]}' " +
+                 "--username='#{flags[:username.to_s]}' " + 
+                 "--dbname='#{flags[:database.to_s]}' " +
+                 "--file='#{druid.temp_dir}/#{druid.id}.sql' ")
+          end
+        rescue Exception => e
+          FileUtils.rm_rf(d) if File.exist?(d)
+        end
+      end
       
       if flags[:register]
         puts "Registering layer #{druid.id}, #{layername}, #{title}" if flags[:verbose]
@@ -200,7 +222,7 @@ begin
     :register_drop => false,
     :register_table => 'registered_layers',
     :datadir => '/var/geomdtk/current/workspace',
-    :url => GeoMDTK::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
+    # :url => GeoMDTK::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
     :schema => GeoMDTK::Config.postgis.schema || 'public'
   }
   
@@ -215,8 +237,11 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
     opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]})") do |v|
       raise ArgumentError, "Invalid directory #{v}" unless File.directory?(v)
       flags[:datadir] = v
-    end
+    end    
     opts.on("-R", "--register", "Register shapefile") do |v|
+      flags[:register] = true
+    end
+    opts.on("--url", "Database") do |v|
       flags[:register] = true
     end
     
@@ -228,12 +253,12 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
   end.parse!
 
   ap({:flags => flags})
-  dbflags = YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOMDTK_ENVIRONMENT']||'development']
-  ap({:dbflags => dbflags})
+  flags.merge! YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOMDTK_ENVIRONMENT']||'development']
+  ap({:flags => flags})
   
   ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new($stderr) if flags[:debug]
   
-  conn = ActiveRecord::Base.establish_connection dbflags
+  conn = ActiveRecord::Base.establish_connection flags
   conn.with_connection do |db|
     puts "Connected to PostgreSQL #{db.select_value("SHOW server_version")} " +
          "using #{db.current_database} database"
