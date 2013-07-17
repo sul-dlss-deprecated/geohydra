@@ -99,7 +99,8 @@ def main conn, layers, flags = {}
           Dir.glob("#{d}/*.shp") do |shp|
             # XXX: HARD CODED projection here -- extract from MODS or ISO19139
             # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
-            system("shp2pgsql -s 4269:4326 -I -d -G '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
+            # XXX: -G for the geography column causes some issues with GeoServer
+            system("shp2pgsql -s 4269:4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
             system("psql -X -q " +
                  "--host='#{flags[:host.to_s]}' " +
                  "--port='#{flags[:port.to_s]}' " +
