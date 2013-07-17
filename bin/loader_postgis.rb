@@ -6,8 +6,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'mods'
-# require 'pg'
 require 'druid-tools'
+require 'dor-services'
 
 require 'active_record'
 require 'active_support'
@@ -100,7 +100,7 @@ def main conn, layers, flags = {}
             # XXX: HARD CODED projection here -- extract from MODS or ISO19139
             # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
             # XXX: -G for the geography column causes some issues with GeoServer
-            system("shp2pgsql -s 4269:4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
+            system("shp2pgsql -s #{flags[:projection]}:4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
             system("psql -X -q " +
                  "--host='#{flags[:host.to_s]}' " +
                  "--port='#{flags[:port.to_s]}' " +
@@ -186,10 +186,19 @@ def from_druid druid, flags
   puts "Loading #{mods_fn}" if flags[:verbose]
   mods = Mods::Record.new
   mods.from_url(mods_fn)
+  ap({:mods => mods}) if flags[:debug]
+
+  geo_fn = druid.path('metadata/geoMetadata.xml')
+  puts "Loading #{geo_fn}" if flags[:verbose]
+  geo = Dor::GeoMetadataDS.from_xml(File.read(geo_fn))
+  ap({:geo => geo}) if flags[:debug]
+
   zipfn = nil
   layername = nil
+  projection = nil
   Dir.glob(druid.content_dir + "/*_#{prj}.zip") do |fn|
     puts "Found EPSG 4326 zip: #{fn}" if flags[:verbose]
+    projection = '4326'
     zipfn = fn
     layername = File.basename(zipfn, "_#{prj}.zip")
     puts "Derived layername #{zipfn} -> #{layername}" if flags[:verbose]
@@ -208,7 +217,8 @@ def from_druid druid, flags
       :format => 'Shapefile',
       :layername => layername,
       :filename => zipfn,
-      :title => mods.full_titles.first
+      :title => mods.full_titles.first,
+      :projection => projection.nil?? '4326' : projection
     }
   }
   r
