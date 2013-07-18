@@ -10,8 +10,17 @@ If needed, configure host to use Ruby 1.9.3:
 
     % rvm_path=$HOME/.rvm rvm-installer --auto-dotfiles
     % source ~/.bashrc
-    % rvm use 1.9.3@geomdtk
+    % rvm use 1.9.3@geomdtk --create
     % rvm rvmrc create
+
+To install the native extensions to Ruby pg:
+
+    % yum install postgresql92-devel
+    % gem install pg -- --with-pg_config=/usr/pgsql-9.2/bin/pg_config 
+
+You need to customize your configuration parameters like so:
+
+    % edit config/environments/development.rb
 
 Run setup:
 
@@ -22,8 +31,11 @@ Run setup:
 Utilities
 ---------
 
-To assemble the workspace, populate the geomdtk.stage directory with `_druid_.zip` files which contain the
-Shapefiles files.
+To ingest ArcGIS *.shp.xml files and transform into ISO19139 files
+
+    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/metadata
+
+To assemble the workspace, populate the geomdtk.stage directory with `_druid_.zip` files which contain the Shapefiles files.
 
     % bundle exec bin/assemble.rb
 
