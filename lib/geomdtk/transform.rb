@@ -5,9 +5,11 @@ module GeoMDTK
   class Transform
     # XSLT file locations
     XSLT = {
-      :rdf => File.join(File.dirname(__FILE__), 'rdf_bundle.xsl'),
-      :arcgis => '/var/lib/tomcat6/webapps/geonetwork/xsl/conversion/import/ArcGIS2ISO19139.xsl', # pre-installed ~1MB
-      :arcgis_fc => File.join(File.dirname(__FILE__), 'arcgis_to_iso19139_fc.xsl')
+      :rdf        => File.join(File.dirname(__FILE__), 'rdf_bundle.xsl'),
+      :arcgis     => File.exist?('lib/ArcGIS2ISO19139.xsl') ? 
+                      'lib/ArcGIS2ISO19139.xsl' : 
+                      '/var/geonetwork/2.8.0/lib/ArcGIS2ISO19139.xsl', # pre-installed
+      :arcgis_fc  => File.join(File.dirname(__FILE__), 'arcgis_to_iso19139_fc.xsl')
     }
     
     # XSLT processor
