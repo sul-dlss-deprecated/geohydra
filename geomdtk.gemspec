@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   # SUL-DLSS gems
   s.add_dependency 'assembly-objectfile'
   s.add_dependency 'dor-services', '~> 4.3.0.rc1'
-  s.add_dependency 'druid-tools'
+  s.add_dependency 'druid-tools', '~> 0.2.5'
   s.add_dependency 'mods'
   s.add_dependency 'rgeoserver', '~> 0.6.0'
 

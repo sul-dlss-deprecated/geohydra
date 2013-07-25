@@ -9,6 +9,12 @@ GIT
       nokogiri (~> 1)
 
 GIT
+  remote: corn.stanford.edu:/afs/ir/dev/dlss/git/lyberteam/druid-tools.git
+  revision: a7e39e67ad62b8a3f26d3c49aaeea7938705f11c
+  specs:
+    druid-tools (0.2.5)
+
+GIT
   remote: https://github.com/drh-stanford/version_bumper.git
   revision: 0a682b031a6ba6c3de635687b7f1986be5bcd9a5
   branch: patch_tag
@@ -81,7 +87,7 @@ PATH
       assembly-objectfile
       confstruct
       dor-services (~> 4.3.0.rc1)
-      druid-tools
+      druid-tools (~> 0.2.5)
       fastimage
       mods
       nokogiri (~> 1.6)
@@ -143,7 +149,6 @@ GEM
       confstruct
       nokogiri
       rest-client
-    druid-tools (0.2.3)
     equivalent-xml (0.3.0)
       nokogiri (>= 1.4.3)
     fastercsv (1.5.5)
@@ -195,7 +200,7 @@ GEM
       deprecation
       mediashelf-loggable
       nokogiri (>= 1.4.2)
-    pg (0.15.1)
+    pg (0.16.0)
     progressbar (0.20.0)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -273,6 +278,7 @@ DEPENDENCIES
   assembly-objectfile!
   awesome_print
   dor-services!
+  druid-tools!
   equivalent-xml
   geomdtk!
   mods!
