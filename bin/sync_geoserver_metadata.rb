@@ -14,29 +14,21 @@ require 'mods'
 ENV['RGEOSERVER_CONFIG'] ||= ENV_FILE + '_rgeoserver.yml'
 require 'rgeoserver'
 
-def do_vector(catalog, layername, format, ws, ds, v, flags)
-  # Create data stores for shapefiles
-  ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => (ds.nil?? v['druid'].id : ds)
-  puts "DataStore: #{ws.name}/#{ds.name} (#{v['remote']})" if flags[:verbose]
-  ap({:profile => ds.profile}) if flags[:debug]
-  raise ArgumentError, "Datastore #{ds.name} not found" if ds.new?
-  
-  ap({:catalog => catalog, :workspace => ws, :data_store => ds, :name => layername})
-  ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
-  ap({:profile => ft.profile}) if flags[:debug]
-  if ft.new?
-    puts "WARNING: #{layername} not found, searching for #{v['druid'].id}"
-    ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => v['druid'].id 
-  end
+def do_vector(catalog, ws, ds, layername, format, v, flags)
+  # Create data stores for shapefiles  
+  name = v['druid'].id
+  ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => name
+  ap({:catalog => catalog, :workspace => ws, :data_store => ds, :name => name, :layername => layername, :v => v})
   raise "FeatureType is missing #{ft.name}" if ft.new?
   puts "FeatureType: #{ft.route}" if flags[:verbose]
-  ft.enabled = 'true'
-  ft.title = v['title'] 
-  ft.description = v['description']
-  ft.keywords = v['keywords']
+  ft.enabled = true
+  ft.title = layername
+  ft.abstract = '<h1>' + v['title'] + '</h1>' + "\n" + '<p>' + v['abstract'] + '</p>'
+  ap({:abstract => ft.abstract})
+  ft.keywords = [ft.keywords, v['keywords']].flatten.compact.uniq
   ft.metadata_links = v['metadata_links']
-  ap({:profile => ft.profile}) if flags[:debug]
   ft.save
+  ap({:profile => ft.profile}) if flags[:debug]
 end
 
 def do_raster(catalog, layername, format, ws, v, flags)
@@ -50,12 +42,18 @@ end
 # - format
 # - title
 # and optionally
-# - description
+# - abstract
 # - keywords
 # - metadata_links
 
 def main catalog, ws, layers, flags = {}
   raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
+  ap({:ws => ws, :ds => flags[:datastore]}) if flags[:debug]
+
+  ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => flags[:datastore]
+  puts "DataStore: #{ws.name}/#{ds.name}" if flags[:verbose]
+  ap({:profile => ds.profile}) if flags[:debug]
+  raise ArgumentError, "Datastore #{ds.name} not found" if ds.new?
 
   # Iterate over all records in YAML file and create stores in the catalog
   layers.each do |k, v|
@@ -71,7 +69,7 @@ def main catalog, ws, layers, flags = {}
     when 'GeoTIFF'
       do_raster catalog, layername, format, ws, v, flags
     when 'Shapefile'
-      do_vector catalog, layername, format, ws, flags[:datastore], v, flags
+      do_vector catalog, ws, ds, layername, format, v, flags
     else
       raise NotImplementedError, "Unsupported format #{format}"    
     end
@@ -100,7 +98,7 @@ def from_druid druid, flags
       layername = File.basename(zipfn, '.zip')
     end
   end
-  raise ArgumentError, zipfn unless File.exist?(zipfn) and layername
+  raise ArgumentError, zipfn unless layername and not zipfn.nil? and File.exist?(zipfn)
   ap({:zipfn => zipfn, :layername => layername}) if flags[:verbose]
   r = { 
     'vector' => {
@@ -109,15 +107,16 @@ def from_druid druid, flags
       'layername' => layername,
       'filename' => zipfn,
       'title' => mods.full_titles.first,
-      'description' => mods.term_value(:abstract),
-      'keywords' => [mods.term_value([:subject, 'topic']),
-                     mods.term_value([:subject, 'geographic'])].flatten,
+      'abstract' => mods.term_values(:abstract).compact.join("\n"),
+      'keywords' => [mods.term_values([:subject, 'topic']),
+                     mods.term_values([:subject, 'geographic'])].flatten.compact,
       'metadata_links' => [{
         'metadataType' => 'TC211',
         'content' => "http://purl.stanford.edu/#{druid.id}.geoMetadata"
       }]
     }
   }
+  ap({:r => r}) if flags[:debug]
   r
 end
 
@@ -127,7 +126,7 @@ begin
     :debug => false,
     :verbose => true,
     :datadir => '/var/geomdtk/current/workspace',
-    :datastore => GeoMDTK::Config.geoserver.datastore || nil,
+    :datastore => GeoMDTK::Config.geoserver.datastore || 'postgis',
     :workspace => GeoMDTK::Config.geoserver.workspace || 'druid',
     :namespace => GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
   }
@@ -166,6 +165,11 @@ Usage: #{File.basename(__FILE__)} [-v] [options] [druid ... | < druids]
   puts "Workspace: #{ws.name} ready" if flags[:verbose]
 
   (ARGV.size > 0 ? ARGV : $stdin).each do |v|
-    main(catalog, ws, from_druid(v, flags), flags)
+    begin
+      main(catalog, ws, from_druid(v.downcase.strip, flags), flags)      
+    rescue Exception => e
+      puts e
+    end
+    
   end
 end

@@ -63,10 +63,10 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/rgeoserver.git
-  revision: 273fe8c03cb5471b1b4dd3070454c3f4ff929204
+  revision: fe4bb67de4e7595fe8f070981f4d502b57ffb987
   branch: 0.6.x
   specs:
-    rgeoserver (0.6.2.1)
+    rgeoserver (0.6.3.beta1)
       activemodel
       activesupport
       confstruct
