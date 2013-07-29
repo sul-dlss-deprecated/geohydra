@@ -27,7 +27,12 @@ module GeoMDTK
           zoom '1:3'
         end
       end
-    end 
+    end
+    
+    postgis do
+      url 'postgres://geostaff:@localhost:5432/geoserver'
+      schema 'myschema'
+    end
   end
 end
 
