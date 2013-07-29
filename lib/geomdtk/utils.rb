@@ -8,5 +8,10 @@ module GeoMDTK
         p
       end
     end
+    
+    # @see http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf pg2
+    def self.shapefile?(fn)
+      File.basename(fn).downcase =~ /^([a-z0-9_-]+)\.shp$/
+    end
   end
 end
