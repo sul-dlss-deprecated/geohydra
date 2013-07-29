@@ -233,7 +233,7 @@ begin
     :register_drop => false,
     :register_table => 'registered_layers',
     :datadir => '/var/geomdtk/current/workspace',
-    # :url => GeoMDTK::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
+    :url => GeoMDTK::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
     :schema => GeoMDTK::Config.postgis.schema || 'public'
   }
   
@@ -271,46 +271,32 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
   
   conn = ActiveRecord::Base.establish_connection flags
   conn.with_connection do |db|
-    puts "Connected to PostgreSQL #{db.select_value("SHOW server_version")} " +
-         "using #{db.current_database} database"
-  end if flags[:verbose]
-  conn.with_connection do |db|
     # ap({:obj => db, :klass => db.class, :methods => db.public_methods, :schema_search_path => db.schema_search_path})
+    puts "Connected to PostgreSQL #{db.select_value("SHOW server_version")} " +
+         "using #{db.current_database} database" if flags[:verbose]
     if db.select_value('select default_version from pg_catalog.pg_available_extensions where name = \'postgis\'') =~ /^(2\.[\.\d]*)$/
       puts "Using PostGIS #{$1}" if flags[:verbose]
     else
       raise NotImplementedError, "Database does not have PostGIS support"
     end
-  end
-  begin    
     if flags[:register]
-      conn.with_connection do |db|
-      
-        n = db.select_value("SELECT COUNT(*) FROM pg_tables WHERE schemaname = '#{flags[:schema]}' and tablename = '#{flags[:register_table]}'")
-        if n.to_i == 0 or flags[:register_drop]
-          puts "Creating registry table in #{flags[:schema]}.#{flags[:register_table]}" if flags[:verbose]
-          db.execute("DROP TABLE #{flags[:schema]}.#{flags[:register_table]}") if flags[:register_drop]
-          db.execute("
-            CREATE TABLE #{flags[:schema]}.#{flags[:register_table]}
-            (
-              druid character varying NOT NULL PRIMARY KEY,
-              layername character varying NOT NULL,
-              title character varying NOT NULL
-            );      
-            ")
-          end
+      n = db.select_value("SELECT COUNT(*) FROM pg_tables WHERE schemaname = '#{flags[:schema]}' and tablename = '#{flags[:register_table]}'")
+      if n.to_i == 0 or flags[:register_drop]
+        puts "Creating registry table in #{flags[:schema]}.#{flags[:register_table]}" if flags[:verbose]
+        db.execute("DROP TABLE #{flags[:schema]}.#{flags[:register_table]}") if flags[:register_drop]
+        db.execute("
+          CREATE TABLE #{flags[:schema]}.#{flags[:register_table]}
+          (
+            druid character varying NOT NULL PRIMARY KEY,
+            layername character varying NOT NULL,
+            title character varying NOT NULL
+          );      
+          ")
       end
     end
+  end
     
-    (ARGV.size > 0 ? ARGV : $stdin).each do |s|
-        main(conn, from_druid(s.strip, flags), flags)
-    end
-    
-  rescue SystemCallError => e
-    $stderr.puts "ERROR: #{e.message}"
-    $stderr.puts e.backtrace
-    exit(-1)
-  ensure
-    conn = nil
+  (ARGV.size > 0 ? ARGV : $stdin).each do |s|
+      main(conn, from_druid(s.strip, flags), flags)
   end
 end
