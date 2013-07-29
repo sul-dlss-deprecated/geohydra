@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
-require 'druid-tools'
 require 'optparse'
 
-def validate(druid, path, flags)
-  ap({:druid => druid, :path => path, :flags => flags}) if flags[:debug]
+def validate(path, flags)
+  ap({:path => path, :flags => flags}) if flags[:debug]
   File.umask(002)
   Dir.glob("#{flags[:srcdir]}/**/*.shp") do |shp|
+    puts "Processing #{shp}" if flags[:debug]
     basefn = File.basename(shp, '.shp')
     unless GeoMDTK::Utils.shapefile?(shp)
       puts "Error <#{shp}>. Trying to repair..."
