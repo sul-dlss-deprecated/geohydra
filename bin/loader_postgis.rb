@@ -263,9 +263,9 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
     end
   end.parse!
 
-  ap({:flags => flags})
+  ap({:flags => flags}) if flags[:debug]
   flags.merge! YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOMDTK_ENVIRONMENT']||'development']
-  ap({:flags => flags})
+  ap({:flags => flags}) if flags[:debug]
   
   ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new($stderr) if flags[:debug]
   
@@ -274,23 +274,6 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
     puts "Connected to PostgreSQL #{db.select_value("SHOW server_version")} " +
          "using #{db.current_database} database"
   end if flags[:verbose]
-  # (flags[:url],
-  #         :schema_search_path => flags[:schema],
-  #         :encoding => 'UTF8'
-  #         # :adapter  => 'postgresql',
-  #         # :host     => flags[:host],
-  #         # :port     => flags[:port].to_i,
-  #         # :database => flags[:database],
-  #         # :username => flags[:user],
-  #         # :password => flags[:password],
-  #         # :schema_search_path => flags[:schema],
-  #         # :encoding => 'UTF8'
-  #     )
-
-  
-  # conn = PG.connect dbflags
-  # conn.trace($stderr) if flags[:debug]
-  # ap({:obj => conn, :klass => conn.class, :methods => conn.public_methods}) if flags[:debug]
   conn.with_connection do |db|
     # ap({:obj => db, :klass => db.class, :methods => db.public_methods, :schema_search_path => db.schema_search_path})
     if db.select_value('select default_version from pg_catalog.pg_available_extensions where name = \'postgis\'') =~ /^(2\.[\.\d]*)$/
@@ -299,16 +282,7 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
       raise NotImplementedError, "Database does not have PostGIS support"
     end
   end
-  begin
-    # if flags[:debug]
-    #   puts "EXEC #{flags[:schema]}"
-    #   conn.exec("SELECT * FROM pg_tables WHERE schemaname = $1", [flags[:schema]]) do |result|
-    #     result.each do |row|
-    #       ap({:row => row})
-    #     end
-    #   end
-    # end
-    
+  begin    
     if flags[:register]
       conn.with_connection do |db|
       
@@ -328,14 +302,8 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
       end
     end
     
-    if ARGV.size > 0
-      ARGV.each do |v|
-        main(conn, from_druid(v, flags), flags)
-      end
-    else
-      $stdin.each do |line|
-        main(conn, from_druid(line.strip, flags), flags)
-      end
+    (ARGV.size > 0 ? ARGV : $stdin).each do |s|
+        main(conn, from_druid(s.strip, flags), flags)
     end
     
   rescue SystemCallError => e
