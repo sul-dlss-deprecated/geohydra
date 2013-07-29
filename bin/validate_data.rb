@@ -52,7 +52,7 @@ EOM
   raise ArgumentError, "Missing directory #{flags[:srcdir]}" unless flags[:srcdir] and File.directory?(flags[:srcdir])
 
   puts "Examining #{flags[:srcdir]}" if flags[:debug]
-  validate nil, flags[:srcdir], flags
+  validate flags[:srcdir], flags
   rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"
   exit(-1)
