@@ -5,12 +5,111 @@
 # Usage: #{File.basename(__FILE__)} [input.yml]
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
-require 'mods'
+require 'uri'
 require 'yaml'
+
 require 'druid-tools'
+require 'mods'
 
 ENV['RGEOSERVER_CONFIG'] ||= ENV_FILE + '_rgeoserver.yml'
 require 'rgeoserver'
+
+def do_vector(catalog, layername, format, ws, ds, v, flags)
+  # Create data stores for shapefiles
+  ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => (ds.nil?? v['druid'].id : ds)
+  puts "DataStore: #{ws.name}/#{ds.name} (#{v['remote']})" if flags[:verbose]
+  ap({:vector => v}) if flags[:debug]
+  case v['remote']
+  when 'serverfile'
+    puts "DataStore: Loading server-side file #{v['filename']}" if flags[:verbose]
+    ds.upload_external v['filename']
+  when 'localfile'
+    puts "DataStore: Uploading local file #{v['filename']}" if flags[:verbose]
+    ds.upload_file v['filename']
+  when 'postgis-db'
+    puts "DataStore: Connecting to PostGIS database #{flags[:host]}:#{flags[:port]}/#{flags[:database]}" if flags[:verbose]
+    ds.data_type = 'PostGIS'
+    ds.connection_parameters = ds.connection_parameters.merge({
+      "Connection timeout" => 20,
+      "port" => flags[:port],
+      "dbtype" => 'postgis',
+      "host" => flags[:host],
+      "validate connections" => true,
+      "encode functions" => false,
+      "max connections" => 10,
+      "database" => flags[:database],
+      "namespace" => flags[:namespace],
+      "schema" => flags[:schema],
+      "Loose bbox" => true,
+      "Expose primary keys" => false,
+      "fetch size" => 1000,
+      "Max open prepared statements" => 50,
+      "preparedStatements" => false,
+      "Estimated extends" => true,
+      "user" => flags[:user],
+      "min connections" => 1
+    })
+    ap({:connection_parameters => ds.connection_parameters}) if flags[:debug]
+  else
+    raise NotImplemented, "Unknown remote type: #{v['remote']}"
+  end
+  
+  if v['remote'] =~ /file$/
+    ds.connection_parameters = ds.connection_parameters.merge({
+      "namespace" => flags[:namespace],
+      "charset" => 'UTF-8',
+      "create spatial index" => 'true',
+      "cache and reuse memory maps" => 'true',
+      "enable spatial index" => 'true',
+      "filetype" => 'shapefile',
+      "memory mapped buffer" => 'false'
+    })
+    ap({:connection_parameters => ds.connection_parameters}) if flags[:debug]
+  end
+
+  # modify DataStore with rest of parameters
+  ds.enabled = 'true'
+  ds.description = v['description']
+  ds.save# unless v['remote'] =~ /-db$/
+  
+  ft = RGeoServer::FeatureType.new catalog, 
+    :workspace => ws, 
+    :data_store => ds, 
+    :name => layername 
+  puts "WARNING: FeatureType doesn't already exists #{ft}" if ft.new?
+  puts "FeatureType: #{ws.name}/#{ds.name}/#{ft.name}" if flags[:verbose]
+  ft.enabled = 'true'
+  ft.title = v['title'] 
+  ft.description = v['description']
+  ft.keywords = v['keywords']
+  ft.metadata_links = v['metadata_links']
+  puts(ft.message) if flags[:debug]
+  ft.save
+end
+
+def do_raster(catalog, layername, format, ws, v, flags)
+  # Create of a coverage store
+  puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
+  cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => layername
+  if v['filename'] =~ %r{^/}
+    cs.url = "file://" + v['filename']
+  else
+    cs.url = "file://" + File.join(flags[:datadir], v['filename'])
+  end
+  cs.description = v['description'] 
+  cs.enabled = 'true'
+  cs.data_type = format
+  cs.save
+
+  # Now create the actual coverage
+  puts "Coverage: #{ws.name}/#{cs.name}/#{layername}" if flags[:verbose]
+  cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => layername 
+  cv.enabled = 'true'
+  cv.title = v['title'] 
+  cv.keywords = v['keywords']
+  cv.metadata_links = v['metadata_links']
+  cv.save
+end
 
 #=  Input data. *See DATA section at end of file*
 # The input file is in YAML syntax with each record is a Hash with keys:
@@ -36,61 +135,11 @@ def main catalog, ws, layers, flags = {}
     layername = v['layername'].strip
     format = v['format'].strip
     
-    if format == 'GeoTIFF'
-      # Create of a coverage store
-      puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
-      cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => layername
-      if v['filename'] =~ %r{^/}
-        cs.url = "file://" + v['filename']
-      else
-        cs.url = "file://" + File.join(flags[:datadir], v['filename'])
-      end
-      cs.description = v['description'] 
-      cs.enabled = 'true'
-      cs.data_type = format
-      cs.save
-
-      # Now create the actual coverage
-      puts "Coverage: #{ws.name}/#{cs.name}/#{layername}" if flags[:verbose]
-      cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => layername 
-      cv.enabled = 'true'
-      cv.title = v['title'] 
-      cv.keywords = v['keywords']
-      cv.metadata_links = v['metadata_links']
-      cv.save
-
-    elsif format == 'Shapefile'
-      # Create data stores for shapefiles
-      ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => v['druid'].id
-      puts "DataStore: #{ws.name}/#{ds.name} (#{v['remote']})" if flags[:verbose]
-      if v['remote']
-        ds.upload_external v['filename']
-      else
-        ds.upload_file v['filename']
-      end
-      # modify DataStore with rest of parameters
-      ds.enabled = 'true'
-      ds.connection_parameters = ds.connection_parameters.merge({
-        "namespace" => flags[:namespace],
-        "charset" => 'UTF-8',
-        "create spatial index" => 'true',
-        "cache and reuse memory maps" => 'true',
-        "enable spatial index" => 'true',
-        "filetype" => 'shapefile',
-        "memory mapped buffer" => 'false'
-      })
-      ds.description = v['description']
-      ds.save
-      
-      ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
-      raise Exception, "FeatureType doesn't already exists #{ft}" if ft.new?
-      puts "FeatureType: #{ws.name}/#{ds.name}/#{ft.name}" if flags[:verbose]
-      ft.enabled = 'true'
-      ft.title = v['title'] 
-      ft.description = v['description']
-      ft.keywords = v['keywords']
-      ft.metadata_links = v['metadata_links']
-      ft.save
+    case format
+    when 'GeoTIFF'
+      do_raster catalog, layername, format, ws, v, flags
+    when 'Shapefile'
+      do_vector catalog, layername, format, ws, flags[:datastore], v, flags
     else
       raise NotImplementedError, "Unsupported format #{format}"    
     end
@@ -124,17 +173,17 @@ def from_druid druid, flags
   r = { 
     'vector' => {
       'druid' => druid,
-      'remote' => false,
+      'remote' => flags[:remote],
       'format' => 'Shapefile',
       'layername' => layername,
       'filename' => zipfn,
       'title' => mods.full_titles.first,
       'description' => mods.term_value(:abstract),
-      'keywords' => [mods.term_value([:subject, 'topic']),
-                     mods.term_value([:subject, 'geographic'])].flatten,
+      'keywords' => [mods.term_values([:subject, 'topic']),
+                     mods.term_values([:subject, 'geographic'])].flatten,
       'metadata_links' => [{
         'metadataType' => 'TC211',
-        'content' => "http://purl.stanford.edu/#{druid.id}.iso19139"
+        'content' => "http://purl.stanford.edu/#{druid.id}.geoMetadata"
       }]
     }
   }
@@ -144,12 +193,20 @@ end
 # __MAIN__
 begin
   flags = {
+    :debug => false,
     :delete => false,
     :verbose => true,
     :datadir => '/var/geomdtk/current/workspace',
     :format => 'MODS',
+    :remote => 'localfile',
+    :datastore => GeoMDTK::Config.geoserver.datastore || nil,
     :workspace => GeoMDTK::Config.geoserver.workspace || 'druid',
     :namespace => GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
+    # :host => 'localhost',
+    # :port => 5432,
+    # :user => 'geostaff',
+    # :database => 'geoserver',
+    # :schema => 'druid'
   }
   
   OptionParser.new do |opts|
@@ -159,6 +216,7 @@ Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ... | < druid
            
     "
     opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+      flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
     end
     opts.on("--delete", "Delete workspaces recursively") do |v|
@@ -178,7 +236,26 @@ Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ... | < druid
     opts.on("--namespace NAME", "Namespace on GeoServer (default: #{flags[:namespace]})") do |v|
       flags[:namespace] = v.to_s
     end
+    opts.on("--datastore NAME", "Datastore on GeoServer in which data are loaded") do |v|
+      flags[:datastore] = v.to_s
+    end
+    opts.on("--remote NAME", "Remote action (default: #{flags[:remote]})") do |v|
+      flags[:remote] = v.to_s
+    end
+    opts.on("--dburl URL", "Database URL") do |v|
+      url = URI(v)
+      raise ArgumentError, "Invalid database URL (#{v}) -- postgresql://u@h:p/db#s" unless url.scheme == 'postgresql'
+      flags[:host] = url.host
+      flags[:port] = url.port || flags[:port]
+      flags[:database] = url.path.gsub(%r{^/}, '') || flags[:database]
+      flags[:user] = url.user || flags[:user]
+      flags[:schema] = url.fragment || flags[:schema]
+      flags[:remote] = 'postgis-db'
+      flags[:datastore] = 'postgis'
+    end
   end.parse!
+  
+  ap({:flags => flags}) if flags[:debug]
   
   # init
   # Connect to the GeoServer catalog
