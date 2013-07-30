@@ -280,12 +280,12 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
       raise NotImplementedError, "Database does not have PostGIS support"
     end
     if flags[:register]
-      n = db.select_value("SELECT COUNT(*) FROM pg_tables WHERE schemaname = '#{flags[:schema]}' and tablename = '#{flags[:register_table]}'")
+      n = db.select_value("SELECT COUNT(*) FROM pg_tables WHERE schemaname = 'public' and tablename = '#{flags[:register_table]}'")
       if n.to_i == 0 or flags[:register_drop]
-        puts "Creating registry table in #{flags[:schema]}.#{flags[:register_table]}" if flags[:verbose]
-        db.execute("DROP TABLE #{flags[:schema]}.#{flags[:register_table]}") if flags[:register_drop]
+        puts "Creating registry table in public.#{flags[:register_table]}" if flags[:verbose]
+        db.execute("DROP TABLE public.#{flags[:register_table]}") if flags[:register_drop]
         db.execute("
-          CREATE TABLE #{flags[:schema]}.#{flags[:register_table]}
+          CREATE TABLE public.#{flags[:register_table]}
           (
             druid character varying NOT NULL PRIMARY KEY,
             layername character varying NOT NULL,
