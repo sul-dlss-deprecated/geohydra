@@ -10,6 +10,13 @@
 
        https://github.com/OpenGeoportal/ogpSolrConfig/blob/master/ogpSolrConfig/SolrConfig/schema.xml
        
+       
+     Requires parameters:
+       
+       - geoserver - URL prefix to the geoserver
+       - druid - the id
+       - stacks - URL prefix to the stacks
+       
      -->
 <xsl:stylesheet 
   xmlns="http://lucene.apache.org/solr/4/document"
@@ -18,37 +25,32 @@
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:mods="http://www.loc.gov/mods/v3"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
   version="1.0" 
   exclude-result-prefixes="gmd gco gml mods rdf xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
-    <xsl:variable name="geoserver" select="'http://kurma-podd1.stanford.edu/geoserver'"/>
-    <xsl:variable name="stacks" select="'http://ogpapp-dev.stanford.edu/stacks'"/>
-    <xsl:variable name="druid" select="substring(mods:identifier[@type='local' and @displayLabel='druid']/text(), string-length('druid:')+1)"/>
-    <xsl:variable name="purl" select="mods:location/mods:url[@displayLabel='PURL']/text()"/>
+    <!-- <xsl:variable name="druid" select="substring(mods:identifier[@type='local' and @displayLabel='druid']/text(), string-length('druid:')+1)"/> -->
+    <xsl:variable name="purl" select="mods:extension/rdf:RDF/@rdf:about"/>
+    <xsl:variable name="filename" select="mods:extension/rdf:RDF/rdf:Description[@rdf:type='geo#filename']/text()"/>
     <xsl:variable name="downloadURL">
       <xsl:value-of select="$stacks"/>
       <xsl:value-of select="concat('/',$druid)"/>
       <xsl:text>/content/</xsl:text>
-      <xsl:value-of select="substring-before(mods:identifier[@type='local' and @displayLabel='filename']/text(), '.shp')"/>
+      <xsl:value-of select="substring-before($filename, '.shp')"/>
       <xsl:text>.zip</xsl:text>
     </xsl:variable>
     <xsl:variable name="metadataURL">
       <xsl:value-of select="$stacks"/>
       <xsl:value-of select="concat('/',$druid)"/>
-      <xsl:text>/metadata/geoMetadata.xml</xsl:text>
+      <xsl:text>/temp/iso19139.xml</xsl:text><!-- XXX: Use Xpointer on geoMetadata to extract -->
     </xsl:variable>
     <add>
       <doc>
         <field name="LayerId"><xsl:value-of select="$druid"/></field>
-        <field name="Name">
-          <xsl:value-of select="substring-before(mods:identifier[@type='local' and @displayLabel='filename']/text(), '.shp')"/>
-        </field>
         <field name="ExternalLayerId"><xsl:value-of select="$purl"/></field>
-        <!-- XXX: set to Public which disables the "login" -->
         <field name="Access"><xsl:text>Public</xsl:text></field>
         <field name="Institution"><xsl:text>Stanford</xsl:text></field>
         <field name="WorkspaceName"><xsl:text>druid</xsl:text></field>
@@ -62,9 +64,9 @@
           <xsl:value-of select="mods:titleInfo/mods:title[@type='main']/text()"/>
         </field>
         <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
+          <xsl:comment>XXX: Might not be correct: one of Point, Line, Polygon</xsl:comment>
           <field name="DataType">
             <xsl:text>Polygon</xsl:text>
-            <!-- XXX: this needs to come from the data for Point, Line, Polygon -->
           </field>
         </xsl:if>
         <xsl:for-each select="mods:name[mods:role/mods:roleTerm/text()='Publisher']">        
@@ -73,7 +75,10 @@
           </field>
         </xsl:for-each>
         <field name="Abstract">
-          <xsl:value-of select="mods:abstract[@displayLabel='abstract']/text()"/>          
+          <xsl:for-each select="mods:abstract[@displayLabel='abstract' or @displayLabel='purpose']/text()">
+            <xsl:value-of select="."/>
+            <xsl:text>; </xsl:text>
+          </xsl:for-each>
         </field>
         <field name="ThemeKeywords">
           <xsl:for-each select="mods:subject/mods:topic">
@@ -134,7 +139,7 @@
               <xsl:text>/wms"],
               "tilecache": ["</xsl:text>
               <xsl:value-of select="$geoserver"/>
-              <xsl:text>/gwc/service/wms"],
+              <xsl:text>/wms"],
               "wfs":       ["</xsl:text>
               <xsl:value-of select="$geoserver"/>
               <xsl:text>/wfs"],
@@ -143,16 +148,21 @@
               <xsl:text>"],
               "download":  ["</xsl:text>
               <xsl:value-of select="$downloadURL"/>
-                <xsl:text>"]
+                <xsl:text>"],
+              "view":      ["</xsl:text>
+                <xsl:value-of select="$purl"/>
+                <xsl:text>"]              
               }
           </xsl:text>
       </field>
-      <field name="FgdcText" xlink:type="simple">
-        <xsl:attribute name="xlink:href">
-          <xsl:value-of select="$metadataURL"/>
-        </xsl:attribute>
+      <field name="FgdcText">
+        <!-- yes, parse=text, it will escape for Solr -->
+        <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="text">
+          <xsl:attribute name="href">
+            <xsl:value-of select="$metadataURL"/>
+          </xsl:attribute>
+        </xi:include>
       </field>
-      
       </doc>
     </add>
   </xsl:template>
