@@ -88,25 +88,41 @@ def convert_geo2solr(druid, geoMetadata, flags)
   sfn
 end
 
-def convert_mods2ogpsolr(druid, dfn, geoserver, stacks, flags)
+def convert_mods2ogpsolr(druid, dfn, flags)
+  geoserver = flags[:geoserver]
+  stacks = flags[:stacks]
+  purl = "#{flags[:purl]}/#{druid.id}"
   # OGP Solr document from GeoMetadataDS
   sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
   FileUtils.rm_f(sfn) if File.exist?(sfn)
   cmd = ['xsltproc',
           "--param geoserver '\"#{geoserver}\"'",
           "--param stacks '\"#{stacks}\"'",
+          "--param purl '\"#{purl}\"'",
           "--param druid '\"#{druid.id}\"'",
           "--output '#{sfn}'",
           "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/mods2ogp.xsl')}'",
-          "'#{dfn}'"].join(' ')
+          "'#{dfn}'"
+          ].join(' ')
   puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
-  ap({:cmd => cmd})
+  ap({:cmd => cmd}) if flags[:debug]
   system(cmd)
   
   # post-process to resolve XInclude
   doc = Nokogiri::XML::Document.parse(open(sfn), nil, nil, Nokogiri::XML::ParseOptions::XINCLUDE)
-  ap({:doc => doc, :root => doc.root, :root_namespaces => doc.root.namespaces}) if flags[:debug]
+  ap({:root => doc.root.name, :root_namespaces => doc.root.namespaces}) if flags[:debug]
   File.open(sfn, 'w') { |f| f << doc.to_xml }
+  
+  # cleanup by adding CDATA
+  cmd = ['xsltproc',
+          "--output '#{sfn}'",
+          "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/ogpcleanup.xsl')}'",
+          "'#{sfn}'"  
+          ].join(' ')
+  puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
+  ap({:cmd => cmd}) if flags[:debug]
+  system(cmd)
+  
   sfn
 end
 
@@ -155,12 +171,12 @@ def doit(client, uuid, obj, flags)
     ifn = find_local(druid, flags)
   end
   
-  puts "Processing #{ifn}" if flags[:verbose]
+  puts "Processing #{ifn}"
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
   dfn = convert_geo2mods(druid, geoMetadata, flags)
   sfn = convert_geo2solr(druid, geoMetadata, flags)
-  ofn = convert_mods2ogpsolr(druid, dfn, 'http://kurma-podd1.stanford.edu/geoserver', 'http://ogpapp-dev.stanford.edu/stacks', flags)
+  ofn = convert_mods2ogpsolr(druid, dfn, flags)
   if flags[:geonetwork]
     export_images(druid, uuid, flags)
   end
@@ -195,6 +211,10 @@ begin
     :debug => false,
     :verbose => false,
     :geonetwork => false,
+    :geoserver => GeoMDTK::Config.ogp.geoserver,
+    :stacks => GeoMDTK::Config.ogp.stacks,
+    :solr => GeoMDTK::Config.ogp.solr,
+    :purl => GeoMDTK::Config.ogp.purl,
     :srcdir => nil,
     :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',

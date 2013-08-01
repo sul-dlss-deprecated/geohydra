@@ -52,6 +52,7 @@ EOM
   flags[:srcdir] = ARGV.pop
   raise ArgumentError, "Missing directory #{flags[:srcdir]}" unless flags[:srcdir] and File.directory?(flags[:srcdir])
 
+  puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
   GeoMDTK::Utils.find_druid_folders(flags[:srcdir]) do |path|
     assemble DruidTools::Druid.new(File.basename(path)), path, flags
   end

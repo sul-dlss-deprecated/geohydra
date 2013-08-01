@@ -98,7 +98,7 @@ def from_druid druid, flags
       layername = File.basename(zipfn, '.zip')
     end
   end
-  raise ArgumentError, zipfn unless layername and not zipfn.nil? and File.exist?(zipfn)
+  raise ArgumentError, "Cannot locate ZIP file: #{druid.content_dir} #{zipfn}" unless layername and not zipfn.nil? and File.exist?(zipfn)
   ap({:zipfn => zipfn, :layername => layername}) if flags[:verbose]
   r = { 
     'vector' => {
@@ -158,6 +158,7 @@ Usage: #{File.basename(__FILE__)} [-v] [options] [druid ... | < druids]
   # Connect to the GeoServer catalog
   puts "Connecting to catalog..." if flags[:verbose]
   catalog = RGeoServer::catalog
+  puts "Connected to #{catalog}" if flags[:verbose]
 
   # Obtain a handle to the workspace and clean it up. 
   ws = RGeoServer::Workspace.new catalog, :name => flags[:workspace]
@@ -165,11 +166,6 @@ Usage: #{File.basename(__FILE__)} [-v] [options] [druid ... | < druids]
   puts "Workspace: #{ws.name} ready" if flags[:verbose]
 
   (ARGV.size > 0 ? ARGV : $stdin).each do |v|
-    begin
-      main(catalog, ws, from_druid(v.downcase.strip, flags), flags)      
-    rescue Exception => e
-      puts e
-    end
-    
+    main(catalog, ws, from_druid(v.downcase.strip, flags), flags)          
   end
 end
