@@ -15,12 +15,12 @@ If needed, configure host to use Ruby 1.9.3:
 
 To install the native extensions to Ruby pg:
 
-    % yum install postgresql92-devel
+    # yum install postgresql92-devel
     % gem install pg -- --with-pg_config=/usr/pgsql-9.2/bin/pg_config 
 
 You need to customize your configuration parameters like so:
 
-    % edit config/environments/development.rb
+    % $EDITOR config/environments/development.rb
 
 Run setup:
 
@@ -35,11 +35,12 @@ To ingest ArcGIS *.shp.xml files and transform into ISO19139 files
 
     % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/metadata
 
-To assemble the workspace, populate the geomdtk.stage directory with `_druid_.zip` files which contain the Shapefiles files.
+To assemble the workspace, populate the geomdtk.stage directory with `_druid_.zip` files which contain the
+Shapefiles files.
 
-    % bundle exec bin/assemble.rb
+    % bundle exec bin/assemble.rb --srcdir /var/geomdtk/current/workspace
 
-To project all Shapefiles into EPSG:4326 (WGS84):
+To project all Shapefiles into EPSG:4326 (WGS84), if needed:
 
     % bundle exec bin/derive_wgs84.rb
 
@@ -47,48 +48,23 @@ To upload the druid metadata to DOR:
 
     % bundle exec bin/accession.rb druid1 [druid2 druid3...]
 
-To upload the druid packages to GeoServer:
+To upload the druid packages to PostGIS, use:
+
+    % bundle exec bin/loader_postgis.rb druid1 [druid2 druid3...]
+
+Then, login to GeoServer and import the data layers from PostGIS
+
+    % bundle exec bin/sync_geoserver_metadata.rb
+
+To upload the druid packages to GeoServer via the filesystem:
 
     % bundle exec bin/loader.rb druid1 [druid2 druid3...]
-    
+
+To upload the OGP Solr documents, use:
+
+    % bundle exec bin/solr_indexer.rb 
+
 To enable logging for the Rest client, use
 
     % RESTCLIENT_LOG=stdout bundle exec ...
     
-GeoHydra Head
-=============
-
-GeoServer
----------
-
-    >> c = RGeoServer::Catalog.new
-    Catalog: http://localhost:8080/geoserver/rest
-    >> w = c.get_default_workspace
-    RGeoServer::Workspace: druid
-    >> ds = w.data_stores
-    [
-        [0] RGeoServer::DataStore: ww217dj0457,
-        [1] RGeoServer::DataStore: fw920bc5473,
-        [2] RGeoServer::DataStore: vk120xn2474,
-        [3] RGeoServer::DataStore: df559hb2469,
-        [4] RGeoServer::DataStore: zv925hd6723,
-        [5] RGeoServer::DataStore: ks297fy1411,
-        [6] RGeoServer::DataStore: rt625ws6022,
-        [7] RGeoServer::DataStore: sq479mx3086,
-        [8] RGeoServer::DataStore: zz943vx1492,
-        [9] RGeoServer::DataStore: cs838pw3418
-    ]
-    >> ds.first.profile
-    {
-                         "name" => "ww217dj0457",
-                      "enabled" => "true",
-        "connection_parameters" => {
-                  "url" => "file:/var/geoserver/current/data/data/druid/ww217dj0457/",
-            "namespace" => "http://purl.stanford.edu"
-        },
-                 "featureTypes" => [
-            [0] "ww217dj0457"
-        ]
-    }
-
-
