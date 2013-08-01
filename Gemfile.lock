@@ -80,7 +80,7 @@ GIT
 PATH
   remote: .
   specs:
-    geomdtk (0.2.1.beta5)
+    geomdtk (0.2.1.beta6)
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
