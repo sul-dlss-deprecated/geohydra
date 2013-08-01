@@ -10,11 +10,13 @@ module GeoMDTK
     end
     
     geoserver do
+      service_root 'http://user:pw@host/geoserver'
       workspace 'druid'
       namespace 'http://mynamespace'
     end
 
     geowebcache do
+      service_root 'http://user:pwd@host/geoserver/gwc'
       seed do # one or more seeding options
         basic do
           gridSetId 'EPSG:4326' # required
@@ -33,6 +35,17 @@ module GeoMDTK
       url 'postgres://geostaff:@localhost:5432/geoserver'
       schema 'myschema'
     end
+    
+    ogp do
+      geoserver 'http://host/geoserver'
+      purl 'http://host'
+      solr do
+        url 'http://host/solr'
+        collection 'mycollection'
+      end
+      stacks 'http://host/stacks'
+    end
+    
   end
 end
 
