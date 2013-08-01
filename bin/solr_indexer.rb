@@ -5,11 +5,14 @@ require 'druid-tools'
 require 'optparse'
 
 def main(flags)
-  Dir.glob("/var/geomdtk/current/workspace/**/ogpSolr.xml") do |fn|
+  Dir.glob('/var/geomdtk/current/workspace/**/ogpSolr.xml') do |fn|
     puts "Uploading #{fn}"
-    system("curl -X POST  -H 'Content-Type: text/xml' --data-binary @#{fn} #{flags[:solr]}/#{flags[:collection]}/update")
+    system('curl -X POST  -H "Content-Type: text/xml" ' +
+           "--data-binary @#{fn} " +
+           "#{flags[:solr]}/#{flags[:collection]}/update")
   end
   system("curl '#{flags[:solr]}/#{flags[:collection]}/update?commit=true'")
+  system("curl '#{flags[:solr]}/#{flags[:collection]}/update?optimize=true'")
 end
 
 # __MAIN__
@@ -25,7 +28,7 @@ begin
     opts.banner = <<EOM
 Usage: #{File.basename(__FILE__)} [options]
 EOM
-    opts.on("-v", "--verbose", "Run verbosely") do |v|
+    opts.on('-v', '--verbose', 'Run verbosely') do |v|
       flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
     end
