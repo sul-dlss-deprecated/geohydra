@@ -1,17 +1,23 @@
 #!/usr/bin/env ruby
+
 require 'csv'
 require 'fileutils'
 
 BASE = '/var/geomdtk/current/upload'
-DST = '/var/geomdtk/current/upload/druid'
+DST = File.join(BASE, 'druid')
+
 def build(druid, name)
-  %w{metadata content temp}.each { |d| d = File.join(DST, druid, d); FileUtils.mkdir_p(d) unless File.directory?(d)}
+  %w{metadata content temp}.each do |d| 
+    d = File.join(DST, druid, d)
+    FileUtils.mkdir_p(d) unless File.directory?(d)
+  end
   Dir.glob("#{BASE}/data/ready/**/#{name}.*") do |fn|
     system("ln -f #{fn} #{DST}/#{druid}/temp/")
   end
   Dir.glob("#{BASE}/metadata/current/**/#{name}-iso19139*.xml") do |fn|
     system("ln -f #{fn} #{DST}/#{druid}/temp/")
   end
+  system("zip -9jv #{DST}/#{druid}/content/#{name}.zip #{DST}/#{druid}/temp/#{name}*")
 end
 
 Dir.glob("#{BASE}/metadata/current/**/*-iso19139.xml") do |fn|
