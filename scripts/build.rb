@@ -7,17 +7,20 @@ BASE = '/var/geomdtk/current/upload'
 DST = File.join(BASE, 'druid')
 
 def build(druid, name)
+  dp = File.join(DST, druid)
   %w{metadata content temp}.each do |d| 
-    d = File.join(DST, druid, d)
-    FileUtils.mkdir_p(d) unless File.directory?(d)
+    subd = File.join(p, d)
+    FileUtils.mkdir_p(subd, :verbose => true) unless File.directory?(subd)
   end
-  Dir.glob("#{BASE}/data/ready/**/#{name}.*") do |fn|
-    system("ln -f #{fn} #{DST}/#{druid}/temp/")
+  p = File.join(BASE, 'data', 'ready')
+  Dir.glob("#{p}/**/#{name}.*") do |fn|
+    FileUtils.ln([fn], File.join(dp, 'temp'), :verbose => true)
   end
-  Dir.glob("#{BASE}/metadata/current/**/#{name}-iso19139*.xml") do |fn|
-    system("ln -f #{fn} #{DST}/#{druid}/temp/")
+  p = File.join(BASE, 'metadata', 'current')
+  Dir.glob("#{p}/**/#{name}-iso19139*.xml") do |fn|
+    FileUtils.ln([fn], File.join(dp, 'temp'), :verbose => true)
   end
-  system("zip -9jv #{DST}/#{druid}/content/#{name}.zip #{DST}/#{druid}/temp/#{name}*")
+  system("zip -9jv #{dp}/content/#{name}.zip #{dp}/temp/#{name}*")
 end
 
 Dir.glob("#{BASE}/metadata/current/**/*-iso19139.xml") do |fn|
