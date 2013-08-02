@@ -16,7 +16,7 @@ end
 
 Dir.glob("#{BASE}/metadata/current/**/*-iso19139.xml") do |fn|
   puts "<#{fn}>" if $DEBUG
-  IO.popen("xsltproc extract.xsl #{fn}") do |i|
+  IO.popen("xsltproc #{File.dirname(__FILE__)}/extract.xsl #{fn}") do |i|
     puts "<#{i}>" if $DEBUG
     i.each do |line|
       CSV.parse(line.to_s) do |row|
