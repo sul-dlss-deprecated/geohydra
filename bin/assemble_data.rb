@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
+# require 'rgeo/shapefile'
 require 'druid-tools'
 require 'optparse'
 
@@ -9,6 +10,20 @@ def assemble(druid, path, flags)
   File.umask(002)
   Dir.glob("#{path}/**/*.shp") do |shp|
     raise ArgumentError, shp unless GeoMDTK::Utils.shapefile?(shp)
+
+    # ap({:shp => shp})
+    # RGeo::Shapefile::Reader.open(shp) do |f|
+    #   puts "File contains #{f.num_records} records."
+    #   file.each do |record|
+    #     puts "Record number #{record.index}:"
+    #     puts "  Geometry: #{record.geometry.as_text}"
+    #     puts "  Attributes: #{record.attributes.inspect}"
+    #   end
+    #   f.rewind
+    #   record = file.next
+    #   puts "First record geometry was: #{record.geometry.as_text}"
+    # end
+    # 
     basename = File.basename(shp, '.shp')
     zipfn = File.join(File.dirname(shp), basename + '.zip')
     puts "Compressing #{basename} into #{zipfn}" if flags[:verbose]
@@ -53,9 +68,12 @@ EOM
   raise ArgumentError, "Missing directory #{flags[:srcdir]}" unless flags[:srcdir] and File.directory?(flags[:srcdir])
 
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
+  n = 0
   GeoMDTK::Utils.find_druid_folders(flags[:srcdir]) do |path|
     assemble DruidTools::Druid.new(File.basename(path)), path, flags
+    n = n + 1
   end
+  puts "Processed #{n} folders."
 rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"
   exit(-1)
