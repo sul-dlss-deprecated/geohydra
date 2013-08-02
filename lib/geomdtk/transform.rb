@@ -3,13 +3,30 @@ require 'base64'
 module GeoMDTK
   # Facilitates XSLT stylesheet transformations for ISO 19139 import/export
   class Transform
+    # XXX hardcoded paths
+    def self.search_for_xsl(filename)
+      path = %w{
+        lib
+        lib/geomdtk
+        /usr/share/tomcat6/webapps/geonetwork/xsl/conversion/import
+        /var/geonetwork/2.8.0/lib
+        /opt/staging/s_gis_services
+        }
+      path.unshift(File.dirname(__FILE__))
+      path.each do |d|
+        fn = File.join(d, filename)
+        if File.exist?(fn)
+          return fn
+        end
+      end
+      nil
+    end
+    
     # XSLT file locations
     XSLT = {
-      :rdf        => File.join(File.dirname(__FILE__), 'rdf_bundle.xsl'),
-      :arcgis     => File.exist?('lib/ArcGIS2ISO19139.xsl') ? 
-                      'lib/ArcGIS2ISO19139.xsl' : 
-                      '/var/geonetwork/2.8.0/lib/ArcGIS2ISO19139.xsl', # pre-installed
-      :arcgis_fc  => File.join(File.dirname(__FILE__), 'arcgis_to_iso19139_fc.xsl')
+      :rdf        => self.search_for_xsl('rdf_bundle.xsl'),
+      :arcgis     => self.search_for_xsl('ArcGIS2ISO19139.xsl'),
+      :arcgis_fc  => self.search_for_xsl('arcgis_to_iso19139_fc.xsl')
     }
     
     # XSLT processor

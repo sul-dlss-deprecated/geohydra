@@ -35,6 +35,10 @@ To ingest ArcGIS *.shp.xml files and transform into ISO19139 files
 
     % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/metadata
 
+To package up the .shp files into .zip files:
+
+    % bundle exec bin/assemble_data.rb /var/geomdtk/current/upload/data
+
 To assemble the workspace, populate the geomdtk.stage directory with `_druid_.zip` files which contain the
 Shapefiles files.
 
