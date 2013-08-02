@@ -9,7 +9,7 @@ DST = File.join(BASE, 'druid')
 def build(druid, name)
   dp = File.join(DST, druid)
   %w{metadata content temp}.each do |d| 
-    subd = File.join(p, d)
+    subd = File.join(dp, d)
     FileUtils.mkdir_p(subd, :verbose => true) unless File.directory?(subd)
   end
   p = File.join(BASE, 'data', 'ready')
