@@ -3,13 +3,13 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 
 def process_file fn, flags
-  puts "Processing <#{fn}>" if flags[:verbose]
+  puts "Processing #{fn}" if flags[:verbose]
   if fn =~ %r{^(.*).shp.xml$}
     ofn = $1 + '-iso19139.xml'
     ofn_fc = $1 + '-iso19139-fc.xml'
     ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
     GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
-    system("bundle exec bin/extract_thumbnail.rb -v #{fn}")
+    system("bundle exec bin/extract_thumbnail.rb #{fn}")
   end
 end
 
