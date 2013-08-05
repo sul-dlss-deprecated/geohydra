@@ -26,7 +26,7 @@ def build(druid, name)
   system("zip -9jv #{dp}/content/#{name}.zip #{dp}/temp/#{name}*")
   
   Dir.glob("#{p}/**/#{name}_preview.jpg") do |fn|
-    FileUtils.install fn, File.join(dp, 'content', :verbose => true)
+    FileUtils.install fn, File.join(dp, 'content'), :verbose => true
   end
 end
 
