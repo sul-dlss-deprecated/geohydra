@@ -24,6 +24,10 @@ def build(druid, name)
     end
   end
   system("zip -9jv #{dp}/content/#{name}.zip #{dp}/temp/#{name}*")
+  
+  Dir.glob("#{p}/**/#{name}_preview.jpg") do |fn|
+    FileUtils.install fn, File.join(dp, 'content', :verbose => true)
+  end
 end
 
 Dir.glob("#{BASE}/data/ready/**/*-iso19139.xml") do |fn|
