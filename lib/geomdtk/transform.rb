@@ -1,4 +1,6 @@
 require 'base64'
+require 'rgeo'
+require 'rgeo/shapefile'
 
 module GeoMDTK
   # Facilitates XSLT stylesheet transformations for ISO 19139 import/export
@@ -128,13 +130,20 @@ module GeoMDTK
       FileUtils.rm_rf tmp
     end
     
+    # @return RGeo::Feature::Point, RGeo::Feature::Polygon, RGeo::Feature::Line as appropriate
+    def self.geometry_type(shp_filename)
+      RGeo::Shapefile::Reader.open(shp_filename) do |shp|
+        shp.each do |record|
+          return record.geometry.envelope.geometry_type
+        end
+      end
+    end
+    
     private
     def self.do_xslt xslt, fn
       IO::popen("#{XSLTPROC} #{xslt} #{fn} | #{XMLLINT} -", 'r') do |f|
         return Nokogiri::XML(f.read)
       end      
     end
-    
-    
   end
 end

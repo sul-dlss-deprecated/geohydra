@@ -80,7 +80,7 @@ GIT
 PATH
   remote: .
   specs:
-    geomdtk (0.2.1.beta6)
+    geomdtk (0.2.1.beta8)
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
@@ -92,6 +92,8 @@ PATH
       mods
       nokogiri (~> 1.6)
       rest-client
+      rgeo
+      rgeo-shapefile
       rgeoserver (~> 0.6.0)
       rsolr
 
@@ -163,7 +165,7 @@ GEM
     i18n (0.6.4)
     iso-639 (0.1.0)
     json (1.8.0)
-    libxml-ruby (2.6.0)
+    libxml-ruby (2.7.0)
     lyber-utils (0.1.2)
       bagit (>= 0.1.0)
       nokogiri (>= 1.4.3.1)
@@ -181,7 +183,7 @@ GEM
       json
       nokogiri
       systemu
-    multi_json (1.7.7)
+    multi_json (1.7.8)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.6.8)

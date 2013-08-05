@@ -14,16 +14,16 @@ def build(druid, name)
   end
   p = File.join(BASE, 'data', 'ready')
   Dir.glob("#{p}/**/#{name}.*") do |fn|
-    FileUtils.ln([fn], File.join(dp, 'temp'), :verbose => true)
+    FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
   end
   p = File.join(BASE, 'metadata', 'current')
   Dir.glob("#{p}/**/#{name}-iso19139*.xml") do |fn|
-    FileUtils.ln([fn], File.join(dp, 'temp'), :verbose => true)
+    FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
   end
   system("zip -9jv #{dp}/content/#{name}.zip #{dp}/temp/#{name}*")
 end
 
-Dir.glob("#{BASE}/metadata/current/**/*-iso19139.xml") do |fn|
+Dir.glob("#{BASE}/metadata/current/ready/**/*.shp.xml") do |fn|
   puts "<#{fn}>" if $DEBUG
   IO.popen("xsltproc #{File.dirname(__FILE__)}/extract.xsl #{fn}") do |i|
     puts "<#{i}>" if $DEBUG

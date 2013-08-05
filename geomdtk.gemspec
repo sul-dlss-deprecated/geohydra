@@ -22,6 +22,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri', '~> 1.6' # need libxml2 >= 2.7.8 and 1.6 bundles latest libxml2, BUT conflicts with dor-services
   s.add_dependency 'rest-client'
   s.add_dependency 'rsolr'
+  s.add_dependency 'rgeo'
+  s.add_dependency 'rgeo-shapefile'
   s.add_dependency 'activerecord', '~> 3.2.0'
   s.add_dependency 'activesupport', '~> 3.2.0'
   s.add_dependency 'activerecord-postgresql-adapter'
