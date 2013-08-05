@@ -16,7 +16,7 @@ end
 flags = {
   :verbose => false,
   :debug => false,
-  :directory => '/var/geomdtk/current/upload/ready'
+  :directory => '/var/geomdtk/current/upload/data/ready'
 }
 OptionParser.new do |opts|
   opts.banner = "
@@ -32,15 +32,19 @@ ARGV << flags[:directory] if ARGV.empty?
 
 ap({:flags => flags, :argv => ARGV}) if flags[:debug]
 
+n = 0
 ARGV.each do |fn|
   if File.directory? fn
     Dir.glob(File.join(fn, '**', '*.shp.xml')) do |fn2|
       process_file fn2, flags
+      n = n + 1
     end
   elsif File.exist? fn
     process_file fn, flags
+    n = n + 1
   else
     $stderr.puts "WARNING: Missing file <#{fn}>"
   end
 end
+puts "Processed #{n} ArcGIS metadata files"
 
