@@ -20,3 +20,4 @@ test/tmp
 test/version_tmp
 tmp
 _yardoc
+lib/ArcGIS2ISO19139.xsl
