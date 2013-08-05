@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
-# require 'rgeo/shapefile'
 require 'druid-tools'
 require 'optparse'
+require 'csv'
 
 def assemble(druid, path, flags)
   ap({:druid => druid, :path => path, :flags => flags}) if flags[:debug]
@@ -11,27 +11,18 @@ def assemble(druid, path, flags)
   Dir.glob("#{path}/**/*.shp") do |shp|
     raise ArgumentError, shp unless GeoMDTK::Utils.shapefile?(shp)
 
-    # ap({:shp => shp})
-    # RGeo::Shapefile::Reader.open(shp) do |f|
-    #   puts "File contains #{f.num_records} records."
-    #   file.each do |record|
-    #     puts "Record number #{record.index}:"
-    #     puts "  Geometry: #{record.geometry.as_text}"
-    #     puts "  Attributes: #{record.attributes.inspect}"
-    #   end
-    #   f.rewind
-    #   record = file.next
-    #   puts "First record geometry was: #{record.geometry.as_text}"
-    # end
-    # 
+    ap({:shp => shp}) if flags[:debug]
+    geometry_type = GeoMDTK::Transform.geometry_type(shp)
+    ap({:geometry_type => geometry_type}) if flags[:debug]
     basename = File.basename(shp, '.shp')
     zipfn = File.join(File.dirname(shp), basename + '.zip')
     puts "Compressing #{basename} into #{zipfn}" if flags[:verbose]
     fns = Dir.glob("#{File.dirname(shp)}/#{basename}.*").select do |fn|
       fn !~ /\.zip$/
     end
-    system "zip -jv '#{zipfn}' #{fns.join(' ')}"
+    system "zip -9vj '#{zipfn}' #{fns.join(' ')}"
     fns.each {|fn| FileUtils.rm(fn)}
+    flags[:csv] << [druid, geometry_type, shp]
   end
 end
 
@@ -67,6 +58,8 @@ EOM
   flags[:srcdir] = ARGV.pop
   raise ArgumentError, "Missing directory #{flags[:srcdir]}" unless flags[:srcdir] and File.directory?(flags[:srcdir])
 
+  flags[:csv] = CSV.open('druid.csv', 'w')
+  flags[:csv] << ['druid', 'geometry_type', 'filename']
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
   n = 0
   GeoMDTK::Utils.find_druid_folders(flags[:srcdir]) do |path|

@@ -33,7 +33,7 @@ Utilities
 
 To ingest ArcGIS *.shp.xml files and transform into ISO19139 files
 
-    % bundle exec bin/ingest_arcgis.rb
+    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/data/ready
 
 To package up the .shp files into .zip files:
 
@@ -68,12 +68,13 @@ To upload the OGP Solr documents, use:
 
     % bundle exec bin/solr_indexer.rb 
 
-To enable logging for the Rest client, use
-
-    % RESTCLIENT_LOG=stdout bundle exec ...
 
 Caveats
 =======
+
+To enable logging for the Rest client, use
+
+    % RESTCLIENT_LOG=stdout bundle exec ...
 
 These utilities assume a few things:
 
