@@ -16,7 +16,7 @@ flags = {
   :datadir => '.',
   :recurse => false,
   :verbose => false,
-  :flags_suffix => '_preview'
+  :suffix => '_preview'
 }
 
 optparse = OptionParser.new do |opts|
