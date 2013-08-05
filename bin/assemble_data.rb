@@ -25,7 +25,7 @@ def assemble(druid, path, flags)
     end
     system "zip -9vj '#{zipfn}' #{fns.join(' ')}"
     fns.each {|fn| FileUtils.rm(fn)}
-    flags[:csv] << [druid, geometry_type, shp]
+    flags[:csvout] << [druid, File.basename(shp), geometry_type]
   end
 end
 
@@ -61,8 +61,8 @@ EOM
   flags[:srcdir] = ARGV.pop
   raise ArgumentError, "Missing directory #{flags[:srcdir]}" unless flags[:srcdir] and File.directory?(flags[:srcdir])
 
-  flags[:csv] = CSV.open('druid.csv', 'w')
-  flags[:csv] << ['druid', 'geometry_type', 'filename']
+  flags[:csvout] = CSV.open('druid.csv', 'w')
+  flags[:csvout] << ['druid', 'shapefile', 'geometry_type']
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
   n = 0
   GeoMDTK::Utils.find_druid_folders(flags[:srcdir]) do |path|
