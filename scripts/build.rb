@@ -23,7 +23,7 @@ def build(druid, name)
   system("zip -9jv #{dp}/content/#{name}.zip #{dp}/temp/#{name}*")
 end
 
-Dir.glob("#{BASE}/data/ready/**/*.shp.xml") do |fn|
+Dir.glob("#{BASE}/data/ready/**/temp/*-iso19139.xml") do |fn|
   puts "<#{fn}>" if $DEBUG
   IO.popen("xsltproc #{File.dirname(__FILE__)}/extract.xsl #{fn}") do |i|
     puts "<#{i}>" if $DEBUG
