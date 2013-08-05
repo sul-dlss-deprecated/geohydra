@@ -16,7 +16,7 @@ def build(druid, name)
   Dir.glob("#{p}/**/#{name}.*") do |fn|
     FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
   end
-  p = File.join(BASE, 'metadata', 'current')
+  p = File.join(BASE, 'data', 'ready')
   Dir.glob("#{p}/**/#{name}-iso19139*.xml") do |fn|
     FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
   end
