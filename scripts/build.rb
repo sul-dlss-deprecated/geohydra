@@ -5,6 +5,7 @@ require 'fileutils'
 
 BASE = '/var/geomdtk/current/upload'
 DST = File.join(BASE, 'druid')
+INCLUDE_ISO19139 = true
 
 def build(druid, name)
   dp = File.join(DST, druid)
@@ -16,9 +17,11 @@ def build(druid, name)
   Dir.glob("#{p}/**/#{name}.*") do |fn|
     FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
   end
-  p = File.join(BASE, 'data', 'ready')
-  Dir.glob("#{p}/**/#{name}-iso19139*.xml") do |fn|
-    FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
+  if INCLUDE_ISO19139
+    p = File.join(BASE, 'data', 'ready')
+    Dir.glob("#{p}/**/#{name}-iso19139*.xml") do |fn|
+      FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
+    end
   end
   system("zip -9jv #{dp}/content/#{name}.zip #{dp}/temp/#{name}*")
 end
