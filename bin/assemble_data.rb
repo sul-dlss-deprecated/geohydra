@@ -20,6 +20,9 @@ def assemble(druid, path, flags)
     fns = Dir.glob("#{File.dirname(shp)}/#{basename}.*").select do |fn|
       fn !~ /\.zip$/
     end
+    Dir.glob("#{File.dirname(shp)}/#{basename}-iso19139*.xml").each do |fn|
+      fns << fn
+    end
     system "zip -9vj '#{zipfn}' #{fns.join(' ')}"
     fns.each {|fn| FileUtils.rm(fn)}
     flags[:csv] << [druid, geometry_type, shp]
