@@ -89,6 +89,7 @@ The file system structure will initially look like this:
     zv925hd6723/
       metadata/
       content/
+        OGWELLS_preview.jpg
       temp/
         OGWELLS.dbf
         OGWELLS.prj

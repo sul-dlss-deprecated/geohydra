@@ -15,7 +15,7 @@ def assemble(druid, path, flags)
     geometry_type = GeoMDTK::Transform.geometry_type(shp)
     ap({:geometry_type => geometry_type}) if flags[:debug]
     basename = File.basename(shp, '.shp')
-    zipfn = File.join(File.dirname(shp), basename + '.zip')
+    zipfn = File.join(druid.content_dir, basename + '.zip')
     puts "Compressing #{basename} into #{zipfn}" if flags[:verbose]
     fns = Dir.glob("#{File.dirname(shp)}/#{basename}.*").select do |fn|
       fn !~ /\.zip$/
