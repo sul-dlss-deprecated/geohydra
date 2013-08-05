@@ -9,23 +9,26 @@ def process_file fn, flags
     ofn_fc = $1 + '-iso19139-fc.xml'
     ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
     GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
+    system("bundle exec bin/extract_thumbnail.rb -v #{fn}")
   end
 end
 
 flags = {
   :verbose => false,
-  :debug => false
+  :debug => false,
+  :directory => '/var/geomdtk/current/upload/ready'
 }
 OptionParser.new do |opts|
   opts.banner = "
 Usage: #{__FILE__} [-v] file.shp.xml [file.shp.xml ...]
-       #{__FILE__} [-v] directory
+       #{__FILE__} [-v] [directory]
 "
   opts.on("-v", "--verbose", "Run verbosely") do |v|
     flags[:debug] = true if flags[:verbose]
     flags[:verbose] = true
   end
 end.parse!
+ARGV << flags[:directory] if ARGV.empty?
 
 ap({:flags => flags, :argv => ARGV}) if flags[:debug]
 
