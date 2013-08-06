@@ -35,6 +35,7 @@ Dir.glob("#{flags[:base]}/data/ready/**/*-iso19139.xml") do |fn|
     puts "<#{i}>" if flags[:debug]
     i.each do |line|
       CSV.parse(line.to_s) do |row|
+        next if row[0].to_s.strip.empty?
         druid = DruidTools::Druid.new(row[0].to_s.strip)
         name = row[1].to_s.strip
         build druid, name, flags
