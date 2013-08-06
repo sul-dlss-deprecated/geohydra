@@ -27,7 +27,7 @@ def build(druid, name)
   end
 end
 
-system("find #{flags[:base]}/data/ready -print0 | xargs -0 bin/ingest_arcgis.rb -vv")
+system("find #{flags[:base]}/data/ready -name '*.shp.xml' -print0 | xargs -0 bin/ingest_arcgis.rb -vv")
 Dir.glob("#{flags[:base]}/data/ready/**/*-iso19139.xml") do |fn|
   puts "<#{fn}>" if flags[:debug]
   IO.popen("xsltproc #{File.dirname(__FILE__)}/extract.xsl #{fn}") do |i|
