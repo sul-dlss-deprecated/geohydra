@@ -17,16 +17,13 @@
     </xsl:choose>
     <!-- see http://www.w3.org/TR/2004/REC-rdf-primer-20040210/#example3 -->
     <rdf:RDF>
-      <rdf:Description>
-        <xsl:attribute name="rdf:about">
-          <xsl:value-of select="$purl"/>
-        </xsl:attribute>
+      <xsl:attribute name="rdf:about">
+        <xsl:value-of select="$purl"/>
+      </xsl:attribute>
+      <rdf:Description rdf:type="geo#metadata">
         <xsl:apply-templates select="//gmd:MD_Metadata"/>
       </rdf:Description>
-      <rdf:Description>
-        <xsl:attribute name="rdf:about">
-          <xsl:value-of select="$purl"/>
-        </xsl:attribute>
+      <rdf:Description rdf:type="geo#featurecatalog">
         <xsl:apply-templates select="//gfc:FC_FeatureCatalogue"/>
       </rdf:Description>
     </rdf:RDF>
