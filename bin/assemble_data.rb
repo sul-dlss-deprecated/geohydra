@@ -24,8 +24,10 @@ def assemble(druid, path, flags)
     Dir.glob(File.join(File.dirname(shp), "#{basename}-iso19139*.xml")).each do |fn|
       fns << fn
     end
-    system "zip -9vj '#{zipfn}' #{fns.join(' ')}"
-    fns.each {|fn| FileUtils.rm(fn)}
+    cmd =  "zip -9vj '#{zipfn}' #{fns.join(' ')}"
+    ap({:cmd => cmd}) if flags[:debug]
+    system cmd
+    fns.each {|fn| FileUtils.rm(fn)} unless flags[:debug]
   end
 end
 
