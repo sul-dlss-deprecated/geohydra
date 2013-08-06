@@ -25,7 +25,7 @@ def assemble(druid, path, flags)
       fns << fn
     end
     cmd =  "zip -9vj '#{zipfn}' #{fns.join(' ')}"
-    ap({:cmd => cmd}) if flags[:debug]
+    ap({:cmd => cmd, :fns => fns}) if flags[:debug]
     system cmd
     fns.each {|fn| FileUtils.rm(fn)} unless flags[:debug]
   end
