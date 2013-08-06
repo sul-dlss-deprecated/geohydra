@@ -106,7 +106,6 @@ upload if you don't already have the below structure ready.
     zv925hd6723/
       metadata/
       content/
-        OGWELLS_preview.jpg  (unless embedded inside .shp.xml)
       temp/
         OGWELLS.dbf
         OGWELLS.prj
@@ -116,6 +115,24 @@ upload if you don't already have the below structure ready.
         OGWELLS.shp.xml
         OGWELLS.shx
         options.json
+
+after assembling the data, it should look like this, where the temp files for the shapefiles are all symlinks to reduce space requirements:
+
+zv925hd6723/
+  metadata/
+  content/
+    OGWELLS.zip
+    OGWELLS_preview.jpg
+  temp/
+    OGWELLS.dbf
+    OGWELLS.prj
+    OGWELLS.sbn
+    OGWELLS.sbx
+    OGWELLS.shp
+    OGWELLS.shp.xml
+    OGWELLS.shx
+    options.json
+
 
 then at the end of processing -- prior to accessioning -- it will look like:
 

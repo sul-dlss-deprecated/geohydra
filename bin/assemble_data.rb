@@ -23,7 +23,7 @@ def assemble(path, flags)
     Dir.glob(File.join(File.dirname(shp), "#{basename}-iso19139*.xml")).each do |fn|
       fns << fn
     end
-    cmd =  "zip -9vj '#{zipfn}' #{fns.join(' ')}"
+    cmd =  "zip -vj '#{zipfn}' #{fns.join(' ')}"
     ap({:cmd => cmd, :fns => fns}) if flags[:debug]
     system cmd
     fns.each {|fn| FileUtils.rm(fn)} unless flags[:debug]
