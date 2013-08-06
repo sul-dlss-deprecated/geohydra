@@ -3,7 +3,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'druid-tools'
 require 'optparse'
-require 'csv'
 
 def assemble(druid, path, flags)
   ap({:druid => druid, :path => path, :flags => flags}) if flags[:debug]
@@ -27,7 +26,6 @@ def assemble(druid, path, flags)
     end
     system "zip -9vj '#{zipfn}' #{fns.join(' ')}"
     fns.each {|fn| FileUtils.rm(fn)}
-    flags[:csvout] << [druid, File.basename(shp), geometry_type]
   end
 end
 
