@@ -9,7 +9,8 @@ def process_file fn, flags
     ofn_fc = $1 + '-iso19139-fc.xml'
     ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
     GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
-    system("bundle exec bin/extract_thumbnail.rb #{fn}")
+    system("bundle exec bin/extract_thumbnail.rb -v #{fn}")
+    FileUtils.mv(fn, File.dirname(fn) + '/../content')
   end
 end
 

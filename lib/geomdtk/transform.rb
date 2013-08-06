@@ -130,7 +130,9 @@ module GeoMDTK
       FileUtils.rm_rf tmp
     end
     
-    # @return RGeo::Feature::Point, RGeo::Feature::Polygon, RGeo::Feature::Line as appropriate
+    # @return RGeo::Feature::Point, 
+    #         RGeo::Feature::Polygon, 
+    #         RGeo::Feature::LineString as appropriate
     def self.geometry_type(shp_filename)
       RGeo::Shapefile::Reader.open(shp_filename) do |shp|
         shp.each do |record|

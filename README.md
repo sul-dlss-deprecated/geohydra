@@ -46,7 +46,7 @@ Utilities
 
 To ingest ArcGIS *.shp.xml files and transform into ISO19139 files
 
-    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/data/ready
+    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/druid
 
 To package up the .shp files into .zip files:
 
@@ -106,7 +106,7 @@ upload if you don't already have the below structure ready.
     zv925hd6723/
       metadata/
       content/
-        OGWELLS_preview.jpg
+        OGWELLS_preview.jpg  (unless embedded inside .shp.xml)
       temp/
         OGWELLS.dbf
         OGWELLS.prj
@@ -115,6 +115,7 @@ upload if you don't already have the below structure ready.
         OGWELLS.shp
         OGWELLS.shp.xml
         OGWELLS.shx
+        options.json
 
 then at the end of processing -- prior to accessioning -- it will look like:
 
