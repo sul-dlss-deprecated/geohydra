@@ -7,7 +7,7 @@ require 'optparse'
 def assemble(druid, path, flags)
   ap({:druid => druid, :path => path, :flags => flags}) if flags[:debug]
   File.umask(002)
-  Dir.glob("#{path}/**/*.shp") do |shp|
+  Dir.glob(File.join(path, '**', '*.shp')) do |shp|
     raise ArgumentError, shp unless GeoMDTK::Utils.shapefile?(shp)
 
     ap({:shp => shp}) if flags[:debug]
@@ -18,10 +18,10 @@ def assemble(druid, path, flags)
     basename = File.basename(shp, '.shp')
     zipfn = File.join(druid.content_dir, basename + '.zip')
     puts "Compressing #{basename} into #{zipfn}" if flags[:verbose]
-    fns = Dir.glob("#{File.dirname(shp)}/#{basename}.*").select do |fn|
+    fns = Dir.glob(File.join(File.dirname(shp), "#{basename}.*")).select do |fn|
       fn !~ /\.zip$/
     end
-    Dir.glob("#{File.dirname(shp)}/#{basename}-iso19139*.xml").each do |fn|
+    Dir.glob(File.join(File.dirname(shp), "#{basename}-iso19139*.xml")).each do |fn|
       fns << fn
     end
     system "zip -9vj '#{zipfn}' #{fns.join(' ')}"
