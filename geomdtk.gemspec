@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'confstruct'
+  s.add_dependency 'json'
   s.add_dependency 'fastimage'  
   s.add_dependency 'nokogiri', '~> 1.6' # need libxml2 >= 2.7.8 and 1.6 bundles latest libxml2, BUT conflicts with dor-services
   s.add_dependency 'rest-client'

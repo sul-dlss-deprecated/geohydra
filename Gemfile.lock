@@ -89,6 +89,7 @@ PATH
       dor-services (~> 4.3.0.rc1)
       druid-tools (~> 0.2.5)
       fastimage
+      json
       mods
       nokogiri (~> 1.6)
       rest-client

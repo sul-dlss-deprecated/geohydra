@@ -3,6 +3,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'druid-tools'
 require 'optparse'
+require 'json'
 
 def setup_druid(obj, flags)
   druid = DruidTools::Druid.new(obj.druid, flags[:workspacedir])
@@ -64,7 +65,10 @@ def convert_geo2mods(druid, geoMetadata, flags)
   ap({:geoMetadata => geoMetadata.ng_xml, :descMetadata => geoMetadata.to_mods}) if flags[:debug]
   dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
   puts "Generating #{dfn}" if flags[:verbose]
-  File.open(dfn, 'w') { |f| f << geoMetadata.to_mods.to_xml }
+  File.open(dfn, 'w') { |f| f << geoMetadata.to_mods({
+    :purl => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}",
+    :geometryType => 'Point'
+  }).to_xml }
   dfn
 end
 
@@ -94,6 +98,7 @@ def convert_mods2ogpsolr(druid, dfn, flags)
   geoserver = flags[:geoserver]
   stacks = flags[:stacks]
   purl = "#{flags[:purl]}/#{druid.id}"
+  geometryType = flags[:geometryType]
   # OGP Solr document from GeoMetadataDS
   sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
   FileUtils.rm_f(sfn) if File.exist?(sfn)
@@ -176,6 +181,7 @@ def doit(client, uuid, obj, flags)
   end
   
   puts "Processing #{ifn}"
+  flags.merge(JSON.parse(File.dirname(ifn) + '/options.json'))
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
   dfn = convert_geo2mods(druid, geoMetadata, flags)
