@@ -52,11 +52,11 @@ def convert_iso2geo(druid, ifn, flags)
   # GeoMetadataDS
   gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
   puts "Generating #{gfn}" if flags[:verbose]
-  File.open(gfn, 'w') do |f| 
-    f << GeoMDTK::Transform.to_geoMetadataDS(ifn, {
-          :purl => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}"
-         }) 
-  end
+  xml = GeoMDTK::Transform.to_geoMetadataDS(ifn, {
+        'purl' => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}"
+       }) 
+  ap({:xml => xml})
+  File.open(gfn, 'w') {|f| f << xml.to_xml }
   gfn
 end
 
@@ -66,8 +66,8 @@ def convert_geo2mods(druid, geoMetadata, flags)
   dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
   puts "Generating #{dfn}" if flags[:verbose]
   File.open(dfn, 'w') { |f| f << geoMetadata.to_mods({
-    :purl => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}",
-    :geometryType => 'Point'
+    'purl' => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}",
+    'geometryType' => 'Point' # XXX
   }).to_xml }
   dfn
 end
