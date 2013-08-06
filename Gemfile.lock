@@ -23,10 +23,10 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: fdf136cdd4685c19543b49db6a03d007fbc0558e
+  revision: 1c70da5dbc88317f0d98dbdbd08871715efbcbe1
   branch: geoMetadata
   specs:
-    dor-services (4.3.0.rc7)
+    dor-services (4.3.0.rc8)
       active-fedora (~> 5.6, >= 5.6.3)
       confstruct (>= 0.2.2)
       dor-workflow-service (~> 1.3)
