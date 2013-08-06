@@ -24,10 +24,6 @@ def build(druid, name)
       FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
     end
   end
-  
-  Dir.glob("#{p}/**/#{name}_preview.jpg") do |fn|
-    FileUtils.install fn, File.join(dp, 'content'), :verbose => true
-  end
 end
 
 system("find #{flags[:base]}/data/ready -print0 | xargs -0 bin/ingest_arcgis.rb -vv")
