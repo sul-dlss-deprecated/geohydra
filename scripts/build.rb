@@ -10,7 +10,7 @@ flags = {
   :debug => true
 }
 
-def build(druid, name)
+def build(druid, name, flags)
   dp = File.join(flags[:base], 'druid', druid.id)
   %w{metadata content temp}.each do |d| 
     p = File.join(dp, d)
@@ -37,7 +37,7 @@ Dir.glob("#{flags[:base]}/data/ready/**/*-iso19139.xml") do |fn|
       CSV.parse(line.to_s) do |row|
         druid = DruidTools::Druid.new(row[0].to_s.strip)
         name = row[1].to_s.strip
-        build druid, name
+        build druid, name, flags
       end
     end
   end

@@ -65,7 +65,7 @@
           XXX: Access is really Stanford-only but UI is not defaulted to search for restricted
         </xsl:comment>
         <field name="Access">
-          <xsl:text>Public</xsl:text>
+          <xsl:text>Restricted</xsl:text>
         </field>
         <field name="Institution">
           <xsl:text>Stanford</xsl:text>
