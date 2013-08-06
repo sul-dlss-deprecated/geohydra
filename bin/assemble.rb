@@ -151,8 +151,8 @@ def export_images(druid, uuid, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.install fn, imagefn, 
-                        :verbose => flags[:debug]
+      FileUtils.ln fn, imagefn, # hard link
+                        :verbose => flags[:debug], :force => true
       yield imagefn if block_given?
     end
   end
@@ -165,7 +165,7 @@ def export_zip(druid, flags)
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
     ofn = "#{druid.content_dir}/#{k}.zip"
-    FileUtils.install fn, ofn, :verbose => flags[:verbose]
+    FileUtils.ln fn, ofn, :verbose => flags[:verbose], :force => true # hard link
     yield ofn if block_given?
   end
 end
@@ -186,13 +186,13 @@ def doit(client, uuid, obj, flags)
   flags.merge(h)
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
-  # dfn = convert_geo2mods(druid, geoMetadata, flags)
-  # sfn = convert_geo2solr(druid, geoMetadata, flags)
+  dfn = convert_geo2mods(druid, geoMetadata, flags)
+  sfn = convert_geo2solr(druid, geoMetadata, flags)
   # ofn = convert_mods2ogpsolr(druid, dfn, flags)
-  # if flags[:geonetwork]
-  #   export_images(druid, uuid, flags)
-  # end
-  # export_zip(druid, flags)
+  if flags[:geonetwork]
+    export_images(druid, uuid, flags)
+  end
+  export_zip(druid, flags)
 end
 
 def main(flags)
