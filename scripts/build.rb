@@ -3,22 +3,23 @@
 require 'csv'
 require 'fileutils'
 
-BASE = '/var/geomdtk/current/upload'
-DST = File.join(BASE, 'druid')
-INCLUDE_ISO19139 = true
+flags = {
+  :base => '/var/geomdtk/current/upload',
+  :include_iso19139 => true,
+  :debug => true
+}
 
 def build(druid, name)
-  dp = File.join(DST, druid)
+  dp = File.join(flags[:base], 'druid', druid)
   %w{metadata content temp}.each do |d| 
-    subd = File.join(dp, d)
-    FileUtils.mkdir_p(subd, :verbose => true) unless File.directory?(subd)
+    p = File.join(dp, d)
+    FileUtils.mkdir_p(p, :verbose => true) unless File.directory?(p)
   end
-  p = File.join(BASE, 'data', 'ready')
+  p = File.join(flags[:base], 'data', 'ready')
   Dir.glob("#{p}/**/#{name}.*") do |fn|
     FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
   end
-  if INCLUDE_ISO19139
-    p = File.join(BASE, 'data', 'ready')
+  if flags[:include_iso19139]
     Dir.glob("#{p}/**/#{name}-iso19139*.xml") do |fn|
       FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
     end
@@ -29,10 +30,11 @@ def build(druid, name)
   end
 end
 
-Dir.glob("#{BASE}/data/ready/**/*-iso19139.xml") do |fn|
-  puts "<#{fn}>" if $DEBUG
+system("find #{flags[:base]}/data/ready -print0 | xargs -0 bin/ingest_arcgis.rb -vv")
+Dir.glob("#{flags[:base]}/data/ready/**/*-iso19139.xml") do |fn|
+  puts "<#{fn}>" if flags[:debug]
   IO.popen("xsltproc #{File.dirname(__FILE__)}/extract.xsl #{fn}") do |i|
-    puts "<#{i}>" if $DEBUG
+    puts "<#{i}>" if flags[:debug]
     i.each do |line|
       CSV.parse(line.to_s) do |row|
         druid = row[0].to_s.strip

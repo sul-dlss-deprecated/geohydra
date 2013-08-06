@@ -1,15 +1,28 @@
 GeoMDTK
 =======
 
-Geospatial MetaData ToolKit for use in a GeoHydra head.
+Geospatial MetaData ToolKit for use as a Geo[Hydra|http://projecthydra.org]
+head.
 
 Setup
 -----
 
+Core requirements, with versions as-tested:
+
+  * ArcGIS 10.2
+  * Red Hat Enterprise Linux Server release 6.4 (Santiago)
+  * GeoNetwork 2.8 (optional for metadata management)
+  * GeoServer 2.2
+  * OpenGeoPortal 1.2
+  * PostGIS 2.0.1
+  * PostgreSQL 9.2.4
+  * Ruby 1.9.3
+
 If needed, configure host to use Ruby 1.9.3:
 
     % rvm_path=$HOME/.rvm rvm-installer --auto-dotfiles
-    % source ~/.bashrc
+    % source $HOME/.bashrc
+    % cd geomdtk
     % rvm use 1.9.3@geomdtk --create
     % rvm rvmrc create
 
@@ -39,8 +52,8 @@ To package up the .shp files into .zip files:
 
     % bundle exec bin/assemble_data.rb /var/geomdtk/current/upload/druid
 
-To assemble the workspace, populate the geomdtk.stage directory with `_druid_.zip` files which contain the
-Shapefiles files.
+To assemble the workspace, populate the geomdtk.stage directory with
+`_druid_.zip` files which contain the Shapefiles files.
 
     % bundle exec bin/assemble.rb --srcdir /var/geomdtk/current/workspace
 
@@ -68,7 +81,6 @@ To upload the OGP Solr documents, use:
 
     % bundle exec bin/solr_indexer.rb 
 
-
 Caveats
 =======
 
@@ -82,9 +94,14 @@ These utilities assume a few things:
 * upload holds data to be processed
 * upload/druid holds data and metadata in the druid workspace structure
 
-You can use the scripts/build.rb to help build out a druid/ folder with data for upload.
+Data Wrangling
+==============
 
-The file system structure will initially look like this:
+
+The file system structure will initially look like this (see [Consul
+page](https://consul.stanford.edu/x/C5xSC) for a description.) Note that you
+can use scripts/build.rb to help build out a druid/ folder with data for
+upload if you don't already have the below structure ready.
 
     zv925hd6723/
       metadata/
@@ -99,15 +116,17 @@ The file system structure will initially look like this:
         OGWELLS.shp.xml
         OGWELLS.shx
 
-then at the end of processing it will look like:
+then at the end of processing -- prior to accessioning -- it will look like:
 
     zv925hd6723/
       metadata/
+        contentMetadata.xml
         descMetadata.xml
         geoMetadata.xml
       content/
         OGWELLS_preview.jpg
         OGWELLS.zip
+        OGWELLS_ESRI_4326.zip
       temp/
         dc.xml
         ogpSolr.xml
@@ -117,5 +136,14 @@ then at the end of processing it will look like:
         OGWELLS.sbx
         OGWELLS.shp
         OGWELLS.shp.xml
+        OGWELLS-iso19139.xml
+        OGWELLS-iso19139-fc.xml
         OGWELLS.shx
+
+Credits
+=======
+
+Author: Darren Hardy <drh@stanford.edu>,
+        Digital Library Systems and Services,
+        Stanford University Libraries
 
