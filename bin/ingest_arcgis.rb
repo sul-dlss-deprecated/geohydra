@@ -10,7 +10,7 @@ def process_file fn, flags
     ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
     GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
     system("bundle exec bin/extract_thumbnail.rb -v #{fn}")
-    FileUtils.mv(fn, File.dirname(fn) + '/../content')
+    system("mv #{File.dirname(fn)}/*.jpg #{File.dirname(fn)}/../content/")
   end
 end
 
