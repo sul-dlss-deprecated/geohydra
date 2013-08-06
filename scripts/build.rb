@@ -10,36 +10,28 @@ flags = {
   :debug => true
 }
 
-def build(druid, name, flags)
-  dp = File.join(flags[:base], 'druid', druid.id)
+def build(shp, druid, geometryType, flags)
+  destdir = File.join(flags[:base], 'druid', druid.id)
+  tempdir = File.join(destdir, 'temp')
+  readydir = File.join(flags[:base], 'data', 'ready')
+  basename = File.join(File.dirname(shp), File.basename(shp, '.shp'))
+  
   %w{metadata content temp}.each do |d| 
-    p = File.join(dp, d)
+    p = File.join(destdir, d)
     FileUtils.mkdir_p(p, :verbose => true) unless File.directory?(p)
   end
-  p = File.join(flags[:base], 'data', 'ready')
-  Dir.glob("#{p}/**/#{name}.*") do |fn|
-    FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
+  Dir.glob("#{readydir}/**/#{basename}.*") do |fn|
+    FileUtils.ln_s([File.expand_path(fn)], tempdir, :verbose => true)
   end
-  if flags[:include_iso19139]
-    Dir.glob("#{p}/**/#{name}-iso19139*.xml") do |fn|
-      FileUtils.ln_s([File.expand_path(fn)], File.join(dp, 'temp'), :verbose => true)
-    end
+  File.open("#{tempdir}/options.json", "w") do |f|
+    f.puts "{ \"druid\" : \"#{druid.id}\", \"geometryType\" : \"#{geometryType}\" }"
   end
 end
 
-puts "ingesting .shp.xml files" if flags[:debug]
-system("bundle exec bin/ingest_arcgis.rb -vv #{flags[:base]}/data/ready")
-Dir.glob("#{flags[:base]}/data/ready/**/*-iso19139.xml") do |fn|
-  puts "<#{fn}>" if flags[:debug]
-  IO.popen("xsltproc #{File.dirname(__FILE__)}/extract.xsl #{fn}") do |i|
-    puts "<#{i}>" if flags[:debug]
-    i.each do |line|
-      CSV.parse(line.to_s) do |row|
-        next if row[0].to_s.strip.empty?
-        druid = DruidTools::Druid.new(row[0].to_s.strip)
-        name = row[1].to_s.strip
-        build druid, name, flags
-      end
-    end
-  end
+CSV.foreach('Batch20130806.csv') do |row|
+  shp = row[0].to_s.strip
+  next if shp.empty? or shp == 'shapefile'
+  druid = DruidTools::Druid.new(row[1].to_s.strip)
+  geometryType = row[2].to_s.strip
+  build shp, druid, geometryType, flags
 end
