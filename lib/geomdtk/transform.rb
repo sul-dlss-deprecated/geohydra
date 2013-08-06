@@ -52,7 +52,7 @@ module GeoMDTK
     def self.from_arcgis fn, ofn, ofn_fc = nil
       system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -")
       unless ofn_fc.nil?
-        system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -")
+        system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -")
       end
     end
     
