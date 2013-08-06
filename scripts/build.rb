@@ -2,6 +2,7 @@
 
 require 'csv'
 require 'fileutils'
+require 'druid-tools'
 
 flags = {
   :base => '/var/geomdtk/current/upload',
@@ -10,7 +11,7 @@ flags = {
 }
 
 def build(druid, name)
-  dp = File.join(flags[:base], 'druid', druid)
+  dp = File.join(flags[:base], 'druid', druid.id)
   %w{metadata content temp}.each do |d| 
     p = File.join(dp, d)
     FileUtils.mkdir_p(p, :verbose => true) unless File.directory?(p)
@@ -33,9 +34,9 @@ Dir.glob("#{flags[:base]}/data/ready/**/*-iso19139.xml") do |fn|
     puts "<#{i}>" if flags[:debug]
     i.each do |line|
       CSV.parse(line.to_s) do |row|
-        druid = row[0].to_s.strip
+        druid = DruidTools::Druid.new(row[0].to_s.strip)
         name = row[1].to_s.strip
-        build druid, name unless druid.empty?
+        build druid, name
       end
     end
   end
