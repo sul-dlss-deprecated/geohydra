@@ -181,7 +181,9 @@ def doit(client, uuid, obj, flags)
   end
   
   puts "Processing #{ifn}"
-  flags.merge(JSON.parse(File.dirname(ifn) + '/options.json'))
+  h = JSON.parse(File.read("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json"))
+  ap({:h => h})
+  flags.merge(h)
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
   dfn = convert_geo2mods(druid, geoMetadata, flags)
@@ -209,7 +211,7 @@ def main(flags)
     end
   else
     Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '.zip') do |zipfn|
-      obj = Struct.new(:content, :status, :druid).new(File.read(zipfn.gsub('.zip', '.xml')), nil, File.basename(zipfn, '.zip'))      
+      obj = Struct.new(:content, :status, :druid, :zipfn).new(File.read(zipfn.gsub('.zip', '.xml')), nil, File.basename(zipfn, '.zip'), zipfn)
       ap({:zipfn => zipfn, :obj => obj})
       doit client, nil, obj, flags
     end
