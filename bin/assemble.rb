@@ -186,13 +186,13 @@ def doit(client, uuid, obj, flags)
   flags.merge(h)
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
-  dfn = convert_geo2mods(druid, geoMetadata, flags)
-  sfn = convert_geo2solr(druid, geoMetadata, flags)
-  ofn = convert_mods2ogpsolr(druid, dfn, flags)
-  if flags[:geonetwork]
-    export_images(druid, uuid, flags)
-  end
-  export_zip(druid, flags)
+  # dfn = convert_geo2mods(druid, geoMetadata, flags)
+  # sfn = convert_geo2solr(druid, geoMetadata, flags)
+  # ofn = convert_mods2ogpsolr(druid, dfn, flags)
+  # if flags[:geonetwork]
+  #   export_images(druid, uuid, flags)
+  # end
+  # export_zip(druid, flags)
 end
 
 def main(flags)
