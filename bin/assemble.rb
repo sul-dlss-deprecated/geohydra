@@ -39,12 +39,10 @@ def find_mef(druid, uuid, flags)
   ifn
 end
 
-def find_local(druid, flags)
+def find_local(druid, xml, flags)
   ifn = File.join(druid.temp_dir, 'iso19139.xml')
   unless File.exist?(ifn)
-    Dir.glob(druid.path, '/**/*iso19139.xml') do |p|
-      FileUtils.install p, ifn, :verbose => flags[:verbose]
-    end
+    File.open(ifn, "w") {|f| f << xml.to_s}
   end
   ifn
 end
@@ -53,7 +51,7 @@ def convert_iso2geo(druid, ifn, flags)
   # GeoMetadataDS
   gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
   puts "Generating #{gfn}" if flags[:verbose]
-  File.open(gfn, 'w') { |f| f << GeoMDTK::Transform.to_geoMetadataDS(ifn) }
+  File.open(gfn, 'w') { |f| f << GeoMDTK::Transform.to_geoMetadataDS(ifn, { :purl => "http://purl/#{druid.id}" }) }
   gfn
 end
 
@@ -169,7 +167,8 @@ def doit(client, uuid, obj, flags)
   if flags[:geonetwork]
     ifn = find_mef(druid, uuid, flags)
   else
-    ifn = find_local(druid, flags)
+    raise ArgumentError, druid if obj.content.empty?
+    ifn = find_local(druid, obj.content.to_s, flags)
   end
   
   puts "Processing #{ifn}"
@@ -199,8 +198,9 @@ def main(flags)
       end
     end
   else
-    Dir.glob(flags[:workspacedir] + '/**/' + DruidTools::Druid.glob) do |dir|
-      obj = Struct.new(:content, :status, :druid).new(nil, nil, File.basename(dir))      
+    Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '.zip') do |zipfn|
+      obj = Struct.new(:content, :status, :druid).new(File.read(zipfn.gsub('.zip', '.xml')), nil, File.basename(zipfn, '.zip'))      
+      ap({:zipfn => zipfn, :obj => obj})
       doit client, nil, obj, flags
     end
   end

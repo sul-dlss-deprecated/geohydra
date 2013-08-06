@@ -83,8 +83,8 @@ module GeoMDTK
     # Converts a ISO 19139 into RDF-bundled document geoMetadataDS
     # @param [String] fn Input data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
-    def self.to_geoMetadataDS fn
-      do_xslt XSLT[:rdf], fn
+    def self.to_geoMetadataDS fn, flags
+      do_xslt XSLT[:rdf], fn, flags
     end
     
     # @param zipfn [String] ZIP file
@@ -142,8 +142,13 @@ module GeoMDTK
     end
     
     private
-    def self.do_xslt xslt, fn
-      IO::popen("#{XSLTPROC} #{xslt} #{fn} | #{XMLLINT} -", 'r') do |f|
+    def self.do_xslt xslt, fn, params = {}
+      cmd = XSLTPROC
+      params.each do |k,v|
+        cmd += "--stringparam '#{k}' '#{v}'"
+      end
+      ap({:cmd => cmd, :xslt => xslt})
+      IO::popen("#{cmd} #{xslt} #{fn} | #{XMLLINT} -", 'r') do |f|
         return Nokogiri::XML(f.read)
       end      
     end
