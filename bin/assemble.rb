@@ -53,7 +53,7 @@ def convert_iso2geo(druid, ifn, flags)
   puts "Generating #{gfn}" if flags[:verbose]
   File.open(gfn, 'w') do |f| 
     f << GeoMDTK::Transform.to_geoMetadataDS(ifn, {
-          :purl => "http://#{GeoMDTK::Config.ogp.purl}/#{druid.id}"
+          :purl => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}"
          }) 
   end
   gfn
