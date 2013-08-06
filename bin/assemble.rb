@@ -216,7 +216,6 @@ begin
     :stacks => GeoMDTK::Config.ogp.stacks,
     :solr => GeoMDTK::Config.ogp.solr,
     :purl => GeoMDTK::Config.ogp.purl,
-    :srcdir => nil,
     :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',
     :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp'
@@ -233,9 +232,6 @@ EOM
       flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
     end
-    opts.on("--srcdir DIR", "Source directory with metadata files (default: #{flags[:srcdir]})") do |v|
-      flags[:srcdir] = v
-    end
     opts.on("--stagedir DIR", "Staging directory with ZIP files (default: #{flags[:stagedir]})") do |v|
       flags[:stagedir] = v
     end
@@ -247,7 +243,7 @@ EOM
     end
   end.parse!
 
-  %w{tmpdir stagedir workspacedir srcdir}.each do |k|
+  %w{tmpdir stagedir workspacedir}.each do |k|
     d = flags[k.to_sym]
     raise ArgumentError, "Missing directory #{d}" unless d.nil? or File.directory? d
   end

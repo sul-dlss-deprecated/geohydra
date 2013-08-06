@@ -52,10 +52,10 @@ To package up the .shp files into .zip files:
 
     % bundle exec bin/assemble_data.rb /var/geomdtk/current/upload/druid
 
-To assemble the workspace, populate the geomdtk.stage directory with
-`_druid_.zip` files which contain the Shapefiles files.
+To assemble the workspace, populate the *geomdtk.stage* directory with
+`druid.zip` files which contain the Shapefiles files and `druid.xml`.
 
-    % bundle exec bin/assemble.rb --srcdir /var/geomdtk/current/workspace
+    % bundle exec bin/assemble.rb
 
 To project all Shapefiles into EPSG:4326 (WGS84), if needed:
 
