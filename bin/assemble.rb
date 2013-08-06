@@ -158,6 +158,22 @@ def export_images(druid, uuid, flags)
   end
 end
 
+def export_local_images(druid, tempdir, flags)
+  # export any thumbnail images
+  %w{png jpg}.each do |fmt|
+    Dir.glob("#{flags[:stagedir]}/../upload/druid/#{druid.id}/content/*.#{fmt}") do |fn|
+      ext = '.' + fmt
+      tfn = File.basename(fn, ext)
+      # convert _s to _small as per GeoNetwork convention
+      tfn = tfn.gsub(/_s$/, '_small')
+      imagefn = File.join(druid.content_dir, tfn + ext)
+      FileUtils.ln fn, imagefn, # hard link
+                        :verbose => flags[:debug], :force => true
+      yield imagefn if block_given?
+    end
+  end
+end
+
 def export_zip(druid, flags)
   # export content into zip files
   Dir.glob(File.join(flags[:stagedir], "#{druid.id}.zip")) do |fn|
@@ -191,6 +207,8 @@ def doit(client, uuid, obj, flags)
   # ofn = convert_mods2ogpsolr(druid, dfn, flags)
   if flags[:geonetwork]
     export_images(druid, uuid, flags)
+  else
+    export_local_images(druid, File.dirname(obj.zipfn) + '/../temp', flags)
   end
   export_zip(druid, flags)
 end

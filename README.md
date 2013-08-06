@@ -118,23 +118,23 @@ upload if you don't already have the below structure ready.
 
 after assembling the data, it should look like this, where the temp files for the shapefiles are all symlinks to reduce space requirements:
 
-zv925hd6723/
-  metadata/
-  content/
-    OGWELLS.zip
-    OGWELLS_preview.jpg
-  temp/
-    OGWELLS.dbf
-    OGWELLS.prj
-    OGWELLS.sbn
-    OGWELLS.sbx
-    OGWELLS.shp
-    OGWELLS.shp.xml
-    OGWELLS.shx
-    options.json
+    zv925hd6723/
+      metadata/
+      content/
+        OGWELLS.zip
+        OGWELLS_preview.jpg
+      temp/
+        OGWELLS.dbf
+        OGWELLS.prj
+        OGWELLS.sbn
+        OGWELLS.sbx
+        OGWELLS.shp
+        OGWELLS.shp.xml
+        OGWELLS.shx
+        options.json
 
 
-then at the end of processing -- prior to accessioning -- it will look like:
+then at the end of processing -- prior to accessioning -- it will look like in your workspace:
 
     zv925hd6723/
       metadata/
@@ -147,16 +147,9 @@ then at the end of processing -- prior to accessioning -- it will look like:
         OGWELLS_ESRI_4326.zip
       temp/
         dc.xml
+        iso19139.xml
         ogpSolr.xml
-        OGWELLS.dbf
-        OGWELLS.prj
-        OGWELLS.sbn
-        OGWELLS.sbx
-        OGWELLS.shp
-        OGWELLS.shp.xml
-        OGWELLS-iso19139.xml
-        OGWELLS-iso19139-fc.xml
-        OGWELLS.shx
+        solr.xml
 
 Credits
 =======
