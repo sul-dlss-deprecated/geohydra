@@ -145,7 +145,7 @@ module GeoMDTK
     def self.do_xslt xslt, fn, params = {}
       cmd = XSLTPROC
       params.each do |k,v|
-        cmd += "--stringparam '#{k}' '#{v}'"
+        cmd += " --stringparam '#{k}' '#{v}'"
       end
       ap({:cmd => cmd, :xslt => xslt})
       IO::popen("#{cmd} #{xslt} #{fn} | #{XMLLINT} -", 'r') do |f|
