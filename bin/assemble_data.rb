@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
-require 'druid-tools'
 require 'optparse'
 
-def assemble(druid, path, flags)
-  ap({:druid => druid, :path => path, :flags => flags}) if flags[:debug]
+def assemble(path, flags)
+  ap({:path => path, :flags => flags}) if flags[:debug]
   File.umask(002)
   Dir.glob(File.join(path, '**', '*.shp')) do |shp|
     raise ArgumentError, shp unless GeoMDTK::Utils.shapefile?(shp)
@@ -16,7 +15,7 @@ def assemble(druid, path, flags)
     puts ['Scanned', File.basename(shp), geometry_type].join("\t") if flags[:verbose]
     
     basename = File.basename(shp, '.shp')
-    zipfn = File.join(druid.content_dir, basename + '.zip')
+    zipfn = File.join(path, 'content', basename + '.zip')
     puts "Compressing #{basename} into #{zipfn}" if flags[:verbose]
     fns = Dir.glob(File.join(File.dirname(shp), "#{basename}.*")).select do |fn|
       fn !~ /\.zip$/
@@ -55,7 +54,7 @@ EOM
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
   n = 0
   GeoMDTK::Utils.find_druid_folders(flags[:srcdir]) do |path|
-    assemble DruidTools::Druid.new(File.basename(path), File.dirname(path)), path, flags
+    assemble path, flags
     n = n + 1
   end
   puts "Processed #{n} folders."
