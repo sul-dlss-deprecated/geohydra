@@ -55,7 +55,7 @@ EOM
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
   n = 0
   GeoMDTK::Utils.find_druid_folders(flags[:srcdir]) do |path|
-    assemble DruidTools::Druid.new(File.basename(path)), path, flags
+    assemble DruidTools::Druid.new(File.basename(path), File.dirname(path)), path, flags
     n = n + 1
   end
   puts "Processed #{n} folders."
