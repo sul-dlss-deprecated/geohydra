@@ -39,7 +39,7 @@ n = 0
 ARGV.each do |fn|
   if File.directory? fn
     Dir.glob(File.join(fn, '**', '*.shp.xml')) do |fn2|
-      process_file fn2, flags
+      process_file fn2, flags if File.exist?(fn2)
       n = n + 1
     end
   elsif File.exist? fn
