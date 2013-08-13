@@ -6,7 +6,7 @@ require 'geomdtk'
 def do_file fn, flags
   if fn =~ %r{^(.*)\.(shp|tif)\.xml$}i
     puts "Processing #{fn} for JPEG" if flags[:verbose]
-    GeoMDTK::Transform.extract_thumbnail fn, "preview.jpg"
+    GeoMDTK::Transform.extract_thumbnail fn, File.join(File.dirname(fn), 'preview.jpg')
   else
     raise OptionParser::InvalidOption, "File <#{fn}> is not ESRI metadata format"
   end
