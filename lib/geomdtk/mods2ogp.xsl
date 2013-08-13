@@ -29,7 +29,7 @@
       select="substring($purl, string-length($purl)-11)" />
     <xsl:variable name="filename" select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#filename']/text()"/>
     <xsl:variable name="downloadURL">
-      <xsl:value-of select="$stacks"/>
+      <xsl:value-of select="$stacks_root"/>
       <xsl:value-of select="concat('/',$druid)"/>
       <xsl:text>/content/</xsl:text>
       <xsl:value-of select="substring-before($filename, '.shp')"/>
@@ -37,7 +37,7 @@
     </xsl:variable>
     <!-- XXX: Use Xpointer on geoMetadata to extract -->
     <xsl:variable name="metadataURL">
-      <xsl:value-of select="$stacks"/>
+      <xsl:value-of select="$stacks_root"/>
       <xsl:value-of select="concat('/',$druid)"/>
       <xsl:text>/metadata/geoMetadata.xml</xsl:text>
     </xsl:variable>
@@ -147,13 +147,13 @@
           <xsl:text>
               { 
               "wms":       ["</xsl:text>
-          <xsl:value-of select="$geoserver"/>
+          <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms"],
               "tilecache": ["</xsl:text>
-          <xsl:value-of select="$geoserver"/>
+          <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms"],
               "wfs":       ["</xsl:text>
-          <xsl:value-of select="$geoserver"/>
+          <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wfs"],
               "metadata":  ["</xsl:text>
           <xsl:value-of select="$metadataURL"/>
