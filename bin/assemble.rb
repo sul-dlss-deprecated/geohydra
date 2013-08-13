@@ -52,9 +52,7 @@ def convert_iso2geo(druid, ifn, flags)
   # GeoMetadataDS
   gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
   puts "Generating #{gfn}" if flags[:verbose]
-  xml = GeoMDTK::Transform.to_geoMetadataDS(ifn, {
-        'purl' => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}"
-       }) 
+  xml = GeoMDTK::Transform.to_geoMetadataDS(ifn) 
   ap({:xml => xml}) if flags[:debug]
   File.open(gfn, 'w') {|f| f << xml.to_xml }
   gfn
@@ -65,10 +63,7 @@ def convert_geo2mods(druid, geoMetadata, flags)
   ap({:geoMetadata => geoMetadata.ng_xml, :descMetadata => geoMetadata.to_mods}) if flags[:debug]
   dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
   puts "Generating #{dfn}" if flags[:verbose]
-  File.open(dfn, 'w') { |f| f << geoMetadata.to_mods({
-    'purl' => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}",
-    'geometryType' => 'Point' # XXX
-  }).to_xml }
+  File.open(dfn, 'w') { |f| f << geoMetadata.to_mods.to_xml }
   dfn
 end
 
@@ -206,6 +201,10 @@ def doit(client, uuid, obj, flags)
   ap({:h => h, :flags => flags}) if flags[:debug]
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
+  geoMetadata.geometryType = flags[:geometryType]
+  geoMetadata.zipName = 'data.zip'
+  geoMetadata.purl = File.join(flags[:purl], druid.id)
+
   dfn = convert_geo2mods(druid, geoMetadata, flags)
   sfn = convert_geo2solr(druid, geoMetadata, flags)
   ofn = convert_mods2ogpsolr(druid, dfn, flags)
