@@ -103,11 +103,11 @@ def convert_mods2ogpsolr(druid, dfn, flags)
   sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
   FileUtils.rm_f(sfn) if File.exist?(sfn)
   cmd = ['xsltproc',
-          "--stringparam geometryType #{geometryType}",
-          "--stringparam geoserver #{geoserver}",
-          "--stringparam stacks #{stacks}",
-          "--stringparam purl #{purl}",
-          "--stringparam druid #{druid.id}",
+          "--stringparam geometryType '#{geometryType}'",
+          "--stringparam geoserver '#{geoserver}'",
+          "--stringparam stacks '#{stacks}'",
+          "--stringparam purl '#{purl}'",
+          "--stringparam druid '#{druid.id}'",
           "--output '#{sfn}'",
           "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/mods2ogp.xsl')}'",
           "'#{dfn}'"
@@ -198,13 +198,13 @@ def doit(client, uuid, obj, flags)
   
   puts "Processing #{ifn}"
   h = JSON.parse(File.read("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json"))
-  ap({:h => h}) if flags[:debug]
-  flags.merge(h)
+  flags = flags.merge(h).symbolize_keys
+  ap({:h => h, :flags => flags}) if flags[:debug]
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
   dfn = convert_geo2mods(druid, geoMetadata, flags)
   sfn = convert_geo2solr(druid, geoMetadata, flags)
-  # ofn = convert_mods2ogpsolr(druid, dfn, flags)
+  ofn = convert_mods2ogpsolr(druid, dfn, flags)
   if flags[:geonetwork]
     export_images(druid, uuid, flags)
   else
