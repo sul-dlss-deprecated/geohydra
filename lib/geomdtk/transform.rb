@@ -83,7 +83,8 @@ module GeoMDTK
     # Converts a ISO 19139 into RDF-bundled document geoMetadataDS
     # @param [String] fn Input data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
-    def self.to_geoMetadataDS fn, flags
+    def self.to_geoMetadataDS fn, flags = {}
+      raise ArgumentError, "PURL is required" if flags['purl'].nil?
       do_xslt XSLT[:rdf], fn, flags
     end
     

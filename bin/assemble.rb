@@ -52,7 +52,7 @@ def convert_iso2geo(druid, ifn, flags)
   # GeoMetadataDS
   gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
   puts "Generating #{gfn}" if flags[:verbose]
-  xml = GeoMDTK::Transform.to_geoMetadataDS(ifn) 
+  xml = GeoMDTK::Transform.to_geoMetadataDS(ifn, { 'purl' => "#{flags[:purl]}/#{druid.id}"}) 
   ap({:xml => xml}) if flags[:debug]
   File.open(gfn, 'w') {|f| f << xml.to_xml }
   gfn
