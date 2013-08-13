@@ -179,10 +179,14 @@ def export_zip(druid, flags)
   Dir.glob(File.join(flags[:stagedir], "#{druid.id}.zip")) do |fn|
     # extract shapefile name using filename pattern from
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
-    k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
-    ofn = "#{druid.content_dir}/#{druid.id}.zip"
+    ofn = "#{druid.content_dir}/data.zip"
     FileUtils.ln fn, ofn, :verbose => flags[:verbose]
     yield ofn if block_given?
+    
+    if flags[:extract_basename]
+      k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
+      flags[:basename] = k
+    end
   end
 end
 
