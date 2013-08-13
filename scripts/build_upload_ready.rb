@@ -21,7 +21,7 @@ def build(shp, druid, geometryType, flags)
     FileUtils.mkdir_p(p, :verbose => true) unless File.directory?(p)
   end
   Dir.glob("#{readydir}/**/#{basename}.*") do |fn|
-    FileUtils.ln_s([File.expand_path(fn)], tempdir, :verbose => true)
+    FileUtils.ln([File.expand_path(fn)], tempdir, :verbose => true)
   end
   File.open("#{tempdir}/options.json", "w") do |f|
     f.puts "{ \"druid\" : \"#{druid.id}\", \"geometryType\" : \"#{geometryType}\" }"
