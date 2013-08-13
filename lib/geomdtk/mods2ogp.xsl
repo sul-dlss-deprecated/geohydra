@@ -32,14 +32,8 @@
       <xsl:value-of select="substring-before($filename, '.shp')"/>
       <xsl:text>.zip</xsl:text>
     </xsl:variable>
-    <!-- XXX: Use Xpointer on geoMetadata to extract -->
     <xsl:variable name="metadataURL">
       <xsl:value-of select="$stacks_root"/>
-      <xsl:value-of select="concat('/',$druid)"/>
-      <xsl:text>/metadata/geoMetadata.xml</xsl:text>
-    </xsl:variable>
-    <xsl:variable name="localMetadataURL">
-      <xsl:text>file:///var/geomdtk/current/export</xsl:text>
       <xsl:value-of select="concat('/',$druid)"/>
       <xsl:text>/metadata/geoMetadata.xml</xsl:text>
     </xsl:variable>
@@ -148,7 +142,8 @@
             <xsl:value-of select="@srsName"/>
           </field>
         </xsl:for-each>
-        <field name="Location">
+        <field name="Location"><!-- output is JSON so we wrap in CDATA -->
+          <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
           <xsl:text>
               { 
               "wms":       ["</xsl:text>
@@ -171,11 +166,12 @@
           <xsl:text>"]              
               }
           </xsl:text>
+          <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
         <field name="FgdcText">
           <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)">
             <xsl:attribute name="href">
-              <xsl:value-of select="$localMetadataURL"/>
+              <xsl:value-of select="$metadataURL"/>
             </xsl:attribute>
           </xi:include>
         </field>
