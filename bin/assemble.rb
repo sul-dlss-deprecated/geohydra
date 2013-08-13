@@ -120,18 +120,18 @@ def convert_mods2ogpsolr(druid, dfn, flags)
     doc = Nokogiri::XML::Document.parse(open(sfn), nil, nil, Nokogiri::XML::ParseOptions::XINCLUDE)
     ap({:root => doc.root.name, :root_namespaces => doc.root.namespaces}) if flags[:debug]
     File.open(sfn, 'w') { |f| f << doc.to_xml }
+    
+    # cleanup by adding CDATA
+    cmd = ['xsltproc',
+            "--output '#{sfn}'",
+            "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/ogpcleanup.xsl')}'",
+            "'#{sfn}'"  
+            ].join(' ')
+    puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
+    ap({:cmd => cmd}) if flags[:debug]
+    system(cmd)
   end
-  
-  # cleanup by adding CDATA
-  cmd = ['xsltproc',
-          "--output '#{sfn}'",
-          "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/ogpcleanup.xsl')}'",
-          "'#{sfn}'"  
-          ].join(' ')
-  puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
-  ap({:cmd => cmd}) if flags[:debug]
-  system(cmd)
-  
+
   sfn
 end
 
