@@ -152,7 +152,7 @@ def export_images(druid, uuid, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.install fn, imagefn, :verbose => flags[:debug], :force => true, :mode => 664
+      FileUtils.install fn, imagefn, :verbose => flags[:debug], :mode => 664
       yield imagefn if block_given?
     end
   end
@@ -168,7 +168,7 @@ def export_local_images(druid, tempdir, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.install fn, imagefn, :verbose => flags[:debug], :force => true, :mode => 664
+      FileUtils.install fn, imagefn, :verbose => flags[:debug], :mode => 664
       yield imagefn if block_given?
     end
   end
@@ -181,7 +181,7 @@ def export_zip(druid, flags)
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
     ofn = "#{druid.content_dir}/#{druid.id}.zip"
-    FileUtils.install fn, ofn, :verbose => flags[:verbose], :force => true, :mode => 664
+    FileUtils.install fn, ofn, :verbose => flags[:verbose], :mode => 664
     yield ofn if block_given?
   end
 end
