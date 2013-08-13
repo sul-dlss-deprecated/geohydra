@@ -122,9 +122,9 @@ module GeoMDTK
         end
 
         # package up reprojection
-         ozip = File.join(druid.content_dir, k + "_EPSG_#{srid}.zip")
+         ozip = File.join(druid.content_dir, "data_EPSG_#{srid}.zip")
         puts "Repacking #{ozip}" if flags[:verbose]
-        system("zip -q -Dj '#{ozip}' #{odr}/#{File.basename(k, '.shp')}.*")
+        system("zip -q -Dj '#{ozip}' #{odr}/#{File.basename(shpfn, '.shp')}.*")
 
         # cleanup
         FileUtils.rm_rf odr
