@@ -15,15 +15,16 @@ def assemble(path, flags)
     puts ['Scanned', File.basename(shp), geometry_type].join("\t") if flags[:verbose]
     
     basename = File.basename(shp, '.shp')
-    zipfn = File.join(path, 'content', basename + '.zip')
+    zipfn = File.join(path, 'content', 'data.zip')
     puts "Compressing #{basename} into #{zipfn}" if flags[:verbose]
     fns = Dir.glob(File.join(File.dirname(shp), "#{basename}.*")).select do |fn|
       fn !~ /\.zip$/
     end
+    metadata_fns = []
     Dir.glob(File.join(File.dirname(shp), "#{basename}-iso19139*.xml")).each do |fn|
-      fns << fn
+      metadata_fns << fn
     end
-    cmd =  "zip -vj '#{zipfn}' #{fns.join(' ')}"
+    cmd =  "zip -vj '#{zipfn}' #{fns.join(' ')} #{metadata_fns.join(' ')}"
     ap({:cmd => cmd, :fns => fns}) if flags[:debug]
     system cmd
     fns.each {|fn| FileUtils.rm(fn)} unless flags[:debug]
