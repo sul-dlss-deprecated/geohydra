@@ -70,8 +70,8 @@ module GeoMDTK
     # @raise [ArgumentError] if cannot find a thumbnail
     def self.extract_thumbnail fn, thumbnail_fn, property_type = 'PictureX'
       doc = Nokogiri::XML(File.read(fn))
-      doc.xpath('/metadata/Binary/Thumbnail/Data').each do |node|
-        if node['EsriPropertyType'] == property_type
+      doc.xpath('//Binary/Thumbnail/Data').each do |node|
+        if property_type.nil? or node['EsriPropertyType'] == property_type
           image = Base64.decode64(node.text)
           File.open(thumbnail_fn, 'wb') {|f| f << image }
           return
@@ -134,11 +134,16 @@ module GeoMDTK
     #         RGeo::Feature::Polygon, 
     #         RGeo::Feature::LineString as appropriate
     def self.geometry_type(shp_filename)
-      RGeo::Shapefile::Reader.open(shp_filename) do |shp|
-        shp.each do |record|
-          return record.geometry.envelope.geometry_type
+      begin
+        RGeo::Shapefile::Reader.open(shp_filename) do |shp|
+          shp.each do |record|
+              return record.geometry.envelope.geometry_type
+          end
         end
+      rescue RGeo::Error::RGeoError => e
+        puts e.message
       end
+      nil     
     end
     
     private
