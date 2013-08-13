@@ -1,10 +1,13 @@
 #!/usr/bin/env ruby
-#
-srcdir='/var/geomdtk/current/upload/druid'
-Dir.glob(File.join(srcdir, '**', '*.zip')) do |zipfn|
-  druid = File.basename(File.dirname(File.dirname(zipfn)))
-  system("ln -s #{zipfn} #{druid}.zip")
+
+require 'fileutils'
+require 'druid-tools'
+
+Dir.chdir('/var/geomdtk/current/stage')
+Dir.glob(File.join('/var/geomdtk/current/upload/druid/**/*.zip')) do |zipfn|
+  druid = DruidTools::Druid.new(File.basename(File.dirname(File.dirname(zipfn))))
+  FileUtils.ln_sf(zipfn, "#{druid.id}.zip", :verbose => true)
   Dir.glob(File.join(File.dirname(zipfn), '..', '**', '*-iso19139.xml')) do |xmlfn|
-    system("ln -s #{xmlfn} #{druid}.xml")
+    FileUtils.ln_sf(File.expand_path(xmlfn), "#{druid.id}.xml", :verbose => true)
   end
 end

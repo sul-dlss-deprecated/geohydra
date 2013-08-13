@@ -52,8 +52,8 @@ To package up the .shp files into .zip files:
 
     % bundle exec bin/assemble_data.rb /var/geomdtk/current/upload/druid
 
-To assemble the workspace, populate the *geomdtk.stage* directory with
-`druid.zip` files which contain the Shapefiles files and `druid.xml`.
+To assemble the workspace, populate the *geomdtk.stage* directory with `druid.zip` files which
+contain the Shapefiles files and `druid.xml`. See scripts/load_stage.rb for an example process.
 
     % bundle exec bin/assemble.rb
 
