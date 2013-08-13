@@ -22,11 +22,8 @@
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
-    <xsl:param name="geoserver_root"/>
-    <xsl:param name="purl"/>
-    <xsl:param name="stacks_root"/>
     <xsl:variable name="druid" 
-      select="substring($purl, string-length($purl)-11)" />
+      select="substring($purl, string-length($purl)-10)" />
     <xsl:variable name="filename" select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#filename']/text()"/>
     <xsl:variable name="downloadURL">
       <xsl:value-of select="$stacks_root"/>
