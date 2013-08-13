@@ -97,6 +97,7 @@ module GeoMDTK
       FileUtils.mkdir_p tmp
       system("unzip -q -j '#{zipfn}' -d '#{tmp}'")
       
+      shpfn = nil
       Dir.glob("#{tmp}/**/*.shp") do |fn|
         shpfn = File.basename(fn)
       end
