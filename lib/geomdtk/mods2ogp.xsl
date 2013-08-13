@@ -16,29 +16,17 @@
        - geoserver - URL prefix to the geoserver
        - druid - the id
        - stacks - URL prefix to the stacks
+       - purl - complete URL
        
      -->
 <xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0" exclude-result-prefixes="gmd gco gml mods rdf xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
-    <!-- Init: set purl, filename, downloadURL, metadataURL. The MODS geo extension looks like:
-    
-    <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2" rdf:type="geo">
-      <rdf:RDF rdf:about="http://purl.stanford.edu/cs838pw3418">
-        <rdf:Description rdf:type="geo#geometryType" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">gml:Point</rdf:Description>
-        <rdf:Description rdf:type="geo#filename" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">OIL_GAS_FIELDS.shp</rdf:Description>
-        <rdf:Description rdf:type="geo#boundingBox">
-          <gml:Envelope srsName="EPSG:4269">
-            <gml:lowerCorner>-151.479444 26.071745</gml:lowerCorner>
-            <gml:upperCorner>-78.085007 69.4325</gml:upperCorner>
-          </gml:Envelope>
-        </rdf:Description>
-      </rdf:RDF>
-    </extension>
-    
-      -->
-    <!-- <xsl:variable name="purl" select="mods:extension[@rdf:type='geo']/rdf:RDF/@rdf:about"/> -->
+    <xsl:param name="druid"/>
+    <xsl:param name="geoserver"/>
+    <xsl:param name="purl"/>
+    <xsl:param name="stacks"/>
     <xsl:variable name="filename" select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#filename']/text()"/>
     <xsl:variable name="downloadURL">
       <xsl:value-of select="$stacks"/>
@@ -156,7 +144,6 @@
           </field>
         </xsl:for-each>
         <field name="Location">
-          <!-- XXX: remove hardcoded links here -->
           <xsl:text>
               { 
               "wms":       ["</xsl:text>
