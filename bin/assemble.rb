@@ -116,9 +116,11 @@ def convert_mods2ogpsolr(druid, dfn, flags)
   system(cmd)
   
   # post-process to resolve XInclude
-  doc = Nokogiri::XML::Document.parse(open(sfn), nil, nil, Nokogiri::XML::ParseOptions::XINCLUDE)
-  ap({:root => doc.root.name, :root_namespaces => doc.root.namespaces}) if flags[:debug]
-  File.open(sfn, 'w') { |f| f << doc.to_xml }
+  if flags[:xinclude]
+    doc = Nokogiri::XML::Document.parse(open(sfn), nil, nil, Nokogiri::XML::ParseOptions::XINCLUDE)
+    ap({:root => doc.root.name, :root_namespaces => doc.root.namespaces}) if flags[:debug]
+    File.open(sfn, 'w') { |f| f << doc.to_xml }
+  end
   
   # cleanup by adding CDATA
   cmd = ['xsltproc',
@@ -246,6 +248,7 @@ begin
     :solr => GeoMDTK::Config.ogp.solr,
     :purl => GeoMDTK::Config.ogp.purl,
     :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
+    :xinclude => false,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',
     :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp'
   }
@@ -255,7 +258,10 @@ begin
 Usage: #{File.basename(__FILE__)} [options]
 EOM
     opts.on("--geonetwork", "Run against GeoNetwork metadata") do |v|
-      flags[:geonetwork] = v
+      flags[:geonetwork] = true
+    end
+    opts.on("--xinclude", "Post process ogpSolr.xml with xinclude") do |v|
+      flags[:xinclude] = true
     end
     opts.on("-v", "--verbose", "Run verbosely") do |v|
       flags[:debug] = true if flags[:verbose]

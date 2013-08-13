@@ -38,9 +38,17 @@
       <xsl:value-of select="concat('/',$druid)"/>
       <xsl:text>/metadata/geoMetadata.xml</xsl:text>
     </xsl:variable>
+    <xsl:variable name="localMetadataURL">
+      <xsl:text>file:///var/geomdtk/current/export</xsl:text>
+      <xsl:value-of select="concat('/',$druid)"/>
+      <xsl:text>/metadata/geoMetadata.xml</xsl:text>
+    </xsl:variable>
     <add>
       <doc>
         <field name="LayerId">
+          <xsl:value-of select="$druid"/>
+        </field>
+        <field name="Name">
           <xsl:value-of select="$druid"/>
         </field>
         <field name="ExternalLayerId">
@@ -167,7 +175,7 @@
         <field name="FgdcText">
           <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)">
             <xsl:attribute name="href">
-              <xsl:value-of select="$metadataURL"/>
+              <xsl:value-of select="$localMetadataURL"/>
             </xsl:attribute>
           </xi:include>
         </field>
