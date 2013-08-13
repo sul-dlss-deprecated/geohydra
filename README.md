@@ -1,7 +1,7 @@
 GeoMDTK
 =======
 
-Geospatial MetaData ToolKit for use as a Geo[Hydra|http://projecthydra.org]
+Geospatial MetaData ToolKit for use as a Geo[Hydra](http://projecthydra.org)
 head.
 
 Setup
@@ -10,13 +10,14 @@ Setup
 Core requirements, with versions as-tested:
 
   * ArcGIS 10.2
-  * Red Hat Enterprise Linux Server release 6.4 (Santiago)
   * GeoNetwork 2.8 (optional for metadata management)
+  * GEOS 3.3
   * GeoServer 2.2
   * OpenGeoPortal 1.2
-  * PostGIS 2.0.1
-  * PostgreSQL 9.2.4
-  * Ruby 1.9.3
+  * PostGIS 2.0
+  * PostgreSQL 9.2
+  * Red Hat Enterprise Linux Server release 6.4 (Santiago)
+  * Ruby 1.9
 
 If needed, configure host to use Ruby 1.9.3:
 
@@ -97,11 +98,16 @@ These utilities assume a few things:
 Data Wrangling
 ==============
 
-
 The file system structure will initially look like this (see [Consul
-page](https://consul.stanford.edu/x/C5xSC) for a description.) Note that you
-can use scripts/build.rb to help build out a druid/ folder with data for
-upload if you don't already have the below structure ready.
+page](https://consul.stanford.edu/x/C5xSC) for a description.). The options.json contain meta-metadata about the package:
+
+    { 
+      "druid"        : "zz943vx1492", 
+      "geometryType" : "Point" 
+    }
+
+Note that you can use scripts/build.rb to help build out a druid/ folder with data for upload
+if you don't already have the below structure ready.
 
     zv925hd6723/
       metadata/
@@ -121,8 +127,8 @@ after assembling the data, it should look like this, where the temp files for th
     zv925hd6723/
       metadata/
       content/
-        OGWELLS.zip
-        OGWELLS_preview.jpg
+        data.zip
+        preview.jpg
       temp/
         OGWELLS.dbf
         OGWELLS.prj
@@ -142,19 +148,21 @@ then at the end of processing -- prior to accessioning -- it will look like in y
         descMetadata.xml
         geoMetadata.xml
       content/
-        OGWELLS_preview.jpg
-        OGWELLS.zip
-        OGWELLS_ESRI_4326.zip
+        preview.jpg
+        data.zip
+        data_ESRI_4326.zip (optionally)
       temp/
         dc.xml
         iso19139.xml
         ogpSolr.xml
+        options.json
         solr.xml
 
 Credits
 =======
 
-Author: Darren Hardy <drh@stanford.edu>,
-        Digital Library Systems and Services,
-        Stanford University Libraries
+Author:  
+Darren Hardy <drh@stanford.edu>,  
+Digital Library Systems and Services,  
+Stanford University Libraries
 
