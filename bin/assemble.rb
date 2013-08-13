@@ -34,7 +34,7 @@ def find_mef(druid, uuid, flags)
       found_metadata = true
       # original ISO 19139
       ifn = File.join(druid.temp_dir, 'iso19139.xml')
-      FileUtils.install fn, ifn, :verbose => flags[:verbose]
+      FileUtils.install fn, ifn, :verbose => flags[:verbose], :mode => 664
     end
   end
   ifn
@@ -152,8 +152,7 @@ def export_images(druid, uuid, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.ln fn, imagefn, # hard link
-                        :verbose => flags[:debug], :force => true
+      FileUtils.install fn, imagefn, :verbose => flags[:debug], :force => true, :mode => 664
       yield imagefn if block_given?
     end
   end
@@ -163,13 +162,13 @@ def export_local_images(druid, tempdir, flags)
   # export any thumbnail images
   %w{png jpg}.each do |fmt|
     Dir.glob("#{flags[:stagedir]}/../upload/druid/#{druid.id}/content/*.#{fmt}") do |fn|
+      fn = File.expand_path(fn)
       ext = '.' + fmt
       tfn = File.basename(fn, ext)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.ln fn, imagefn, # hard link
-                        :verbose => flags[:debug], :force => true
+      FileUtils.install fn, imagefn, :verbose => flags[:debug], :force => true, :mode => 664
       yield imagefn if block_given?
     end
   end
@@ -182,7 +181,7 @@ def export_zip(druid, flags)
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
     ofn = "#{druid.content_dir}/#{druid.id}.zip"
-    FileUtils.ln fn, ofn, :verbose => flags[:verbose], :force => true # hard link
+    FileUtils.install fn, ofn, :verbose => flags[:verbose], :force => true, :mode => 664
     yield ofn if block_given?
   end
 end
@@ -198,7 +197,7 @@ def doit(client, uuid, obj, flags)
   end
   
   puts "Processing #{ifn}"
-  h = JSON.parse(File.read("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json"))
+  h = JSON.parse(File.read(File.expand_path("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json")))
   flags = flags.merge(h).symbolize_keys
   ap({:h => h, :flags => flags}) if flags[:debug]
   gfn = convert_iso2geo(druid, ifn, flags)
@@ -209,7 +208,7 @@ def doit(client, uuid, obj, flags)
   if flags[:geonetwork]
     export_images(druid, uuid, flags)
   else
-    export_local_images(druid, File.dirname(obj.zipfn) + '/../temp', flags)
+    export_local_images(druid, File.expand_path(File.dirname(obj.zipfn) + '/../temp'), flags)
   end
   export_zip(druid, flags)
 end
