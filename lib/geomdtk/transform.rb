@@ -147,7 +147,7 @@ module GeoMDTK
       params.each do |k,v|
         cmd += " --stringparam '#{k}' '#{v}'"
       end
-      ap({:cmd => cmd, :xslt => xslt})
+      # ap({:cmd => cmd, :xslt => xslt})
       IO::popen("#{cmd} #{xslt} #{fn} | #{XMLLINT} -", 'r') do |f|
         return Nokogiri::XML(f.read)
       end      
