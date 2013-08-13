@@ -104,10 +104,9 @@ def convert_mods2ogpsolr(druid, dfn, flags)
   FileUtils.rm_f(sfn) if File.exist?(sfn)
   cmd = ['xsltproc',
           "--stringparam geometryType '#{geometryType}'",
-          "--stringparam geoserver '#{geoserver}'",
-          "--stringparam stacks '#{stacks}'",
+          "--stringparam geoserver_root '#{geoserver}'",
+          "--stringparam stacks_root '#{stacks}'",
           "--stringparam purl '#{purl}'",
-          "--stringparam druid '#{druid.id}'",
           "--output '#{sfn}'",
           "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/mods2ogp.xsl')}'",
           "'#{dfn}'"
