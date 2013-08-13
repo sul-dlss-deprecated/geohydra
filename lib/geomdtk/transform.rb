@@ -90,15 +90,17 @@ module GeoMDTK
     
     # @param zipfn [String] ZIP file
     def self.reproject druid, zipfn, flags
-      k = File.basename(zipfn, '.zip')
-      shpfn = k + '.shp'
 
       puts "Extracting #{druid.id} data from #{zipfn}" if flags[:verbose]
       tmp = "#{flags[:tmpdir]}/#{druid.id}"
       FileUtils.rm_rf tmp if File.directory? tmp
       FileUtils.mkdir_p tmp
       system("unzip -q -j '#{zipfn}' -d '#{tmp}'")
-
+      
+      Dir.glob("#{tmp}/**/*.shp") do |fn|
+        shpfn = File.basename(fn)
+      end
+      
       [4326].each do |srid|
         ifn = File.join(tmp, shpfn)
         raise ArgumentError, "#{ifn} is missing" unless File.exist? ifn
