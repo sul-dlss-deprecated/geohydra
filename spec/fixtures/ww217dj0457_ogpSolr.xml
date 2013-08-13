@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add xmlns="http://lucene.apache.org/solr/4/document" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <doc>
+    <field name="LayerId">ww217dj0457</field>
+    <field name="Name">ww217dj0457</field>
+    <field name="ExternalLayerId">http://purl.stanford.edu/ww217dj0457</field>
+    <!--
+          XXX: Access is really Stanford-only but UI is not defaulted to search for restricted
+        -->
+    <field name="Access">Restricted</field>
+    <field name="Institution">Stanford</field>
+    <field name="WorkspaceName">druid</field>
+    <field name="GeoReferenced">true</field>
+    <field name="Availability">Online</field>
+    <field name="ContentDate">2012-01-01T00:00:00Z</field>
+    <field name="LayerDisplayName">Carbon Dioxide (CO2) Pipelines in the United States, 2011</field>
+    <field name="DataType">Point</field>
+    <field name="Abstract">Dataset represents locations of existing and proposed CO2 pipelines. Includes all interstate pipelines and major intrastate pipelines.; Locating Carbon Dioxide (CO2) pipelines in the United States.; </field>
+    <field name="ThemeKeywords">Carbon Dioxode; Pipelines; </field>
+    <field name="PlaceKeywords">United States; </field>
+    <field name="MinX">-109.758319</field>
+    <field name="MinY">29.423028</field>
+    <field name="MaxX">-88.990844</field>
+    <field name="MaxY">48.999336</field>
+    <field name="CenterX">-99.3745815</field>
+    <field name="CenterY">39.211182</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfWidth">10.3837375</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfHeight">9.788154</field>
+    <!-- XXX: in degrees**2 ??? -->
+    <field name="Area">407</field>
+    <field name="SrsProjectionCode">EPSG:4269</field>
+    <field name="Location"><![CDATA[
+              { 
+              "wms":       ["http://host/geoserver/wms"],
+              "tilecache": ["http://host/geoserver/wms"],
+              "wfs":       ["http://host/geoserver/wfs"],
+              "metadata":  ["http://host/stacks/ww217dj0457/metadata/geoMetadata.xml"],
+              "download":  ["http://host/stacks/ww217dj0457/content/CO2_PIPE.zip"],
+              "view":      ["http://purl.stanford.edu/ww217dj0457"]              
+              }
+          ]]></field>
+    <field name="FgdcText">
+      <xi:include parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)" href="http://host/stacks/ww217dj0457/metadata/geoMetadata.xml"/>
+    </field>
+  </doc>
+</add>

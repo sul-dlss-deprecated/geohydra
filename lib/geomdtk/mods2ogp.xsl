@@ -24,7 +24,7 @@
   <xsl:template match="/mods:mods">
     <xsl:variable name="druid" 
       select="substring($purl, string-length($purl)-10)" />
-    <xsl:variable name="filename" select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#filename']/text()"/>
+    <xsl:variable name="filename" select="mods:extension/rdf:RDF/rdf:Description[@rdf:type='geo#filename']"/>
     <xsl:variable name="downloadURL">
       <xsl:value-of select="$stacks_root"/>
       <xsl:value-of select="concat('/',$druid)"/>

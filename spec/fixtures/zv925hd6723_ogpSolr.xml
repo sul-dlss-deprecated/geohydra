@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add xmlns="http://lucene.apache.org/solr/4/document" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <doc>
+    <field name="LayerId">zv925hd6723</field>
+    <field name="Name">zv925hd6723</field>
+    <field name="ExternalLayerId">http://purl.stanford.edu/zv925hd6723</field>
+    <!--
+          XXX: Access is really Stanford-only but UI is not defaulted to search for restricted
+        -->
+    <field name="Access">Restricted</field>
+    <field name="Institution">Stanford</field>
+    <field name="WorkspaceName">druid</field>
+    <field name="GeoReferenced">true</field>
+    <field name="Availability">Online</field>
+    <field name="ContentDate">2011-01-01T00:00:00Z</field>
+    <field name="LayerDisplayName">Oil and Gas Wells in the United States, 2011</field>
+    <field name="DataType">Point</field>
+    <field name="Abstract">This layer is based on data provided by numerous sources in a variety of digital formats, collected at the state or county level.; The purpose of this file is to combine multiple well data sources into one national file.; </field>
+    <field name="ThemeKeywords">Oil wells; Gas wells; Petroleum; Natural Gas; </field>
+    <field name="PlaceKeywords">United States; </field>
+    <field name="MinX">-124.646</field>
+    <field name="MinY">24.421389</field>
+    <field name="MaxX">-73.38717</field>
+    <field name="MaxY">48.998656</field>
+    <field name="CenterX">-99.016585</field>
+    <field name="CenterY">36.7100225</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfWidth">25.629415</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfHeight">12.2886335</field>
+    <!-- XXX: in degrees**2 ??? -->
+    <field name="Area">1260</field>
+    <field name="SrsProjectionCode">EPSG:4269</field>
+    <field name="Location"><![CDATA[
+              { 
+              "wms":       ["http://host/geoserver/wms"],
+              "tilecache": ["http://host/geoserver/wms"],
+              "wfs":       ["http://host/geoserver/wfs"],
+              "metadata":  ["http://host/stacks/zv925hd6723/metadata/geoMetadata.xml"],
+              "download":  ["http://host/stacks/zv925hd6723/content/OGWELLS.zip"],
+              "view":      ["http://purl.stanford.edu/zv925hd6723"]              
+              }
+          ]]></field>
+    <field name="FgdcText">
+      <xi:include parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)" href="http://host/stacks/zv925hd6723/metadata/geoMetadata.xml"/>
+    </field>
+  </doc>
+</add>

@@ -1,490 +1,469 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <rdf:Description rdf:about="http://purl.stanford.edu/sq479mx3086">
-    <rdf:Description rdf:about="http://purl.stanford.edu/sq479mx3086#geoMetadata/MD_Metadata">
-      <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geonet="http://www.fao.org/geonetwork">
-        <gmd:fileIdentifier>
-          <gco:CharacterString>CF4874FF-F01A-4013-82A5-CA8CDE2CCF50</gco:CharacterString>
-        </gmd:fileIdentifier>
-        <gmd:language>
-          <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" codeSpace="ISO639-2"/>
-        </gmd:language>
-        <gmd:characterSet>
-          <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115"/>
-        </gmd:characterSet>
-        <gmd:parentIdentifier>
-          <gco:CharacterString>b34d535d-6607-43e8-abcb-a7a6431ae98d</gco:CharacterString>
-        </gmd:parentIdentifier>
-        <gmd:hierarchyLevel>
-          <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115"/>
-        </gmd:hierarchyLevel>
-        <gmd:hierarchyLevelName>
-          <gco:CharacterString>dataset</gco:CharacterString>
-        </gmd:hierarchyLevelName>
-        <gmd:contact>
-          <gmd:CI_ResponsibleParty>
-            <gmd:organisationName>
-              <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
-            </gmd:organisationName>
-            <gmd:positionName>
-              <gco:CharacterString>Metadata Analyst</gco:CharacterString>
-            </gmd:positionName>
-            <gmd:contactInfo>
-              <gmd:CI_Contact>
-                <gmd:phone>
-                  <gmd:CI_Telephone>
-                    <gmd:voice>
-                      <gco:CharacterString>650-723-2746</gco:CharacterString>
-                    </gmd:voice>
-                  </gmd:CI_Telephone>
-                </gmd:phone>
-                <gmd:address>
-                  <gmd:CI_Address>
-                    <gmd:deliveryPoint>
-                      <gco:CharacterString>Branner Earth Sciences Library</gco:CharacterString>
-                    </gmd:deliveryPoint>
-                    <gmd:deliveryPoint>
-                      <gco:CharacterString>Mitchell Building, 2nd Floor</gco:CharacterString>
-                    </gmd:deliveryPoint>
-                    <gmd:deliveryPoint>
-                      <gco:CharacterString>397 Panama Mall</gco:CharacterString>
-                    </gmd:deliveryPoint>
-                    <gmd:city>
-                      <gco:CharacterString>Stanford</gco:CharacterString>
-                    </gmd:city>
-                    <gmd:administrativeArea>
-                      <gco:CharacterString>California</gco:CharacterString>
-                    </gmd:administrativeArea>
-                    <gmd:postalCode>
-                      <gco:CharacterString>94305</gco:CharacterString>
-                    </gmd:postalCode>
-                    <gmd:electronicMailAddress>
-                      <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
-                    </gmd:electronicMailAddress>
-                  </gmd:CI_Address>
-                </gmd:address>
-              </gmd:CI_Contact>
-            </gmd:contactInfo>
-            <gmd:role>
-              <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115"/>
-            </gmd:role>
-          </gmd:CI_ResponsibleParty>
-        </gmd:contact>
-        <gmd:dateStamp>
-          <gco:DateTime>2013-06-18T12:34:05</gco:DateTime>
-        </gmd:dateStamp>
-        <gmd:metadataStandardName>
-          <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
-        </gmd:metadataStandardName>
-        <gmd:metadataStandardVersion>
-          <gco:CharacterString>2007</gco:CharacterString>
-        </gmd:metadataStandardVersion>
-        <gmd:dataSetURI>
-          <gco:CharacterString>http://purl.stanford.edu/sq479mx3086</gco:CharacterString>
-        </gmd:dataSetURI>
-        <gmd:spatialRepresentationInfo>
-          <gmd:MD_VectorSpatialRepresentation>
-            <gmd:topologyLevel>
-              <gmd:MD_TopologyLevelCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_TopologyLevelCode" codeListValue="geometryOnly" codeSpace="ISOTC211/19115"/>
-            </gmd:topologyLevel>
-            <gmd:geometricObjects>
-              <gmd:MD_GeometricObjects>
-                <gmd:geometricObjectType>
-                  <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="point" codeSpace="ISOTC211/19115"/>
-                </gmd:geometricObjectType>
-                <gmd:geometricObjectCount>
-                  <gco:Integer>6976</gco:Integer>
-                </gmd:geometricObjectCount>
-              </gmd:MD_GeometricObjects>
-            </gmd:geometricObjects>
-          </gmd:MD_VectorSpatialRepresentation>
-        </gmd:spatialRepresentationInfo>
-        <gmd:referenceSystemInfo>
-          <gmd:MD_ReferenceSystem>
-            <gmd:referenceSystemIdentifier>
-              <gmd:RS_Identifier>
-                <gmd:code>
-                  <gco:CharacterString>4269</gco:CharacterString>
-                </gmd:code>
-                <gmd:codeSpace>
-                  <gco:CharacterString>EPSG</gco:CharacterString>
-                </gmd:codeSpace>
-                <gmd:version>
-                  <gco:CharacterString>7.11.2</gco:CharacterString>
-                </gmd:version>
-              </gmd:RS_Identifier>
-            </gmd:referenceSystemIdentifier>
-          </gmd:MD_ReferenceSystem>
-        </gmd:referenceSystemInfo>
-        <gmd:identificationInfo>
-          <gmd:MD_DataIdentification>
-            <gmd:citation>
-              <gmd:CI_Citation>
-                <gmd:title>
-                  <gco:CharacterString>Offshore Platforms in the Gulf of Mexico, 2011</gco:CharacterString>
-                </gmd:title>
-                <gmd:date gco:nilReason="missing">
-                  <gmd:CI_Date>
-                    <gmd:date>
-                      <gco:Date>2008-01-01</gco:Date>
-                    </gmd:date>
-                    <gmd:dateType>
-                      <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
-                    </gmd:dateType>
-                  </gmd:CI_Date>
-                </gmd:date>
-                <gmd:citedResponsibleParty>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName>
-                      <gco:CharacterString>United States. Minerals Management Service.</gco:CharacterString>
-                    </gmd:organisationName>
-                    <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:citedResponsibleParty>
-                <gmd:presentationForm>
-                  <gmd:CI_PresentationFormCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" codeSpace="ISOTC211/19115"/>
-                </gmd:presentationForm>
-                <gmd:otherCitationDetails>
-                  <gco:CharacterString>http://www.gomr.mms.gov/contact.html</gco:CharacterString>
-                </gmd:otherCitationDetails>
-              </gmd:CI_Citation>
-            </gmd:citation>
-            <gmd:abstract>
-              <gco:CharacterString>Identifies the location of platforms in Gulf Of Mexico. All platforms existing in the database are included.</gco:CharacterString>
-            </gmd:abstract>
-            <gmd:purpose>
-              <gco:CharacterString>Locating and analysing information on the Gulf of Mexico's offshore platforms</gco:CharacterString>
-            </gmd:purpose>
-            <gmd:status>
-              <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ProgressCode" codeListValue="completed" codeSpace="ISOTC211/19115"/>
-            </gmd:status>
-            <gmd:pointOfContact>
-              <gmd:CI_ResponsibleParty>
-                <gmd:individualName>
-                  <gco:CharacterString>GIS Department</gco:CharacterString>
-                </gmd:individualName>
-                <gmd:organisationName>
-                  <gco:CharacterString>Hart Energy</gco:CharacterString>
-                </gmd:organisationName>
-                <gmd:positionName>
-                  <gco:CharacterString>GIS Department</gco:CharacterString>
-                </gmd:positionName>
-                <gmd:contactInfo>
-                  <gmd:CI_Contact>
-                    <gmd:phone>
-                      <gmd:CI_Telephone>
-                        <gmd:voice>
-                          <gco:CharacterString>619-564-7313</gco:CharacterString>
-                        </gmd:voice>
-                        <gmd:facsimile>
-                          <gco:CharacterString>619-564-7314</gco:CharacterString>
-                        </gmd:facsimile>
-                      </gmd:CI_Telephone>
-                    </gmd:phone>
-                    <gmd:address>
-                      <gmd:CI_Address>
-                        <gmd:deliveryPoint>
-                          <gco:CharacterString>8745 Aero Dr. Suite 305</gco:CharacterString>
-                        </gmd:deliveryPoint>
-                        <gmd:city>
-                          <gco:CharacterString>San Diego</gco:CharacterString>
-                        </gmd:city>
-                        <gmd:administrativeArea>
-                          <gco:CharacterString>CA</gco:CharacterString>
-                        </gmd:administrativeArea>
-                        <gmd:postalCode>
-                          <gco:CharacterString>92123</gco:CharacterString>
-                        </gmd:postalCode>
-                        <gmd:country>
-                          <gco:CharacterString>US</gco:CharacterString>
-                        </gmd:country>
-                        <gmd:electronicMailAddress>
-                          <gco:CharacterString>info@rextag.com</gco:CharacterString>
-                        </gmd:electronicMailAddress>
-                      </gmd:CI_Address>
-                    </gmd:address>
-                  </gmd:CI_Contact>
-                </gmd:contactInfo>
-                <gmd:role>
-                  <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115"/>
-                </gmd:role>
-              </gmd:CI_ResponsibleParty>
-            </gmd:pointOfContact>
-            <gmd:resourceMaintenance>
-              <gmd:MD_MaintenanceInformation>
-                <gmd:maintenanceAndUpdateFrequency>
-                  <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" codeSpace="ISOTC211/19115"/>
-                </gmd:maintenanceAndUpdateFrequency>
-              </gmd:MD_MaintenanceInformation>
-            </gmd:resourceMaintenance>
-            <gmd:graphicOverview>
-              <gmd:MD_BrowseGraphic>
-                <gmd:fileName>
-                  <gco:CharacterString>http://geomdtk.stanford.edu:80/geonetwork/srv/eng/resources.get?uuid=CF4874FF-F01A-4013-82A5-CA8CDE2CCF50&amp;fname=OFFSH_PLATF_s.png</gco:CharacterString>
-                </gmd:fileName>
-                <gmd:fileDescription>
-                  <gco:CharacterString>thumbnail</gco:CharacterString>
-                </gmd:fileDescription>
-                <gmd:fileType>
-                  <gco:CharacterString>png</gco:CharacterString>
-                </gmd:fileType>
-              </gmd:MD_BrowseGraphic>
-            </gmd:graphicOverview>
-            <gmd:graphicOverview>
-              <gmd:MD_BrowseGraphic>
-                <gmd:fileName>
-                  <gco:CharacterString>http://geomdtk.stanford.edu:80/geonetwork/srv/eng/resources.get?uuid=CF4874FF-F01A-4013-82A5-CA8CDE2CCF50&amp;fname=OFFSH_PLATF.png</gco:CharacterString>
-                </gmd:fileName>
-                <gmd:fileDescription>
-                  <gco:CharacterString>large_thumbnail</gco:CharacterString>
-                </gmd:fileDescription>
-                <gmd:fileType>
-                  <gco:CharacterString>png</gco:CharacterString>
-                </gmd:fileType>
-              </gmd:MD_BrowseGraphic>
-            </gmd:graphicOverview>
-            <gmd:descriptiveKeywords>
-              <gmd:MD_Keywords>
-                <gmd:keyword>
-                  <gco:CharacterString>Gulf of Mexico</gco:CharacterString>
-                </gmd:keyword>
-                <gmd:type>
-                  <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="place" codeSpace="ISOTC211/19115"/>
-                </gmd:type>
-                <gmd:thesaurusName>
-                  <gmd:CI_Citation>
-                    <gmd:title>
-                      <gco:CharacterString>GeoNames</gco:CharacterString>
-                    </gmd:title>
-                    <gmd:date gco:nilReason="missing"/>
-                  </gmd:CI_Citation>
-                </gmd:thesaurusName>
-              </gmd:MD_Keywords>
-            </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords>
-              <gmd:MD_Keywords>
-                <gmd:keyword>
-                  <gco:CharacterString>Offshore Platforms</gco:CharacterString>
-                </gmd:keyword>
-                <gmd:type>
-                  <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" codeSpace="ISOTC211/19115"/>
-                </gmd:type>
-                <gmd:thesaurusName>
-                  <gmd:CI_Citation>
-                    <gmd:title>
-                      <gco:CharacterString>LCSH</gco:CharacterString>
-                    </gmd:title>
-                    <gmd:date gco:nilReason="missing"/>
-                  </gmd:CI_Citation>
-                </gmd:thesaurusName>
-              </gmd:MD_Keywords>
-            </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords>
-              <gmd:MD_Keywords>
-                <gmd:keyword>
-                  <gco:CharacterString>http://www.geonames.org/4326669</gco:CharacterString>
-                </gmd:keyword>
-                <gmd:type>
-                  <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="place"/>
-                </gmd:type>
-                <gmd:thesaurusName>
-                  <gmd:CI_Citation>
-                    <gmd:title>
-                      <gco:CharacterString>GeoNames</gco:CharacterString>
-                    </gmd:title>
-                    <gmd:date>
-                      <gmd:CI_Date>
-                        <gmd:dateType>
-                          <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
-                        </gmd:dateType>
-                      </gmd:CI_Date>
-                    </gmd:date>
-                  </gmd:CI_Citation>
-                </gmd:thesaurusName>
-              </gmd:MD_Keywords>
-            </gmd:descriptiveKeywords>
-            <gmd:resourceConstraints>
-              <gmd:MD_Constraints>
-                <gmd:useLimitation>
-                  <gco:CharacterString>As allowed under data agreement by Rextag Strategies</gco:CharacterString>
-                </gmd:useLimitation>
-              </gmd:MD_Constraints>
-            </gmd:resourceConstraints>
-            <gmd:resourceConstraints>
-              <gmd:MD_LegalConstraints>
-                <gmd:accessConstraints>
-                  <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115"/>
-                </gmd:accessConstraints>
-                <gmd:useConstraints>
-                  <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115"/>
-                </gmd:useConstraints>
-                <gmd:otherConstraints>
-                  <gco:CharacterString>Access is granted to Stanford University affiliates only. Affiliates are limited to current faculty, staff and students.</gco:CharacterString>
-                </gmd:otherConstraints>
-              </gmd:MD_LegalConstraints>
-            </gmd:resourceConstraints>
-            <gmd:spatialRepresentationType>
-              <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" codeSpace="ISOTC211/19115"/>
-            </gmd:spatialRepresentationType>
-            <gmd:language>
-              <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" codeSpace="ISO639-2"/>
-            </gmd:language>
-            <gmd:characterSet>
-              <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115"/>
-            </gmd:characterSet>
-            <gmd:topicCategory>
-              <gmd:MD_TopicCategoryCode>inlandWaters</gmd:MD_TopicCategoryCode>
-            </gmd:topicCategory>
-            <gmd:topicCategory>
-              <gmd:MD_TopicCategoryCode>utilitiesCommunication</gmd:MD_TopicCategoryCode>
-            </gmd:topicCategory>
-            <gmd:environmentDescription>
-              <gco:CharacterString>Microsoft Windows 7 Version 6.1 (Build 7601) Service Pack 1; Esri ArcGIS 10.1.1.3143</gco:CharacterString>
-            </gmd:environmentDescription>
-            <gmd:extent>
-              <gmd:EX_Extent>
-                <gmd:description>
-                  <gco:CharacterString>publication date</gco:CharacterString>
-                </gmd:description>
-                <gmd:temporalElement>
-                  <gmd:EX_TemporalExtent>
-                    <gmd:extent>
-                      <gml:TimeInstant gml:id="idp95808">
-                        <gml:timePosition indeterminatePosition="unknown">2008-01-01T00:00:00</gml:timePosition>
-                      </gml:TimeInstant>
-                    </gmd:extent>
-                  </gmd:EX_TemporalExtent>
-                </gmd:temporalElement>
-              </gmd:EX_Extent>
-            </gmd:extent>
-            <gmd:extent>
-              <gmd:EX_Extent>
-                <gmd:geographicElement>
-                  <gmd:EX_GeographicBoundingBox>
-                    <gmd:extentTypeCode>
-                      <gco:Boolean>true</gco:Boolean>
-                    </gmd:extentTypeCode>
-                    <gmd:westBoundLongitude>
-                      <gco:Decimal>-97.113524</gco:Decimal>
-                    </gmd:westBoundLongitude>
-                    <gmd:eastBoundLongitude>
-                      <gco:Decimal>-87.75762</gco:Decimal>
-                    </gmd:eastBoundLongitude>
-                    <gmd:southBoundLatitude>
-                      <gco:Decimal>26.036053</gco:Decimal>
-                    </gmd:southBoundLatitude>
-                    <gmd:northBoundLatitude>
-                      <gco:Decimal>30.195178</gco:Decimal>
-                    </gmd:northBoundLatitude>
-                  </gmd:EX_GeographicBoundingBox>
-                </gmd:geographicElement>
-              </gmd:EX_Extent>
-            </gmd:extent>
-            <gmd:supplementalInformation>
-              <gco:CharacterString>1007 Update</gco:CharacterString>
-            </gmd:supplementalInformation>
-          </gmd:MD_DataIdentification>
-        </gmd:identificationInfo>
-        <gmd:distributionInfo>
-          <gmd:MD_Distribution>
-            <gmd:distributionFormat>
-              <gmd:MD_Format>
-                <gmd:name>
-                  <gco:CharacterString>Shapefile</gco:CharacterString>
-                </gmd:name>
-                <gmd:version gco:nilReason="missing"/>
-              </gmd:MD_Format>
-            </gmd:distributionFormat>
-            <gmd:distributor>
-              <gmd:MD_Distributor>
-                <gmd:distributorContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName>
-                      <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gmd:phone>
-                          <gmd:CI_Telephone>
-                            <gmd:voice>
-                              <gco:CharacterString>619-564-7313</gco:CharacterString>
-                            </gmd:voice>
-                            <gmd:facsimile>
-                              <gco:CharacterString>619-564-7314</gco:CharacterString>
-                            </gmd:facsimile>
-                          </gmd:CI_Telephone>
-                        </gmd:phone>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gmd:deliveryPoint>
-                              <gco:CharacterString>Branner Earth Sciences Library</gco:CharacterString>
-                            </gmd:deliveryPoint>
-                            <gmd:deliveryPoint>
-                              <gco:CharacterString>Mitchell Building, 2nd Floor</gco:CharacterString>
-                            </gmd:deliveryPoint>
-                            <gmd:deliveryPoint>
-                              <gco:CharacterString>397 Panama Mall</gco:CharacterString>
-                            </gmd:deliveryPoint>
-                            <gmd:city>
-                              <gco:CharacterString>Stanford</gco:CharacterString>
-                            </gmd:city>
-                            <gmd:administrativeArea>
-                              <gco:CharacterString>California</gco:CharacterString>
-                            </gmd:administrativeArea>
-                            <gmd:postalCode>
-                              <gco:CharacterString>94305</gco:CharacterString>
-                            </gmd:postalCode>
-                            <gmd:country>
-                              <gco:CharacterString>United States</gco:CharacterString>
-                            </gmd:country>
-                            <gmd:electronicMailAddress>
-                              <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="distributor" codeSpace="ISOTC211/19115"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:distributorContact>
-              </gmd:MD_Distributor>
-            </gmd:distributor>
-            <gmd:transferOptions>
-              <gmd:MD_DigitalTransferOptions>
-                <gmd:transferSize>
-                  <gco:Real>0.186</gco:Real>
-                </gmd:transferSize>
-                <gmd:onLine>
-                  <gmd:CI_OnlineResource>
-                    <gmd:linkage>
-                      <gmd:URL>http://purl.stanford.edu/sq479mx3086</gmd:URL>
-                    </gmd:linkage>
-                    <gmd:name>
-                      <gco:CharacterString>OFFSH_PLATF.shp</gco:CharacterString>
-                    </gmd:name>
-                  </gmd:CI_OnlineResource>
-                </gmd:onLine>
-              </gmd:MD_DigitalTransferOptions>
-            </gmd:transferOptions>
-          </gmd:MD_Distribution>
-        </gmd:distributionInfo>
-        <gmd:dataQualityInfo>
-          <gmd:DQ_DataQuality>
-            <gmd:scope>
-              <gmd:DQ_Scope>
-                <gmd:level>
-                  <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115"/>
-                </gmd:level>
-              </gmd:DQ_Scope>
-            </gmd:scope>
-          </gmd:DQ_DataQuality>
-        </gmd:dataQualityInfo>
-      </gmd:MD_Metadata>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://purl.stanford.edu/sq479mx3086#geoMetadata/FC_FeatureCatalogue"/>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://purl-test.stanford.edu/sq479mx3086">
+  <rdf:Description rdf:type="geo#metadata">
+    <MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <fileIdentifier>
+        <gco:CharacterString>CF4874FF-F01A-4013-82A5-CA8CDE2CCF50</gco:CharacterString>
+      </fileIdentifier>
+      <language>
+        <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng" codeSpace="ISO639-2">eng</LanguageCode>
+      </language>
+      <characterSet>
+        <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
+      </characterSet>
+      <hierarchyLevel>
+        <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</MD_ScopeCode>
+      </hierarchyLevel>
+      <hierarchyLevelName>
+        <gco:CharacterString>dataset</gco:CharacterString>
+      </hierarchyLevelName>
+      <contact>
+        <CI_ResponsibleParty>
+          <organisationName>
+            <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
+          </organisationName>
+          <positionName>
+            <gco:CharacterString>Metadata Analyst</gco:CharacterString>
+          </positionName>
+          <contactInfo>
+            <CI_Contact>
+              <phone>
+                <CI_Telephone>
+                  <voice>
+                    <gco:CharacterString>650-723-2746</gco:CharacterString>
+                  </voice>
+                </CI_Telephone>
+              </phone>
+              <address>
+                <CI_Address>
+                  <deliveryPoint>
+                    <gco:CharacterString>397 Panama Mall</gco:CharacterString>
+                  </deliveryPoint>
+                  <city>
+                    <gco:CharacterString>Stanford</gco:CharacterString>
+                  </city>
+                  <administrativeArea>
+                    <gco:CharacterString>Ca.</gco:CharacterString>
+                  </administrativeArea>
+                  <postalCode>
+                    <gco:CharacterString>94305</gco:CharacterString>
+                  </postalCode>
+                  <electronicMailAddress>
+                    <gco:CharacterString>gis@stanford.edu</gco:CharacterString>
+                  </electronicMailAddress>
+                </CI_Address>
+              </address>
+            </CI_Contact>
+          </contactInfo>
+          <role>
+            <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115">pointOfContact</CI_RoleCode>
+          </role>
+        </CI_ResponsibleParty>
+      </contact>
+      <dateStamp>
+        <gco:Date>2013-06-26</gco:Date>
+      </dateStamp>
+      <metadataStandardName>
+        <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
+      </metadataStandardName>
+      <metadataStandardVersion>
+        <gco:CharacterString>2007</gco:CharacterString>
+      </metadataStandardVersion>
+      <dataSetURI>
+        <gco:CharacterString>http://purl.stanford.edu/sq479mx3086 </gco:CharacterString>
+      </dataSetURI>
+      <spatialRepresentationInfo>
+        <MD_VectorSpatialRepresentation>
+          <topologyLevel>
+            <MD_TopologyLevelCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopologyLevelCode" codeListValue="geometryOnly" codeSpace="ISOTC211/19115">geometryOnly</MD_TopologyLevelCode>
+          </topologyLevel>
+          <geometricObjects>
+            <MD_GeometricObjects>
+              <geometricObjectType>
+                <MD_GeometricObjectTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="point" codeSpace="ISOTC211/19115">point</MD_GeometricObjectTypeCode>
+              </geometricObjectType>
+              <geometricObjectCount>
+                <gco:Integer>6976</gco:Integer>
+              </geometricObjectCount>
+            </MD_GeometricObjects>
+          </geometricObjects>
+        </MD_VectorSpatialRepresentation>
+      </spatialRepresentationInfo>
+      <referenceSystemInfo>
+        <MD_ReferenceSystem>
+          <referenceSystemIdentifier>
+            <RS_Identifier>
+              <code>
+                <gco:CharacterString>4269</gco:CharacterString>
+              </code>
+              <codeSpace>
+                <gco:CharacterString>EPSG</gco:CharacterString>
+              </codeSpace>
+              <version>
+                <gco:CharacterString>7.11.2</gco:CharacterString>
+              </version>
+            </RS_Identifier>
+          </referenceSystemIdentifier>
+        </MD_ReferenceSystem>
+      </referenceSystemInfo>
+      <identificationInfo>
+        <MD_DataIdentification>
+          <citation>
+            <CI_Citation>
+              <title>
+                <gco:CharacterString>Offshore Platforms in the Gulf of Mexico, 2011</gco:CharacterString>
+              </title>
+              <date>
+                <CI_Date>
+                  <date>
+                    <gco:Date>2008-11-01</gco:Date>
+                  </date>
+                  <dateType>
+                    <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
+                  </dateType>
+                </CI_Date>
+              </date>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <organisationName>
+                    <gco:CharacterString>Minerals Management Service</gco:CharacterString>
+                  </organisationName>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <presentationForm>
+                <CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" codeSpace="ISOTC211/19115">mapDigital</CI_PresentationFormCode>
+              </presentationForm>
+              <otherCitationDetails>
+                <gco:CharacterString>http://www.gomr.mms.gov/contact.html</gco:CharacterString>
+              </otherCitationDetails>
+            </CI_Citation>
+          </citation>
+          <abstract>
+            <gco:CharacterString>Identifies the location of platforms in Gulf Of Mexico. All platforms existing in the database are included.</gco:CharacterString>
+          </abstract>
+          <purpose>
+            <gco:CharacterString>Locating and analysing information on the Gulf of Mexico's offshore platforms</gco:CharacterString>
+          </purpose>
+          <status>
+            <MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed" codeSpace="ISOTC211/19115">completed</MD_ProgressCode>
+          </status>
+          <pointOfContact>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>GIS Department</gco:CharacterString>
+              </individualName>
+              <organisationName>
+                <gco:CharacterString>Hart Energy</gco:CharacterString>
+              </organisationName>
+              <positionName>
+                <gco:CharacterString>GIS Department</gco:CharacterString>
+              </positionName>
+              <contactInfo>
+                <CI_Contact>
+                  <phone>
+                    <CI_Telephone>
+                      <voice>
+                        <gco:CharacterString>619-564-7313</gco:CharacterString>
+                      </voice>
+                      <facsimile>
+                        <gco:CharacterString>619-564-7314</gco:CharacterString>
+                      </facsimile>
+                    </CI_Telephone>
+                  </phone>
+                  <address>
+                    <CI_Address>
+                      <deliveryPoint>
+                        <gco:CharacterString>8745 Aero Dr. Suite 305</gco:CharacterString>
+                      </deliveryPoint>
+                      <city>
+                        <gco:CharacterString>San Diego</gco:CharacterString>
+                      </city>
+                      <administrativeArea>
+                        <gco:CharacterString>CA</gco:CharacterString>
+                      </administrativeArea>
+                      <postalCode>
+                        <gco:CharacterString>92123</gco:CharacterString>
+                      </postalCode>
+                      <country>
+                        <gco:CharacterString>US</gco:CharacterString>
+                      </country>
+                      <electronicMailAddress>
+                        <gco:CharacterString>info@rextag.com</gco:CharacterString>
+                      </electronicMailAddress>
+                    </CI_Address>
+                  </address>
+                </CI_Contact>
+              </contactInfo>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115">pointOfContact</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </pointOfContact>
+          <resourceMaintenance>
+            <MD_MaintenanceInformation>
+              <maintenanceAndUpdateFrequency>
+                <MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" codeSpace="ISOTC211/19115">asNeeded</MD_MaintenanceFrequencyCode>
+              </maintenanceAndUpdateFrequency>
+            </MD_MaintenanceInformation>
+          </resourceMaintenance>
+          <descriptiveKeywords>
+            <MD_Keywords>
+              <keyword>
+                <gco:CharacterString>Gulf of Mexico</gco:CharacterString>
+              </keyword>
+              <type>
+                <MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="place" codeSpace="ISOTC211/19115">place</MD_KeywordTypeCode>
+              </type>
+              <thesaurusName>
+                <CI_Citation>
+                  <title>
+                    <gco:CharacterString>GeoNames</gco:CharacterString>
+                  </title>
+                  <date gco:nilReason="missing"/>
+                </CI_Citation>
+              </thesaurusName>
+            </MD_Keywords>
+          </descriptiveKeywords>
+          <descriptiveKeywords>
+            <MD_Keywords>
+              <keyword>
+                <gco:CharacterString>Offshore Platforms</gco:CharacterString>
+              </keyword>
+              <type>
+                <MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" codeSpace="ISOTC211/19115">theme</MD_KeywordTypeCode>
+              </type>
+              <thesaurusName>
+                <CI_Citation>
+                  <title>
+                    <gco:CharacterString>unk</gco:CharacterString>
+                  </title>
+                  <date gco:nilReason="missing"/>
+                </CI_Citation>
+              </thesaurusName>
+            </MD_Keywords>
+          </descriptiveKeywords>
+          <descriptiveKeywords>
+            <MD_Keywords>
+              <keyword>
+                <gco:CharacterString>Downloadable Data</gco:CharacterString>
+              </keyword>
+              <thesaurusName uuidref="723f6998-058e-11dc-8314-0800200c9a66"/>
+            </MD_Keywords>
+          </descriptiveKeywords>
+          <resourceConstraints>
+            <MD_LegalConstraints>
+              <accessConstraints>
+                <MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115">restricted</MD_RestrictionCode>
+              </accessConstraints>
+              <useConstraints>
+                <MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115">restricted</MD_RestrictionCode>
+              </useConstraints>
+              <otherConstraints>
+                <gco:CharacterString>Access is granted to Stanford University affiliates only. Affiliates are limited to current faculty, staff and students.</gco:CharacterString>
+              </otherConstraints>
+            </MD_LegalConstraints>
+          </resourceConstraints>
+          <spatialRepresentationType>
+            <MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" codeSpace="ISOTC211/19115">vector</MD_SpatialRepresentationTypeCode>
+          </spatialRepresentationType>
+          <language>
+            <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng" codeSpace="ISO639-2">eng</LanguageCode>
+          </language>
+          <characterSet>
+            <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
+          </characterSet>
+          <topicCategory>
+            <MD_TopicCategoryCode>inlandWaters</MD_TopicCategoryCode>
+          </topicCategory>
+          <topicCategory>
+            <MD_TopicCategoryCode>utilitiesCommunication</MD_TopicCategoryCode>
+          </topicCategory>
+          <environmentDescription>
+            <gco:CharacterString>Microsoft Windows 7 Version 6.1 (Build 7601) Service Pack 1; Esri ArcGIS 10.1.1.3143</gco:CharacterString>
+          </environmentDescription>
+          <extent>
+            <EX_Extent>
+              <description>
+                <gco:CharacterString>publication date</gco:CharacterString>
+              </description>
+              <temporalElement>
+                <EX_TemporalExtent>
+                  <extent>
+                    <gml:TimePeriod gml:id="idp160992">
+                      <gml:beginPosition>2008-11-01T00:00:00</gml:beginPosition>
+                      <gml:endPosition>2008-11-30T00:00:00</gml:endPosition>
+                    </gml:TimePeriod>
+                  </extent>
+                </EX_TemporalExtent>
+              </temporalElement>
+            </EX_Extent>
+          </extent>
+          <extent>
+            <EX_Extent>
+              <geographicElement>
+                <EX_GeographicBoundingBox>
+                  <extentTypeCode>
+                    <gco:Boolean>true</gco:Boolean>
+                  </extentTypeCode>
+                  <westBoundLongitude>
+                    <gco:Decimal>-97.113524</gco:Decimal>
+                  </westBoundLongitude>
+                  <eastBoundLongitude>
+                    <gco:Decimal>-87.75762</gco:Decimal>
+                  </eastBoundLongitude>
+                  <southBoundLatitude>
+                    <gco:Decimal>26.036053</gco:Decimal>
+                  </southBoundLatitude>
+                  <northBoundLatitude>
+                    <gco:Decimal>30.195178</gco:Decimal>
+                  </northBoundLatitude>
+                </EX_GeographicBoundingBox>
+              </geographicElement>
+            </EX_Extent>
+          </extent>
+        </MD_DataIdentification>
+      </identificationInfo>
+      <distributionInfo>
+        <MD_Distribution>
+          <distributionFormat>
+            <MD_Format>
+              <name>
+                <gco:CharacterString>Shapefile</gco:CharacterString>
+              </name>
+              <version gco:nilReason="missing"/>
+            </MD_Format>
+          </distributionFormat>
+          <distributor>
+            <MD_Distributor>
+              <distributorContact>
+                <CI_ResponsibleParty>
+                  <organisationName>
+                    <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
+                  </organisationName>
+                  <contactInfo>
+                    <CI_Contact>
+                      <phone>
+                        <CI_Telephone>
+                          <voice>
+                            <gco:CharacterString>650-723-2746</gco:CharacterString>
+                          </voice>
+                        </CI_Telephone>
+                      </phone>
+                      <address>
+                        <CI_Address>
+                          <deliveryPoint>
+                            <gco:CharacterString>Branner Earth Sciences Library</gco:CharacterString>
+                          </deliveryPoint>
+                          <deliveryPoint>
+                            <gco:CharacterString>Mitchell Bldg. 2nd floor</gco:CharacterString>
+                          </deliveryPoint>
+                          <deliveryPoint>
+                            <gco:CharacterString>397 Panama Mall</gco:CharacterString>
+                          </deliveryPoint>
+                          <city>
+                            <gco:CharacterString>Stanford</gco:CharacterString>
+                          </city>
+                          <administrativeArea>
+                            <gco:CharacterString>California</gco:CharacterString>
+                          </administrativeArea>
+                          <postalCode>
+                            <gco:CharacterString>94305</gco:CharacterString>
+                          </postalCode>
+                          <country>
+                            <gco:CharacterString>US</gco:CharacterString>
+                          </country>
+                          <electronicMailAddress>
+                            <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
+                          </electronicMailAddress>
+                        </CI_Address>
+                      </address>
+                    </CI_Contact>
+                  </contactInfo>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="distributor" codeSpace="ISOTC211/19115">distributor</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </distributorContact>
+            </MD_Distributor>
+          </distributor>
+          <transferOptions>
+            <MD_DigitalTransferOptions>
+              <unitsOfDistribution>
+                <gco:CharacterString>MB</gco:CharacterString>
+              </unitsOfDistribution>
+              <transferSize>
+                <gco:Real>0.186</gco:Real>
+              </transferSize>
+              <onLine>
+                <CI_OnlineResource>
+                  <linkage>
+                    <URL>http://purl.stanford.edu/sq479mx3086 </URL>
+                  </linkage>
+                  <name>
+                    <gco:CharacterString>OFFSH_PLATF.shp</gco:CharacterString>
+                  </name>
+                  <function>
+                    <CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download" codeSpace="ISOTC211/19115">download</CI_OnLineFunctionCode>
+                  </function>
+                </CI_OnlineResource>
+              </onLine>
+            </MD_DigitalTransferOptions>
+          </transferOptions>
+        </MD_Distribution>
+      </distributionInfo>
+      <dataQualityInfo>
+        <DQ_DataQuality>
+          <scope>
+            <DQ_Scope>
+              <level>
+                <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</MD_ScopeCode>
+              </level>
+            </DQ_Scope>
+          </scope>
+          <lineage>
+            <LI_Lineage>
+              <source>
+                <LI_Source>
+                  <sourceCitation>
+                    <CI_Citation>
+                      <title>
+                        <gco:CharacterString>MMS</gco:CharacterString>
+                      </title>
+                      <date>
+                        <CI_Date>
+                          <date>
+                            <gco:Date>2008-01-01</gco:Date>
+                          </date>
+                          <dateType>
+                            <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
+                          </dateType>
+                        </CI_Date>
+                      </date>
+                      <citedResponsibleParty>
+                        <CI_ResponsibleParty>
+                          <organisationName>
+                            <gco:CharacterString>MMS</gco:CharacterString>
+                          </organisationName>
+                          <role>
+                            <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                          </role>
+                        </CI_ResponsibleParty>
+                      </citedResponsibleParty>
+                      <otherCitationDetails>
+                        <gco:CharacterString>MMS</gco:CharacterString>
+                      </otherCitationDetails>
+                    </CI_Citation>
+                  </sourceCitation>
+                </LI_Source>
+              </source>
+            </LI_Lineage>
+          </lineage>
+        </DQ_DataQuality>
+      </dataQualityInfo>
+    </MD_Metadata>
   </rdf:Description>
+  <rdf:Description rdf:type="geo#featurecatalog"/>
 </rdf:RDF>

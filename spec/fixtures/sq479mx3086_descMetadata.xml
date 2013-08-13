@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
-  <identifier type="local" displayLabel="file_identifier_id">geonetwork:CF4874FF-F01A-4013-82A5-CA8CDE2CCF50</identifier>
-  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/sq479mx3086</identifier>
-  <identifier type="local" displayLabel="druid">druid:sq479mx3086</identifier>
-  <location>
-    <url displayLabel="PURL">http://purl.stanford.edu/sq479mx3086</url>
-  </location>
   <titleInfo>
     <title type="main">Offshore Platforms in the Gulf of Mexico, 2011</title>
   </titleInfo>
   <name type="corporate">
-    <namePart>United States. Minerals Management Service.</namePart>
+    <namePart>Minerals Management Service</namePart>
     <role>
-      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+      <roleTerm type="text" authority="marcrelator">creator</roleTerm>
     </role>
   </name>
   <typeOfResource>cartographic</typeOfResource>
   <typeOfResource>software, multimedia</typeOfResource>
-  <genre>GIS Datasets</genre>
+  <genre authority="lcgft" authorityURI="http://id.loc.gov/authorities/genreForms/gf2011026297">Geospatial data</genre>
+  <genre authority="rda" authorityURI="http://rdvocab.info/termList/RDAContentType/1001">cartographic dataset</genre>
   <originInfo>
-    <dateIssued encoding="w3cdtf">2008-01-01</dateIssued>
+    <dateIssued encoding="w3cdtf" keyDate="yes">2008-11-01</dateIssued>
   </originInfo>
   <language>
-    <languageTerm authority="iso639-2b"/>
+    <languageTerm authority="iso639-2b">eng</languageTerm>
   </language>
   <physicalDescription>
     <form>Shapefile</form>
-    <extent>0.186</extent>
+    <extent>0.186 MB</extent>
     <digitalOrigin>born digital</digitalOrigin>
   </physicalDescription>
   <subject>
     <cartographics>
+      <scale>Scale not given</scale>
       <projection>North American Datum (NAD83)</projection>
       <coordinates>W 97° 6' 49" -- W 87° 45' 27"/N 30° 11' 43" -- N 26° 2' 10"</coordinates>
     </cartographics>
@@ -38,29 +34,18 @@
   <abstract displayLabel="abstract" lang="eng">Identifies the location of platforms in Gulf Of Mexico. All platforms existing in the database are included.</abstract>
   <abstract displayLabel="purpose" lang="eng">Locating and analysing information on the Gulf of Mexico's offshore platforms</abstract>
   <subject>
-    <geographic>Gulf of Mexico</geographic>
+    <topic authority="unk">Offshore Platforms</topic>
   </subject>
   <subject>
-    <topic>Offshore Platforms</topic>
+    <geographic authority="GeoNames">Gulf of Mexico</geographic>
   </subject>
-  <subject>
-    <geographic>http://www.geonames.org/4326669</geographic>
-  </subject>
-  <location>
-    <url displayLabel="OFFSH_PLATF.shp">http://purl.stanford.edu/sq479mx3086</url>
-  </location>
-  <identifier type="local" displayLabel="filename">OFFSH_PLATF.shp</identifier>
-  <accessCondition type="restrictionsOnAccess"/>
-  <accessCondition type="useAndReproduction"/>
-  <accessCondition/>
-  <accessCondition type="useLimitation">As allowed under data agreement by Rextag Strategies</accessCondition>
-  <accessCondition>
-          Access is granted to Stanford University affiliates only. 
-          Affiliates are limited to current faculty, staff and students.
-        </accessCondition>
-  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2">
-    <rdf:RDF>
-      <rdf:Description rdf:about="geo#envelope">
+  <accessCondition type="restrictionsOnAccess">Restricted</accessCondition>
+  <accessCondition type="useAndReproduction">Restricted</accessCondition>
+  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2" rdf:type="geo">
+    <rdf:RDF rdf:about="http://purl-test.stanford.edu/sq479mx3086">
+      <rdf:Description rdf:type="geo#geometryType" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">gml:Point</rdf:Description>
+      <rdf:Description rdf:type="geo#filename" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">OFFSH_PLATF.shp</rdf:Description>
+      <rdf:Description rdf:type="geo#boundingBox">
         <gml:Envelope srsName="EPSG:4269">
           <gml:lowerCorner>-97.113524 26.036053</gml:lowerCorner>
           <gml:upperCorner>-87.75762 30.195178</gml:upperCorner>

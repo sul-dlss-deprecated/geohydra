@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add xmlns="http://lucene.apache.org/solr/4/document" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <doc>
+    <field name="LayerId">df559hb2469</field>
+    <field name="Name">df559hb2469</field>
+    <field name="ExternalLayerId">http://purl.stanford.edu/df559hb2469</field>
+    <!--
+          XXX: Access is really Stanford-only but UI is not defaulted to search for restricted
+        -->
+    <field name="Access">Restricted</field>
+    <field name="Institution">Stanford</field>
+    <field name="WorkspaceName">druid</field>
+    <field name="GeoReferenced">true</field>
+    <field name="Availability">Online</field>
+    <field name="ContentDate">2011-01-01T00:00:00Z</field>
+    <field name="LayerDisplayName">Offshore Block Groups in the Gulf of Mexico, 2011</field>
+    <field name="DataType"/>
+    <field name="Publisher">United States. Minerals Management Service.</field>
+    <field name="Abstract">Contains information that defines the Federal lease blocks for the Gulf of Mexico Outer Continental Shelf Region.; Locating and analysing information on the Gulf of Mexico's offshore lease blocks; </field>
+    <field name="ThemeKeywords">Offshore Blocks; </field>
+    <field name="PlaceKeywords">Gulf of Mexico; ; </field>
+    <field name="Location"><![CDATA[
+              { 
+              "wms":       ["http://host/geoserver/wms"],
+              "tilecache": ["http://host/geoserver/wms"],
+              "wfs":       ["http://host/geoserver/wfs"],
+              "metadata":  ["http://host/stacks/df559hb2469/metadata/geoMetadata.xml"],
+              "download":  ["http://host/stacks/df559hb2469/content/.zip"],
+              "view":      ["http://purl.stanford.edu/df559hb2469"]              
+              }
+          ]]></field>
+    <field name="FgdcText">
+      <xi:include parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)" href="http://host/stacks/df559hb2469/metadata/geoMetadata.xml"/>
+    </field>
+  </doc>
+</add>

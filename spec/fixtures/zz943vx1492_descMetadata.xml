@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
-  <identifier type="local" displayLabel="file_identifier_id">geonetwork:580DF91B-4A24-4E3C-9C1D-D62C0389932C</identifier>
-  <identifier type="local" displayLabel="data_set_uri">http://purl.stanford.edu/zz943vx1492</identifier>
-  <identifier type="local" displayLabel="druid">druid:zz943vx1492</identifier>
-  <location>
-    <url displayLabel="PURL">http://purl.stanford.edu/zz943vx1492</url>
-  </location>
   <titleInfo>
     <title type="main">Oil and Gas Basins in North America, 2008</title>
   </titleInfo>
   <name type="corporate">
     <namePart>Rextag Strategies</namePart>
     <role>
-      <roleTerm type="text" authority="marcrelator">Publisher</roleTerm>
+      <roleTerm type="text" authority="marcrelator">creator</roleTerm>
     </role>
   </name>
   <typeOfResource>cartographic</typeOfResource>
   <typeOfResource>software, multimedia</typeOfResource>
-  <genre>GIS Datasets</genre>
+  <genre authority="lcgft" authorityURI="http://id.loc.gov/authorities/genreForms/gf2011026297">Geospatial data</genre>
+  <genre authority="rda" authorityURI="http://rdvocab.info/termList/RDAContentType/1001">cartographic dataset</genre>
   <originInfo>
-    <dateIssued encoding="w3cdtf">2008-01-01</dateIssued>
+    <dateIssued encoding="w3cdtf" keyDate="yes">2008-01-01</dateIssued>
+    <edition>1007 update</edition>
   </originInfo>
   <language>
-    <languageTerm authority="iso639-2b"/>
+    <languageTerm authority="iso639-2b">eng</languageTerm>
   </language>
   <physicalDescription>
     <form>Shapefile</form>
-    <extent>0.556</extent>
+    <extent>0.556 MB</extent>
     <digitalOrigin>born digital</digitalOrigin>
   </physicalDescription>
   <subject>
     <cartographics>
+      <scale>Scale not given</scale>
       <projection>North American Datum (NAD83)</projection>
       <coordinates>W 164° 11' 47" -- W 44° 5' 48"/N 77° 36' 51" -- N 16° 42' 33"</coordinates>
     </cartographics>
@@ -38,26 +35,21 @@
   <abstract displayLabel="abstract" lang="eng">Oil and Gas Basins in North America</abstract>
   <abstract displayLabel="purpose" lang="eng">Locating Oil and Gas Basins in North America</abstract>
   <subject>
-    <geographic>United States</geographic>
+    <topic authority="Library of Congress Subject Headings (LCSH)">Oil fields</topic>
   </subject>
   <subject>
-    <topic>Oil Fields</topic>
+    <topic authority="Library of Congress Subject Headings (LCSH)">Gas fields</topic>
   </subject>
-  <location>
-    <url displayLabel="BASINS.shp">http://purl.stanford.edu/zz943vx1492</url>
-  </location>
-  <identifier type="local" displayLabel="filename">BASINS.shp</identifier>
-  <accessCondition type="restrictionsOnAccess"/>
-  <accessCondition type="useAndReproduction"/>
-  <accessCondition/>
-  <accessCondition type="useLimitation">As allowed under data agreement by Rextag Strategies</accessCondition>
-  <accessCondition>
-          Access is granted to Stanford University affiliates only. 
-          Affiliates are limited to current faculty, staff and students.
-        </accessCondition>
-  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2">
-    <rdf:RDF>
-      <rdf:Description rdf:about="geo#envelope">
+  <subject>
+    <geographic authority="GeoNames">United States</geographic>
+  </subject>
+  <accessCondition type="restrictionsOnAccess">Restricted</accessCondition>
+  <accessCondition type="useAndReproduction">Restricted</accessCondition>
+  <extension xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gml="http://www.opengis.net/gml/3.2" rdf:type="geo">
+    <rdf:RDF rdf:about="http://purl-test.stanford.edu/zz943vx1492">
+      <rdf:Description rdf:type="geo#geometryType" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">gml:Point</rdf:Description>
+      <rdf:Description rdf:type="geo#filename" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">BASINS.shp</rdf:Description>
+      <rdf:Description rdf:type="geo#boundingBox">
         <gml:Envelope srsName="EPSG:4269">
           <gml:lowerCorner>-164.196401 16.709076</gml:lowerCorner>
           <gml:upperCorner>-44.096585 77.614132</gml:upperCorner>

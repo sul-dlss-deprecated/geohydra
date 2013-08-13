@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add xmlns="http://lucene.apache.org/solr/4/document" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <doc>
+    <field name="LayerId">ns377mt1608</field>
+    <field name="Name">ns377mt1608</field>
+    <field name="ExternalLayerId">http://purl.stanford.edu/ns377mt1608</field>
+    <!--
+          XXX: Access is really Stanford-only but UI is not defaulted to search for restricted
+        -->
+    <field name="Access">Restricted</field>
+    <field name="Institution">Stanford</field>
+    <field name="WorkspaceName">druid</field>
+    <field name="GeoReferenced">true</field>
+    <field name="Availability">Online</field>
+    <field name="ContentDate">2013-01-01T00:00:00Z</field>
+    <field name="LayerDisplayName">State Map of India : Digital Map of State Boundaries of India, 1991</field>
+    <field name="DataType">Point</field>
+    <field name="Abstract">State boundaries of India linked to Census 1991. 25 states, 7 union territories.; State level demographic analysis; </field>
+    <field name="ThemeKeywords">Sex ratio; Literacy; Population; Statistics; Administrative and political divisions; </field>
+    <field name="PlaceKeywords">India; Maharashtra; Gujarat; Tamil Nadu; Uttar Pradesh; West Bengal; Rajasthan; Kerala; Karnataka; Delhi; Haryana; Punjab; </field>
+    <field name="MinX">68.110092</field>
+    <field name="MinY">6.755698</field>
+    <field name="MaxX">97.409103</field>
+    <field name="MaxY">37.050301</field>
+    <field name="CenterX">82.7595975</field>
+    <field name="CenterY">21.9029995</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfWidth">14.6495055</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfHeight">15.1473015</field>
+    <!-- XXX: in degrees**2 ??? -->
+    <field name="Area">888</field>
+    <field name="SrsProjectionCode">EPSG:4326</field>
+    <field name="Location"><![CDATA[
+              { 
+              "wms":       ["http://host/geoserver/wms"],
+              "tilecache": ["http://host/geoserver/wms"],
+              "wfs":       ["http://host/geoserver/wfs"],
+              "metadata":  ["http://host/stacks/ns377mt1608/metadata/geoMetadata.xml"],
+              "download":  ["http://host/stacks/ns377mt1608/content/.zip"],
+              "view":      ["http://purl.stanford.edu/ns377mt1608"]              
+              }
+          ]]></field>
+    <field name="FgdcText">
+      <xi:include parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)" href="http://host/stacks/ns377mt1608/metadata/geoMetadata.xml"/>
+    </field>
+  </doc>
+</add>

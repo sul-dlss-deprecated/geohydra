@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add xmlns="http://lucene.apache.org/solr/4/document" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <doc>
+    <field name="LayerId">zz943vx1492</field>
+    <field name="Name">zz943vx1492</field>
+    <field name="ExternalLayerId">http://purl.stanford.edu/zz943vx1492</field>
+    <!--
+          XXX: Access is really Stanford-only but UI is not defaulted to search for restricted
+        -->
+    <field name="Access">Restricted</field>
+    <field name="Institution">Stanford</field>
+    <field name="WorkspaceName">druid</field>
+    <field name="GeoReferenced">true</field>
+    <field name="Availability">Online</field>
+    <field name="ContentDate">2008-01-01T00:00:00Z</field>
+    <field name="LayerDisplayName">Oil and Gas Basins in North America, 2008</field>
+    <field name="DataType">Point</field>
+    <field name="Abstract">Oil and Gas Basins in North America; Locating Oil and Gas Basins in North America; </field>
+    <field name="ThemeKeywords">Oil fields; Gas fields; </field>
+    <field name="PlaceKeywords">United States; </field>
+    <field name="MinX">-164.196401</field>
+    <field name="MinY">16.709076</field>
+    <field name="MaxX">-44.096585</field>
+    <field name="MaxY">77.614132</field>
+    <field name="CenterX">-104.146493</field>
+    <field name="CenterY">47.161604</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfWidth">60.049908</field>
+    <!-- XXX: in degrees ??? -->
+    <field name="HalfHeight">30.452528</field>
+    <!-- XXX: in degrees**2 ??? -->
+    <field name="Area">7315</field>
+    <field name="SrsProjectionCode">EPSG:4269</field>
+    <field name="Location"><![CDATA[
+              { 
+              "wms":       ["http://host/geoserver/wms"],
+              "tilecache": ["http://host/geoserver/wms"],
+              "wfs":       ["http://host/geoserver/wfs"],
+              "metadata":  ["http://host/stacks/zz943vx1492/metadata/geoMetadata.xml"],
+              "download":  ["http://host/stacks/zz943vx1492/content/BASINS.zip"],
+              "view":      ["http://purl.stanford.edu/zz943vx1492"]              
+              }
+          ]]></field>
+    <field name="FgdcText">
+      <xi:include parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)" href="http://host/stacks/zz943vx1492/metadata/geoMetadata.xml"/>
+    </field>
+  </doc>
+</add>
