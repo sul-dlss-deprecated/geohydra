@@ -55,7 +55,7 @@ def convert_iso2geo(druid, ifn, flags)
   xml = GeoMDTK::Transform.to_geoMetadataDS(ifn, {
         'purl' => "#{GeoMDTK::Config.ogp.purl}/#{druid.id}"
        }) 
-  ap({:xml => xml})
+  ap({:xml => xml}) if flags[:debug]
   File.open(gfn, 'w') {|f| f << xml.to_xml }
   gfn
 end
@@ -198,7 +198,7 @@ def doit(client, uuid, obj, flags)
   
   puts "Processing #{ifn}"
   h = JSON.parse(File.read("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json"))
-  ap({:h => h})
+  ap({:h => h}) if flags[:debug]
   flags.merge(h)
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
@@ -230,7 +230,7 @@ def main(flags)
   else
     Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '.zip') do |zipfn|
       obj = Struct.new(:content, :status, :druid, :zipfn).new(File.read(zipfn.gsub('.zip', '.xml')), nil, File.basename(zipfn, '.zip'), zipfn)
-      ap({:zipfn => zipfn, :obj => obj})
+      ap({:zipfn => zipfn, :obj => obj}) if flags[:debug]
       doit client, nil, obj, flags
     end
   end
