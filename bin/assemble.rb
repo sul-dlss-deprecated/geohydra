@@ -181,7 +181,7 @@ def export_zip(druid, flags)
     # extract shapefile name using filename pattern from
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
-    ofn = "#{druid.content_dir}/#{k}.zip"
+    ofn = "#{druid.content_dir}/#{druid.id}.zip"
     FileUtils.ln fn, ofn, :verbose => flags[:verbose], :force => true # hard link
     yield ofn if block_given?
   end
