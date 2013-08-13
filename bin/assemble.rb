@@ -34,7 +34,7 @@ def find_mef(druid, uuid, flags)
       found_metadata = true
       # original ISO 19139
       ifn = File.join(druid.temp_dir, 'iso19139.xml')
-      FileUtils.install fn, ifn, :verbose => flags[:verbose], :mode => 0664
+      FileUtils.ln fn, ifn, :verbose => flags[:verbose]
     end
   end
   ifn
@@ -152,7 +152,7 @@ def export_images(druid, uuid, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.install fn, imagefn, :verbose => flags[:debug], :mode => 0664
+      FileUtils.ln fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
   end
@@ -168,7 +168,7 @@ def export_local_images(druid, tempdir, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.install fn, imagefn, :verbose => flags[:debug], :mode => 0664
+      FileUtils.ln fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
   end
@@ -181,7 +181,7 @@ def export_zip(druid, flags)
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
     ofn = "#{druid.content_dir}/#{druid.id}.zip"
-    FileUtils.install fn, ofn, :verbose => flags[:verbose], :mode => 0664
+    FileUtils.ln fn, ofn, :verbose => flags[:verbose]
     yield ofn if block_given?
   end
 end
