@@ -256,7 +256,7 @@ module GeoMDTK
       end
 
       # verify that we found the item
-      return nil if item.nil? 
+      raise ArgumentError, "#{@druid.druid} not found" if item.nil? 
 
       # now item is registered, so generate mods
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
@@ -265,7 +265,7 @@ module GeoMDTK
       ap({:descMetadata => item.datastreams['descMetadata'].ng_xml}) if flags[:debug]
 
       # upload data files to contentMetadata if required
-      if flags[:upload]
+      if flags[:contentMetadata]
         objects = {
           :Data => [],
           :Preview => [],
@@ -301,13 +301,16 @@ module GeoMDTK
         item.datastreams['contentMetadata'].content = xml
         ap({:contentMetadataDS => item.datastreams['contentMetadata'].ng_xml}) if flags[:debug]
 
-        $stderr.puts "Shelving to stacks content..." if flags[:verbose]
-        files = []
-        item.datastreams['contentMetadata'].public_xml.xpath('//file').each do |f|
-          files << f['id'].to_s
+        if flags[:shelve]
+          $stderr.puts "Shelving to stacks content..." if flags[:verbose]
+          files = []
+          item.datastreams['contentMetadata'].public_xml.xpath('//file').each do |f|
+            files << f['id'].to_s
+          end
+          ap({ :id => @druid.druid, :files => files }) if flags[:debug]
+        
+          Dor::DigitalStacksService.shelve_to_stacks @druid.druid, files
         end
-        ap({ :id => @druid.druid, :files => files }) if flags[:debug]
-        Dor::DigitalStacksService.shelve_to_stacks @druid.druid, files
       end
 
       # save changes

@@ -14,14 +14,15 @@ begin
     :admin_policy => 'druid:cb854wz7157',
     :rights => 'stanford',
     :tags => [
-      'Registered With : GeoMDTK',
-      "Registered By : #{%x{whoami}.strip}"
+      "Registered By : #{%x{whoami}.strip} (GeoMDTK)"
     ],
     :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp',
     :verbose => false,
     :configtest => false,
     :purge => false,
     :upload => false,
+    :shelve => false,
+    :contentMetadata => true,
     :upload_max => Float::INFINITY, # unrestricted
     :debug => false,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace'
@@ -40,6 +41,9 @@ EOM
       flags[:collection] = DruidTools::Druid.new(druid).druid
     end
     opts.on('--purge', 'Purge items before accessioning') do |b|
+      flags[:purge] = true
+    end
+    opts.on('--shelve', 'Shelve items during accessioning') do |b|
       flags[:purge] = true
     end
     opts.on('--rights KEYWORD', "Rights keyword (default: #{flags[:rights]})") do |keyword|
