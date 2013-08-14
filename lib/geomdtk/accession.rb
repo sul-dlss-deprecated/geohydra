@@ -65,7 +65,7 @@ module GeoMDTK
     #        </file>
     #      </resource>
     #    </contentMetadata>
-    def create_content_metadata objects, geoData = nil, flags = {}
+    def create_content_metadata(objects, geoData, flags)
       Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'file') do
           seq = 1
