@@ -5,7 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'druid-tools'
 
-VERSION = '0.2'
+VERSION = '0.3'
 
 # __MAIN__
 begin
@@ -31,6 +31,7 @@ begin
     opts.version = VERSION
     opts.banner = <<EOM
 Usage: #{File.basename(__FILE__)} [options] [druid [druid...]]
+       #{File.basename(__FILE__)} [options] < druids
 EOM
     opts.on('--apo DRUID', 'APO for collection to accession' + (flags[:admin_policy] ? " (default: #{flags[:admin_policy]})" : '')) do |druid|
       flags[:admin_policy] = DruidTools::Druid.new(druid).druid
@@ -91,11 +92,10 @@ EOM
   end
 
   if ARGV.empty?
-    Dir.glob("#{flags[:workspacedir]}/**/metadata/geoMetadata.xml") do |fn|
-      if fn =~ %r{/([a-z0-9]+)/metadata/geoMetadata.xml}
-        druid = DruidTools::Druid.new($1, flags[:workspacedir])
-        GeoMDTK::Accession.run(druid, flags)
-      end
+    STDIN.each do |line|
+      pid = line.strip
+      druid = DruidTools::Druid.new(pid, flags[:workspacedir])
+      GeoMDTK::Accession.run(druid, flags)
     end
   else
     ARGV.each do |pid|
