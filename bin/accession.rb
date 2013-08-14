@@ -74,28 +74,33 @@ EOM
 
   # Verify configuation
   if flags[:configtest]
+    errs = 0
     %w{workflow.url fedora.safeurl solrizer.url ssl.cert_file ssl.key_pass dor.service_root}.each do |k|
       begin
         k = "Dor::Config.#{k}"
-        $stderr.puts "ERROR: Configuration requires #{k}"
+        if eval(k).nil?
+          $stderr.puts "ERROR: Configuration requires #{k}" 
+          errs += 1
+        end
       rescue Exception => e
         $stderr.puts e, e.backtrace
       end
     end
-    exit
+    puts "Configuration OK" if errs == 0
+    exit errs
   end
 
   if ARGV.empty?
     Dir.glob("#{flags[:workspacedir]}/**/metadata/geoMetadata.xml") do |fn|
       if fn =~ %r{/([a-z0-9]+)/metadata/geoMetadata.xml}
         druid = DruidTools::Druid.new($1, flags[:workspacedir])
-        GeoMDTK::Accession.new(druid).run flags
+        GeoMDTK::Accession.run(druid, flags)
       end
     end
   else
     ARGV.each do |pid|
       druid = DruidTools::Druid.new(pid, flags[:workspacedir])
-      GeoMDTK::Accession.new(druid).run flags
+      GeoMDTK::Accession.run(druid, flags)
     end
   end
 rescue SystemCallError => e

@@ -13,7 +13,13 @@ module GeoMDTK
     )
   
     attr_reader :druid
-    def initialize druid
+    def initialize(druid)
+      if druid.is_a? String
+        druid = DruidTools::Druid.new(druid)
+      end
+      unless druid.is_a? DruidTools::Druid
+        raise ArgumentError, "Invalid druid: #{druid}" 
+      end
       @druid = druid
     end
 
@@ -177,17 +183,18 @@ module GeoMDTK
       :Metadata => '*.{xml,txt}'
     }
 
-    def run flags = {}
+    def self.run(druid, flags = {})
+      self.new(druid).accession(flags)
+    end
+    
+    def accession(flags)
       # validate parameters
-      unless druid.is_a? DruidTools::Druid
-        raise ArgumentError, "Invalid druid: #{druid}" 
-      end
       unless ['world','stanford','none', 'dark'].include? flags[:rights]
         raise ArgumentError, "Invalid rights: #{flags[:rights]}" 
       end
 
       # setup input metadata
-      xml = File.read(druid.find_metadata('geoMetadata.xml'))
+      xml = File.read(@druid.find_metadata('geoMetadata.xml'))
       geoMetadata = Dor::GeoMetadataDS.from_xml(xml)
 
       # required parameters
@@ -198,7 +205,7 @@ module GeoMDTK
 
       # optional parameters
       opts.merge!({
-        :pid              => druid.druid, # druid:xx111xx1111
+        :pid              => @druid.druid, # druid:xx111xx1111
         :source_id        => { 'geomdtk' => geoMetadata.file_id.first.to_s },
         :tags             => []
       })
@@ -217,7 +224,7 @@ module GeoMDTK
       item = nil
       if flags[:purge]
         begin
-          item = Dor::Item.find(druid.druid)
+          item = Dor::Item.find(@druid.druid)
           $stderr.puts "Purging #{item.id}" if flags[:verbose]
           item.delete
           item = nil
@@ -228,7 +235,7 @@ module GeoMDTK
 
       begin
         # Load item
-        item = Dor::Item.find(druid.druid)
+        item = Dor::Item.find(@druid.druid)
         # add collection when we don't use registration service
         unless opts[:collection].nil?
           item.add_collection(opts[:collection]) 
@@ -239,7 +246,7 @@ module GeoMDTK
           $stderr.puts "Registering #{opts[:pid]}" if flags[:verbose]
           item = Dor::RegistrationService.register_object opts
         rescue Dor::DuplicateIdError => e
-          $stderr.puts "ABORT: #{druid.druid} is corrupt (registered but Dor::Item cannot locate)"
+          $stderr.puts "ABORT: #{@druid.druid} is corrupt (registered but Dor::Item cannot locate)"
           $stderr.puts "#{e.class}: #{e}"
           return nil
         end
@@ -264,7 +271,7 @@ module GeoMDTK
 
         # Process files
         objects.keys.each do |k|
-          Dir.glob(druid.content_dir + '/' + PATTERNS[k]).each do |fn|
+          Dir.glob(@druid.content_dir + '/' + PATTERNS[k]).each do |fn|
             each_upload(fn, k.to_s, flags) {|o| objects[k] << o }
           end
         end
@@ -294,8 +301,8 @@ module GeoMDTK
         item.datastreams['contentMetadata'].public_xml.xpath('//file').each do |f|
           files << f['id'].to_s
         end
-        ap({ :id => druid.druid, :files => files }) if flags[:debug]
-        Dor::DigitalStacksService.shelve_to_stacks druid.druid, files
+        ap({ :id => @druid.druid, :files => files }) if flags[:debug]
+        Dor::DigitalStacksService.shelve_to_stacks @druid.druid, files
       end
 
       # save changes
