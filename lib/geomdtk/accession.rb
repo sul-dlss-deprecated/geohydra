@@ -140,8 +140,8 @@ module GeoMDTK
                            :role => roletype || 'master') do
 
                   if resource_type == :main
-                    if geoData and roletype == 'master'
-                      xml.geoData :srsName => geoData['srsName'] do
+                    if roletype == 'master' and not geoData.nil?
+                      xml.geoData do
                         xml.parent.add_child geoData
                       end
                       geoData = nil # only once                  
