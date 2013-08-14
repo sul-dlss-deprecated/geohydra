@@ -188,6 +188,8 @@ module GeoMDTK
     end
     
     def accession(flags)
+      ap({:flags => flags}) if flags[:debug]
+
       # validate parameters
       unless ['world','stanford','none', 'dark'].include? flags[:rights]
         raise ArgumentError, "Invalid rights: #{flags[:rights]}" 
@@ -196,6 +198,7 @@ module GeoMDTK
       # setup input metadata
       xml = File.read(@druid.find_metadata('geoMetadata.xml'))
       geoMetadata = Dor::GeoMetadataDS.from_xml(xml)
+      ap({:geoMetadata => geoMetadata}) if flags[:debug]
 
       # required parameters
       opts = {
@@ -271,7 +274,9 @@ module GeoMDTK
 
         # Process files
         objects.keys.each do |k|
+          ap({:glob => @druid.content_dir + '/' + PATTERNS[k]})
           Dir.glob(@druid.content_dir + '/' + PATTERNS[k]).each do |fn|
+            ap({:fn => fn})
             each_upload(fn, k.to_s, flags) {|o| objects[k] << o }
           end
         end
