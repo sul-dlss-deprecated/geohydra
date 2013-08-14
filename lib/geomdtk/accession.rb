@@ -275,10 +275,9 @@ module GeoMDTK
 
         # Process files
         objects.keys.each do |k|
-          ap({:glob => @druid.content_dir + '/' + PATTERNS[k]})
           Dir.glob(@druid.content_dir + '/' + PATTERNS[k]).each do |fn|
-            ap({:fn => fn})
-            each_upload(fn, k.to_s, flags) {|o| objects[k] << o }
+            ap({:content_fn => fn}) if flags[:debug]
+            objects[k] << Assembly::ObjectFile.new(fn, :label => k.to_s)
           end
         end
         ap({:content_metadata_objects => objects}) if flags[:debug]
@@ -293,7 +292,7 @@ module GeoMDTK
             ns['mods'] = v
           end
         end
-        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension/rdf:RDF/rdf:Description[starts-with(@rdf:about, "geo")]/*', ns).first
+        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@rdf:type="geo"]/rdf:RDF/rdf:Description[@rdf:type="geo#boundingBox"]/*', ns).first
         ap({:geoData => geoData, :geoDataClass => geoData.class}) if flags[:debug]
 
         # Create the contentMetadata

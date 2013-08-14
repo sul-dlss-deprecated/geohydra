@@ -20,10 +20,8 @@ begin
     :verbose => false,
     :configtest => false,
     :purge => false,
-    :upload => false,
     :shelve => false,
     :contentMetadata => true,
-    :upload_max => Float::INFINITY, # unrestricted
     :debug => false,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace'
   }
@@ -57,10 +55,6 @@ EOM
     end
     opts.on('--tmpdir DIR', "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |d|
       flags[:tmpdir] = d
-    end
-    opts.on('--upload[=MAX]', 'Upload content files -- MAX restricts to files smaller than MAX MB') do |mb|
-      flags[:upload] = true
-      flags[:upload_max] = (mb.to_f < 0 ? Float::INFINITY : mb.to_f) unless mb.nil?
     end
     opts.on('-v', '--verbose', 'Run verbosely, use multiple times for debug level output') do
       flags[:debug] = true if flags[:verbose]  # -vv
