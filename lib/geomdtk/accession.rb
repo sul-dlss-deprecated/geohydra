@@ -139,7 +139,7 @@ module GeoMDTK
                            :size => o.filesize,
                            :role => roletype || 'master') do
 
-                  if resource_type == :main
+                  if resource_type == :object
                     if roletype == 'master' and not geoData.nil?
                       xml.geoData do
                         xml.parent.add_child geoData
