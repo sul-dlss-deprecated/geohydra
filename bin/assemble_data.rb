@@ -35,12 +35,13 @@ end
 begin
   flags = {
     :debug => false,
-    :verbose => false
+    :verbose => false,
+    :srcdir => '/var/geomdtk/current/upload/druid'
   }
 
   OptionParser.new do |opts|
     opts.banner = <<EOM
-Usage: #{File.basename(__FILE__)} [options] srcdir
+Usage: #{File.basename(__FILE__)} [options] [srcdir]
 EOM
     opts.on("-v", "--verbose", "Run verbosely") do |v|
       flags[:debug] = true if flags[:verbose]
@@ -49,7 +50,7 @@ EOM
   end.parse!
 
   
-  flags[:srcdir] = ARGV.pop
+  flags[:srcdir] = ARGV.pop unless File.directory?(flags[:srcdir])
   raise ArgumentError, "Missing directory #{flags[:srcdir]}" unless flags[:srcdir] and File.directory?(flags[:srcdir])
 
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]

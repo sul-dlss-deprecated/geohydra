@@ -19,7 +19,7 @@ end
 flags = {
   :verbose => false,
   :debug => false,
-  :directory => '/var/geomdtk/current/upload/data/ready'
+  :directory => '/var/geomdtk/current/upload/druid'
 }
 OptionParser.new do |opts|
   opts.banner = "
