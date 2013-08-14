@@ -42,7 +42,7 @@ EOM
       flags[:purge] = true
     end
     opts.on('--shelve', 'Shelve items during accessioning') do |b|
-      flags[:purge] = true
+      flags[:shelve] = true
     end
     opts.on('--rights KEYWORD', "Rights keyword (default: #{flags[:rights]})") do |keyword|
       flags[:rights] = keyword
