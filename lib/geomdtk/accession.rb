@@ -46,7 +46,7 @@ module GeoMDTK
     #          <checksum type="md5">a89191324c24ead1f1bc0fced4e0f75d</checksum>
     #        </file>
     #        <file preserve="no" shelve="yes" publish="yes" id="OFFSH_BLOCKS_EPSG_4326.zip" mimetype="application/zip" size="2003420" role="derivative">
-    #          <geoData srsName="EPSG:4236"/>
+    #          <geoData srsName="EPSG:4326"/>
     #          <checksum type="sha1">a860e8aa831e0f0011d2cd3ca8f75186b956f19d</checksum>
     #          <checksum type="md5">a6055a001f4f98cc6b8eb41e617417b3</checksum>
     #        </file>
@@ -149,7 +149,7 @@ module GeoMDTK
                       if o.filename =~ %r{_EPSG_(\d+)\.zip}i
                         xml.geoData :srsName => "EPSG:#{$1}"
                       else
-                        xml.geoData :srsName => 'EPSG:4236'
+                        xml.geoData :srsName => 'EPSG:4326' # XXX: assumes normal projection?
                       end
                     end
                   end
