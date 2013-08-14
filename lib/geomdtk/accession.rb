@@ -148,8 +148,6 @@ module GeoMDTK
                     else
                       if o.filename =~ %r{_EPSG_(\d+)\.zip}i
                         xml.geoData :srsName => "EPSG:#{$1}"
-                      else
-                        xml.geoData :srsName => 'EPSG:4326' # XXX: assumes normal projection?
                       end
                     end
                   end
