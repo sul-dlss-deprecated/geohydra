@@ -198,6 +198,9 @@ module GeoMDTK
       geoMetadata = Dor::GeoMetadataDS.from_xml(xml)
       ap({:geoMetadata => geoMetadata}) if flags[:debug]
 
+      descMetadataXML = File.read(@druid.find_metadata('descMetadata.xml'))
+      ap({:descMetadata => descMetadataXML}) if flags[:debug]
+
       # required parameters
       opts = {
           :object_type  => 'item',
@@ -259,8 +262,8 @@ module GeoMDTK
       # now item is registered, so generate mods
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
       item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
-      item.datastreams['descMetadata'].content = geoMetadata.to_mods.to_xml
-      ap({:descMetadata => item.datastreams['descMetadata'].ng_xml}) if flags[:debug]
+      item.datastreams['descMetadata'].content = descMetadataXML
+      ap({:descMetadata => item.datastreams['descMetadata']}) if flags[:debug]
 
       # upload data files to contentMetadata if required
       if flags[:contentMetadata]
