@@ -32,7 +32,7 @@ module GeoMDTK
     #
     # Example:
     #
-    #    <contentMetadata objectId="druid:ks297fy1411" type="dataset">
+    #    <contentMetadata objectId="druid:ks297fy1411" type="file">
     #      <resource id="druid:ks297fy1411_1" sequence="1" type="main">
     #        <label>Data</label>
     #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.zip" mimetype="application/zip" size="2191447" role="master">
@@ -51,7 +51,7 @@ module GeoMDTK
     #          <checksum type="md5">a6055a001f4f98cc6b8eb41e617417b3</checksum>
     #        </file>
     #      </resource>
-    #      <resource id="druid:ks297fy1411_2" sequence="2" type="supplement">
+    #      <resource id="druid:ks297fy1411_2" sequence="2" type="preview">
     #        <label>Preview</label>
     #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.png" mimetype="image/png" size="22927" role="master">
     #          <checksum type="sha1">9f16b1036a08dc722ff14cce16e04e75e6b4b7de</checksum>
@@ -67,15 +67,15 @@ module GeoMDTK
     #    </contentMetadata>
     def create_content_metadata objects, geoData = nil, flags = {}
       Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'dataset') do
+        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'file') do
           seq = 1
           objects.each do |k, v|
             next if v.nil? or v.empty?
             resource_type = case k 
               when :Data 
-                :main
+                :object
               when :Preview
-                :supplement 
+                :preview
               else 
                 :attachment
               end
