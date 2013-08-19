@@ -285,6 +285,7 @@ EOM
     raise ArgumentError, "Missing directory #{d}" unless d.nil? or File.directory? d
   end
 
+  ap({:flags => flags}) if flags[:debug]
   main flags
 rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"
