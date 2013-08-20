@@ -167,14 +167,10 @@
         </field>
         <field name="FgdcText">
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <xsl:text>{ "iso19139":  ["</xsl:text>
+          <xsl:text disable-output-escaping="yes">
+            &lt;MD_Metadata xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.isotc211.org/2005/gmd" xlink:href=&quot;</xsl:text>
           <xsl:value-of select="$metadataURL"/>
-          <xsl:text>"] }</xsl:text>          
-          <!-- <rdf:Description xmlns:xlink="http://www.w3.org/1999/xlink" rdf:type="http://www.isotc211.org/2005/gmd">
-            <xsl:attribute name="xlink:href">
-              <xsl:value-of select="$metadataURL"/>
-            </xsl:attribute>
-          </rdf:Description> -->
+          <xsl:text disable-output-escaping="yes">&quot;/&gt;</xsl:text>
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
       </doc>
