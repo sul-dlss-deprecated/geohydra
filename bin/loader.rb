@@ -36,7 +36,7 @@ def do_vector(catalog, layername, format, ws, ds, v, flags)
       "host" => flags[:host],
       "validate connections" => true,
       "encode functions" => false,
-      "max connections" => 10,
+      "max connections" => 16,
       "database" => flags[:database],
       "namespace" => flags[:namespace],
       "schema" => flags[:schema],
@@ -47,7 +47,7 @@ def do_vector(catalog, layername, format, ws, ds, v, flags)
       "preparedStatements" => false,
       "Estimated extends" => true,
       "user" => flags[:user],
-      "min connections" => 1
+      "min connections" => 4
     })
     ap({:connection_parameters => ds.connection_parameters}) if flags[:debug]
   else
