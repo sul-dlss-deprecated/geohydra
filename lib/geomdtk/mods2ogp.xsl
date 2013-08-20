@@ -169,11 +169,13 @@
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
         <field name="FgdcText">
+          <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
           <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)">
             <xsl:attribute name="href">
               <xsl:value-of select="$metadataURL"/>
             </xsl:attribute>
           </xi:include>
+          <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
       </doc>
     </add>
