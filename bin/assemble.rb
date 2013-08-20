@@ -34,7 +34,7 @@ def find_mef(druid, uuid, flags)
       found_metadata = true
       # original ISO 19139
       ifn = File.join(druid.temp_dir, 'iso19139.xml')
-      FileUtils.ln fn, ifn, :verbose => flags[:verbose]
+      FileUtils.ln_sf fn, ifn, :verbose => flags[:verbose]
     end
   end
   ifn
@@ -147,7 +147,7 @@ def export_images(druid, uuid, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.ln fn, imagefn, :verbose => flags[:debug]
+      FileUtils.ln_sf fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
   end
@@ -163,7 +163,7 @@ def export_local_images(druid, tempdir, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.ln fn, imagefn, :verbose => flags[:debug]
+      FileUtils.ln_sf fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
   end
@@ -175,7 +175,7 @@ def export_zip(druid, flags)
     # extract shapefile name using filename pattern from
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     ofn = "#{druid.content_dir}/data.zip"
-    FileUtils.ln fn, ofn, :verbose => flags[:verbose]
+    FileUtils.ln_sf fn, ofn, :verbose => flags[:verbose]
     yield ofn if block_given?
     
     if flags[:extract_basename]
@@ -196,7 +196,9 @@ def doit(client, uuid, obj, flags)
   end
   
   puts "Processing #{ifn}"
-  h = JSON.parse(File.read(File.expand_path("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json")))
+  fn = File.expand_path("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json")
+  raise ArgumentError, "Required options file missing: #{fn}" unless File.exist?(fn)
+  h = JSON.parse(File.read(fn))
   flags = flags.merge(h).symbolize_keys
   ap({:h => h, :flags => flags}) if flags[:debug]
   gfn = convert_iso2geo(druid, ifn, flags)

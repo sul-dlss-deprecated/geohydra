@@ -67,12 +67,12 @@
           <xsl:text>Online</xsl:text>
         </field>
         <field name="ContentDate">
-          <!-- year only -->
+          <!-- year only but OGP's solr schema requires full date -->
           <xsl:value-of select="substring(mods:originInfo/mods:dateIssued/text(), 0, 5)"/>
           <xsl:text>-01-01T00:00:00Z</xsl:text>
         </field>
         <field name="LayerDisplayName">
-          <xsl:value-of select="mods:titleInfo/mods:title[@type='main']/text()"/>
+          <xsl:value-of select="mods:titleInfo/mods:title[not(@type)]/text()"/>
         </field>
         <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
           <field name="DataType">
@@ -85,7 +85,7 @@
           </field>
         </xsl:for-each>
         <field name="Abstract">
-          <xsl:for-each select="mods:abstract[@displayLabel='abstract' or @displayLabel='purpose']/text()">
+          <xsl:for-each select="mods:abstract[@displayLabel='Abstract' or @displayLabel='Purpose']/text()">
             <xsl:value-of select="."/>
             <xsl:text>; </xsl:text>
           </xsl:for-each>
@@ -144,8 +144,7 @@
         </xsl:for-each>
         <field name="Location"><!-- output is JSON so we wrap in CDATA -->
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <xsl:text>
-              { 
+          <xsl:text>{ 
               "wms":       ["</xsl:text>
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms"],
@@ -163,18 +162,19 @@
           <xsl:text>"],
               "view":      ["</xsl:text>
           <xsl:value-of select="$purl"/>
-          <xsl:text>"]              
-              }
-          </xsl:text>
+          <xsl:text>"] }</xsl:text>
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
         <field name="FgdcText">
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="xml" xpointer="xmlns(gmd=http://www.isotc211.org/2005/gmd)xpointer(//gmd:MD_Metadata)">
-            <xsl:attribute name="href">
+          <xsl:text>{ "iso19139":  ["</xsl:text>
+          <xsl:value-of select="$metadataURL"/>
+          <xsl:text>"] }</xsl:text>          
+          <!-- <rdf:Description xmlns:xlink="http://www.w3.org/1999/xlink" rdf:type="http://www.isotc211.org/2005/gmd">
+            <xsl:attribute name="xlink:href">
               <xsl:value-of select="$metadataURL"/>
             </xsl:attribute>
-          </xi:include>
+          </rdf:Description> -->
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
       </doc>
