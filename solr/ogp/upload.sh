@@ -1,7 +1,7 @@
 #!/bin/bash -x
 c=ogp
 d=/var/geomdtk/current/workspace
-h=localhost:8080
+h=localhost:18080
 s=http
 
 find -L "$d" -name 'ogpSolr.xml' | while read fn; do

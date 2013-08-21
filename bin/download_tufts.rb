@@ -46,15 +46,21 @@ WorkspaceName
 unless File.exist?('data.json')
   system("curl '#{url}' > data.json")
 end
-
+n = 0
 json = JSON::parse(File.open('data.json').read.to_s)
 json['response']['docs'].each do |doc|
   # ap({:doc => doc})
   puts "Adding #{doc['LayerId']}"
   solr.add doc
-  solr.commit
+  if n == 100
+    puts "Commit"
+    solr.commit
+    n = 0
+  end
+  n += 1
   # ap({:solr => solr})
 end
+solr.commit
 solr.optimize
 puts json['response']['docs'].length
 
