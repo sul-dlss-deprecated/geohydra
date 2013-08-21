@@ -144,13 +144,11 @@
               "metadata":  ["</xsl:text>
           <xsl:value-of select="$stacks_root"/>
           <xsl:value-of select="concat('/',$druid)"/>
-          <xsl:text>/metadata/geoMetadata.xml</xsl:text>
-          <xsl:text>"],
+          <xsl:text>/metadata/geoMetadata.xml"],
               "download":  ["</xsl:text>
           <xsl:value-of select="$stacks_root"/>
           <xsl:value-of select="concat('/',$druid)"/>
-          <xsl:text>/content/data.zip</xsl:text>
-          <xsl:text>"],
+          <xsl:text>/content/data.zip"],
               "view":      ["</xsl:text>
           <xsl:value-of select="$purl"/>
           <xsl:text>"] }</xsl:text>
@@ -160,7 +158,7 @@
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[&lt;link rel=&quot;meta&quot; href=&quot;</xsl:text>
           <xsl:value-of select="$stacks_root"/>
           <xsl:value-of select="concat('/',$druid)"/>
-          <xsl:text>/metadata/geoMetadata.xml&quot;/&gt;]]&gt;</xsl:text>
+          <xsl:text disable-output-escaping="yes">/metadata/geoMetadata.xml&quot;/&gt;]]&gt;</xsl:text>
         </field>
       </doc>
     </add>
