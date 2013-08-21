@@ -24,19 +24,7 @@
   <xsl:template match="/mods:mods">
     <xsl:variable name="druid" 
       select="substring($purl, string-length($purl)-10)" />
-    <xsl:variable name="filename" select="mods:extension/rdf:RDF/rdf:Description[@rdf:type='geo#filename']"/>
-    <xsl:variable name="downloadURL">
-      <xsl:value-of select="$stacks_root"/>
-      <xsl:value-of select="concat('/',$druid)"/>
-      <xsl:text>/content/</xsl:text>
-      <xsl:value-of select="substring-before($filename, '.shp')"/>
-      <xsl:text>.zip</xsl:text>
-    </xsl:variable>
-    <xsl:variable name="metadataURL">
-      <xsl:value-of select="$stacks_root"/>
-      <xsl:value-of select="concat('/',$druid)"/>
-      <xsl:text>/metadata/geoMetadata.xml</xsl:text>
-    </xsl:variable>
+    <xsl:variable name="datatype" select="substring-after(mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']/text(), 'gml:')" />
     <add>
       <doc>
         <field name="LayerId">
@@ -76,7 +64,14 @@
         </field>
         <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
           <field name="DataType">
-            <xsl:value-of select="substring-after(mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']/text(), 'gml:')"/>
+              <xsl:choose>
+                <xsl:when test="$datatype = 'LineString'">
+                    <xsl:text>Line</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$datatype"/>
+                </xsl:otherwise>
+              </xsl:choose>
           </field>
         </xsl:if>
         <xsl:for-each select="mods:name[mods:role/mods:roleTerm/text()='Publisher']">
@@ -155,23 +150,23 @@
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wfs"],
               "metadata":  ["</xsl:text>
-          <xsl:value-of select="$metadataURL"/>
-          <xsl:text>"],
+          <xsl:value-of select="$stacks_root"/>
+          <xsl:value-of select="concat('/',$druid)"/>
+          <xsl:text>/metadata/geoMetadata.xml"],
               "download":  ["</xsl:text>
-          <xsl:value-of select="$downloadURL"/>
-          <xsl:text>"],
+          <xsl:value-of select="$stacks_root"/>
+          <xsl:value-of select="concat('/',$druid)"/>
+          <xsl:text>/content/data.zip"],
               "view":      ["</xsl:text>
           <xsl:value-of select="$purl"/>
           <xsl:text>"] }</xsl:text>
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
         <field name="FgdcText">
-          <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <xsl:text disable-output-escaping="yes">
-            &lt;MD_Metadata xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.isotc211.org/2005/gmd" xlink:href=&quot;</xsl:text>
-          <xsl:value-of select="$metadataURL"/>
-          <xsl:text disable-output-escaping="yes">&quot;/&gt;</xsl:text>
-          <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+          <xsl:text disable-output-escaping="yes">&lt;![CDATA[&lt;link rel=&quot;meta&quot; href=&quot;</xsl:text>
+          <xsl:value-of select="$stacks_root"/>
+          <xsl:value-of select="concat('/',$druid)"/>
+          <xsl:text disable-output-escaping="yes">/metadata/geoMetadata.xml&quot;/&gt;]]&gt;</xsl:text>
         </field>
       </doc>
     </add>
