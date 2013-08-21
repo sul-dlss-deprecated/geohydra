@@ -24,19 +24,6 @@
   <xsl:template match="/mods:mods">
     <xsl:variable name="druid" 
       select="substring($purl, string-length($purl)-10)" />
-    <xsl:variable name="filename" select="mods:extension/rdf:RDF/rdf:Description[@rdf:type='geo#filename']"/>
-    <xsl:variable name="downloadURL">
-      <xsl:value-of select="$stacks_root"/>
-      <xsl:value-of select="concat('/',$druid)"/>
-      <xsl:text>/content/</xsl:text>
-      <xsl:value-of select="substring-before($filename, '.shp')"/>
-      <xsl:text>.zip</xsl:text>
-    </xsl:variable>
-    <xsl:variable name="metadataURL">
-      <xsl:value-of select="$stacks_root"/>
-      <xsl:value-of select="concat('/',$druid)"/>
-      <xsl:text>/metadata/geoMetadata.xml</xsl:text>
-    </xsl:variable>
     <add>
       <doc>
         <field name="LayerId">
@@ -155,10 +142,14 @@
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wfs"],
               "metadata":  ["</xsl:text>
-          <xsl:value-of select="$metadataURL"/>
+          <xsl:value-of select="$stacks_root"/>
+          <xsl:value-of select="concat('/',$druid)"/>
+          <xsl:text>/metadata/geoMetadata.xml</xsl:text>
           <xsl:text>"],
               "download":  ["</xsl:text>
-          <xsl:value-of select="$downloadURL"/>
+          <xsl:value-of select="$stacks_root"/>
+          <xsl:value-of select="concat('/',$druid)"/>
+          <xsl:text>/content/data.zip</xsl:text>
           <xsl:text>"],
               "view":      ["</xsl:text>
           <xsl:value-of select="$purl"/>
@@ -166,12 +157,10 @@
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
         <field name="FgdcText">
-          <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <xsl:text disable-output-escaping="yes">
-            &lt;MD_Metadata xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.isotc211.org/2005/gmd" xlink:href=&quot;</xsl:text>
-          <xsl:value-of select="$metadataURL"/>
-          <xsl:text disable-output-escaping="yes">&quot;/&gt;</xsl:text>
-          <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+          <xsl:text disable-output-escaping="yes">&lt;![CDATA[&lt;link rel=&quot;meta&quot; href=&quot;</xsl:text>
+          <xsl:value-of select="$stacks_root"/>
+          <xsl:value-of select="concat('/',$druid)"/>
+          <xsl:text>/metadata/geoMetadata.xml&quot;/&gt;]]&gt;</xsl:text>
         </field>
       </doc>
     </add>
