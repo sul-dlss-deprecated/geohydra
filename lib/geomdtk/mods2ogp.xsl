@@ -24,6 +24,7 @@
   <xsl:template match="/mods:mods">
     <xsl:variable name="druid" 
       select="substring($purl, string-length($purl)-10)" />
+    <xsl:variable name="datatype" select="substring-after(mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']/text(), 'gml:')" />
     <add>
       <doc>
         <field name="LayerId">
@@ -63,7 +64,14 @@
         </field>
         <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
           <field name="DataType">
-            <xsl:value-of select="substring-after(mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']/text(), 'gml:')"/>
+              <xsl:choose>
+                <xsl:when test="$datatype = 'LineString'">
+                    <xsl:text>Line</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$datatype"/>
+                </xsl:otherwise>
+              </xsl:choose>
           </field>
         </xsl:if>
         <xsl:for-each select="mods:name[mods:role/mods:roleTerm/text()='Publisher']">
