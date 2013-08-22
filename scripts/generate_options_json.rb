@@ -9,7 +9,7 @@ def doit(shp)
   raise ArgumentError unless GeoMDTK::Utils.shapefile?(shp)
   r['geometryType'] = GeoMDTK::Transform.geometry_type(shp)
   r['filename'] = File.basename(shp)
-  File.open(File.join(File.dirname(shp), 'options.json'), 'w') do |f|
+  File.open(File.join(File.dirname(shp), 'geoOptions.json'), 'w') do |f|
     f.puts r.to_json.to_s
   end
   

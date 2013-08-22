@@ -196,7 +196,7 @@ def doit(client, uuid, obj, flags)
   end
   
   puts "Processing #{ifn}"
-  fn = File.expand_path("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/options.json")
+  fn = File.expand_path("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/geoOptions.json")
   raise ArgumentError, "Required options file missing: #{fn}" unless File.exist?(fn)
   h = JSON.parse(File.read(fn))
   flags = flags.merge(h).symbolize_keys
