@@ -8,11 +8,13 @@ def process_file fn, flags
     ofn = $1 + '-iso19139.xml'
     ofn_fc = $1 + '-iso19139-fc.xml'
     ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
-    GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
-    system("bundle exec bin/extract_thumbnail.rb -v #{fn}")
-    dstdir = "#{File.dirname(fn)}/../content/"
-    FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
-    system("mv #{File.dirname(fn)}/*.jpg #{dstdir}/")
+    unless File.uptodate?(ofn, [fn]) and File.uptodate?(ofn_fc, [fn])
+      GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
+      system("bundle exec bin/extract_thumbnail.rb -v #{fn}")
+      dstdir = "#{File.dirname(fn)}/../content/"
+      FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
+      system("mv #{File.dirname(fn)}/*.jpg #{dstdir}/")
+    end
   end
 end
 
