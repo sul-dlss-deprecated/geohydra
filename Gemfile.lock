@@ -9,12 +9,6 @@ GIT
       nokogiri (~> 1)
 
 GIT
-  remote: corn.stanford.edu:/afs/ir/dev/dlss/git/lyberteam/druid-tools.git
-  revision: a7e39e67ad62b8a3f26d3c49aaeea7938705f11c
-  specs:
-    druid-tools (0.2.5)
-
-GIT
   remote: https://github.com/drh-stanford/version_bumper.git
   revision: 0a682b031a6ba6c3de635687b7f1986be5bcd9a5
   branch: patch_tag
@@ -23,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 9229e4cf2e27ff5d082c80c720528b945becf995
+  revision: bf0cfade9b23d3bec5c2d36651ca4f946375efa8
   branch: geoMetadata
   specs:
     dor-services (4.2.21)
@@ -53,6 +47,12 @@ GIT
       validatable
 
 GIT
+  remote: https://github.com/sul-dlss/druid-tools
+  revision: a7e39e67ad62b8a3f26d3c49aaeea7938705f11c
+  specs:
+    druid-tools (0.2.5)
+
+GIT
   remote: https://github.com/sul-dlss/mods.git
   revision: f57e833b5eb1950ec5e6afc03b426d28a1ecaca5
   specs:
@@ -63,24 +63,24 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/rgeoserver.git
-  revision: fe4bb67de4e7595fe8f070981f4d502b57ffb987
+  revision: 71906e37927f32a4b0c6647ec90624f628eb73f3
   branch: 0.6.x
   specs:
-    rgeoserver (0.6.3.beta1)
-      activemodel
-      activesupport
-      confstruct
-      mime-types
-      nokogiri
-      rest-client
-      rgeo (>= 0.3.20)
-      rgeo-shapefile
-      rubyzip
+    rgeoserver (0.6.3.beta2)
+      activemodel (~> 3.2.14)
+      activesupport (~> 3.2.14)
+      confstruct (~> 0.2.5)
+      mime-types (~> 1.24)
+      nokogiri (~> 1.6.0)
+      rest-client (~> 1.6.7)
+      rgeo (~> 0.3.20)
+      rgeo-shapefile (~> 0.2.3)
+      rubyzip (~> 0.9.9)
 
 PATH
   remote: .
   specs:
-    geomdtk (0.2.2.3)
+    geomdtk (0.2.2.4)
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
@@ -161,7 +161,7 @@ GEM
       ffi (>= 1.0.1)
     happymapper (0.4.0)
       libxml-ruby (~> 2.0)
-    hashery (2.1.0)
+    hashery (2.1.1)
     hooks (0.3.1)
     i18n (0.6.5)
     iso-639 (0.1.0)
@@ -264,7 +264,7 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
-    stanford-mods (0.0.18)
+    stanford-mods (0.0.19)
       mods
     stomp (1.2.14)
     systemu (2.5.2)
