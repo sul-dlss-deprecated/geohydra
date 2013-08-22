@@ -4,6 +4,15 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'fileutils'
 
+def extract_thumbnail fn, flags
+  if fn =~ %r{^(.*)\.(shp|tif)\.xml$}i
+    puts "Processing #{fn} for JPEG" if flags[:verbose]
+    GeoMDTK::Transform.extract_thumbnail fn, File.join(File.dirname(fn), 'preview.jpg')
+  else
+    raise OptionParser::InvalidOption, "File <#{fn}> is not ESRI metadata format"
+  end
+end
+
 def process_file fn, flags
   puts "Processing #{fn}" if flags[:verbose]
   if fn =~ %r{^(.*).shp.xml$}
@@ -12,7 +21,7 @@ def process_file fn, flags
     ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
     unless FileUtils.uptodate?(ofn, [fn]) and FileUtils.uptodate?(ofn_fc, [fn])
       GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
-      system("bundle exec bin/extract_thumbnail.rb -v #{fn}")
+      extract_thumbnail(fn, flags)
       dstdir = "#{File.dirname(fn)}/../content/"
       FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
       system("mv #{File.dirname(fn)}/*.jpg #{dstdir}/")
