@@ -134,19 +134,19 @@ module GeoMDTK
       FileUtils.rm_rf tmp
     end
     
-    # @return RGeo::Feature::Point, 
-    #         RGeo::Feature::Polygon, 
-    #         RGeo::Feature::LineString as appropriate
+    # Reads the shapefile to determine geometry type
+    #
+    # @return [String] Point, Polygon, LineString as appropriate
     def self.geometry_type(shp_filename)
       begin
         RGeo::Shapefile::Reader.open(shp_filename) do |shp|
           shp.each do |record|
-              return record.geometry.envelope.geometry_type
+            return record.geometry.geometry_type.to_s.gsub(/^Multi/,'')
           end
         end
       rescue RGeo::Error::RGeoError => e
         puts e.message
-      end
+      end 
       nil     
     end
     
