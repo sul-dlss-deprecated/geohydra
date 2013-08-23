@@ -168,26 +168,21 @@
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms"],
               "tilecache": ["</xsl:text>
-          <xsl:value-of select="$geoserver_root"/><!-- XXX: do we need WMS-T??? -->
+          <xsl:value-of select="$geoserver_root"/>
+          <!-- XXX: do we need WMS-T??? -->
           <xsl:text>/wms"],
               "wfs":       ["</xsl:text>
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wfs"],
               "view":      ["</xsl:text>
           <xsl:value-of select="$purl"/>
+          <xsl:text>"],
+              "view_metadata_iso19139":      ["</xsl:text>
+          <xsl:value-of select="concat($purl, '.geoMetadata.xml')"/>
           <xsl:text>"] }</xsl:text>
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>
-        <xsl:comment> XXX: We embed an xlink MD_Metadata for ISO 19139 </xsl:comment>
-        <field name="FgdcText">
-          <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple">
-            <xsl:attribute name="xlink:href">
-              <xsl:value-of select="concat($purl,'.geoMetadata.xml')"/>
-            </xsl:attribute>
-          </gmd:MD_Metadata>
-          <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
-        </field>
+        <field name="FgdcText"/>
       </doc>
     </add>
   </xsl:template>
