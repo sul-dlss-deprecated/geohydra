@@ -11,10 +11,18 @@
        https://github.com/OpenGeoportal/ogpSolrConfig/blob/master/ogpSolrConfig/SolrConfig/schema.xml
        
        
+     Example usage:
+     
+     xsltproc -stringparam geometryType 'Polygon' 
+              -stringparam geoserver_root 'http://kurma-podd1.stanford.edu/geoserver' 
+              -stringparam purl 'http://purl-dev.stanford.edu/fw920bc5473' 
+              -output '/var/geomdtk/current/workspace/fw/920/bc/5473/fw920bc5473/temp/ogpSolr.xml' 
+              '/home/geostaff/geomdtk/current/lib/geomdtk/mods2ogp.xsl' 
+              '/var/geomdtk/current/workspace/fw/920/bc/5473/fw920bc5473/metadata/descMetadata.xml'
+       
      Requires parameters:
        
        - geoserver_root - URL prefix to the geoserver
-       - stacks_root - URL prefix to the stacks
        - purl - complete URL with aa111bb1111 (len = 11)
        
      -->
@@ -27,9 +35,11 @@
     <add>
       <doc>
         <field name="LayerId">
+          <!-- REQUIRED -->
           <xsl:value-of select="$druid"/>
         </field>
         <field name="Name">
+          <!-- REQUIRED -->
           <xsl:value-of select="$druid"/>
         </field>
         <field name="ExternalLayerId">
@@ -38,13 +48,12 @@
         <field name="CollectionId">
           <xsl:value-of select="mods:relatedItem/mods:titleInfo/mods:title"/>
         </field>
-        <xsl:comment>
-          XXX: Access is really Stanford-only but UI is not defaulted to search for restricted
-        </xsl:comment>
         <field name="Access">
+          <!-- REQUIRED -->
           <xsl:text>Restricted</xsl:text>
         </field>
         <field name="Institution">
+          <!-- REQUIRED -->
           <xsl:text>Stanford</xsl:text>
         </field>
         <field name="WorkspaceName">
@@ -56,17 +65,20 @@
         <field name="Availability">
           <xsl:text>Online</xsl:text>
         </field>
+        <xsl:comment>XXX - year only but OGP's solr schema requires full date</xsl:comment>
         <field name="ContentDate">
-          <!-- year only but OGP's solr schema requires full date -->
+          <!-- REQUIRED -->
           <xsl:value-of select="substring(mods:originInfo/mods:dateIssued, 1, 4)"/>
           <xsl:text>-01-01T00:00:00Z</xsl:text>
         </field>
         <field name="LayerDisplayName">
+          <!-- REQUIRED -->
           <xsl:value-of select="mods:titleInfo/mods:title[not(@type)]"/>
         </field>
         <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
           <field name="DataType">
             <xsl:choose>
+              <!-- OGP uses Point, Line, Polygon -->
               <xsl:when test="$datatype = 'LineString'">
                 <xsl:text>Line</xsl:text>
               </xsl:when>
@@ -77,7 +89,7 @@
           </field>
         </xsl:if>
         <field name="Publisher">
-          <xsl:for-each select="mods:originInfo/mods:publisher"/>
+          <xsl:value-of select="mods:originInfo/mods:publisher"/>
         </field>
         <field name="Originator">
           <xsl:for-each select="mods:name">
@@ -156,15 +168,11 @@
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms"],
               "tilecache": ["</xsl:text>
-          <xsl:value-of select="$geoserver_root"/>
+          <xsl:value-of select="$geoserver_root"/><!-- XXX: do we need WMS-T??? -->
           <xsl:text>/wms"],
               "wfs":       ["</xsl:text>
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wfs"],
-              "metadata":  ["</xsl:text>
-          <xsl:value-of select="$stacks_root"/>
-          <xsl:value-of select="concat('/',$druid)"/>
-          <xsl:text>/metadata/geoMetadata.xml"],
               "view":      ["</xsl:text>
           <xsl:value-of select="$purl"/>
           <xsl:text>"] }</xsl:text>
@@ -173,9 +181,9 @@
         <xsl:comment> XXX: We embed an xlink MD_Metadata for ISO 19139 </xsl:comment>
         <field name="FgdcText">
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <gmd:MD_Metadata xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+          <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple">
             <xsl:attribute name="xlink:href">
-              <xsl:value-of select="concat($stacks_root,'/',$druid,'/metadata/geoMetadata.xml')"/>
+              <xsl:value-of select="concat($purl,'.geoMetadata.xml')"/>
             </xsl:attribute>
           </gmd:MD_Metadata>
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
