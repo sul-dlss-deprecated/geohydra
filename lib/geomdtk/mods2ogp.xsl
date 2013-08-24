@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
      mods2ogp.xsl - Transforms MODS with GML extensions into an OGP Solr document
-     
+
      Copyright 2013, Stanford University Libraries.
-     
+
      Created by Darren Hardy.
 
      For OGP Solr schema, see:
 
        https://github.com/OpenGeoportal/ogpSolrConfig/blob/master/ogpSolrConfig/SolrConfig/schema.xml
-       
-       
+
      Example usage:
-     
-     xsltproc -stringparam geometryType 'Polygon' 
-              -stringparam geoserver_root 'http://kurma-podd1.stanford.edu/geoserver' 
-              -stringparam purl 'http://purl-dev.stanford.edu/fw920bc5473' 
-              -output '/var/geomdtk/current/workspace/fw/920/bc/5473/fw920bc5473/temp/ogpSolr.xml' 
-              '/home/geostaff/geomdtk/current/lib/geomdtk/mods2ogp.xsl' 
+
+     xsltproc -stringparam geometryType 'Polygon'
+              -stringparam geoserver_root 'http://kurma-podd1.stanford.edu/geoserver'
+              -stringparam purl 'http://purl-dev.stanford.edu/fw920bc5473'
+              -output '/var/geomdtk/current/workspace/fw/920/bc/5473/fw920bc5473/temp/ogpSolr.xml'
+              '/home/geostaff/geomdtk/current/lib/geomdtk/mods2ogp.xsl'
               '/var/geomdtk/current/workspace/fw/920/bc/5473/fw920bc5473/metadata/descMetadata.xml'
-       
+
      Requires parameters:
-       
+
        - geoserver_root - URL prefix to the geoserver
        - purl - complete URL with aa111bb1111 (len = 11)
-       
+
      -->
 <xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0" exclude-result-prefixes="gmd gco gml mods rdf xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
@@ -67,8 +66,8 @@
         </field>
         <xsl:comment>XXX - year only but OGP's solr schema requires full date</xsl:comment>
         <field name="ContentDate">
-          <!-- REQUIRED -->
-          <xsl:value-of select="substring(mods:originInfo/mods:dateIssued, 1, 4)"/>
+          <!-- year only but OGP's solr schema requires full date -->
+          <xsl:value-of select="substring(mods:subject/mods:temporal, 1, 4)"/>
           <xsl:text>-01-01T00:00:00Z</xsl:text>
         </field>
         <field name="LayerDisplayName">
@@ -163,7 +162,7 @@
         <field name="Location">
           <!-- output is JSON so we wrap in CDATA -->
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
-          <xsl:text>{ 
+          <xsl:text>{
               "wms":       ["</xsl:text>
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms"],
