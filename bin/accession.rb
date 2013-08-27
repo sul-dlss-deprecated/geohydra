@@ -20,7 +20,7 @@ begin
     :verbose => false,
     :configtest => false,
     :purge => false,
-    :shelve => false,
+    :accessionWF => false,
     :contentMetadata => true,
     :debug => false,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace'
@@ -41,8 +41,8 @@ EOM
     opts.on('--purge', 'Purge items before accessioning') do |b|
       flags[:purge] = true
     end
-    opts.on('--shelve', 'Shelve items during accessioning') do |b|
-      flags[:shelve] = true
+    opts.on('--accessionWF', 'Kick off the accessionWF workflow') do |b|
+      flags[:accessionWF] = true
     end
     opts.on('--rights KEYWORD', "Rights keyword (default: #{flags[:rights]})") do |keyword|
       flags[:rights] = keyword

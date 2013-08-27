@@ -300,17 +300,17 @@ module GeoMDTK
         xml = create_content_metadata objects, geoData, flags
         item.datastreams['contentMetadata'].content = xml
         ap({:contentMetadataDS => item.datastreams['contentMetadata'].ng_xml}) if flags[:debug]
-
-        if flags[:shelve]
-          $stderr.puts "Shelving to stacks content..." if flags[:verbose]
-          files = []
-          item.datastreams['contentMetadata'].public_xml.xpath('//file').each do |f|
-            files << f['id'].to_s
-          end
-          ap({ :id => @druid.druid, :files => files }) if flags[:debug]
         
-          Dor::DigitalStacksService.shelve_to_stacks @druid.druid, files
+        cfn = File.join(@druid.metadata_dir, 'contentMetadata.xml')
+        $stderr.puts "Writing #{cfn}" if flags[:verbose]
+        File.open(cfn, 'w') do |f|
+          f << item.datastreams['contentMetadata'].ng_xml.to_xml(:indent => 2, :encoding => 'UTF-8')
         end
+      end
+      
+      if flags[:accessionWF]
+        $stderr.puts "Starting accessioning workflow" if flags[:verbose]
+        raise NotImplementedError, 'accessionWF'
       end
 
       # save changes
