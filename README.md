@@ -137,7 +137,7 @@ after assembling the data, it should look like this, where the temp files for th
         OGWELLS.shp
         OGWELLS.shp.xml
         OGWELLS.shx
-        options.json
+        geoOptions.json
 
 
 then at the end of processing -- prior to accessioning -- it will look like in your workspace:
@@ -155,8 +155,15 @@ then at the end of processing -- prior to accessioning -- it will look like in y
         dc.xml
         iso19139.xml
         ogpSolr.xml
-        options.json
+        geoOptions.json
         solr.xml
+
+To continue with accessioning, stage the data as follows:
+
+    zv925hd6723.xml -> iso19139.xml
+    zv925hd6723.zip -> data.zip
+    zv925hd6723.jpg -> preview.jpg
+    zv925hd6723.json -> geoOptions.json
 
 Credits
 =======

@@ -141,13 +141,8 @@ end
 def export_local_images(druid, tempdir, flags)
   # export any thumbnail images
   %w{png jpg}.each do |fmt|
-    Dir.glob("#{flags[:stagedir]}/../upload/druid/#{druid.id}/content/*.#{fmt}") do |fn|
-      fn = File.expand_path(fn)
-      ext = '.' + fmt
-      tfn = File.basename(fn, ext)
-      # convert _s to _small as per GeoNetwork convention
-      tfn = tfn.gsub(/_s$/, '_small')
-      imagefn = File.join(druid.content_dir, tfn + ext)
+    Dir.glob("#{flags[:stagedir]}/#{druid.id}.#{fmt}") do |fn|
+      imagefn = File.join(druid.content_dir, 'preview' + '.' + ext)
       FileUtils.ln_sf fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
@@ -175,7 +170,7 @@ def doit(client, uuid, obj, flags)
   druid = setup_druid(obj, flags)
 
   if flags[:geonetwork]
-    puts "Processing #{uuid} from geonetwork" if flags[:debug] 
+    puts "Processing #{uuid} from geonetwork" if flags[:debug]
     ifn = find_mef(druid, uuid, flags)
   else
     raise ArgumentError, druid if obj.content.empty?
@@ -281,6 +276,7 @@ EOM
   end
 
   ap({:flags => flags}) if flags[:debug]
+  raise NotImplementError, 'geonetwork code is stale' if flags[:geonetwork]
   main flags
 rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"
