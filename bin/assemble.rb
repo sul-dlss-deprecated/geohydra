@@ -142,7 +142,7 @@ def export_local_images(druid, tempdir, flags)
   # export any thumbnail images
   %w{png jpg}.each do |fmt|
     Dir.glob("#{flags[:stagedir]}/#{druid.id}.#{fmt}") do |fn|
-      imagefn = File.join(druid.content_dir, 'preview' + '.' + ext)
+      imagefn = File.join(druid.content_dir, 'preview' + '.' + fmt)
       FileUtils.ln_sf fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
