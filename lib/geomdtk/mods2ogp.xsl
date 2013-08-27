@@ -12,8 +12,7 @@
 
      Example usage:
 
-     xsltproc -stringparam geometryType 'Polygon'
-              -stringparam geoserver_root 'http://kurma-podd1.stanford.edu/geoserver'
+     xsltproc -stringparam geoserver_root 'http://kurma-podd1.stanford.edu/geoserver'
               -stringparam purl 'http://purl-dev.stanford.edu/fw920bc5473'
               -output '/var/geomdtk/current/workspace/fw/920/bc/5473/fw920bc5473/temp/ogpSolr.xml'
               '/home/geostaff/geomdtk/current/lib/geomdtk/mods2ogp.xsl'
@@ -81,19 +80,11 @@
           <!-- REQUIRED -->
           <xsl:value-of select="mods:titleInfo/mods:title[not(@type)]"/>
         </field>
-        <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
+        <xsl:for-each select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']">
           <field name="DataType">
-            <xsl:choose>
-              <!-- OGP uses Point, Line, Polygon -->
-              <xsl:when test="$datatype = 'LineString'">
-                <xsl:text>Line</xsl:text>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="$datatype"/>
-              </xsl:otherwise>
-            </xsl:choose>
+            <xsl:value-of select='substring(., 5)'/><!-- strip gml: prefix -->
           </field>
-        </xsl:if>
+        </xsl:for-each>
         <field name="Publisher">
           <xsl:value-of select="mods:originInfo/mods:publisher"/>
         </field>

@@ -97,13 +97,11 @@ def convert_mods2ogpsolr(druid, dfn, flags)
 
   geoserver = flags[:geoserver]
   purl = "#{flags[:purl]}/#{druid.id}"
-  geometryType = flags[:geometryType] || 'Polygon'
 
   # OGP Solr document from GeoMetadataDS
   sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
   FileUtils.rm_f(sfn) if File.exist?(sfn)
   cmd = ['xsltproc',
-          "--stringparam geometryType '#{geometryType}'",
           "--stringparam geoserver_root '#{geoserver}'",
           "--stringparam purl '#{purl}'",
           "--output '#{sfn}'",
@@ -199,7 +197,7 @@ def doit(client, uuid, obj, flags)
 
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
-  geoMetadata.geometryType = flags[:geometryType]
+  geoMetadata.geometryType = flags[:geometryType] || 'Polygon'
   geoMetadata.zipName = 'data.zip'
   geoMetadata.purl = File.join(flags[:purl], druid.id)
 
