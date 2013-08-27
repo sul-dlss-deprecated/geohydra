@@ -310,7 +310,7 @@ module GeoMDTK
       
       if flags[:accessionWF]
         $stderr.puts "Starting accessioning workflow" if flags[:verbose]
-        raise NotImplementedError, 'accessionWF'
+        Dor::WorkflowService.update_workflow_status('dor', item.druid, 'accessionWF', 'start-accession', 'waiting')
       end
 
       # save changes
