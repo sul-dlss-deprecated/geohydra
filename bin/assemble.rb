@@ -22,11 +22,13 @@ def find_mef(druid, uuid, flags)
   # export MEF -- the .iso19139.xml file is preferred
   puts "Exporting MEF for #{uuid}" if flags[:verbose]
   client.export(uuid, flags[:tmpdir])
-  system(['unzip', '-oq',
+  system(['unzip', 
+          '-oq',
           "'#{flags[:tmpdir]}/#{uuid}.mef'",
-          '-d', "'#{flags[:tmpdir]}'"].join(' '))
+          '-d', 
+          "'#{flags[:tmpdir]}'"].join(' '))
   found_metadata = false
-  %w{metadata.iso19139.xml metadata.xml}.each do |fn| # priority order
+  %w{metadata.iso19139.xml metadata.xml}.each do |fn| # priority order as per MEF
     unless found_metadata
       fn = File.join(flags[:tmpdir], uuid, 'metadata', fn)
       next unless File.exist? fn
@@ -90,17 +92,19 @@ def convert_geo2solr(druid, geoMetadata, flags)
 end
 
 def convert_mods2ogpsolr(druid, dfn, flags)
+  raise ArgumentError, 'Missing required :geoserver flag' if flags[:geoserver].nil?
+  raise ArgumentError, 'Missing required :purl flag' if flags[:purl].nil?
+
   geoserver = flags[:geoserver]
-  stacks = flags[:stacks]
   purl = "#{flags[:purl]}/#{druid.id}"
-  geometryType = flags[:geometryType]
+  geometryType = flags[:geometryType] || 'Polygon'
+
   # OGP Solr document from GeoMetadataDS
   sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
   FileUtils.rm_f(sfn) if File.exist?(sfn)
   cmd = ['xsltproc',
           "--stringparam geometryType '#{geometryType}'",
           "--stringparam geoserver_root '#{geoserver}'",
-          "--stringparam stacks_root '#{stacks}'",
           "--stringparam purl '#{purl}'",
           "--output '#{sfn}'",
           "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/mods2ogp.xsl')}'",
@@ -109,23 +113,6 @@ def convert_mods2ogpsolr(druid, dfn, flags)
   puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
   ap({:cmd => cmd}) if flags[:debug]
   system(cmd)
-  
-  # post-process to resolve XInclude
-  if flags[:xinclude]
-    doc = Nokogiri::XML::Document.parse(open(sfn), nil, nil, Nokogiri::XML::ParseOptions::XINCLUDE)
-    ap({:root => doc.root.name, :root_namespaces => doc.root.namespaces}) if flags[:debug]
-    File.open(sfn, 'w') { |f| f << doc.to_xml }
-    
-    # cleanup by adding CDATA
-    cmd = ['xsltproc',
-            "--output '#{sfn}'",
-            "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/ogpcleanup.xsl')}'",
-            "'#{sfn}'"  
-            ].join(' ')
-    puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
-    ap({:cmd => cmd}) if flags[:debug]
-    system(cmd)
-  end
 
   sfn
 end
@@ -186,21 +173,30 @@ def export_zip(druid, flags)
 end
 
 def doit(client, uuid, obj, flags)
+  puts "Processing #{uuid}"
   druid = setup_druid(obj, flags)
 
   if flags[:geonetwork]
+    puts "Processing #{uuid} from geonetwork" if flags[:debug] 
     ifn = find_mef(druid, uuid, flags)
   else
     raise ArgumentError, druid if obj.content.empty?
     ifn = find_local(druid, obj.content.to_s, flags)
   end
   
-  puts "Processing #{ifn}"
-  fn = File.expand_path("#{flags[:stagedir]}/../upload/druid/#{obj.druid}/temp/geoOptions.json")
-  raise ArgumentError, "Required options file missing: #{fn}" unless File.exist?(fn)
-  h = JSON.parse(File.read(fn))
-  flags = flags.merge(h).symbolize_keys
-  ap({:h => h, :flags => flags}) if flags[:debug]
+  puts "Processing #{ifn}" if flags[:verbose]
+  
+  optfn = File.expand_path("#{flags[:stagedir]}/#{obj.druid}.json")
+  puts "Loading extra out-of-band options #{optfn}" if flags[:debug]
+  if File.exist?(optfn)
+    h = JSON.parse(File.read(optfn))
+    flags = flags.merge(h).symbolize_keys
+    ap({:optfn => optfn, :h => h, :flags => flags}) if flags[:debug]
+  else
+    puts "WARNING: #{obj.druid} is missing options .json parameters: #{optfn}"
+    flags[:geometryType] ||= 'Polygon' # XXX: placeholder
+  end
+
   gfn = convert_iso2geo(druid, ifn, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
   geoMetadata.geometryType = flags[:geometryType]
@@ -209,12 +205,15 @@ def doit(client, uuid, obj, flags)
 
   dfn = convert_geo2mods(druid, geoMetadata, flags)
   sfn = convert_geo2solr(druid, geoMetadata, flags)
+  
   ofn = convert_mods2ogpsolr(druid, dfn, flags)
+  
   if flags[:geonetwork]
     export_images(druid, uuid, flags)
   else
     export_local_images(druid, File.expand_path(File.dirname(obj.zipfn) + '/../temp'), flags)
   end
+  
   export_zip(druid, flags)
 end
 
@@ -252,7 +251,6 @@ begin
     :solr => GeoMDTK::Config.ogp.solr,
     :purl => GeoMDTK::Config.ogp.purl,
     :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
-    :xinclude => false,
     :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',
     :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp'
   }
@@ -261,23 +259,20 @@ begin
     opts.banner = <<EOM
 Usage: #{File.basename(__FILE__)} [options]
 EOM
-    opts.on("--geonetwork", "Run against GeoNetwork metadata") do |v|
+    opts.on('--geonetwork', 'Run against GeoNetwork server') do |v|
       flags[:geonetwork] = true
     end
-    opts.on("--xinclude", "Post process ogpSolr.xml with xinclude") do |v|
-      flags[:xinclude] = true
-    end
-    opts.on("-v", "--verbose", "Run verbosely") do |v|
+    opts.on('-v', '--verbose', 'Run verbosely') do |v|
       flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
     end
-    opts.on("--stagedir DIR", "Staging directory with ZIP files (default: #{flags[:stagedir]})") do |v|
+    opts.on('--stagedir DIR', "Staging directory with ZIP files (default: #{flags[:stagedir]})") do |v|
       flags[:stagedir] = v
     end
-    opts.on("--workspace DIR", "Workspace directory for assembly (default: #{flags[:workspacedir]})") do |v|
+    opts.on('--workspace DIR', "Workspace directory for assembly (default: #{flags[:workspacedir]})") do |v|
       flags[:workspacedir] = v
     end
-    opts.on("--tmpdir DIR", "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |v|
+    opts.on('--tmpdir DIR', "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |v|
       flags[:tmpdir] = v
     end
   end.parse!
