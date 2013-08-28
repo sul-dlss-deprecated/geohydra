@@ -69,9 +69,9 @@ def convert_geo2mods(druid, geoMetadata, flags)
   dfn
 end
 
-def convert_geo2solr(druid, geoMetadata, flags)
+def convert_geo2solrspatial(druid, geoMetadata, flags)
   # Solr document from GeoMetadataDS
-  sfn = File.join(druid.temp_dir, 'solr.xml')
+  sfn = File.join(druid.temp_dir, 'spatialSolr.xml')
   puts "Generating #{sfn}" if flags[:verbose]
   h = geoMetadata.to_solr_spatial
   ap({:to_solr_spatial => h}) if flags[:debug]
@@ -197,7 +197,7 @@ def doit(client, uuid, obj, flags)
   geoMetadata.purl = File.join(flags[:purl], druid.id)
 
   dfn = convert_geo2mods(druid, geoMetadata, flags)
-  sfn = convert_geo2solr(druid, geoMetadata, flags)
+  sfn = convert_geo2solrspatial(druid, geoMetadata, flags)
   
   ofn = convert_mods2ogpsolr(druid, dfn, flags)
   

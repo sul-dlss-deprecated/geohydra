@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: bf0cfade9b23d3bec5c2d36651ca4f946375efa8
+  revision: 23819fc5ee7d37e9a07e151e5f65eb7e0de7c02b
   branch: geoMetadata
   specs:
     dor-services (4.2.21)
@@ -48,9 +48,9 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/druid-tools
-  revision: a7e39e67ad62b8a3f26d3c49aaeea7938705f11c
+  revision: 8fc285c50ebdd4ada95a493c0671f25fedee23a3
   specs:
-    druid-tools (0.2.5)
+    druid-tools (0.2.6)
 
 GIT
   remote: https://github.com/sul-dlss/mods.git
@@ -264,7 +264,7 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
-    stanford-mods (0.0.19)
+    stanford-mods (0.0.20)
       mods
     stomp (1.2.14)
     systemu (2.5.2)
