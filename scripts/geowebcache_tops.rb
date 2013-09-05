@@ -2,7 +2,6 @@
 require 'uri'
 
 h = 'kurma-podt1.stanford.edu'
-ARGV << 'pz792fz1776'
 ARGV.each do |druid|
   x = '20037508'
   url = URI("http://#{h}/geoserver/gwc/service/wms")
