@@ -70,7 +70,7 @@ def do_vector(catalog, layername, format, ws, ds, v, flags)
   # modify DataStore with rest of parameters
   ds.enabled = 'true'
   ds.description = v['description']
-  ds.save# unless v['remote'] =~ /-db$/
+  ds.save unless flags[:dryrun]
   
   ft = RGeoServer::FeatureType.new catalog, 
     :workspace => ws, 
@@ -80,36 +80,36 @@ def do_vector(catalog, layername, format, ws, ds, v, flags)
   puts "FeatureType: #{ws.name}/#{ds.name}/#{ft.name}" if flags[:verbose]
   ft.enabled = 'true'
   ft.title = v['title'] 
-  ft.description = v['description']
+  ft.abstract = v['description']
   ft.keywords = v['keywords']
   ft.metadata_links = v['metadata_links']
   puts(ft.message) if flags[:debug]
-  ft.save
+  ft.save unless flags[:dryrun]
 end
 
-def do_raster(catalog, layername, format, ws, v, flags)
-  # Create of a coverage store
-  puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
-  cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => layername
-  if v['filename'] =~ %r{^/}
-    cs.url = "file://" + v['filename']
-  else
-    cs.url = "file://" + File.join(flags[:datadir], v['filename'])
-  end
-  cs.description = v['description'] 
-  cs.enabled = 'true'
-  cs.data_type = format
-  cs.save
-
-  # Now create the actual coverage
-  puts "Coverage: #{ws.name}/#{cs.name}/#{layername}" if flags[:verbose]
-  cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => layername 
-  cv.enabled = 'true'
-  cv.title = v['title'] 
-  cv.keywords = v['keywords']
-  cv.metadata_links = v['metadata_links']
-  cv.save
-end
+# def do_raster(catalog, layername, format, ws, v, flags)
+#   # Create of a coverage store
+#   puts "CoverageStore: #{ws.name}/#{layername} (#{format})" if flags[:verbose]
+#   cs = RGeoServer::CoverageStore.new catalog, :workspace => ws, :name => layername
+#   if v['filename'] =~ %r{^/}
+#     cs.url = "file://" + v['filename']
+#   else
+#     cs.url = "file://" + File.join(flags[:datadir], v['filename'])
+#   end
+#   cs.description = v['description'] 
+#   cs.enabled = 'true'
+#   cs.data_type = format
+#   cs.save
+# 
+#   # Now create the actual coverage
+#   puts "Coverage: #{ws.name}/#{cs.name}/#{layername}" if flags[:verbose]
+#   cv = RGeoServer::Coverage.new catalog, :workspace => ws, :coverage_store => cs, :name => layername 
+#   cv.enabled = 'true'
+#   cv.title = v['title'] 
+#   cv.keywords = v['keywords']
+#   cv.metadata_links = v['metadata_links']
+#   cv.save
+# end
 
 #=  Input data. *See DATA section at end of file*
 # The input file is in YAML syntax with each record is a Hash with keys:
@@ -136,8 +136,8 @@ def main catalog, ws, layers, flags = {}
     format = v['format'].strip
     
     case format
-    when 'GeoTIFF'
-      do_raster catalog, layername, format, ws, v, flags
+    # when 'GeoTIFF'
+    #   do_raster catalog, layername, format, ws, v, flags
     when 'Shapefile'
       do_vector catalog, layername, format, ws, flags[:datastore], v, flags
     else
@@ -155,21 +155,18 @@ def from_druid druid, flags
   mods = Mods::Record.new
   mods.from_url(mods_fn)
   zipfn = nil
-  layername = nil
+  layername = druid.id
   Dir.glob(druid.content_dir + "/*_#{prj}.zip") do |fn|
     puts "Found EPSG 4326 zip: #{fn}" if flags[:verbose]
     zipfn = fn
-    layername = File.basename(zipfn, "_#{prj}.zip")
     puts "Derived layername #{zipfn} -> #{layername}" if flags[:verbose]
   end
   if not zipfn
     Dir.glob(druid.content_dir + "/*.zip") do |fn|
       zipfn = fn
-      layername = File.basename(zipfn, '.zip')
     end
   end
   raise ArgumentError, zipfn unless File.exist?(zipfn) and layername
-  ap({:zipfn => zipfn, :layername => layername}) if flags[:verbose]
   r = { 
     'vector' => {
       'druid' => druid,
@@ -187,6 +184,8 @@ def from_druid druid, flags
       }]
     }
   }
+  ap({:zipfn => zipfn, :layername => layername}) if flags[:verbose]
+  ap({:r => r}) if flags[:debug]
   r
 end
 
@@ -195,29 +194,26 @@ begin
   flags = {
     :debug => false,
     :delete => false,
-    :verbose => true,
+    :verbose => false,
     :datadir => '/var/geomdtk/current/workspace',
-    :format => 'MODS',
-    :remote => 'localfile',
+    :format => :mods,
+    :remote => :localfile,
+    :dryrun => false,
     :datastore => GeoMDTK::Config.geoserver.datastore || nil,
     :workspace => GeoMDTK::Config.geoserver.workspace || 'druid',
     :namespace => GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
-    # :host => 'localhost',
-    # :port => 5432,
-    # :user => 'geostaff',
-    # :database => 'geoserver',
-    # :schema => 'druid'
   }
   
   OptionParser.new do |opts|
     opts.banner = "
-Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ... | < druids]
-       #{File.basename(__FILE__)} [-v] [--delete] -f YAML [input.yaml ... | <input.yml]
-           
-    "
-    opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+Usage: #{File.basename(__FILE__)} [options] [druid ... | < druids]
+"
+    opts.on("-v", "--verbose", "Run verbosely") do |v|
       flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
+    end
+    opts.on("--dryrun", "Do not commit changes") do |v|
+      flags[:dryrun] = true
     end
     opts.on("--delete", "Delete workspaces recursively") do |v|
       flags[:delete] = true
@@ -225,10 +221,6 @@ Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ... | < druid
     opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]})") do |v|
       raise ArgumentError, "Invalid directory #{v}" unless File.directory?(v)
       flags[:datadir] = v
-    end
-    opts.on("-f FORMAT", "--format=FORMAT", "Input file format of MODS or YAML (default: #{flags[:format]})") do |v|
-      raise ArgumentError, "Invalid format #{v}" unless ['YAML', 'MODS'].include?(v.upcase)
-      flags[:format] = v.upcase
     end
     opts.on("--workspace NAME", "Workspace on GeoServer (default: #{flags[:workspace]})") do |v|
       flags[:workspace] = v.to_s
@@ -245,6 +237,7 @@ Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ... | < druid
     opts.on("--dburl URL", "Database URL") do |v|
       url = URI(v)
       raise ArgumentError, "Invalid database URL (#{v}) -- postgresql://u@h:p/db#s" unless url.scheme == 'postgresql'
+      flags[:url] = url
       flags[:host] = url.host
       flags[:port] = url.port || flags[:port]
       flags[:database] = url.path.gsub(%r{^/}, '') || flags[:database]
@@ -261,36 +254,28 @@ Usage: #{File.basename(__FILE__)} [-v] [--delete] [-f MODS] [druid ... | < druid
   # Connect to the GeoServer catalog
   puts "Connecting to catalog..." if flags[:verbose]
   catalog = RGeoServer::catalog
+  ap({:catalog => catalog}) if flags[:debug]
 
   # Obtain a handle to the workspace and clean it up. 
   ws = RGeoServer::Workspace.new catalog, :name => flags[:workspace]
-  puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:verbose]
+  puts "Workspace: #{ws.name} new?=#{ws.new?}" if flags[:debug]
   ws.delete :recurse => true if flags[:delete] and not ws.new?
-  ws.enabled = 'true'
-  ws.save
+  if ws.new?
+    ws.enabled = 'true'
+    ws.save unless flags[:dryrun]
+  end
   puts "Workspace: #{ws.name} ready" if flags[:verbose]
 
-  if ARGV.size > 0
-    ARGV.each do |v|
-      case flags[:format]
-      when 'YAML' then
-        main(catalog, ws, YAML::load_file(v), flags)
-      when 'MODS' then
-        main(catalog, ws, from_druid(v, flags), flags)
-      end
+  (ARGV.size == 0 ? $stdin.readlines : ARGV).each do |v|
+    druid = v.strip
+    begin
+      main(catalog, ws, from_druid(druid, flags), flags)
+    rescue Exception => e
+      puts "ERROR: #{e}: skipping #{druid}"
     end
-  else
-    case flags[:format]
-    when 'YAML' then
-      main(catalog, ws, YAML::load($stdin), flags)
-    when 'MODS' then
-      $stdin.readlines.each do |line|
-        main(catalog, ws, from_druid(line.strip, flags), flags)
-      end
-    end
+    
   end
 rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"
   $stderr.puts e.backtrace
-  exit(-1)
 end
