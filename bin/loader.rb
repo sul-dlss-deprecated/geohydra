@@ -19,7 +19,7 @@ def do_vector(catalog, layername, format, ws, ds, v, flags)
   ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => (ds.nil?? v['druid'].id : ds)
   puts "DataStore: #{ws.name}/#{ds.name} (#{v['remote']})" if flags[:verbose]
   ap({:vector => v}) if flags[:debug]
-  case v['remote']
+  case v['remote'].to_s
   when 'serverfile'
     puts "DataStore: Loading server-side file #{v['filename']}" if flags[:verbose]
     ds.upload_external v['filename']
@@ -51,7 +51,7 @@ def do_vector(catalog, layername, format, ws, ds, v, flags)
     })
     ap({:connection_parameters => ds.connection_parameters}) if flags[:debug]
   else
-    raise NotImplemented, "Unknown remote type: #{v['remote']}"
+    raise NotImplementedError, "Unknown remote type: #{v['remote']}"
   end
   
   if v['remote'] =~ /file$/
