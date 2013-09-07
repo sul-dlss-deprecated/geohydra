@@ -22,33 +22,35 @@ def do_vector(catalog, layername, format, ws, ds, v, flags)
   case v['remote'].to_s
   when 'serverfile'
     puts "DataStore: Loading server-side file #{v['filename']}" if flags[:verbose]
-    ds.upload_external v['filename']
+    ds.upload_external v['filename'] unless flags[:dryrun]
   when 'localfile'
     puts "DataStore: Uploading local file #{v['filename']}" if flags[:verbose]
-    ds.upload_file v['filename']
-  when 'postgis-db'
-    puts "DataStore: Connecting to PostGIS database #{flags[:host]}:#{flags[:port]}/#{flags[:database]}" if flags[:verbose]
-    ds.data_type = 'PostGIS'
-    ds.connection_parameters = ds.connection_parameters.merge({
-      "Connection timeout" => 20,
-      "port" => flags[:port],
-      "dbtype" => 'postgis',
-      "host" => flags[:host],
-      "validate connections" => true,
-      "encode functions" => false,
-      "max connections" => 16,
-      "database" => flags[:database],
-      "namespace" => flags[:namespace],
-      "schema" => flags[:schema],
-      "Loose bbox" => true,
-      "Expose primary keys" => false,
-      "fetch size" => 1000,
-      "Max open prepared statements" => 50,
-      "preparedStatements" => false,
-      "Estimated extends" => true,
-      "user" => flags[:user],
-      "min connections" => 4
-    })
+    ds.upload_file v['filename'] unless flags[:dryrun]
+  when 'postgis'
+    if ds.new?
+      puts "DataStore: Connecting to PostGIS database #{flags[:host]}:#{flags[:port]}/#{flags[:database]}" if flags[:verbose]
+      ds.data_type = 'PostGIS'
+      ds.connection_parameters = ds.connection_parameters.merge({
+        "Connection timeout" => 20,
+        "port" => flags[:port],
+        "dbtype" => 'postgis',
+        "host" => flags[:host],
+        "validate connections" => true,
+        "encode functions" => false,
+        "max connections" => 16,
+        "database" => flags[:database],
+        "namespace" => flags[:namespace],
+        "schema" => flags[:schema],
+        "Loose bbox" => true,
+        "Expose primary keys" => false,
+        "fetch size" => 1000,
+        "Max open prepared statements" => 50,
+        "preparedStatements" => false,
+        "Estimated extends" => true,
+        "user" => flags[:user],
+        "min connections" => 4
+      })
+    end
     ap({:connection_parameters => ds.connection_parameters}) if flags[:debug]
   else
     raise NotImplementedError, "Unknown remote type: #{v['remote']}"
@@ -197,7 +199,7 @@ begin
     :verbose => false,
     :datadir => '/var/geomdtk/current/workspace',
     :format => :mods,
-    :remote => :localfile,
+    :remote => :postgis,
     :dryrun => false,
     :datastore => GeoMDTK::Config.geoserver.datastore || nil,
     :workspace => GeoMDTK::Config.geoserver.workspace || 'druid',
@@ -243,7 +245,7 @@ Usage: #{File.basename(__FILE__)} [options] [druid ... | < druids]
       flags[:database] = url.path.gsub(%r{^/}, '') || flags[:database]
       flags[:user] = url.user || flags[:user]
       flags[:schema] = url.fragment || flags[:schema]
-      flags[:remote] = 'postgis-db'
+      flags[:remote] = :postgis
       flags[:datastore] = 'postgis'
     end
   end.parse!
