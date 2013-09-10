@@ -36,7 +36,7 @@ def find_mef(druid, uuid, flags)
       found_metadata = true
       # original ISO 19139
       ifn = File.join(druid.temp_dir, 'iso19139.xml')
-      FileUtils.ln_sf fn, ifn, :verbose => flags[:verbose]
+      FileUtils.install fn, ifn, :verbose => flags[:verbose]
     end
   end
   ifn
@@ -56,6 +56,7 @@ def convert_iso2geo(druid, ifn, flags)
   puts "Generating #{gfn}" if flags[:verbose]
   xml = GeoMDTK::Transform.to_geoMetadataDS(ifn, { 'purl' => "#{flags[:purl]}/#{druid.id}"}) 
   ap({:xml => xml}) if flags[:debug]
+  # XXX: if we have a feature catalog append it here...
   File.open(gfn, 'w') {|f| f << xml.to_xml }
   gfn
 end
@@ -132,7 +133,7 @@ def export_images(druid, uuid, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.ln_sf fn, imagefn, :verbose => flags[:debug]
+      FileUtils.install fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
   end
@@ -141,9 +142,9 @@ end
 def export_local_images(druid, tempdir, flags)
   # export any thumbnail images
   %w{png jpg}.each do |fmt|
-    Dir.glob("#{flags[:stagedir]}/#{druid.id}.#{fmt}") do |fn|
+    Dir.glob("#{flags[:stagedir]}/#{druid.id}/content/*.#{fmt}") do |fn|
       imagefn = File.join(druid.content_dir, 'preview' + '.' + fmt)
-      FileUtils.ln_sf fn, imagefn, :verbose => flags[:debug]
+      FileUtils.install fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
     end
   end
@@ -151,11 +152,11 @@ end
 
 def export_zip(druid, flags)
   # export content into zip files
-  Dir.glob(File.join(flags[:stagedir], "#{druid.id}.zip")) do |fn|
+  Dir.glob(File.join(flags[:stagedir], "#{druid.id}/content/data.zip")) do |fn|
     # extract shapefile name using filename pattern from
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     ofn = "#{druid.content_dir}/data.zip"
-    FileUtils.ln_sf fn, ofn, :verbose => flags[:verbose]
+    FileUtils.install fn, ofn, :verbose => flags[:verbose]
     yield ofn if block_given?
     
     if flags[:extract_basename]
@@ -178,8 +179,8 @@ def doit(client, uuid, obj, flags)
   end
   
   puts "Processing #{ifn}" if flags[:verbose]
-  
-  optfn = File.expand_path("#{flags[:stagedir]}/#{obj.druid}.json")
+
+  optfn = File.expand_path("#{flags[:stagedir]}/#{obj.druid}/temp/geoOptions.json")
   puts "Loading extra out-of-band options #{optfn}" if flags[:debug]
   if File.exist?(optfn)
     h = JSON.parse(File.read(optfn))
@@ -225,10 +226,15 @@ def main(flags)
       end
     end
   else
-    Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '.zip') do |zipfn|
-      obj = Struct.new(:content, :status, :druid, :zipfn).new(File.read(zipfn.gsub('.zip', '.xml')), nil, File.basename(zipfn, '.zip'), zipfn)
-      ap({:zipfn => zipfn, :obj => obj}) if flags[:debug]
-      doit client, nil, obj, flags
+    puts "Searching for staged content..." if flags[:verbose]
+    puts flags[:stagedir] + '/' + DruidTools::Druid.glob + '/content/data.zip'
+    Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '/content/data.zip') do |zipfn|
+      Dir.glob(File.join(File.dirname(zipfn), '..', 'temp', '*iso19139.xml')) do |xmlfn|
+        druid = File.basename(File.dirname(File.dirname(zipfn)))
+        obj = Struct.new(:content, :status, :druid, :zipfn, :fc).new(File.read(xmlfn), nil, druid, zipfn, File.read(xmlfn.gsub('.xml', '-fc.xml')))
+        ap({:zipfn => zipfn, :obj => obj}) if flags[:debug]
+        doit client, nil, obj, flags
+      end
     end
   end
 end
