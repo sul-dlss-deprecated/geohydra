@@ -38,7 +38,7 @@ module GeoMDTK
     #
     # Example:
     #
-    # <contentMetadata objectId="druid:cs838pw3418" type="file">
+    # <contentMetadata objectId="druid:cs838pw3418" type="geo">
     #   <resource id="druid:cs838pw3418_1" sequence="1" type="object">
     #     <label>Data</label>
     #     <file id="data.zip" mimetype="application/zip" preserve="yes" publish="yes" role="master" shelve="yes" size="217041">
@@ -68,7 +68,7 @@ module GeoMDTK
     # </contentMetadata>
     def create_content_metadata(objects, geoData, flags)
       Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'file') do
+        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'geo') do
           seq = 1
           objects.each do |k, v|
             next if v.nil? or v.empty?
