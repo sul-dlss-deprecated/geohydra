@@ -50,13 +50,14 @@ def find_local(druid, xml, flags)
   ifn
 end
 
-def convert_iso2geo(druid, ifn, flags)
+def convert_iso2geo(druid, ifn, isoXml, fcXml, flags)
+  isoXml = Nokogiri::XML(isoXml)
+  fcXml = Nokogiri::XML(fcXml)
+  ap({:ifn => ifn, :isoXml => isoXml, :fcXml => fcXml, :flags => flags})
   # GeoMetadataDS
   gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
   puts "Generating #{gfn}" if flags[:verbose]
-  xml = GeoMDTK::Transform.to_geoMetadataDS(ifn, { 'purl' => "#{flags[:purl]}/#{druid.id}"}) 
-  ap({:xml => xml}) if flags[:debug]
-  # XXX: if we have a feature catalog append it here...
+  xml = GeoMDTK::Transform.to_geoMetadataDS(isoXml, fcXml, { 'purl' => "#{flags[:purl]}/#{druid.id}"}) 
   File.open(gfn, 'w') {|f| f << xml.to_xml }
   gfn
 end
@@ -191,7 +192,7 @@ def doit(client, uuid, obj, flags)
     flags[:geometryType] ||= 'Polygon' # XXX: placeholder
   end
 
-  gfn = convert_iso2geo(druid, ifn, flags)
+  gfn = convert_iso2geo(druid, ifn, obj.content, obj.fc, flags)
   geoMetadata = Dor::GeoMetadataDS.from_xml File.read(gfn)
   geoMetadata.geometryType = flags[:geometryType] || 'Polygon'
   geoMetadata.zipName = 'data.zip'
