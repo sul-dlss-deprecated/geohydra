@@ -2,9 +2,9 @@
 module GeoHydra
 end
 
-require 'geomdtk/version'
-require 'geomdtk/geonetwork'
-require 'geomdtk/transform'
-require 'geomdtk/solr'
-require 'geomdtk/accession'
-require 'geomdtk/utils'
+require geohydra/version'
+require geohydra/geonetwork'
+require geohydra/transform'
+require geohydra/solr'
+require geohydra/accession'
+require geohydra/utils'

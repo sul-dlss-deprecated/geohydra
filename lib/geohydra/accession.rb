@@ -11,12 +11,6 @@ module GeoHydra
       'image/png' => Assembly::FILE_ATTRIBUTES['image/jp2'], # preview image
       'application/zip' => Assembly::FILE_ATTRIBUTES['default'] # data file
     )
-
-    PATTERNS = {
-      :Data => '*.zip',
-      :Preview => '*.{png,jpg,gif}',
-      :Metadata => '*.{xml,txt}'
-    }
   
     attr_reader :druid
     def initialize(druid)
@@ -38,37 +32,42 @@ module GeoHydra
     #
     # Example:
     #
-    # <contentMetadata objectId="druid:cs838pw3418" type="geo">
-    #   <resource id="druid:cs838pw3418_1" sequence="1" type="object">
-    #     <label>Data</label>
-    #     <file id="data.zip" mimetype="application/zip" preserve="yes" publish="yes" role="master" shelve="yes" size="217041">
-    #       <geoData>
-    #         <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269">
-    #           <gml:lowerCorner>-151.479444 26.071745</gml:lowerCorner>
-    #           <gml:upperCorner>-78.085007 69.4325</gml:upperCorner>
-    #         </gml:Envelope>
-    #       </geoData>
-    #       <checksum type="sha1">dcbe71ba0d886f9f00c84035c31f626054cbcd22</checksum>
-    #       <checksum type="md5">2c17f35d5fdb48ba03c717175c7f2156</checksum>
-    #     </file>
-    #     <file id="data_EPSG_4326.zip" mimetype="application/zip" preserve="no" publish="yes" role="derivative" shelve="yes" size="127083">
-    #       <geoData srsName="EPSG:4326"/>
-    #       <checksum type="sha1">a19af4cc236fb999e85844aed6ababaebe7b49ff</checksum>
-    #       <checksum type="md5">9576f1c8643b11c24a1dfbf1d42b68e8</checksum>
-    #     </file>
-    #   </resource>
-    #   <resource id="druid:cs838pw3418_2" sequence="2" type="preview">
-    #     <label>Preview</label>
-    #     <file id="preview.jpg" mimetype="image/jpeg" preserve="yes" publish="yes" role="master" shelve="yes" size="71334">
-    #       <checksum type="sha1">43ea5b7bd7d02e3c164d1d5b145a45f83fd7e32f</checksum>
-    #       <checksum type="md5">a38d5bb9649c8d307b9ec84a7de84570</checksum>
-    #       <imageData height="849" width="1428"/>
-    #     </file>
-    #   </resource>
-    # </contentMetadata>
+    #    <contentMetadata objectId="druid:ks297fy1411" type="file">
+    #      <resource id="druid:ks297fy1411_1" sequence="1" type="main">
+    #        <label>Data</label>
+    #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.zip" mimetype="application/zip" size="2191447" role="master">
+    #          <geoData srsName="EPSG:4269">
+    #            <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269">
+    #              <gml:lowerCorner>-97.238989 23.780775</gml:lowerCorner>
+    #              <gml:upperCorner>-81.170106 30.289096</gml:upperCorner>
+    #            </gml:Envelope>
+    #          </geoData>
+    #          <checksum type="sha1">9a08212a815902ebcd14c83bc258bfd830e86b58</checksum>
+    #          <checksum type="md5">a89191324c24ead1f1bc0fced4e0f75d</checksum>
+    #        </file>
+    #        <file preserve="no" shelve="yes" publish="yes" id="OFFSH_BLOCKS_EPSG_4326.zip" mimetype="application/zip" size="2003420" role="derivative">
+    #          <geoData srsName="EPSG:4326"/>
+    #          <checksum type="sha1">a860e8aa831e0f0011d2cd3ca8f75186b956f19d</checksum>
+    #          <checksum type="md5">a6055a001f4f98cc6b8eb41e617417b3</checksum>
+    #        </file>
+    #      </resource>
+    #      <resource id="druid:ks297fy1411_2" sequence="2" type="preview">
+    #        <label>Preview</label>
+    #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.png" mimetype="image/png" size="22927" role="master">
+    #          <checksum type="sha1">9f16b1036a08dc722ff14cce16e04e75e6b4b7de</checksum>
+    #          <checksum type="md5">e43fd14433cb37acbdd30cef3f4e150c</checksum>
+    #          <imageData width="800" height="532"/>
+    #        </file>
+    #        <file preserve="no" shelve="yes" publish="yes" id="OFFSH_BLOCKS_small.png" mimetype="image/png" size="10906" role="derivative">
+    #          <checksum type="sha1">1a62a926a46c16f11f43ec4c250b38b46980673b</checksum>
+    #          <checksum type="md5">f17b9de6b290f56ac6e06f95a3686f7f</checksum>
+    #          <imageData width="180" height="119"/>
+    #        </file>
+    #      </resource>
+    #    </contentMetadata>
     def create_content_metadata(objects, geoData, flags)
       Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'geo') do
+        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'file') do
           seq = 1
           objects.each do |k, v|
             next if v.nil? or v.empty?
@@ -120,7 +119,7 @@ module GeoHydra
                                'master'
                              end
                            elsif o.image?
-                               if o.path =~ %r{_small.(jpg|png|gif)$}
+                               if o.path =~ %r{_small.png$}
                                  'derivative'
                                else
                                  'master'
@@ -176,6 +175,12 @@ module GeoHydra
       end
     end
 
+    PATTERNS = {
+      :Data => '*.zip',
+      :Preview => '*.{png,jpg,gif}',
+      :Metadata => '*.{xml,txt}'
+    }
+
     def self.run(druid, flags = {})
       self.new(druid).accession(flags)
     end
@@ -205,7 +210,7 @@ module GeoHydra
       # optional parameters
       opts.merge!({
         :pid              => @druid.druid, # druid:xx111xx1111
-        :source_id        => { 'geomdtk' => geoMetadata.file_id.first.to_s },
+        :source_id        => { geohydra' => geoMetadata.file_id.first.to_s },
         :tags             => []
       })
 
@@ -295,17 +300,17 @@ module GeoHydra
         xml = create_content_metadata objects, geoData, flags
         item.datastreams['contentMetadata'].content = xml
         ap({:contentMetadataDS => item.datastreams['contentMetadata'].ng_xml}) if flags[:debug]
+
+        if flags[:shelve]
+          $stderr.puts "Shelving to stacks content..." if flags[:verbose]
+          files = []
+          item.datastreams['contentMetadata'].public_xml.xpath('//file').each do |f|
+            files << f['id'].to_s
+          end
+          ap({ :id => @druid.druid, :files => files }) if flags[:debug]
         
-        cfn = File.join(@druid.metadata_dir, 'contentMetadata.xml')
-        $stderr.puts "Writing #{cfn}" if flags[:verbose]
-        File.open(cfn, 'w') do |f|
-          f << item.datastreams['contentMetadata'].ng_xml.to_xml(:indent => 2, :encoding => 'UTF-8')
+          Dor::DigitalStacksService.shelve_to_stacks @druid.druid, files
         end
-      end
-      
-      if flags[:accessionWF]
-        $stderr.puts "Starting accessioning workflow" if flags[:verbose]
-        Dor::WorkflowService.update_workflow_status('dor', item.druid, 'accessionWF', 'start-accession', 'waiting')
       end
 
       # save changes
