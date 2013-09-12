@@ -42,12 +42,18 @@ def find_mef(druid, uuid, flags)
   ifn
 end
 
-def find_local(druid, xml, flags)
+def find_local(druid, xml, fcXml, flags)
   ifn = File.join(druid.temp_dir, 'iso19139.xml')
   unless File.exist?(ifn)
     File.open(ifn, "w") {|f| f << xml.to_s}
   end
-  ifn
+  
+  fcfn = File.join(druid.temp_dir, 'iso19139-fc.xml')
+  unless File.exist?(fcfn)
+    File.open(fcfn, "w") {|f| f << fcXml.to_s}
+  end
+  
+  [ifn, fcfn]
 end
 
 def convert_iso2geo(druid, ifn, isoXml, fcXml, flags)
@@ -179,7 +185,7 @@ def doit(client, uuid, obj, flags)
     ifn = find_mef(druid, uuid, flags)
   else
     raise ArgumentError, druid if obj.content.empty?
-    ifn = find_local(druid, obj.content.to_s, flags)
+    ifn, fcfn = find_local(druid, obj.content.to_s, obj.fc.to_s, flags)
   end
   
   puts "Processing #{ifn}" if flags[:verbose]
