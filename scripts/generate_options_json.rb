@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 
-require 'geomdtk'
+require 'geohydra'
 require 'json'
 
 def doit(shp)
   r = {}
   r['druid'] = File.basename(File.dirname(File.dirname(shp)))
-  raise ArgumentError unless GeoMDTK::Utils.shapefile?(shp)
-  r['geometryType'] = GeoMDTK::Transform.geometry_type(shp)
+  raise ArgumentError unless GeoHydra::Utils.shapefile?(shp)
+  r['geometryType'] = GeoHydra::Transform.geometry_type(shp)
   r['filename'] = File.basename(shp)
   File.open(File.join(File.dirname(shp), 'geoOptions.json'), 'w') do |f|
     f.puts r.to_json.to_s
@@ -16,7 +16,7 @@ def doit(shp)
 end
 
 if ARGV.empty?
-  Dir.glob('/var/geomdtk/current/upload/druid/**/*.shp') do |shp|
+  Dir.glob('/var/geohydra/current/upload/druid/**/*.shp') do |shp|
     doit(shp)
   end
 else

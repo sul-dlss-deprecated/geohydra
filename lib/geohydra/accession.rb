@@ -5,7 +5,7 @@ require 'nokogiri'
 require 'dor-services'
 require 'assembly-objectfile'
 
-module GeoMDTK
+module GeoHydra
   class Accession
     FILE_ATTRIBUTES = Assembly::FILE_ATTRIBUTES.merge(
       'image/png' => Assembly::FILE_ATTRIBUTES['image/jp2'], # preview image

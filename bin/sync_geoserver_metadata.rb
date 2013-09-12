@@ -125,10 +125,10 @@ begin
   flags = {
     :debug => false,
     :verbose => true,
-    :datadir => '/var/geomdtk/current/workspace',
-    :datastore => GeoMDTK::Config.geoserver.datastore || 'postgis',
-    :workspace => GeoMDTK::Config.geoserver.workspace || 'druid',
-    :namespace => GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
+    :datadir => '/var/geohydra/current/workspace',
+    :datastore => GeoHydra::Config.geoserver.datastore || 'postgis',
+    :workspace => GeoHydra::Config.geoserver.workspace || 'druid',
+    :namespace => GeoHydra::Config.geoserver.namespace || 'http://purl.stanford.edu'
   }
   
   OptionParser.new do |opts|

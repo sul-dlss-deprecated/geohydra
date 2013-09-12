@@ -1,8 +1,8 @@
-module GeoMDTK
+module GeoHydra
   Config = Confstruct::Configuration.new do
-    geomdtk do
-      workspace "/var/geomdtk/current/workspace"
-      stage "/var/geomdtk/current/stage"
+    geohydra do
+      workspace "/var/geohydra/current/workspace"
+      stage "/var/geohydra/current/stage"
     end
 
     geonetwork do

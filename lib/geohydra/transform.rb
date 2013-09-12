@@ -2,7 +2,7 @@ require 'base64'
 require 'rgeo'
 require 'rgeo/shapefile'
 
-module GeoMDTK
+module GeoHydra
   # Facilitates XSLT stylesheet transformations for ISO 19139 import/export
   class Transform
     # XXX hardcoded paths

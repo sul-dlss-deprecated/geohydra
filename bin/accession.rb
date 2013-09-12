@@ -14,16 +14,16 @@ begin
     :admin_policy => 'druid:cb854wz7157',
     :rights => 'stanford',
     :tags => [
-      "Registered By : #{%x{whoami}.strip} (GeoMDTK)"
+      "Registered By : #{%x{whoami}.strip} (GeoHydra)"
     ],
-    :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp',
+    :tmpdir => GeoHydra::Config.geohydra.tmpdir || 'tmp',
     :verbose => false,
     :configtest => false,
     :purge => false,
     :shelve => false,
     :contentMetadata => true,
     :debug => false,
-    :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace'
+    :workspacedir => GeoHydra::Config.geohydra.workspace || 'workspace'
   }
 
   OptionParser.new do |opts|
@@ -93,12 +93,12 @@ EOM
     STDIN.each do |line|
       pid = line.strip
       druid = DruidTools::Druid.new(pid, flags[:workspacedir])
-      GeoMDTK::Accession.run(druid, flags)
+      GeoHydra::Accession.run(druid, flags)
     end
   else
     ARGV.each do |pid|
       druid = DruidTools::Druid.new(pid, flags[:workspacedir])
-      GeoMDTK::Accession.run(druid, flags)
+      GeoHydra::Accession.run(druid, flags)
     end
   end
 rescue SystemCallError => e

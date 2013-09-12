@@ -12,7 +12,7 @@ flags = {
 }
 
 ap({:flags => flags}) if flags[:debug]
-flags.merge! YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOMDTK_ENVIRONMENT']||'development']
+flags.merge! YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOHYDRA_ENVIRONMENT']||'development']
 ap({:flags => flags}) if flags[:debug]
 
 conn = ActiveRecord::Base.establish_connection flags

@@ -4,15 +4,15 @@ require 'rubygems'
 require 'rspec'
 require 'awesome_print'
 require 'equivalent-xml'
-require 'geomdtk'
+require 'geohydra'
 
-describe GeoMDTK::Solr do
+describe GeoHydra::Solr do
   
   POINT = /^POINT\([-\s\d\.]+\)/i # no commas
   POLYGON = /^POLYGON\(\([-\s\d\.,]+\)\)/i
   
   before(:each) do
-    @solr = GeoMDTK::Solr.new 'http://localhost:8983/solr'
+    @solr = GeoHydra::Solr.new 'http://localhost:8983/solr'
     @xml = {}
     @docs = {}
     Dir.glob('spec/fixtures/*_geoMetadata.xml') do |fn|

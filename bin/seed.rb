@@ -48,7 +48,7 @@ Usage: #{File.basename(__FILE__)} [-v] all
   raise ArgumentError, "Missing layernames" unless ARGV.size > 0
   
   seed_opts = []
-  GeoMDTK::Config.geowebcache.seed.each do |k,v|
+  GeoHydra::Config.geowebcache.seed.each do |k,v|
     ap({:k => k, :v => v}) if flags[:debug]
     raise ArgumentError, "Seed #{k} is missing parameters: #{v.keys}" unless [:gridSetId, :zoom]
     seed_opts << {

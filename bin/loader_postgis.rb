@@ -232,9 +232,9 @@ begin
     :register => false,
     :register_drop => false,
     :register_table => 'registered_layers',
-    :datadir => '/var/geomdtk/current/workspace',
-    :url => GeoMDTK::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
-    :schema => GeoMDTK::Config.postgis.schema || 'public'
+    :datadir => '/var/geohydra/current/workspace',
+    :url => GeoHydra::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
+    :schema => GeoHydra::Config.postgis.schema || 'public'
   }
   
   OptionParser.new do |opts|
@@ -264,7 +264,7 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
   end.parse!
 
   ap({:flags => flags}) if flags[:debug]
-  flags.merge! YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOMDTK_ENVIRONMENT']||'development']
+  flags.merge! YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOHYDRA_ENVIRONMENT']||'development']
   ap({:flags => flags}) if flags[:debug]
   
   ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new($stderr) if flags[:debug]

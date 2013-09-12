@@ -196,12 +196,12 @@ begin
     :debug => false,
     :delete => false,
     :verbose => true,
-    :datadir => '/var/geomdtk/current/workspace',
+    :datadir => '/var/geohydra/current/workspace',
     :format => 'MODS',
     :remote => 'localfile',
-    :datastore => GeoMDTK::Config.geoserver.datastore || nil,
-    :workspace => GeoMDTK::Config.geoserver.workspace || 'druid',
-    :namespace => GeoMDTK::Config.geoserver.namespace || 'http://purl.stanford.edu'
+    :datastore => GeoHydra::Config.geoserver.datastore || nil,
+    :workspace => GeoHydra::Config.geoserver.workspace || 'druid',
+    :namespace => GeoHydra::Config.geoserver.namespace || 'http://purl.stanford.edu'
     # :host => 'localhost',
     # :port => 5432,
     # :user => 'geostaff',

@@ -1,12 +1,12 @@
 GIT
   remote: corn.stanford.edu:/afs/ir/dev/dlss/git/lyberteam/assembly-objectfile.git
-  revision: 87e19326864d4fe9a2e286256a5b2582ebd932c8
+  revision: ac7f2d22495d4b32b5c1d2e2be64a93440c6be15
   specs:
-    assembly-objectfile (1.5.2)
-      activesupport
+    assembly-objectfile (1.5.7)
+      activesupport (~> 3.2.0)
       mime-types
       mini_exiftool (~> 1.6)
-      nokogiri (~> 1)
+      nokogiri (~> 1.5.0)
 
 GIT
   remote: https://github.com/drh-stanford/version_bumper.git
@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: bf0cfade9b23d3bec5c2d36651ca4f946375efa8
+  revision: ce8d3a990ea1d28a32812f59103d259618cf444b
   branch: geoMetadata
   specs:
     dor-services (4.2.21)
@@ -32,7 +32,7 @@ GIT
       net-sftp
       net-ssh
       net-ssh-krb (>= 0.3.0)
-      nokogiri (>= 1.6.0)
+      nokogiri (~> 1.5.10)
       om
       progressbar
       rest-client
@@ -48,9 +48,9 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/druid-tools
-  revision: a7e39e67ad62b8a3f26d3c49aaeea7938705f11c
+  revision: 8fc285c50ebdd4ada95a493c0671f25fedee23a3
   specs:
-    druid-tools (0.2.5)
+    druid-tools (0.2.6)
 
 GIT
   remote: https://github.com/sul-dlss/mods.git
@@ -63,15 +63,15 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/rgeoserver.git
-  revision: 71906e37927f32a4b0c6647ec90624f628eb73f3
+  revision: 56ae5811bcac6897a4d82fb50cb2b759e3611aba
   branch: 0.6.x
   specs:
-    rgeoserver (0.6.3.beta2)
+    rgeoserver (0.6.4.0)
       activemodel (~> 3.2.14)
       activesupport (~> 3.2.14)
       confstruct (~> 0.2.5)
       mime-types (~> 1.24)
-      nokogiri (~> 1.6.0)
+      nokogiri (~> 1.5.10)
       rest-client (~> 1.6.7)
       rgeo (~> 0.3.20)
       rgeo-shapefile (~> 0.2.3)
@@ -80,7 +80,7 @@ GIT
 PATH
   remote: .
   specs:
-    geomdtk (0.2.2.4)
+    geohydra (0.2.2.5)
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
@@ -91,7 +91,7 @@ PATH
       fastimage
       json
       mods
-      nokogiri (~> 1.6)
+      nokogiri (~> 1.5.0)
       rest-client
       rgeo
       rgeo-shapefile
@@ -174,25 +174,23 @@ GEM
       validatable
     mediashelf-loggable (0.4.9)
     method_source (0.8.2)
-    mime-types (1.24)
+    mime-types (1.25)
     mini_exiftool (1.7.0)
-    mini_portile (0.5.1)
-    moab-versioning (1.2.7)
+    moab-versioning (1.2.9)
       confstruct
       happymapper
       hashery (>= 2.0.0)
       json
       nokogiri
       systemu
-    multi_json (1.7.9)
+    multi_json (1.8.0)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (2.6.8)
+    net-ssh (2.7.0)
     net-ssh-krb (0.3.0)
       gssapi (~> 1.1.2)
       net-ssh (>= 2.0)
-    nokogiri (1.6.0)
-      mini_portile (~> 0.5.0)
+    nokogiri (1.5.10)
     nom-xml (0.5.1)
       activesupport
       i18n
@@ -210,7 +208,7 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     rake (10.1.0)
-    rdf (1.0.7)
+    rdf (1.0.8)
       addressable (>= 2.2)
     rdf-rdfxml (0.3.9)
       rdf (>= 0.3.11)
@@ -264,7 +262,7 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
-    stanford-mods (0.0.19)
+    stanford-mods (0.0.20)
       mods
     stomp (1.2.14)
     systemu (2.5.2)
@@ -272,7 +270,7 @@ GEM
     uuidtools (2.1.4)
     validatable (1.6.7)
     xml-simple (1.1.2)
-    yard (0.8.7)
+    yard (0.8.7.1)
 
 PLATFORMS
   ruby
@@ -283,7 +281,7 @@ DEPENDENCIES
   dor-services!
   druid-tools!
   equivalent-xml
-  geomdtk!
+  geohydra!
   mods!
   pry
   rake

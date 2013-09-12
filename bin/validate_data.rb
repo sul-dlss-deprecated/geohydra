@@ -9,7 +9,7 @@ def validate(path, flags)
   Dir.glob("#{flags[:srcdir]}/**/*.shp") do |shp|
     puts "Processing #{shp}" if flags[:debug]
     basefn = File.basename(shp, '.shp')
-    unless GeoMDTK::Utils.shapefile?(shp)
+    unless GeoHydra::Utils.shapefile?(shp)
       puts "Error <#{shp}>. Trying to repair..."
       Dir.glob("#{File.dirname(shp)}/#{basefn.gsub(' ', "\\ ")}.*") do |fn|
         newfn = File.join(File.dirname(fn), File.basename(fn).gsub(/[^a-zA-Z0-9_]/, '_'))
@@ -24,8 +24,8 @@ begin
   flags = {
     :debug => false,
     :verbose => false,
-    :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
-    :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp'
+    :stagedir => GeoHydra::Config.geohydra.stage || 'stage',
+    :tmpdir => GeoHydra::Config.geohydra.tmpdir || 'tmp'
   }
 
   OptionParser.new do |opts|

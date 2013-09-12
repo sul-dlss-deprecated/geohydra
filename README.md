@@ -1,7 +1,7 @@
-GeoMDTK
+GeoHydra
 =======
 
-Geospatial MetaData ToolKit for use as a Geo[Hydra](http://projecthydra.org)
+Geospatial MetaData ToolKit for use as a Geo[Hydra](http://projecthydra.org) head.
 head.
 
 Setup
@@ -23,8 +23,8 @@ If needed, configure host to use Ruby 1.9.3:
 
     % rvm_path=$HOME/.rvm rvm-installer --auto-dotfiles
     % source $HOME/.bashrc
-    % cd geomdtk
-    % rvm use 1.9.3@geomdtk --create
+    % cd geohydra
+    % rvm use 1.9.3@geohydra --create
     % rvm rvmrc create
 
 To install the native extensions to Ruby pg:
@@ -45,20 +45,20 @@ Run setup:
 Utilities
 ---------
 
-To ingest ArcGIS *.shp.xml files and transform into ISO19139 files
+To ingest ArcGIS `*.shp.xml` files and transform into ISO 19139 files
 
-    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/druid
+    % bundle exec bin/ingest_arcgis.rb /var/geohydra/current/upload/druid
 
 To package up the .shp files into .zip files:
 
-    % bundle exec bin/assemble_data.rb /var/geomdtk/current/upload/druid
+    % bundle exec bin/assemble_data.rb /var/geohydra/current/upload/druid
 
-To assemble the workspace, populate the *geomdtk.stage* directory with `druid.zip` files which
-contain the Shapefiles files and `druid.xml`. See scripts/load_stage.rb for an example process.
+To assemble the workspace, populate the *geohydra.stage* directory with `druid` directories which
+contain the data as described in the Data Wrangling section below.
 
     % bundle exec bin/assemble.rb
 
-To project all Shapefiles into EPSG:4326 (WGS84), if needed:
+To project all Shapefiles into EPSG:4326 (WGS84), as needed:
 
     % bundle exec bin/derive_wgs84.rb
 
@@ -66,7 +66,7 @@ To upload the druid metadata to DOR:
 
     % bundle exec bin/accession.rb druid1 [druid2 druid3...]
 
-To upload the druid packages to PostGIS, use:
+To upload the druid packages to PostGIS, you will need `shp2pgsql` then use:
 
     % bundle exec bin/loader_postgis.rb druid1 [druid2 druid3...]
 
@@ -74,11 +74,11 @@ Then, login to GeoServer and import the data layers from PostGIS
 
     % bundle exec bin/sync_geoserver_metadata.rb
 
-To upload the druid packages to GeoServer via the filesystem:
+To upload the druid packages to GeoServer use OpenGeo's *Import Data* feature, or via the filesystem:
 
     % bundle exec bin/loader.rb druid1 [druid2 druid3...]
 
-To upload the OGP Solr documents, use:
+To upload the OpenGeoPortal Solr documents, use:
 
     % bundle exec bin/solr_indexer.rb 
 
@@ -91,28 +91,29 @@ To enable logging for the Rest client, use
 
 These utilities assume a few things:
 
-* /var/geomdtk/current is the core root folder for data/metadata
-* upload holds data to be processed
-* upload/druid holds data and metadata in the druid workspace structure
+* `/var/geohydra/current` is the core root folder for data/metadata
+* `upload` holds data to be processed
+* `upload/druid` holds data and metadata in the druid workspace structure
 
 Data Wrangling
 ==============
 
 The file system structure will initially look like this (see [Consul
-page](https://consul.stanford.edu/x/C5xSC) for a description.). The options.json contain meta-metadata about the package:
+page](https://consul.stanford.edu/x/C5xSC) for a description.). The `geoOptions.json` contain meta-metadata about the package:
 
     { 
       "druid"        : "zz943vx1492", 
       "geometryType" : "Point" 
     }
 
-Note that you can use scripts/build.rb to help build out a druid/ folder with data for upload
+Note that you can use `scripts/build.rb` to help build out a `druid/` folder with data for upload
 if you don't already have the below structure ready.
 
     zv925hd6723/
       metadata/
       content/
       temp/
+        geoOptions.json
         OGWELLS.dbf
         OGWELLS.prj
         OGWELLS.sbn
@@ -120,9 +121,9 @@ if you don't already have the below structure ready.
         OGWELLS.shp
         OGWELLS.shp.xml
         OGWELLS.shx
-        options.json
 
-after assembling the data, it should look like this, where the temp files for the shapefiles are all symlinks to reduce space requirements:
+after assembling the data, it should look like this, where the temp files for the shapefiles are all
+symlinks to reduce space requirements:
 
     zv925hd6723/
       metadata/
@@ -130,6 +131,9 @@ after assembling the data, it should look like this, where the temp files for th
         data.zip
         preview.jpg
       temp/
+        geoOptions.json
+        OGWELLS-iso19139-fc.shp.xml
+        OGWELLS-iso19139.shp.xml
         OGWELLS.dbf
         OGWELLS.prj
         OGWELLS.sbn
@@ -137,7 +141,6 @@ after assembling the data, it should look like this, where the temp files for th
         OGWELLS.shp
         OGWELLS.shp.xml
         OGWELLS.shx
-        options.json
 
 
 then at the end of processing -- prior to accessioning -- it will look like in your workspace:
@@ -148,14 +151,14 @@ then at the end of processing -- prior to accessioning -- it will look like in y
         descMetadata.xml
         geoMetadata.xml
       content/
-        preview.jpg
         data.zip
         data_ESRI_4326.zip (optionally)
+        preview.jpg
       temp/
         dc.xml
+        geoOptions.json
         iso19139.xml
         ogpSolr.xml
-        options.json
         solr.xml
 
 Credits

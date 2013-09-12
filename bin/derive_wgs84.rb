@@ -12,8 +12,8 @@ begin
   flags = {
     :overwrite_prj => true,
     :verbose => false,
-    :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',
-    :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp',
+    :workspacedir => GeoHydra::Config.geohydra.workspace || 'workspace',
+    :tmpdir => GeoHydra::Config.geohydra.tmpdir || 'tmp',
     # ogr2ogr is using a different WKT than GeoServer -- this one is from GeoServer 2.3.1.
     # As implemented by EPSG database on HSQL:
     #  http://docs.geotools.org/latest/userguide/library/referencing/hsql.html
@@ -65,7 +65,7 @@ EOM
       druid = DruidTools::Druid.new(id, flags[:workspacedir])
       unless fn =~ %r{_EPSG_}i
         puts "Processing #{druid.id} #{fn}"
-        GeoMDTK::Transform.reproject druid, fn, flags 
+        GeoHydra::Transform.reproject druid, fn, flags 
       end
     end
   else
@@ -74,7 +74,7 @@ EOM
       Dir.glob(druid.content_dir + '/*.zip').each do |fn|
         unless fn =~ %r{_EPSG_}i
           puts "Processing #{druid.id} #{fn}"
-          GeoMDTK::Transform.reproject druid, fn, flags 
+          GeoHydra::Transform.reproject druid, fn, flags 
         end
       end
     end

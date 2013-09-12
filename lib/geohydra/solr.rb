@@ -3,7 +3,7 @@
 require 'dor-services'
 require 'rsolr'
 
-module GeoMDTK
+module GeoHydra
   # API for uploading Solr documents
   class Solr
 

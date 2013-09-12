@@ -1,13 +1,13 @@
-require File.join(File.dirname(__FILE__), 'lib/geomdtk/version')
+require File.join(File.dirname(__FILE__), 'lib/geohydra/version')
 
 Gem::Specification.new do |s|
-  s.name = 'geomdtk'
-  s.version = GeoMDTK::VERSION
+  s.name = 'geohydra'
+  s.version = GeoHydra::VERSION
   s.platform = Gem::Platform::RUBY
   s.required_ruby_version = '~> 1.9.3'
   s.authors = ['Darren Hardy']
   s.email = ['drh@stanford.edu']
-  s.summary = %q{GeoMDTK}
+  s.summary = %q{GeoHydra}
   s.description = %q{Geospatial MetaData ToolKit for use in a GeoHydra head}
   s.has_rdoc = true
   s.licenses = ['ALv2', 'Stanford University Libraries']
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'confstruct'
   s.add_dependency 'json'
   s.add_dependency 'fastimage'  
-  s.add_dependency 'nokogiri', '~> 1.6' # need libxml2 >= 2.7.8 and 1.6 bundles latest libxml2, BUT conflicts with dor-services
+  s.add_dependency 'nokogiri', '~> 1.5.0'
   s.add_dependency 'rest-client'
   s.add_dependency 'rsolr'
   s.add_dependency 'rgeo'

@@ -1,6 +1,6 @@
 require 'druid-tools'
 
-module GeoMDTK
+module GeoHydra
   class Utils
     def self.find_druid_folders(dir = '.')
       # requires extra * for symlinks to directories

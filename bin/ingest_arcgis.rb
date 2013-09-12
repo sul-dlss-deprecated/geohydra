@@ -7,7 +7,7 @@ require 'fileutils'
 def extract_thumbnail fn, flags
   if fn =~ %r{^(.*)\.(shp|tif)\.xml$}i
     puts "Processing #{fn} for JPEG" if flags[:verbose]
-    GeoMDTK::Transform.extract_thumbnail fn, File.join(File.dirname(fn), 'preview.jpg')
+    GeoHydra::Transform.extract_thumbnail fn, File.join(File.dirname(fn), 'preview.jpg')
   else
     raise OptionParser::InvalidOption, "File <#{fn}> is not ESRI metadata format"
   end
@@ -20,7 +20,7 @@ def process_file fn, flags
     ofn_fc = $1 + '-iso19139-fc.xml'
     ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
     unless FileUtils.uptodate?(ofn, [fn]) and FileUtils.uptodate?(ofn_fc, [fn])
-      GeoMDTK::Transform.from_arcgis fn, ofn, ofn_fc
+      GeoHydra::Transform.from_arcgis fn, ofn, ofn_fc
       extract_thumbnail(fn, flags)
       dstdir = "#{File.dirname(fn)}/../content/"
       FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
@@ -32,7 +32,7 @@ end
 flags = {
   :verbose => false,
   :debug => false,
-  :directory => '/var/geomdtk/current/upload/druid'
+  :directory => '/var/geohydra/current/upload/druid'
 }
 OptionParser.new do |opts|
   opts.banner = "

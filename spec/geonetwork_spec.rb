@@ -5,12 +5,12 @@ require 'rubygems'
 require 'rspec'
 require 'awesome_print'
 
-require 'geomdtk'
+require 'geohydra'
 
-describe GeoMDTK::GeoNetwork do
+describe GeoHydra::GeoNetwork do
   
   before(:each) do
-    @client = GeoMDTK::GeoNetwork.new
+    @client = GeoHydra::GeoNetwork.new
     @uuid_example = "FA6ED959-7DED-4722-B1FB-A85FB79725BA"
   end
 

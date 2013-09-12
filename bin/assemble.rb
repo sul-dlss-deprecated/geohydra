@@ -52,7 +52,7 @@ def convert_iso2geo(druid, ifn, flags)
   # GeoMetadataDS
   gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
   puts "Generating #{gfn}" if flags[:verbose]
-  xml = GeoMDTK::Transform.to_geoMetadataDS(ifn, { 'purl' => "#{flags[:purl]}/#{druid.id}"}) 
+  xml = GeoHydra::Transform.to_geoMetadataDS(ifn, { 'purl' => "#{flags[:purl]}/#{druid.id}"}) 
   ap({:xml => xml}) if flags[:debug]
   File.open(gfn, 'w') {|f| f << xml.to_xml }
   gfn
@@ -103,7 +103,7 @@ def convert_mods2ogpsolr(druid, dfn, flags)
           "--stringparam stacks_root '#{stacks}'",
           "--stringparam purl '#{purl}'",
           "--output '#{sfn}'",
-          "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/mods2ogp.xsl')}'",
+          "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geohydra/mods2ogp.xsl')}'",
           "'#{dfn}'"
           ].join(' ')
   puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
@@ -119,7 +119,7 @@ def convert_mods2ogpsolr(druid, dfn, flags)
     # cleanup by adding CDATA
     cmd = ['xsltproc',
             "--output '#{sfn}'",
-            "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/ogpcleanup.xsl')}'",
+            "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geohydra/ogpcleanup.xsl')}'",
             "'#{sfn}'"  
             ].join(' ')
     puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
@@ -221,7 +221,7 @@ end
 def main(flags)
   File.umask(002)
   if flags[:geonetwork]
-    client = GeoMDTK::GeoNetwork.new
+    client = GeoHydra::GeoNetwork.new
     client.each do |uuid|
       begin
         puts "Processing #{uuid}"
@@ -247,14 +247,14 @@ begin
     :debug => false,
     :verbose => false,
     :geonetwork => false,
-    :geoserver => GeoMDTK::Config.ogp.geoserver,
-    :stacks => GeoMDTK::Config.ogp.stacks,
-    :solr => GeoMDTK::Config.ogp.solr,
-    :purl => GeoMDTK::Config.ogp.purl,
-    :stagedir => GeoMDTK::Config.geomdtk.stage || 'stage',
+    :geoserver => GeoHydra::Config.ogp.geoserver,
+    :stacks => GeoHydra::Config.ogp.stacks,
+    :solr => GeoHydra::Config.ogp.solr,
+    :purl => GeoHydra::Config.ogp.purl,
+    :stagedir => GeoHydra::Config.geohydra.stage || 'stage',
     :xinclude => false,
-    :workspacedir => GeoMDTK::Config.geomdtk.workspace || 'workspace',
-    :tmpdir => GeoMDTK::Config.geomdtk.tmpdir || 'tmp'
+    :workspacedir => GeoHydra::Config.geohydra.workspace || 'workspace',
+    :tmpdir => GeoHydra::Config.geohydra.tmpdir || 'tmp'
   }
 
   OptionParser.new do |opts|

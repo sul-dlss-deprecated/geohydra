@@ -3,7 +3,7 @@ require 'nokogiri'
 require 'rest_client'
 require 'awesome_print'
 
-module GeoMDTK
+module GeoHydra
   # Provides client interface to GeoNetwork's REST API
   # @see http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services XML Services documentation
   class GeoNetwork  
@@ -15,7 +15,7 @@ module GeoMDTK
     
     # @param [Hash] options provides `:service_root` URL
     def initialize options = {}
-      @service_root = options[:service_root] || GeoMDTK::Config.geonetwork.service_root
+      @service_root = options[:service_root] || GeoHydra::Config.geonetwork.service_root
       ap({:service_root => @service_root}) if $DEBUG
     end
     
@@ -90,7 +90,7 @@ module GeoMDTK
     
     # @see  http://geonetwork-opensource.org/manuals/2.8.0/eng/developer/xml_services/system_configuration.html#system-configuration 
     #   System Configuration
-    # @param types [Array] see {GeoMDTK::GeoNetwork::GEONETWORK_INFO_CODES}
+    # @param types [Array] see {GeoHydra::GeoNetwork::GEONETWORK_INFO_CODES}
     def info(types = GEONETWORK_INFO_CODES)
       r = {}
       types.each do |t|

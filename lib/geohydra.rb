@@ -1,5 +1,5 @@
 # Geospatial MetaData ToolKit is one component of the GeoHydra head
-module GeoMDTK
+module GeoHydra
 end
 
 require 'geomdtk/version'

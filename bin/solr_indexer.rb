@@ -5,7 +5,7 @@ require 'druid-tools'
 require 'optparse'
 
 def main(flags)
-  Dir.glob('/var/geomdtk/current/workspace/**/ogpSolr.xml') do |fn|
+  Dir.glob('/var/geohydra/current/workspace/**/ogpSolr.xml') do |fn|
     puts "Uploading #{fn}"
     system('curl -X POST  -H "Content-Type: text/xml" ' +
            "--data-binary @#{fn} " +
@@ -20,8 +20,8 @@ begin
   flags = {
     :debug => false,
     :verbose => false,
-    :collection => GeoMDTK::Config.ogp.solr.collection || 'ogp',
-    :solr => GeoMDTK::Config.ogp.solr.url
+    :collection => GeoHydra::Config.ogp.solr.collection || 'ogp',
+    :solr => GeoHydra::Config.ogp.solr.url
   }
 
   OptionParser.new do |opts|

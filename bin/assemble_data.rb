@@ -7,10 +7,10 @@ def assemble(path, flags)
   ap({:path => path, :flags => flags}) if flags[:debug]
   File.umask(002)
   Dir.glob(File.join(path, '**', '*.shp')) do |shp|
-    raise ArgumentError, shp unless GeoMDTK::Utils.shapefile?(shp)
+    raise ArgumentError, shp unless GeoHydra::Utils.shapefile?(shp)
 
     ap({:shp => shp}) if flags[:debug]
-    geometry_type = GeoMDTK::Transform.geometry_type(shp)
+    geometry_type = GeoHydra::Transform.geometry_type(shp)
     ap({:geometry_type => geometry_type}) if flags[:debug]
     puts ['Scanned', File.basename(shp), geometry_type].join("\t") if flags[:verbose]
     
@@ -36,7 +36,7 @@ begin
   flags = {
     :debug => false,
     :verbose => false,
-    :srcdir => '/var/geomdtk/current/upload/druid'
+    :srcdir => '/var/geohydra/current/upload/druid'
   }
 
   OptionParser.new do |opts|
@@ -55,7 +55,7 @@ EOM
 
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
   n = 0
-  GeoMDTK::Utils.find_druid_folders(flags[:srcdir]) do |path|
+  GeoHydra::Utils.find_druid_folders(flags[:srcdir]) do |path|
     assemble path, flags
     n = n + 1
   end

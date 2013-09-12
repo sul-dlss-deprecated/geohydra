@@ -5,7 +5,7 @@ require 'fileutils'
 require 'druid-tools'
 
 flags = {
-  :base => '/var/geomdtk/current/upload',
+  :base => '/var/geohydra/current/upload',
   :include_iso19139 => true,
   :debug => true
 }
@@ -28,7 +28,7 @@ def build(shp, druid, geometryType, flags)
   end
 end
 
-CSV.foreach('/var/geomdtk/current/upload/metadata/Batch20130806.csv') do |row|
+CSV.foreach('/var/geohydra/current/upload/metadata/Batch20130806.csv') do |row|
   shp = row[0].to_s.strip
   next if shp.empty? or shp == 'shapefile'
   druid = DruidTools::Druid.new(row[1].to_s.strip)

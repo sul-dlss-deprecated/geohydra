@@ -4,7 +4,7 @@ require 'rubygems'
 require 'rspec'
 require 'awesome_print'
 require 'equivalent-xml'
-require 'geomdtk'
+require 'geohydra'
 require 'nokogiri'
 
 describe do
@@ -28,7 +28,7 @@ describe do
                 "--stringparam stacks_root 'http://host/stacks'",
                 "--stringparam purl '#{purl}'",
                 # "--output #{fn.gsub('descMetadata', 'ogpSolr')}",
-                "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geomdtk/mods2ogp.xsl')}'",
+                "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geohydra/mods2ogp.xsl')}'",
                 "#{fn}",
                 "| diff --ignore-all-space - #{fn.gsub('descMetadata', 'ogpSolr')}"
                 ].join(' ')
