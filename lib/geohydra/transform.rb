@@ -80,21 +80,24 @@ module GeoHydra
     end
     
     # Converts a ISO 19139 into RDF-bundled document geoMetadataDS
-    # @param [String] fn Input data as ISO 19139 XML.
+    # @param [Nokogiri::XML::Document] isoXml ISO 19193 MD_Metadata node
+    # @param [Nokogiri::XML::Document] fcXml ISO 19193 feature catalog
+    # @param [String] flags['purl']
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
     def self.to_geoMetadataDS isoXml, fcXml, flags = {}
       raise ArgumentError, "PURL is required" if flags['purl'].nil?
-      xml = Nokogiri::XML("
+      Nokogiri::XML("
 <rdf:RDF rdf:about=\"#{flags['purl']}\" 
          xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
-  <rdf:Description rdf:type=\"geo#metadata\"/>
-  <rdf:Description rdf:type=\"geo#featurecatalog\"/>
+  <rdf:Description rdf:type=\"geo#metadata\">
+    #{isoXml.root.to_s}
+  </rdf:Description>
+  <rdf:Description rdf:type=\"geo#featurecatalog\">
+    #{fcXml.root.to_s}
+  </rdf:Description>
 </rdf:RDF>")
-      xml.root.first_element_child << isoXml.root 
-      xml.root.last_element_child << fcXml.root
-      ap({:to_geoMetadataDS_xml => xml})
     end
-    
+
     # @param zipfn [String] ZIP file
     def self.reproject druid, zipfn, flags
 

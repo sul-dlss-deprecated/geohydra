@@ -52,22 +52,26 @@ end
 
 def convert_iso2geo(druid, ifn, isoXml, fcXml, flags)
   isoXml = Nokogiri::XML(isoXml)
+  if isoXml.nil? or isoXml.root.nil?
+    raise ArgumentError, "Empty ISO 19139" 
+  end
   fcXml = Nokogiri::XML(fcXml)
-  ap({:ifn => ifn, :isoXml => isoXml, :fcXml => fcXml, :flags => flags})
+  ap({:ifn => ifn, :isoXml => isoXml, :fcXml => fcXml, :flags => flags}) if flags[:debug]
   # GeoMetadataDS
   gfn = File.join(druid.metadata_dir, 'geoMetadata.xml')
   puts "Generating #{gfn}" if flags[:verbose]
   xml = GeoHydra::Transform.to_geoMetadataDS(isoXml, fcXml, { 'purl' => "#{flags[:purl]}/#{druid.id}"}) 
-  File.open(gfn, 'w') {|f| f << xml.to_xml }
+  File.open(gfn, 'w') {|f| f << xml.to_xml(:indent => 2) }
   gfn
 end
 
 def convert_geo2mods(druid, geoMetadata, flags)
   # MODS from GeoMetadataDS
-  ap({:geoMetadata => geoMetadata.ng_xml, :descMetadata => geoMetadata.to_mods}) if flags[:debug]
+  ap({:geoMetadata => geoMetadata.ng_xml}) if flags[:debug]
+  ap({:metadata => geoMetadata.metadata})
   dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
   puts "Generating #{dfn}" if flags[:verbose]
-  File.open(dfn, 'w') { |f| f << geoMetadata.to_mods.to_xml }
+  File.open(dfn, 'w') { |f| f << geoMetadata.to_mods.to_xml(:index => 2) }
   dfn
 end
 
@@ -89,7 +93,7 @@ def convert_geo2solrspatial(druid, geoMetadata, flags)
       }
     }
   end
-  File.open(sfn, 'w') { |f| f << doc.to_xml }
+  File.open(sfn, 'w') { |f| f << doc.to_xml(:indent => 2) }
   sfn
 end
 
@@ -121,7 +125,7 @@ def convert_geo2dc(geoMetadata, flags)
   # Solr document from GeoMetadataDS
   dcfn = File.join(druid.temp_dir, 'dc.xml')
   puts "Generating #{dcfn}" if flags[:verbose]
-  File.open(dcfn, 'w') { |f| f << geoMetadata.to_dublin_core.to_xml }
+  File.open(dcfn, 'w') { |f| f << geoMetadata.to_dublin_core.to_xml(:indent => 2) }
   dcfn
 end
 
