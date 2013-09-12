@@ -171,7 +171,7 @@ def export_zip(druid, flags)
 end
 
 def doit(client, uuid, obj, flags)
-  puts "Processing #{uuid}"
+  puts "Processing #{obj.druid}"
   druid = setup_druid(obj, flags)
 
   if flags[:geonetwork]
