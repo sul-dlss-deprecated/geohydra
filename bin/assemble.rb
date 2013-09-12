@@ -68,7 +68,6 @@ end
 def convert_geo2mods(druid, geoMetadata, flags)
   # MODS from GeoMetadataDS
   ap({:geoMetadata => geoMetadata.ng_xml}) if flags[:debug]
-  ap({:metadata => geoMetadata.metadata})
   dfn = File.join(druid.metadata_dir, 'descMetadata.xml')
   puts "Generating #{dfn}" if flags[:verbose]
   File.open(dfn, 'w') { |f| f << geoMetadata.to_mods.to_xml(:index => 2) }
