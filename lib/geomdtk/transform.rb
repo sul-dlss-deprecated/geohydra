@@ -84,10 +84,12 @@ module GeoMDTK
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
     def self.to_geoMetadataDS isoXml, fcXml, flags = {}
       raise ArgumentError, "PURL is required" if flags['purl'].nil?
-      xml = Nokogiri::XML("<rdf:RDF rdf:about=\"#{flags['purl']}\">
-        <rdf:Description rdf:type=\"geo#metadata\"/>
-        <rdf:Description rdf:type=\"geo#featurecatalog\"/>
-      </rdf:RDF>")
+      xml = Nokogiri::XML("
+<rdf:RDF rdf:about=\"#{flags['purl']}\" 
+         xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
+  <rdf:Description rdf:type=\"geo#metadata\"/>
+  <rdf:Description rdf:type=\"geo#featurecatalog\"/>
+</rdf:RDF>")
       xml.root.first_element_child << isoXml.root 
       xml.root.last_element_child << fcXml.root
       ap({:to_geoMetadataDS_xml => xml})

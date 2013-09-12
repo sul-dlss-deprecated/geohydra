@@ -1,6 +1,6 @@
 development:
   adapter: postgresql
-  host: 127.0.0.1
+  host: kurma-db1-dev.stanford.edu
   port: 5432
   username: geostaff
   database: geoserver
@@ -10,7 +10,7 @@ development:
 
 testing:
   adapter: postgresql
-  host: 127.0.0.1
+  host: kurma-db1-dev.stanford.edu
   port: 5432
   username: geostaff
   database: geoserver
@@ -20,7 +20,7 @@ testing:
 
 production:
   adapter: postgresql
-  host: 127.0.0.1
+  host: kurma-db1-prod.stanford.edu
   port: 5432
   username: geostaff
   database: geoserver
