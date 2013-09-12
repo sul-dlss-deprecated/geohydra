@@ -161,6 +161,13 @@ then at the end of processing -- prior to accessioning -- it will look like in y
         ogpSolr.xml
         solr.xml
 
+To continue with accessioning, stage the data as follows:
+
+    zv925hd6723.xml -> iso19139.xml
+    zv925hd6723.zip -> data.zip
+    zv925hd6723.jpg -> preview.jpg
+    zv925hd6723.json -> geoOptions.json
+
 Credits
 =======
 

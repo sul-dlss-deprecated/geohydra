@@ -1,9 +1,29 @@
 development:
   adapter: postgresql
-  host: 127.0.0.1
+  host: kurma-db1-dev.stanford.edu
   port: 5432
   username: geostaff
   database: geoserver
-  schema_search_path: druid
+  schema_search_path: druid,public
+  pool: 5
+  timeout: 5000
+
+testing:
+  adapter: postgresql
+  host: kurma-db1-dev.stanford.edu
+  port: 5432
+  username: geostaff
+  database: geoserver
+  schema_search_path: druid,public
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: postgresql
+  host: kurma-db1-prod.stanford.edu
+  port: 5432
+  username: geostaff
+  database: geoserver
+  schema_search_path: druid,public
   pool: 5
   timeout: 5000

@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'confstruct'
   s.add_dependency 'json'
   s.add_dependency 'fastimage'  
-  s.add_dependency 'nokogiri', '~> 1.5.0'
+  s.add_dependency 'nokogiri', '~> 1.5.10'
   s.add_dependency 'rest-client'
   s.add_dependency 'rsolr'
   s.add_dependency 'rgeo'

@@ -12,8 +12,7 @@
 
      Example usage:
 
-     xsltproc -stringparam geometryType 'Polygon'
-              -stringparam geoserver_root 'http://kurma-podd1.stanford.edu/geoserver'
+     xsltproc -stringparam geoserver_root 'http://kurma-podd1.stanford.edu/geoserver'
               -stringparam purl 'http://purl-dev.stanford.edu/fw920bc5473'
               -output '/var/geomdtk/current/workspace/fw/920/bc/5473/fw920bc5473/temp/ogpSolr.xml'
               '/home/geostaff/geomdtk/current/lib/geomdtk/mods2ogp.xsl'
@@ -25,7 +24,7 @@
        - purl - complete URL with aa111bb1111 (len = 11)
 
      -->
-<xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0" exclude-result-prefixes="gmd gco gml mods rdf xsl">
+<xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" exclude-result-prefixes="gmd gco gml mods rdf xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
@@ -64,29 +63,28 @@
         <field name="Availability">
           <xsl:text>Online</xsl:text>
         </field>
-        <xsl:comment>XXX - year only but OGP's solr schema requires full date</xsl:comment>
+        <xsl:comment>XXX - MODS data are year only but OGP's solr schema requires full date</xsl:comment>
         <field name="ContentDate">
-          <!-- year only but OGP's solr schema requires full date -->
-          <xsl:value-of select="substring(mods:subject/mods:temporal, 1, 4)"/>
-          <xsl:text>-01-01T00:00:00Z</xsl:text>
+          <xsl:choose>
+            <xsl:when test="mods:subject/mods:temporal">
+              <xsl:value-of select="substring(mods:subject/mods:temporal, 1, 4)"/>
+              <xsl:text>-01-01T00:00:00Z</xsl:text>
+            </xsl:when>
+            <xsl:when test="mods:originInfo/mods:dateIssued">
+              <xsl:value-of select="substring(mods:originInfo/mods:dateIssued, 1, 4)"/>
+              <xsl:text>-01-01T00:00:00Z</xsl:text>
+            </xsl:when>
+          </xsl:choose>
         </field>
         <field name="LayerDisplayName">
           <!-- REQUIRED -->
           <xsl:value-of select="mods:titleInfo/mods:title[not(@type)]"/>
         </field>
-        <xsl:if test="mods:physicalDescription/mods:form[text() = 'Shapefile']">
+        <xsl:for-each select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']">
           <field name="DataType">
-            <xsl:choose>
-              <!-- OGP uses Point, Line, Polygon -->
-              <xsl:when test="$datatype = 'LineString'">
-                <xsl:text>Line</xsl:text>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="$datatype"/>
-              </xsl:otherwise>
-            </xsl:choose>
+            <xsl:value-of select='substring(., 5)'/><!-- strip gml: prefix -->
           </field>
-        </xsl:if>
+        </xsl:for-each>
         <field name="Publisher">
           <xsl:value-of select="mods:originInfo/mods:publisher"/>
         </field>
@@ -166,18 +164,11 @@
               "wms":       ["</xsl:text>
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms"],
-              "tilecache": ["</xsl:text>
-          <xsl:value-of select="$geoserver_root"/>
-          <!-- XXX: do we need WMS-T??? -->
-          <xsl:text>/wms"],
               "wfs":       ["</xsl:text>
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wfs"],
-              "view":      ["</xsl:text>
+              "purl":      ["</xsl:text>
           <xsl:value-of select="$purl"/>
-          <xsl:text>"],
-              "view_metadata_iso19139":      ["</xsl:text>
-          <xsl:value-of select="concat($purl, '.geoMetadata.xml')"/>
           <xsl:text>"] }</xsl:text>
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
         </field>

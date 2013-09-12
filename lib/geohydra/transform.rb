@@ -26,7 +26,6 @@ module GeoHydra
     
     # XSLT file locations
     XSLT = {
-      :rdf        => self.search_for_xsl('rdf_bundle.xsl'),
       :arcgis     => self.search_for_xsl('ArcGIS2ISO19139.xsl'),
       :arcgis_fc  => self.search_for_xsl('arcgis_to_iso19139_fc.xsl')
     }
@@ -83,9 +82,17 @@ module GeoHydra
     # Converts a ISO 19139 into RDF-bundled document geoMetadataDS
     # @param [String] fn Input data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
-    def self.to_geoMetadataDS fn, flags = {}
+    def self.to_geoMetadataDS isoXml, fcXml, flags = {}
       raise ArgumentError, "PURL is required" if flags['purl'].nil?
-      do_xslt XSLT[:rdf], fn, flags
+      xml = Nokogiri::XML("
+<rdf:RDF rdf:about=\"#{flags['purl']}\" 
+         xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
+  <rdf:Description rdf:type=\"geo#metadata\"/>
+  <rdf:Description rdf:type=\"geo#featurecatalog\"/>
+</rdf:RDF>")
+      xml.root.first_element_child << isoXml.root 
+      xml.root.last_element_child << fcXml.root
+      ap({:to_geoMetadataDS_xml => xml})
     end
     
     # @param zipfn [String] ZIP file
