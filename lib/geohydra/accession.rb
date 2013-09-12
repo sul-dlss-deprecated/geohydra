@@ -210,7 +210,7 @@ module GeoHydra
       # optional parameters
       opts.merge!({
         :pid              => @druid.druid, # druid:xx111xx1111
-        :source_id        => { geohydra' => geoMetadata.file_id.first.to_s },
+        :source_id        => { 'geohydra' => geoMetadata.file_id.first.to_s },
         :tags             => []
       })
 
