@@ -1,6 +1,6 @@
 #!/bin/bash -x
 c=ogp
-d=/var/geohydra/current/workspace
+d=/var/geomdtk/current/workspace
 h=localhost:18080
 s=http
 

@@ -47,11 +47,11 @@ Utilities
 
 To ingest ArcGIS `*.shp.xml` files and transform into ISO 19139 files
 
-    % bundle exec bin/ingest_arcgis.rb /var/geohydra/current/upload/druid
+    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/druid
 
 To package up the .shp files into .zip files:
 
-    % bundle exec bin/assemble_data.rb /var/geohydra/current/upload/druid
+    % bundle exec bin/assemble_data.rb /var/geomdtk/current/upload/druid
 
 To assemble the workspace, populate the *geohydra.stage* directory with `druid` directories which
 contain the data as described in the Data Wrangling section below.
@@ -91,7 +91,7 @@ To enable logging for the Rest client, use
 
 These utilities assume a few things:
 
-* `/var/geohydra/current` is the core root folder for data/metadata
+* `/var/geomdtk/current` is the core root folder for data/metadata
 * `upload` holds data to be processed
 * `upload/druid` holds data and metadata in the druid workspace structure
 

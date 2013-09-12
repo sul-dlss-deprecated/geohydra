@@ -125,7 +125,7 @@ begin
   flags = {
     :debug => false,
     :verbose => true,
-    :datadir => '/var/geohydra/current/workspace',
+    :datadir => '/var/geomdtk/current/workspace',
     :datastore => GeoHydra::Config.geoserver.datastore || 'postgis',
     :workspace => GeoHydra::Config.geoserver.workspace || 'druid',
     :namespace => GeoHydra::Config.geoserver.namespace || 'http://purl.stanford.edu'

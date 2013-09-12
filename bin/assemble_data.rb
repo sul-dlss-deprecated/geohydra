@@ -36,7 +36,7 @@ begin
   flags = {
     :debug => false,
     :verbose => false,
-    :srcdir => '/var/geohydra/current/upload/druid'
+    :srcdir => '/var/geomdtk/current/upload/druid'
   }
 
   OptionParser.new do |opts|

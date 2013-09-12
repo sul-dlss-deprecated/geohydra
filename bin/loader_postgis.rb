@@ -100,7 +100,7 @@ def main conn, layers, flags = {}
             # XXX: HARD CODED projection here -- extract from MODS or ISO19139
             # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
             # XXX: -G for the geography column causes some issues with GeoServer
-            system("shp2pgsql -D -s #{flags[:projection]}:4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
+            system("shp2pgsql -s #{flags[:projection]}:4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
             system("psql -X -q " +
                  "--host='#{flags[:host.to_s]}' " +
                  "--port='#{flags[:port.to_s]}' " +
@@ -232,7 +232,7 @@ begin
     :register => false,
     :register_drop => false,
     :register_table => 'registered_layers',
-    :datadir => '/var/geohydra/current/workspace',
+    :datadir => '/var/geomdtk/current/workspace',
     :url => GeoHydra::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
     :schema => GeoHydra::Config.postgis.schema || 'public'
   }

@@ -16,7 +16,7 @@ def doit(shp)
 end
 
 if ARGV.empty?
-  Dir.glob('/var/geohydra/current/upload/druid/**/*.shp') do |shp|
+  Dir.glob('/var/geomdtk/current/upload/druid/**/*.shp') do |shp|
     doit(shp)
   end
 else

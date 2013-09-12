@@ -32,7 +32,7 @@ end
 flags = {
   :verbose => false,
   :debug => false,
-  :directory => '/var/geohydra/current/upload/druid'
+  :directory => '/var/geomdtk/current/upload/druid'
 }
 OptionParser.new do |opts|
   opts.banner = "

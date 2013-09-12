@@ -5,7 +5,7 @@ require 'druid-tools'
 require 'optparse'
 
 def main(flags)
-  Dir.glob('/var/geohydra/current/workspace/**/ogpSolr.xml') do |fn|
+  Dir.glob('/var/geomdtk/current/workspace/**/ogpSolr.xml') do |fn|
     puts "Uploading #{fn}"
     system('curl -X POST  -H "Content-Type: text/xml" ' +
            "--data-binary @#{fn} " +
