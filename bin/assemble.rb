@@ -231,7 +231,7 @@ def main(flags)
     end
   else
     puts "Searching for staged content..." if flags[:verbose]
-    puts flags[:stagedir] + '/' + DruidTools::Druid.glob + '/content/data.zip'
+    puts flags[:stagedir] + '/' + DruidTools::Druid.glob + '/content/data.zip' if flags[:debug]
     Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '/content/data.zip') do |zipfn|
       Dir.glob(File.join(File.dirname(zipfn), '..', 'temp', '*iso19139.xml')) do |xmlfn|
         druid = File.basename(File.dirname(File.dirname(zipfn)))
