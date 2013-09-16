@@ -47,11 +47,11 @@ Utilities
 
 To ingest ArcGIS `*.shp.xml` files and transform into ISO 19139 files
 
-    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/upload/druid
+    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/stage
 
 To package up the .shp files into .zip files:
 
-    % bundle exec bin/assemble_data.rb /var/geomdtk/current/upload/druid
+    % bundle exec bin/assemble_data.rb /var/geomdtk/current/stage
 
 To assemble the workspace, populate the *geohydra.stage* directory with `druid` directories which
 contain the data as described in the Data Wrangling section below.

@@ -36,7 +36,7 @@ begin
   flags = {
     :debug => false,
     :verbose => false,
-    :srcdir => '/var/geomdtk/current/upload/druid'
+    :srcdir => '/var/geomdtk/current/stage'
   }
 
   OptionParser.new do |opts|
@@ -55,8 +55,8 @@ EOM
 
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
   n = 0
-  GeoHydra::Utils.find_druid_folders(flags[:srcdir]) do |path|
-    assemble path, flags
+  Dir.glob(File.join(flags[:srcdir], DruidTools::Druid.glob + '/')).sort.collect do |p|
+    assemble p, flags
     n = n + 1
   end
   puts "Processed #{n} folders."
