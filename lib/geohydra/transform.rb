@@ -82,7 +82,7 @@ module GeoHydra
     # Converts a ISO 19139 into RDF-bundled document geoMetadataDS
     # @param [Nokogiri::XML::Document] isoXml ISO 19193 MD_Metadata node
     # @param [Nokogiri::XML::Document] fcXml ISO 19193 feature catalog
-    # @param [String] flags['purl']
+    # @param [String] flags flags['purl']
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
     def self.to_geoMetadataDS isoXml, fcXml, flags = {}
       raise ArgumentError, "PURL is required" if flags['purl'].nil?

@@ -45,16 +45,30 @@ Run setup:
 Utilities
 ---------
 
+Assemble all your metadata and data as described in *Data Wrangling* into the
+stage directory `/var/geomdtk/current/stage`.
+
+Caveats: to enable logging for the Rest client, use
+
+    % RESTCLIENT_LOG=stdout bundle exec ...
+
+These utilities assume a few things:
+
+* `/var/geomdtk/current` is the core root folder for data/metadata
+* `upload` holds data to be processed
+* `upload/druid` holds data and metadata in the druid workspace structure
+
 To ingest ArcGIS `*.shp.xml` files and transform into ISO 19139 files
 
-    % bundle exec bin/ingest_arcgis.rb /var/geomdtk/current/stage
+    % bundle exec bin/ingest_arcgis.rb
 
 To package up the .shp files into .zip files:
 
-    % bundle exec bin/assemble_data.rb /var/geomdtk/current/stage
+    % bundle exec bin/assemble_data.rb
 
-To assemble the workspace, populate the *geohydra.stage* directory with `druid` directories which
-contain the data as described in the Data Wrangling section below.
+To assemble the workspace, populate the *geohydra.stage* directory with
+`druid` directories which contain the data as described in the Data Wrangling
+section below.
 
     % bundle exec bin/assemble.rb
 
@@ -82,18 +96,6 @@ To upload the OpenGeoPortal Solr documents, use:
 
     % bundle exec bin/solr_indexer.rb 
 
-Caveats
-=======
-
-To enable logging for the Rest client, use
-
-    % RESTCLIENT_LOG=stdout bundle exec ...
-
-These utilities assume a few things:
-
-* `/var/geomdtk/current` is the core root folder for data/metadata
-* `upload` holds data to be processed
-* `upload/druid` holds data and metadata in the druid workspace structure
 
 Data Wrangling
 ==============
