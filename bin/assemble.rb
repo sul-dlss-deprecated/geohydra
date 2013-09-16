@@ -256,7 +256,6 @@ begin
     :verbose => false,
     :geonetwork => false,
     :geoserver => GeoHydra::Config.ogp.geoserver,
-    :stacks => GeoHydra::Config.ogp.stacks,
     :solr => GeoHydra::Config.ogp.solr,
     :purl => GeoHydra::Config.ogp.purl,
     :stagedir => GeoHydra::Config.geohydra.stage || 'stage',
