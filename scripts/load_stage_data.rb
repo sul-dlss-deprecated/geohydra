@@ -7,7 +7,7 @@ Dir.glob('/var/geomdtk/current/stage/**/temp/*.shp.xml') do |shpxml_fn|
   puts "Locating #{k} data..."
   Dir.glob('/var/geomdtk/current/upload/data/original/**/' + k + '.*') do |fn|
     if %w{shp shx dbf prj sbn sbx}.include? File.extname(fn).gsub(/^\./, '') # only copy core Shapefile files
-      FileUtils.ln fn, d, :verbose => true
+      FileUtils.ln fn, d, :verbose => true unless File.exist?(File.join(d, File.basename(fn)))
     end
   end
 end
