@@ -165,7 +165,7 @@ end
 
 def export_attachments(druid, flags)
   Dir.glob("#{flags[:stagedir]}/#{druid.id}/content/*") do |fn|
-    if %w{.png .jpg}.include?(File.extname(fn))
+    if %w{.png .jpg}.include?(File.extname(fn)) or File.basename(fn) =~ /^data.*.zip$/
       puts "WARNING: Skipping #{fn}"
     else
       afn = File.join(druid.content_dir, File.basename(fn))
