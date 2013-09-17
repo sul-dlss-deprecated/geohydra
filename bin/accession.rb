@@ -11,7 +11,7 @@ VERSION = '0.3'
 begin
   File.umask(002)
   flags = {
-    :admin_policy => 'druid:cb854wz7157',
+    :admin_policy => 'druid:gz830zp4734',
     :rights => 'stanford',
     :tags => [
       "Registered By : #{%x{whoami}.strip} (GeoHydra)"
