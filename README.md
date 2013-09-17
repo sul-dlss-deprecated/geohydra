@@ -155,11 +155,9 @@ then at the end of processing -- prior to accessioning -- it will look like in y
         preview.jpg
         some-other-file.ext (optionally)
       temp/
-        dc.xml
-        geoOptions.json
         iso19139.xml
         ogpSolr.xml
-        solr.xml
+        spatialSolr.xml
 
 Credits
 =======

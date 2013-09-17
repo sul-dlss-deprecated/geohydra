@@ -82,7 +82,14 @@
         </field>
         <xsl:for-each select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']">
           <field name="DataType">
-            <xsl:value-of select='substring(., 5)'/><!-- strip gml: prefix -->
+            <xsl:choose>
+              <xsl:when test="substring(., 5)='LineString'">
+                <xsl:text>Line</xsl:text>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select='substring(., 5)'/><!-- strip gml: prefix -->
+              </xsl:otherwise>
+            </xsl:choose>
           </field>
         </xsl:for-each>
         <field name="Publisher">
