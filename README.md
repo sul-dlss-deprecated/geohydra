@@ -2,22 +2,21 @@ GeoHydra
 =======
 
 Geospatial MetaData ToolKit for use as a Geo[Hydra](http://projecthydra.org) head.
-head.
 
 Setup
 -----
 
 Core requirements, with versions as-tested:
 
-  * ArcGIS 10.2
-  * GeoNetwork 2.8 (optional for metadata management)
-  * GEOS 3.3
-  * GeoServer 2.2
-  * OpenGeoPortal 1.2
-  * PostGIS 2.0
-  * PostgreSQL 9.2
-  * Red Hat Enterprise Linux Server release 6.4 (Santiago)
-  * Ruby 1.9
+* ArcGIS 10.2
+* GeoNetwork 2.8 (optional for metadata management)
+* GEOS 3.3
+* GeoServer 2.2
+* OpenGeoPortal 1.2
+* PostGIS 2.0
+* PostgreSQL 9.2
+* Red Hat Enterprise Linux Server release 6.4 (Santiago)
+* Ruby 1.9
 
 If needed, configure host to use Ruby 1.9.3:
 
@@ -32,7 +31,7 @@ To install the native extensions to Ruby pg:
     # yum install postgresql92-devel
     % gem install pg -- --with-pg_config=/usr/pgsql-9.2/bin/pg_config 
 
-You need to customize your configuration parameters like so:
+You need to customize your configuration parameters like so (see the `config/environments/example.rb` first):
 
     % $EDITOR config/environments/development.rb
 
@@ -46,17 +45,11 @@ Utilities
 ---------
 
 Assemble all your metadata and data as described in *Data Wrangling* into the
-stage directory `/var/geomdtk/current/stage`.
+stage directory `/var/geomdtk/current/stage`. The utilities will use `/var/geomdtk/current/workspace` as the output folder, akin to `/dor/workspace`.
 
 Caveats: to enable logging for the Rest client, use
 
     % RESTCLIENT_LOG=stdout bundle exec ...
-
-These utilities assume a few things:
-
-* `/var/geomdtk/current` is the core root folder for data/metadata
-* `upload` holds data to be processed
-* `upload/druid` holds data and metadata in the druid workspace structure
 
 To ingest ArcGIS `*.shp.xml` files and transform into ISO 19139 files
 
@@ -80,6 +73,9 @@ To project all Shapefiles into EPSG:4326 (WGS84), as needed:
 
     % bundle exec bin/derive_wgs84.rb
 
+Accessioning
+============
+
 To upload the druid metadata to DOR:
 
     % bundle exec bin/accession.rb druid1 [druid2 druid3...]
@@ -92,14 +88,11 @@ Then, login to GeoServer and import the data layers from PostGIS
 
     % bundle exec bin/sync_geoserver_metadata.rb
 
-To upload the druid packages to GeoServer use OpenGeo's *Import Data* feature, or via the filesystem:
-
-    % bundle exec bin/loader.rb druid1 [druid2 druid3...]
+To upload the druid packages to GeoServer use OpenGeo's *Import Data* feature. Or if you need an automated tool see `bin/loader.rb`.
 
 To upload the OpenGeoPortal Solr documents, use:
 
     % bundle exec bin/solr_indexer.rb 
-
 
 Data Wrangling
 ==============
@@ -128,8 +121,8 @@ if you don't already have the below structure ready.
         OGWELLS.shp.xml
         OGWELLS.shx
 
-after assembling the data, it should look like this, where the temp files for the shapefiles are all
-symlinks to reduce space requirements:
+after assembling the data, it should look like this, where the temp files for
+the shapefiles are all hard links to reduce space requirements:
 
     zv925hd6723/
       metadata/
@@ -160,19 +153,13 @@ then at the end of processing -- prior to accessioning -- it will look like in y
         data.zip
         data_ESRI_4326.zip (optionally)
         preview.jpg
+        some-other-file.ext (optionally)
       temp/
         dc.xml
         geoOptions.json
         iso19139.xml
         ogpSolr.xml
         solr.xml
-
-To continue with accessioning, stage the data as follows:
-
-    zv925hd6723.xml -> iso19139.xml
-    zv925hd6723.zip -> data.zip
-    zv925hd6723.jpg -> preview.jpg
-    zv925hd6723.json -> geoOptions.json
 
 Credits
 =======
