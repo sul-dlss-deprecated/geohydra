@@ -61,6 +61,10 @@ These utilities assume a few things:
 To ingest ArcGIS `*.shp.xml` files and transform into ISO 19139 files
 
     % bundle exec bin/ingest_arcgis.rb
+    
+To generate the `geoOptions.json` files which contain inspections of the Shapefiles:
+
+    % bundle exec bin/build_stage_options.rb
 
 To package up the .shp files into .zip files:
 
