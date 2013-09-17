@@ -151,11 +151,26 @@ end
 
 def export_local_images(druid, tempdir, flags)
   # export any thumbnail images
+  n = 0
   %w{png jpg}.each do |fmt|
     Dir.glob("#{flags[:stagedir]}/#{druid.id}/content/*.#{fmt}") do |fn|
       imagefn = File.join(druid.content_dir, 'preview' + '.' + fmt)
       FileUtils.link fn, imagefn, :verbose => flags[:debug]
       yield imagefn if block_given?
+      n = n + 1
+    end
+  end
+  puts "WARNING: Multiple images for #{druid.id}" if n > 1
+end
+
+def export_attachments(druid, flags)
+  Dir.glob("#{flags[:stagedir]}/#{druid.id}/content/*") do |fn|
+    if %w{.png .jpg}.include?(File.extname(fn))
+      puts "WARNING: Skipping #{fn}"
+    else
+      afn = File.join(druid.content_dir, File.basename(fn))
+      FileUtils.link fn, afn, :verbose => flags[:debug]
+      yield afn if block_given?
     end
   end
 end
@@ -218,6 +233,7 @@ def doit(client, uuid, obj, flags)
     export_local_images(druid, File.expand_path(File.dirname(obj.zipfn) + '/../temp'), flags)
   end
   
+  export_attachments(druid, flags)
   export_zip(druid, flags)
 end
 
