@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 9ba38576b3181b9a75e7d6a4cefa2c9301f40186
+  revision: 1b96a1ef3537e3f551c1d206c23a7938a89263dc
   branch: geoMetadata
   specs:
     dor-services (4.2.22)
