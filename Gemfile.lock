@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: ce8d3a990ea1d28a32812f59103d259618cf444b
+  revision: 358b48020f7d7f60e0ea56194013fa6b1fb7aff9
   branch: geoMetadata
   specs:
     dor-services (4.2.21)
@@ -80,7 +80,7 @@ GIT
 PATH
   remote: .
   specs:
-    geohydra (0.2.2.5)
+    geohydra (0.2.3.0)
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
@@ -155,7 +155,7 @@ GEM
     equivalent-xml (0.3.0)
       nokogiri (>= 1.4.3)
     fastercsv (1.5.5)
-    fastimage (1.5.0)
+    fastimage (1.5.1)
     ffi (1.9.0)
     gssapi (1.1.2)
       ffi (>= 1.0.1)
@@ -201,8 +201,8 @@ GEM
       deprecation
       mediashelf-loggable
       nokogiri (>= 1.4.2)
-    pg (0.16.0)
-    progressbar (0.20.0)
+    pg (0.17.0)
+    progressbar (0.21.0)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -264,7 +264,7 @@ GEM
       xml-simple
     stanford-mods (0.0.20)
       mods
-    stomp (1.2.14)
+    stomp (1.2.16)
     systemu (2.5.2)
     tzinfo (0.3.37)
     uuidtools (2.1.4)
