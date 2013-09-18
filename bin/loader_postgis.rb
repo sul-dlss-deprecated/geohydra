@@ -183,13 +183,12 @@ end
 # __MAIN__
 begin
   flags = {
-    :debug => true,
-    :verbose => true,
+    :debug => false,
+    :verbose => false,
     :register => false,
     :register_drop => false,
     :register_table => 'registered_layers',
     :datadir => '/var/geomdtk/current/workspace',
-    :url => GeoHydra::Config.postgis.url || 'postgresql://postgres:@localhost/postgres',
     :schema => GeoHydra::Config.postgis.schema || 'public'
   }
   
@@ -209,7 +208,7 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
       flags[:register] = true
     end
 
-    %w{url schema}.each do |k|
+    %w{schema}.each do |k|
       opts.on("--#{k} #{k.upcase}", "PostGIS #{k} (default: #{flags[k.to_sym]})") do |v|
         flags[k.to_sym] = v
       end
@@ -217,7 +216,11 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
   end.parse!
 
   ap({:flags => flags}) if flags[:debug]
-  flags.merge! YAML.load(File.read(File.dirname(__FILE__) + '/../config/database.yml'))[ENV['GEOHYDRA_ENVIRONMENT']||'development']
+  dbfn = File.expand_path(File.dirname(__FILE__) + '/../config/database.yml')
+  puts "Loading #{dbfn}" if flags[:verbose]
+  dbconfig = YAML.load(File.read(dbfn))[ENV['GEOHYDRA_ENVIRONMENT']]
+  raise ArgumentError, "Missing configuration for environment" unless dbconfig.include?(ENV['GEOHYDRA_ENVIRONMENT'])
+  flags.merge! dbconfig[ENV['GEOHYDRA_ENVIRONMENT']]
   ap({:flags => flags}) if flags[:debug]
   
   ActiveRecord::Base.logger = ActiveSupport::BufferedLogger.new($stderr) if flags[:debug]
