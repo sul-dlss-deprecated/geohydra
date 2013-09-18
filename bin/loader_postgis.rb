@@ -218,7 +218,7 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
   ap({:flags => flags}) if flags[:debug]
   dbfn = File.expand_path(File.dirname(__FILE__) + '/../config/database.yml')
   puts "Loading #{dbfn}" if flags[:verbose]
-  dbconfig = YAML.load(File.read(dbfn))[ENV['GEOHYDRA_ENVIRONMENT']]
+  dbconfig = YAML.load(File.read(dbfn))
   raise ArgumentError, "Missing configuration for environment" unless dbconfig.include?(ENV['GEOHYDRA_ENVIRONMENT'])
   flags.merge! dbconfig[ENV['GEOHYDRA_ENVIRONMENT']]
   ap({:flags => flags}) if flags[:debug]
