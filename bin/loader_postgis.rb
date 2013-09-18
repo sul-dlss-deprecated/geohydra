@@ -75,7 +75,7 @@ end
 #   -?  Display this help screen.
 
 def main conn, layers, flags = {}
-  ap({:layers => layers, :flags => flags})
+  ap({:layers => layers, :flags => flags}) if flags[:debug]
   layers.each do |k, v|
     %w{layername format filename title}.each do |i|
       raise ArgumentError, "Layer is missing required '#{i}'" if v[i.to_sym].nil? or not v.include?(i.to_sym)
@@ -88,10 +88,8 @@ def main conn, layers, flags = {}
     title = v[:title].strip
       
     case format
-    when :shapefile
-      puts "DataStore: druid/postgis" if flags[:verbose]
-      
-      ap({:v => v})
+    when :shapefile      
+      ap({:v => v}) if flags[:debug]
       Dir.mktmpdir('shp', druid.temp_dir) do |d|
         begin
           system("unzip -oj '#{v[:filename]}' -d '#{d}'")
@@ -101,12 +99,12 @@ def main conn, layers, flags = {}
             # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
             # XXX: -G for the geography column causes some issues with GeoServer
             system("shp2pgsql -s :4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
-            system("psql -X -q " +
-                 "--host='#{flags[:host.to_s]}' " +
-                 "--port='#{flags[:port.to_s]}' " +
-                 "--username='#{flags[:username.to_s]}' " + 
-                 "--dbname='#{flags[:database.to_s]}' " +
-                 "--file='#{druid.temp_dir}/#{druid.id}.sql' ")
+            system('psql --no-psqlrc --no-password ' +
+                   "--host='#{flags[:host.to_s]}' " +
+                   "--port='#{flags[:port.to_s]}' " +
+                   "--username='#{flags[:username.to_s]}' " + 
+                   "--dbname='#{flags[:database.to_s]}' " +
+                   "--file='#{druid.temp_dir}/#{druid.id}.sql' ")
           end
         rescue Exception => e
           FileUtils.rm_rf(d) if File.exist?(d)
@@ -116,7 +114,7 @@ def main conn, layers, flags = {}
       if flags[:register]
         puts "Registering layer #{druid.id}, #{layername}, #{title}" if flags[:verbose]
         layer = RegisteredLayer.find_by_druid druid.id
-        ap({:found_layer => layer})        
+        ap({:found_layer => layer}) if flags[:debug]
         if layer.nil?
           layer = RegisteredLayer.new( 
             :druid => druid.id,
@@ -126,51 +124,9 @@ def main conn, layers, flags = {}
         end
         layer.layername = layername
         layer.title = title
-        ap({:updated_layer => layer})
+        ap({:updated_layer => layer}) if flags[:debug]
         layer.save
-#         result = conn.query("
-# SELECT  COUNT(*) 
-# FROM    #{flags[:schema]}.#{flags[:register_table]}
-# WHERE   druid = $1;", [druid.id])
-#         if result.getvalue(0,0).to_i == 1
-#           conn.exec("
-# UPDATE  #{flags[:schema]}.#{flags[:register_table]} 
-# SET     layername = $2, title = $3 
-# WHERE   druid = $1", [druid.id, layername, v[:title]])
-#         else
-#           conn.exec("
-# INSERT INTO #{flags[:schema]}.#{flags[:register_table]} 
-# VALUES ($1, $2, $3)",[druid.id, layername, v[:title]])
-#         end
       end
-      # if v['remote']
-      #   ds.upload_external v['filename']
-      # else
-      #   ds.upload_file v['filename']
-      # end
-      # # modify DataStore with rest of parameters
-      # ds.enabled = 'true'
-      # ds.connection_parameters = ds.connection_parameters.merge({
-      #   "namespace" => flags[:namespace],
-      #   "charset" => 'UTF-8',
-      #   "create spatial index" => 'true',
-      #   "cache and reuse memory maps" => 'true',
-      #   "enable spatial index" => 'true',
-      #   "filetype" => 'shapefile',
-      #   "memory mapped buffer" => 'false'
-      # })
-      # ds.description = v['description']
-      # ds.save
-      
-      # ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => layername 
-      # raise Exception, "FeatureType doesn't already exists #{ft}" if ft.new?
-      # puts "FeatureType: #{ws.name}/#{ds.name}/#{ft.name}" if flags[:verbose]
-      # ft.enabled = 'true'
-      # ft.title = v['title'] 
-      # ft.description = v['description']
-      # ft.keywords = v['keywords']
-      # ft.metadata_links = v['metadata_links']
-      # ft.save
     else
       raise NotImplementedError, "Unsupported format #{format}"    
     end
@@ -252,10 +208,7 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
     opts.on("-R", "--register", "Register shapefile") do |v|
       flags[:register] = true
     end
-    opts.on("--url", "Database") do |v|
-      flags[:register] = true
-    end
-    
+
     %w{url schema}.each do |k|
       opts.on("--#{k} #{k.upcase}", "PostGIS #{k} (default: #{flags[k.to_sym]})") do |v|
         flags[k.to_sym] = v
