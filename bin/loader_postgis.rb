@@ -98,7 +98,7 @@ def main conn, layers, flags = {}
             # XXX: HARD CODED projection here -- extract from MODS or ISO19139
             # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
             # XXX: -G for the geography column causes some issues with GeoServer
-            system("shp2pgsql -s :4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
+            system("shp2pgsql -W #{flags[:encoding]} -s :4326 -I -d '#{shp}' #{flags[:schema]}.#{druid.id} > '#{druid.temp_dir}/#{druid.id}.sql'")
             system('psql --no-psqlrc --no-password --quiet ' +
                    "--host='#{flags[:host.to_s]}' " +
                    "--port='#{flags[:port.to_s]}' " +
@@ -188,6 +188,7 @@ begin
     :register => false,
     :register_drop => false,
     :register_table => 'registered_layers',
+    :encoding => 'UTF-8',
     :datadir => '/var/geomdtk/current/workspace',
     :schema => GeoHydra::Config.postgis.schema || 'public'
   }
@@ -208,7 +209,7 @@ Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
       flags[:register] = true
     end
 
-    %w{schema}.each do |k|
+    %w{schema encoding}.each do |k|
       opts.on("--#{k} #{k.upcase}", "PostGIS #{k} (default: #{flags[k.to_sym]})") do |v|
         flags[k.to_sym] = v
       end
