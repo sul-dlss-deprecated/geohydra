@@ -36,7 +36,7 @@ def find_mef(druid, uuid, flags)
       found_metadata = true
       # original ISO 19139
       ifn = File.join(druid.temp_dir, 'iso19139.xml')
-      FileUtils.link fn, ifn, :verbose => flags[:verbose]
+      FileUtils.link fn, ifn, :verbose => flags[:verbose], :force => true
     end
   end
   ifn
@@ -143,7 +143,7 @@ def export_images(druid, uuid, flags)
       # convert _s to _small as per GeoNetwork convention
       tfn = tfn.gsub(/_s$/, '_small')
       imagefn = File.join(druid.content_dir, tfn + ext)
-      FileUtils.link fn, imagefn, :verbose => flags[:debug]
+      FileUtils.link fn, imagefn, :verbose => flags[:debug], :force => true
       yield imagefn if block_given?
     end
   end
@@ -155,7 +155,7 @@ def export_local_images(druid, tempdir, flags)
   %w{png jpg}.each do |fmt|
     Dir.glob("#{flags[:stagedir]}/#{druid.id}/content/*.#{fmt}") do |fn|
       imagefn = File.join(druid.content_dir, 'preview' + '.' + fmt)
-      FileUtils.link fn, imagefn, :verbose => flags[:debug]
+      FileUtils.link fn, imagefn, :verbose => flags[:debug], :force => true
       yield imagefn if block_given?
       n = n + 1
     end
@@ -169,7 +169,7 @@ def export_attachments(druid, flags)
       puts "WARNING: Skipping #{fn}"
     else
       afn = File.join(druid.content_dir, File.basename(fn))
-      FileUtils.link fn, afn, :verbose => flags[:debug]
+      FileUtils.link fn, afn, :verbose => flags[:debug], :force => true
       yield afn if block_given?
     end
   end
@@ -181,7 +181,7 @@ def export_zip(druid, flags)
     # extract shapefile name using filename pattern from
     # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
     ofn = "#{druid.content_dir}/data.zip"
-    FileUtils.link fn, ofn, :verbose => flags[:verbose]
+    FileUtils.link fn, ofn, :verbose => flags[:verbose], :force => true
     yield ofn if block_given?
     
     if flags[:extract_basename]
