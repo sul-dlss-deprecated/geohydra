@@ -29,42 +29,6 @@ module GeoHydra
     # @return [Nokogiri::XML::Document]
     # @see [Assembly::ContentMetadata]
     # @see https://consul.stanford.edu/display/chimera/Content+metadata+--+the+contentMetadata+datastream
-    #
-    # Example:
-    #
-    #    <contentMetadata objectId="druid:ks297fy1411" type="file">
-    #      <resource id="druid:ks297fy1411_1" sequence="1" type="main">
-    #        <label>Data</label>
-    #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.zip" mimetype="application/zip" size="2191447" role="master">
-    #          <geoData srsName="EPSG:4269">
-    #            <gml:Envelope xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269">
-    #              <gml:lowerCorner>-97.238989 23.780775</gml:lowerCorner>
-    #              <gml:upperCorner>-81.170106 30.289096</gml:upperCorner>
-    #            </gml:Envelope>
-    #          </geoData>
-    #          <checksum type="sha1">9a08212a815902ebcd14c83bc258bfd830e86b58</checksum>
-    #          <checksum type="md5">a89191324c24ead1f1bc0fced4e0f75d</checksum>
-    #        </file>
-    #        <file preserve="no" shelve="yes" publish="yes" id="OFFSH_BLOCKS_EPSG_4326.zip" mimetype="application/zip" size="2003420" role="derivative">
-    #          <geoData srsName="EPSG:4326"/>
-    #          <checksum type="sha1">a860e8aa831e0f0011d2cd3ca8f75186b956f19d</checksum>
-    #          <checksum type="md5">a6055a001f4f98cc6b8eb41e617417b3</checksum>
-    #        </file>
-    #      </resource>
-    #      <resource id="druid:ks297fy1411_2" sequence="2" type="preview">
-    #        <label>Preview</label>
-    #        <file preserve="yes" shelve="yes" publish="yes" id="OFFSH_BLOCKS.png" mimetype="image/png" size="22927" role="master">
-    #          <checksum type="sha1">9f16b1036a08dc722ff14cce16e04e75e6b4b7de</checksum>
-    #          <checksum type="md5">e43fd14433cb37acbdd30cef3f4e150c</checksum>
-    #          <imageData width="800" height="532"/>
-    #        </file>
-    #        <file preserve="no" shelve="yes" publish="yes" id="OFFSH_BLOCKS_small.png" mimetype="image/png" size="10906" role="derivative">
-    #          <checksum type="sha1">1a62a926a46c16f11f43ec4c250b38b46980673b</checksum>
-    #          <checksum type="md5">f17b9de6b290f56ac6e06f95a3686f7f</checksum>
-    #          <imageData width="180" height="119"/>
-    #        </file>
-    #      </resource>
-    #    </contentMetadata>
     def create_content_metadata(objects, geoData, flags)
       Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'geo') do
@@ -176,8 +140,8 @@ module GeoHydra
     end
 
     PATTERNS = {
-      :Data => '*.zip',
-      :Preview => '*.{png,jpg,gif}',
+      :Data => '*.{zip,TAB,dat,bin,xls,xlsx,tar,tgz,csv,tif}',
+      :Preview => '*.{png,jpg,gif,jp2}',
       :Metadata => '*.{xml,txt}'
     }
 
@@ -300,7 +264,12 @@ module GeoHydra
         xml = create_content_metadata objects, geoData, flags
         item.datastreams['contentMetadata'].content = xml
         ap({:contentMetadataDS => item.datastreams['contentMetadata'].ng_xml}) if flags[:debug]
-
+        
+        puts "Saving contentMetadata..." if flags[:verbose]
+        File.open(druid.metadata_dir + '/contentMetadata.xml', 'w') do |f|
+          f << item.datastreams['contentMetadata'].ng_xml.to_xml
+        end
+        
         if flags[:shelve]
           $stderr.puts "Shelving to stacks content..." if flags[:verbose]
           files = []
