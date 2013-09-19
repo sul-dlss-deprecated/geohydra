@@ -316,8 +316,6 @@ module GeoHydra
       # save changes
       $stderr.puts "Saving #{item.id}" if flags[:verbose]
       item.save
-
-      ap({ :files => item.list_files}) if flags[:debug]
     end
   
   end
