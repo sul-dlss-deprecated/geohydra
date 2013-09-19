@@ -51,6 +51,13 @@ Caveats: to enable logging for the Rest client, use
 
     % RESTCLIENT_LOG=stdout bundle exec ...
 
+Preparing `stage`
+===============
+
+To assemble the workspace, populate the *geohydra.stage* directory with
+`druid` directories which contain the data as described in the Data Wrangling
+section below.
+
 To generate the `geoOptions.json` files which contain inspections of the Shapefiles:
 
     % bundle exec bin/build_stage_options.rb
@@ -63,15 +70,16 @@ To package up the .shp files into .zip files:
 
     % bundle exec bin/assemble_data.rb
 
-To assemble the workspace, populate the *geohydra.stage* directory with
-`druid` directories which contain the data as described in the Data Wrangling
-section below.
+Preparing `workspace`
+=====================
+
+To load the `workspace` and generate metadata files from the `stage`, use:
 
     % bundle exec bin/assemble.rb
 
 To project all Shapefiles into EPSG:4326 (WGS84), as needed:
 
-    % bundle exec bin/derive_wgs84.rb
+    % bundle exec bin/derive_wgs84.rb druid1...
 
 Accessioning
 ============
@@ -105,8 +113,10 @@ page](https://consul.stanford.edu/x/C5xSC) for a description.). The `geoOptions.
       "geometryType" : "Point" 
     }
 
-Note that you can use `scripts/build.rb` to help build out a `druid/` folder with data for upload
-if you don't already have the below structure ready.
+Note that you can use `scripts/build.rb` to help build out a `druid/` folder
+with data for upload if you don't already have the below structure ready. It
+should look like this, where the temp files for the shapefiles are all hard
+links to reduce space requirements: This is pre-`stage`:
 
     zv925hd6723/
       metadata/
@@ -121,8 +131,7 @@ if you don't already have the below structure ready.
         OGWELLS.shp.xml
         OGWELLS.shx
 
-after assembling the data, it should look like this, where the temp files for
-the shapefiles are all hard links to reduce space requirements:
+Once staged, the data look like this:
 
     zv925hd6723/
       metadata/
@@ -133,16 +142,10 @@ the shapefiles are all hard links to reduce space requirements:
         geoOptions.json
         OGWELLS-iso19139-fc.shp.xml
         OGWELLS-iso19139.shp.xml
-        OGWELLS.dbf
-        OGWELLS.prj
-        OGWELLS.sbn
-        OGWELLS.sbx
-        OGWELLS.shp
-        OGWELLS.shp.xml
-        OGWELLS.shx
 
 
-then at the end of processing -- prior to accessioning -- it will look like in your workspace:
+then at the end of processing -- prior to accessioning -- it will look like in
+your workspace:
 
     zv925hd6723/
       metadata/
