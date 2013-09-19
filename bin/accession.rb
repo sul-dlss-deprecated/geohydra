@@ -23,6 +23,7 @@ begin
     :accessionWF => false,
     :contentMetadata => true,
     :debug => false,
+    :shelve => false,
     :workspacedir => GeoHydra::Config.geohydra.workspace || 'workspace'
   }
 

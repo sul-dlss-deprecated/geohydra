@@ -67,7 +67,7 @@ module GeoHydra
     #    </contentMetadata>
     def create_content_metadata(objects, geoData, flags)
       Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'file') do
+        xml.contentMetadata(:objectId => "#{druid.druid}", :type => flags[:content_type] || 'geo') do
           seq = 1
           objects.each do |k, v|
             next if v.nil? or v.empty?
