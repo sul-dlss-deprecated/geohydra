@@ -111,9 +111,19 @@
         </field>
         <field name="ThemeKeywords">
           <xsl:for-each select="mods:subject/mods:topic">
-            <xsl:value-of select="text()"/>
+            <xsl:choose>
+              <xsl:when test="@authority='ISO19115topicCategory'">
+                <xsl:value-of select="@valueURI"/>
+              </xsl:when>
+              
+              <xsl:otherwise>
+                <xsl:value-of select="text()"/>
+              </xsl:otherwise>
+            </xsl:choose>
+            
             <xsl:text>; </xsl:text>
           </xsl:for-each>
+          
         </field>
         <field name="PlaceKeywords">
           <xsl:for-each select="mods:subject/mods:geographic">
