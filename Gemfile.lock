@@ -63,10 +63,10 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/rgeoserver.git
-  revision: 56ae5811bcac6897a4d82fb50cb2b759e3611aba
+  revision: 7454d0339fb53144c3afbb32e67a53cef3bedb06
   branch: 0.6.x
   specs:
-    rgeoserver (0.6.4.0)
+    rgeoserver (0.6.4.1)
       activemodel (~> 3.2.14)
       activesupport (~> 3.2.14)
       confstruct (~> 0.2.5)
@@ -155,7 +155,7 @@ GEM
     equivalent-xml (0.3.0)
       nokogiri (>= 1.4.3)
     fastercsv (1.5.5)
-    fastimage (1.5.1)
+    fastimage (1.5.2)
     ffi (1.9.0)
     gssapi (1.1.2)
       ffi (>= 1.0.1)
