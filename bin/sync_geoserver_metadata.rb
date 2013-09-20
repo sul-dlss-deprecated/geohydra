@@ -52,10 +52,10 @@ def main catalog, ws, layers, flags = {}
 end
 
 # @return [Hash] selectively parsed MODS record to match RGeoServer requirements
-def from_druid druid, flags
-  puts "Processing #{druid.id}" if flags[:verbose]
-  
+def from_druid druid, flags  
   druid = DruidTools::Druid.new(druid, flags[:workspacedir])
+  puts "Processing #{druid.id}" if flags[:verbose]
+
   mods_fn = File.join(druid.metadata_dir, 'descMetadata.xml')
   mods = Mods::Record.new
   mods.from_url(mods_fn)
