@@ -27,6 +27,7 @@ def do_vector(c, ws, ds, layername, layer, flags)
   ft.abstract = layer['abstract']  
   ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
   ft.metadata_links = layer['metadata_links']
+  puts "Saving #{ft}" if flags[:verbose]
   ft.save
 end
 
@@ -35,7 +36,7 @@ def main catalog, ws, layers, flags = {}
   ap({:ws => ws, :ds => flags[:datastore]}) if flags[:debug]
 
   ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => flags[:datastore]
-  puts "DataStore: #{ws.name}/#{ds.name}" if flags[:verbose]
+  puts "DataStore: #{ws.name}/#{ds.name}" if flags[:debug]
   ap({:profile => ds.profile}) if flags[:debug]
   raise ArgumentError, "Datastore #{ds.name} not found" if ds.new?
 
