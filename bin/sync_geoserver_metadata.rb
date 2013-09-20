@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # -*- encoding : utf-8 -*-
 #
-# RGeoServer Batch load layers (batch_demo.rb)
-# Usage: #{File.basename(__FILE__)} [input.yml]
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'uri'
@@ -14,37 +12,24 @@ require 'mods'
 ENV['RGEOSERVER_CONFIG'] ||= ENV_FILE + '_rgeoserver.yml'
 require 'rgeoserver'
 
-def do_vector(catalog, ws, ds, layername, format, v, flags)
-  # Create data stores for shapefiles  
-  name = v['druid'].id
-  ft = RGeoServer::FeatureType.new catalog, :workspace => ws, :data_store => ds, :name => name
-  ap({:catalog => catalog, :workspace => ws, :data_store => ds, :name => name, :layername => layername, :v => v})
-  raise "FeatureType is missing #{ft.name}" if ft.new?
-  puts "FeatureType: #{ft.route}" if flags[:verbose]
-  ft.enabled = true
-  ft.title = layername
-  ft.abstract = '<h1>' + v['title'] + '</h1>' + "\n" + '<p>' + v['abstract'] + '</p>'
-  ap({:abstract => ft.abstract})
-  ft.keywords = [ft.keywords, v['keywords']].flatten.compact.uniq
-  ft.metadata_links = v['metadata_links']
+def do_vector(c, ws, ds, layername, layer, flags)
+  ap({:catalog => c, :workspace => ws, :data_store => ds, :name => layername, :layer => layer}) if flags[:debug]
+  
+  %w{title abstract keywords metadata_links}.each do |i|
+    raise ArgumentError, "Layer is missing #{i}" unless layer.include?(i) and not layer[i].empty?
+  end
+
+  ft = RGeoServer::FeatureType.new c, :workspace => ws, :data_store => ds, :name => layername
+  raise ArgumentError, "Missing FeatureType #{layername}: #{ft}" if ft.new?
+
+  ft.title = layer['title']
+  ft.abstract = layer['abstract']  
+  ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
+  ft.metadata_links = layer['metadata_links']
   ft.save
+
   ap({:profile => ft.profile}) if flags[:debug]
 end
-
-def do_raster(catalog, layername, format, ws, v, flags)
-  raise NotImplemented
-end
-
-#=  Input data. *See DATA section at end of file*
-# The input file is in YAML syntax with each record is a Hash with keys:
-# - layername
-# - filename
-# - format
-# - title
-# and optionally
-# - abstract
-# - keywords
-# - metadata_links
 
 def main catalog, ws, layers, flags = {}
   raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
@@ -55,57 +40,30 @@ def main catalog, ws, layers, flags = {}
   ap({:profile => ds.profile}) if flags[:debug]
   raise ArgumentError, "Datastore #{ds.name} not found" if ds.new?
 
-  # Iterate over all records in YAML file and create stores in the catalog
-  layers.each do |k, v|
-    ['layername', 'format', 'filename', 'title'].each do |i|
-      raise ArgumentError, "Layer is missing #{i}" unless v.include?(i) and v[i] != nil
-    end
-    puts "Processing layer #{k}" if flags[:verbose]
-
-    layername = v['layername'].strip
-    format = v['format'].strip
-    
-    case format
-    when 'GeoTIFF'
-      do_raster catalog, layername, format, ws, v, flags
-    when 'Shapefile'
-      do_vector catalog, ws, ds, layername, format, v, flags
+  # Iterate over all records and load FeatureType info in the catalog
+  layers.each do |k, layer|
+    case layer['format'].downcase.to_sym
+    when :shapefile
+      do_vector catalog, ws, ds, layer['druid'], layer, flags
     else
       raise NotImplementedError, "Unsupported format #{format}"    
     end
   end
 end
 
+# @return [Hash] selectively parsed MODS record to match RGeoServer requirements
 def from_druid druid, flags
-  prj = flags[:projection] || "EPSG:4326"
-  prj = prj.split(':').join('_')
-  druid = DruidTools::Druid.new(druid, flags[:datadir])
-  mods_fn = druid.path('metadata/descMetadata.xml')
-  puts "Loading #{mods_fn}" if flags[:verbose]
+  puts "Processing #{druid.id}" if flags[:verbose]
+  
+  druid = DruidTools::Druid.new(druid, flags[:workspacedir])
+  mods_fn = File.join(druid.metadata_dir, 'descMetadata.xml')
   mods = Mods::Record.new
   mods.from_url(mods_fn)
-  zipfn = nil
-  layername = nil
-  Dir.glob(druid.content_dir + "/*_#{prj}.zip") do |fn|
-    puts "Found EPSG 4326 zip: #{fn}" if flags[:verbose]
-    zipfn = fn
-    layername = File.basename(zipfn, "_#{prj}.zip")
-    puts "Derived layername #{zipfn} -> #{layername}" if flags[:verbose]
-  end
-  if not zipfn
-    Dir.glob(druid.content_dir + "/*.zip") do |fn|
-      zipfn = fn
-      layername = File.basename(zipfn, '.zip')
-    end
-  end
-  raise ArgumentError, "Cannot locate ZIP file: #{druid.content_dir} #{zipfn}" unless layername and not zipfn.nil? and File.exist?(zipfn)
-  ap({:zipfn => zipfn, :layername => layername}) if flags[:verbose]
-  r = { 
+  
+  h = { 
     'vector' => {
-      'druid' => druid,
+      'druid' => druid.id,
       'format' => 'Shapefile',
-      'layername' => layername,
-      'filename' => zipfn,
       'title' => mods.full_titles.first,
       'abstract' => mods.term_values(:abstract).compact.join("\n"),
       'keywords' => [mods.term_values([:subject, 'topic']),
@@ -116,38 +74,37 @@ def from_druid druid, flags
       }]
     }
   }
-  ap({:r => r}) if flags[:debug]
-  r
+  ap({:h => h}) if flags[:debug]
+  h
 end
 
 # __MAIN__
 begin
   flags = {
     :debug => false,
-    :verbose => true,
-    :datadir => '/var/geomdtk/current/workspace',
-    :datastore => GeoHydra::Config.geoserver.datastore || 'postgis',
+    :verbose => false,
+    :workspacedir => GeoHydra::Config.geohydra.workspace || '/var/geomdtk/current/workspace',
+    :datastore => GeoHydra::Config.geoserver.datastore || 'geoserver',
     :workspace => GeoHydra::Config.geoserver.workspace || 'druid',
     :namespace => GeoHydra::Config.geoserver.namespace || 'http://purl.stanford.edu'
   }
   
   OptionParser.new do |opts|
     opts.banner = "
-Usage: #{File.basename(__FILE__)} [-v] [options] [druid ... | < druids]
-           
-    "
-    opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+Usage: #{File.basename(__FILE__)} [options] [druid ... | < druids]
+"
+    opts.on("-v", "--verbose", "Run verbosely") do
       flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
     end
-    opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]})") do |v|
+    opts.on("-d DIR", "Workspace directory (default: #{flags[:workspacedir]})") do |v|
       raise ArgumentError, "Invalid directory #{v}" unless File.directory?(v)
-      flags[:datadir] = v
+      flags[:workspacedir] = v
     end
     opts.on("--workspace NAME", "Workspace on GeoServer (default: #{flags[:workspace]})") do |v|
       flags[:workspace] = v.to_s
     end
-    opts.on("--datastore NAME", "Datastore on GeoServer in which data are loaded") do |v|
+    opts.on("--datastore NAME", "Datastore on GeoServer (default: #{flags[:datastore]})") do |v|
       flags[:datastore] = v.to_s
     end
   end.parse!
@@ -166,6 +123,6 @@ Usage: #{File.basename(__FILE__)} [-v] [options] [druid ... | < druids]
   puts "Workspace: #{ws.name} ready" if flags[:verbose]
 
   (ARGV.size > 0 ? ARGV : $stdin).each do |v|
-    main(catalog, ws, from_druid(v.downcase.strip, flags), flags)          
+    main(catalog, ws, from_druid(v.strip, flags), flags)          
   end
 end
