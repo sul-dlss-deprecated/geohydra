@@ -22,13 +22,12 @@ def do_vector(c, ws, ds, layername, layer, flags)
   ft = RGeoServer::FeatureType.new c, :workspace => ws, :data_store => ds, :name => layername
   raise ArgumentError, "Missing FeatureType #{layername}: #{ft}" if ft.new?
 
+  ft.enabled = true
   ft.title = layer['title']
   ft.abstract = layer['abstract']  
   ft.keywords = [ft.keywords, layer['keywords']].flatten.compact.uniq
   ft.metadata_links = layer['metadata_links']
   ft.save
-
-  ap({:profile => ft.profile}) if flags[:debug]
 end
 
 def main catalog, ws, layers, flags = {}
