@@ -10,8 +10,8 @@ module GeoHydra
     end
     
     geoserver do
-      service_root 'http://user:pw@host/geoserver'
       workspace 'druid'
+      datastore 'geoserver'
       namespace 'http://mynamespace'
     end
 
@@ -43,7 +43,6 @@ module GeoHydra
         url 'http://host/solr'
         collection 'mycollection'
       end
-      stacks 'http://host/stacks'
     end
     
   end
