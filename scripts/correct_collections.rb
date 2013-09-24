@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'druid-tools'
 
@@ -36,11 +35,11 @@ end
 begin
   File.umask(002)
   flags = {
-    :tmpdir => GeoHydra::Config.geohydra.tmpdir || 'tmp',
+    :tmpdir => 'tmp',
     :verbose => false,
     :debug => false,
     :collections => {},
-    :workspacedir => GeoHydra::Config.geohydra.workspace || 'workspace'
+    :workspacedir => '/var/geomdtk/current/workspace'
   }
 
   OptionParser.new do |opts|
