@@ -11,7 +11,6 @@ def doit(druid, flags)
   begin
     item = Dor::Item.find(druid.druid)
     ap({:item => item, :collections => item.collections}) if flags[:debug]
-    raise ArgumentError, "Item not editable: #{druid.id}" unless item.allows_modification?
     
     # remove all collections
     item.collections.dup.each {|c| item.remove_collection(c)}
@@ -22,7 +21,8 @@ def doit(druid, flags)
     end
     
     ap({:item => item, :collections => item.collections}) if flags[:debug]
-    # item.save
+    raise ArgumentError, "Item not editable: #{druid.id}" unless item.allows_modification?
+    item.save
   rescue ActiveFedora::ObjectNotFoundError => e
     puts "ERROR: #{e.message}"
   end
