@@ -17,10 +17,10 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 53fcafa05c95679b089fdcf630d0082577cbcd1b
+  revision: 88025a03e3e09714590c69f4a1830925b095cb35
   branch: geoMetadata
   specs:
-    dor-services (4.2.24)
+    dor-services (4.2.25)
       active-fedora (~> 5.6, >= 5.6.3)
       confstruct (>= 0.2.2)
       dor-workflow-service (~> 1.3)
@@ -133,7 +133,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     arel (3.0.2)
-    awesome_print (1.1.0)
+    awesome_print (1.2.0)
     bagit (0.3.2)
       docopt (~> 0.5.0)
       validatable (~> 1.6)
