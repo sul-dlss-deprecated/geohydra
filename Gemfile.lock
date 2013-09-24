@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: a3dbba2f85de258addf66e0bcd167974fd676435
+  revision: 53fcafa05c95679b089fdcf630d0082577cbcd1b
   branch: geoMetadata
   specs:
     dor-services (4.2.24)
@@ -63,10 +63,10 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/rgeoserver.git
-  revision: 7454d0339fb53144c3afbb32e67a53cef3bedb06
+  revision: 8224e516207b5e3fe88ecbb8c6bf1fef2b3a4b43
   branch: 0.6.x
   specs:
-    rgeoserver (0.6.4.1)
+    rgeoserver (0.6.4.2)
       activemodel (~> 3.2.14)
       activesupport (~> 3.2.14)
       confstruct (~> 0.2.5)
