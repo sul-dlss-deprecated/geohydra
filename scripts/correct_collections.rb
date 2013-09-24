@@ -21,8 +21,12 @@ def doit(druid, flags)
     end
     
     ap({:item => item, :collections => item.collections}) if flags[:debug]
-    raise ArgumentError, "Item not editable: #{druid.id}" unless item.allows_modification?
+    unless item.allows_modification?
+      puts "WARNING: Item not editable: #{druid.id}" 
+      item.open_new_version
+    end
     item.save
+    item.close_version
   rescue ActiveFedora::ObjectNotFoundError => e
     puts "ERROR: #{e.message}"
   end
