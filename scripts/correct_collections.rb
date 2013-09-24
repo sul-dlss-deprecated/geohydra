@@ -14,7 +14,7 @@ def doit(druid, flags)
     raise ArgumentError, "Item not editable: #{druid.id}" unless item.allows_modification?
     
     # remove all collections
-    item.collections.each {|c| item.remove_collection(c)}
+    item.collections.dup.each {|c| item.remove_collection(c)}
     
     # add the new ones
     flags[:collections].each do |k, collection|
@@ -77,7 +77,11 @@ EOM
   (ARGV.empty?? STDIN : ARGV).each do |pid|
     druid = DruidTools::Druid.new(pid.strip, flags[:workspacedir])
     ap({:druid => druid}) if flags[:debug]
-    doit(druid, flags)
+    begin
+      doit(druid, flags)
+    rescue Exception => e
+      ap({:error => e})
+    end
   end
 rescue SystemCallError => e
   $stderr.puts "ERROR: #{e.message}"
