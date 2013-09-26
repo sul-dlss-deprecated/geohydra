@@ -29,7 +29,7 @@
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
     <xsl:variable name="druid" select="substring($purl, string-length($purl)-10)"/>
-    <xsl:variable name="datatype" select="substring-after(mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']/text(), 'gml:')"/>
+    <xsl:variable name="datatype" select="substring-after(mods:extension/rdf:RDF[@rdf:type='geo']/rdf:Description[@rdf:type='geo#geometryType']/text(), 'gml:')"/>
     <add>
       <doc>
         <field name="LayerId">
@@ -80,7 +80,7 @@
           <!-- REQUIRED -->
           <xsl:value-of select="mods:titleInfo/mods:title[not(@type)]"/>
         </field>
-        <xsl:for-each select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#geometryType']">
+        <xsl:for-each select="mods:extension/rdf:RDF[@rdf:type='geo']/rdf:Description[@rdf:type='geo#geometryType']">
           <field name="DataType">
             <xsl:choose>
               <xsl:when test="substring(., 5)='LineString'">
@@ -133,7 +133,7 @@
             </xsl:if>
           </xsl:for-each>
         </field>
-        <xsl:for-each select="mods:extension[@rdf:type='geo']/rdf:RDF/rdf:Description[@rdf:type='geo#boundingBox']/gml:Envelope">
+        <xsl:for-each select="mods:extension/rdf:RDF[@rdf:type='geo']/rdf:Description[@rdf:type='geo#boundingBox']/gml:Envelope">
           <xsl:variable name="x2" select="number(substring-before(gml:upperCorner/text(), ' '))"/>
           <xsl:variable name="x1" select="number(substring-before(gml:lowerCorner/text(), ' '))"/>
           <xsl:variable name="y2" select="number(substring-after(gml:upperCorner/text(), ' '))"/>
