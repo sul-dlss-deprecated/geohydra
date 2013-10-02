@@ -13,3 +13,7 @@ Dir.glob('/Volumes/Geo3TB/document_cache/??/???/??/????/mods') do |fn|
   mods[druid] = File.read(fn)
 end
 JSON.dump(mods, File.open('mods.json', 'w'))
+puts 'Wrote output to mods.json'
+# mods = nil
+# mods = JSON.parse(File.read('mods.json'))
+# puts "Loaded #{mods.size}"
