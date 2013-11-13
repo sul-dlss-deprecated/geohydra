@@ -87,12 +87,11 @@ module GeoHydra
     def self.to_geoMetadataDS isoXml, fcXml, flags = {}
       raise ArgumentError, "PURL is required" if flags['purl'].nil?
       Nokogiri::XML("
-<rdf:RDF rdf:about=\"#{flags['purl']}\" 
-         xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
-  <rdf:Description rdf:type=\"geo#metadata\">
+<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
+  <rdf:Description rdf:about=\"#{flags['purl']}\">
     #{isoXml.root.to_s}
   </rdf:Description>
-  <rdf:Description rdf:type=\"geo#featurecatalog\">
+  <rdf:Description rdf:about=\"#{flags['purl']}\">
     #{fcXml.root.to_s}
   </rdf:Description>
 </rdf:RDF>")
