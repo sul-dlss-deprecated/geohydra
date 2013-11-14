@@ -5,7 +5,7 @@ require 'optparse'
 require 'fileutils'
 
 def extract_thumbnail fn, flags
-  if fn =~ %r{^(.*)\.(shp|tif)\.xml$}i
+  if fn =~ %r{^(.*)\.(shp|tif)\.xml$}i or File.basename(fn) == 'metadata.xml'
     puts "Processing #{fn} for JPEG" if flags[:verbose]
     GeoHydra::Transform.extract_thumbnail fn, File.join(File.dirname(fn), 'preview.jpg')
   else
@@ -15,17 +15,23 @@ end
 
 def process_file fn, flags
   puts "Processing #{fn}" if flags[:verbose]
-  if fn =~ %r{^(.*).shp.xml$}
+  if fn =~ %r{^(.*).(shp|tif).xml$}
     ofn = $1 + '-iso19139.xml'
     ofn_fc = $1 + '-iso19139-fc.xml'
-    ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
-    unless FileUtils.uptodate?(ofn, [fn]) and FileUtils.uptodate?(ofn_fc, [fn])
-      GeoHydra::Transform.from_arcgis fn, ofn, ofn_fc
-      extract_thumbnail(fn, flags)
-      dstdir = "#{File.dirname(fn)}/../content/"
-      FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
-      system("mv #{File.dirname(fn)}/*.jpg #{dstdir}/")
-    end
+  elsif File.basename(fn) == 'metadata.xml'
+    ofn = File.join(File.dirname(fn), 'metadata.iso19139.xml')
+    ofn_fc = File.join(File.dirname(fn), 'metadata.iso19139-fc.xml')
+  else
+    raise OptionParser::InvalidOption, "File <#{fn}> is not named correctly"
+  end
+  
+  ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
+  unless FileUtils.uptodate?(ofn, [fn]) and FileUtils.uptodate?(ofn_fc, [fn])
+    GeoHydra::Transform.from_arcgis fn, ofn, ofn_fc
+    extract_thumbnail(fn, flags)
+    dstdir = "#{File.dirname(fn)}/../content/"
+    FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
+    system("mv #{File.dirname(fn)}/*.jpg #{dstdir}/")
   end
 end
 
@@ -37,6 +43,7 @@ flags = {
 OptionParser.new do |opts|
   opts.banner = "
 Usage: #{__FILE__} [-v] file.shp.xml [file.shp.xml ...]
+       #{__FILE__} [-v] metadata.xml [metadata.xml ...]
        #{__FILE__} [-v] [directory]
 "
   opts.on("-v", "--verbose", "Run verbosely") do |v|
@@ -52,6 +59,10 @@ n = 0
 ARGV.each do |fn|
   if File.directory? fn
     Dir.glob(File.join(fn, '**', '*.shp.xml')) do |fn2|
+      process_file fn2, flags if File.exist?(fn2)
+      n = n + 1
+    end
+    Dir.glob(File.join(fn, '**', 'metadata.xml')) do |fn2|
       process_file fn2, flags if File.exist?(fn2)
       n = n + 1
     end
