@@ -17,10 +17,10 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: ee23b3a767c3b483bb6ff8431683841fa55293e2
+  revision: f8e4ee6275110c8300f53a35e918f272fd959567
   branch: geoMetadata
   specs:
-    dor-services (4.2.26)
+    dor-services (4.2.27)
       active-fedora (~> 5.6, >= 5.6.3)
       confstruct (>= 0.2.2)
       dor-workflow-service (~> 1.3)
@@ -132,7 +132,7 @@ GEM
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     addressable (2.3.5)
-    arel (3.0.2)
+    arel (3.0.3)
     awesome_print (1.2.0)
     bagit (0.3.2)
       docopt (~> 0.5.0)
@@ -147,7 +147,7 @@ GEM
       activesupport
     diff-lcs (1.2.5)
     docopt (0.5.0)
-    dor-workflow-service (1.3.3)
+    dor-workflow-service (1.4.1)
       activesupport
       confstruct
       nokogiri
@@ -155,7 +155,7 @@ GEM
     equivalent-xml (0.3.0)
       nokogiri (>= 1.4.3)
     fastercsv (1.5.5)
-    fastimage (1.5.3)
+    fastimage (1.5.4)
       addressable (~> 2.3, >= 2.3.5)
     ffi (1.9.3)
     gssapi (1.1.2)
@@ -254,7 +254,7 @@ GEM
       nokogiri
       rest-client
     rubyzip (0.9.9)
-    slop (3.4.6)
+    slop (3.4.7)
     solrizer (2.2.0)
       activesupport
       daemons
