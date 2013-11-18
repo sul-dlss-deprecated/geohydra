@@ -165,7 +165,7 @@ end
 
 def export_attachments(druid, flags)
   Dir.glob("#{flags[:stagedir]}/#{druid.id}/content/*") do |fn|
-    unless %w{.png .jpg}.include?(File.extname(fn)) or File.basename(fn) =~ /^data.*.zip$/
+    unless %w{.png .jpg}.include?(File.extname(fn)) or File.basename(fn) =~ /\.zip$/i
       afn = File.join(druid.content_dir, File.basename(fn))
       FileUtils.link fn, afn, :verbose => flags[:debug], :force => true
       yield afn if block_given?
@@ -175,17 +175,10 @@ end
 
 def export_zip(druid, flags)
   # export content into zip files
-  Dir.glob(File.join(flags[:stagedir], "#{druid.id}/content/data.zip")) do |fn|
-    # extract shapefile name using filename pattern from
-    # http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
-    ofn = "#{druid.content_dir}/data.zip"
+  Dir.glob(File.join(flags[:stagedir], "#{druid.id}/content/*.zip")) do |fn|
+    ofn = "#{druid.content_dir}" + File.basename(fn)
     FileUtils.link fn, ofn, :verbose => flags[:verbose], :force => true
     yield ofn if block_given?
-    
-    if flags[:extract_basename]
-      k = %r{([a-zA-Z0-9_-]+)\.(shp|tif)$}i.match(`unzip -l #{fn}`)[1]
-      flags[:basename] = k
-    end
   end
 end
 
