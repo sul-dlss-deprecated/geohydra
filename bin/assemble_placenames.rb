@@ -26,10 +26,12 @@ def resolve_placenames(modsFn, flags)
       next
     else
       i['valueURI'] = uri
-      coverages = mods.xpath('//dc:coverage', { 'dc' => 'http://purl.org/dc/elements/1.1'})
+      coverages = mods.xpath('//dc:coverage', { 'dc' => 'http://purl.org/dc/elements/1.1/' })
       coverages.each do |j|
-      # XXX: need to correct matching dc:coverage@rdf:resource with uri
-        j['rdf:resource'] = uri
+        unless j['dc:title'] == k
+          puts "Correcting dc:coverage@rdf:resource for #{k}" if flags[:debug]
+          j['rdf:resource'] = uri
+        end
       end
     end
     
