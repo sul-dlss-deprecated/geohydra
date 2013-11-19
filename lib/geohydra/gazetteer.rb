@@ -13,7 +13,7 @@ module GeoHydra
       CSV.foreach(CSV_FN, :encoding => 'UTF-8') do |v|#, {:headers => true, }) do |v|
         @registry[v[0]] = {
           :id => v[1].to_i,
-          :lcsh => v[2],
+          :lc => v[2],
           :uri => "http://geonames.org/#{v[1].to_i}"
         }
       end
@@ -24,12 +24,12 @@ module GeoHydra
       @registry.include?(kw) ? @registry[kw][:id].to_i : nil
     end
     
-    # @return [String] library of congress subject heading
-    def find_lcsh_by_keyword(kw)
-      @registry.include?(kw) ? @registry[kw][:lcsh] : nil
+    # @return [String] library of congress name
+    def find_lcnaf_by_keyword(kw)
+      @registry.include?(kw) ? @registry[kw][:lc] : nil
     end
 
-    # @return [String] library of congress subject heading
+    # @return [String] geonames uri
     def find_uri_by_keyword(kw)
       @registry.include?(kw) ? @registry[kw][:uri] : nil
     end

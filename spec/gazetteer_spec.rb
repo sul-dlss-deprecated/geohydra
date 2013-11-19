@@ -17,7 +17,7 @@ K2ID = {
   'State of Mahārāshtra' => 1264418
 }
 
-K2LCSH = {
+K2LC = {
   'United States' => 'United States',
   'Union Territory of Chandīgarh' => nil,
   'State of Mahārāshtra' => 'Maharashtra (India)'
@@ -38,14 +38,14 @@ describe GeoHydra::Gazetteer do
     end
   end
   
-  describe '#find_lcsh_by_keyword' do
+  describe '#find_lcnaf_by_keyword' do
     it "nil case" do
-      g.find_lcsh_by_keyword(nil).should == nil      
-      g.find_lcsh_by_keyword('asdfasdfasdf').should == nil      
+      g.find_lcnaf_by_keyword(nil).should == nil      
+      g.find_lcnaf_by_keyword('asdfasdfasdf').should == nil      
     end
-    K2LCSH.each do |k,lcsh|
+    K2LC.each do |k,lcsh|
       it k do
-        r = g.find_lcsh_by_keyword(k)
+        r = g.find_lcnaf_by_keyword(k)
         r.should == lcsh
       end
     end
