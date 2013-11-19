@@ -37,9 +37,9 @@ def resolve_placenames(modsFn, flags)
     
     lcnaf = @@g.find_lcnaf_by_keyword(k)
     ap({:lcnaf => lcnaf}) if flags[:debug]
-    if not (lcnaf.nil? or k == lcnaf)
+    unless lcnaf.nil? or k == lcnaf
       puts "Adding Library of Congress NAF entry to end of MODS record" if flags[:verbose]
-      mods.root << Nokogiri::XML("<subject><geographic authorityURI='http://id.loc.gov/authorities/names'>#{lcnaf}</geographic></subject>").root
+      i.parent.parent << Nokogiri::XML("<subject><geographic authorityURI='http://id.loc.gov/authorities/names'>#{lcnaf}</geographic></subject>").root
     end
     ap({:i => i}) if flags[:debug]
   end
