@@ -1,0 +1,1168 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about="http://purl-test.stanford.edu/dd452vk1873">
+    <MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <fileIdentifier>
+    <gco:CharacterString>4E1B927B-9D20-4777-8539-E4E8357BF8F7</gco:CharacterString>
+  </fileIdentifier>
+  <language>
+    <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng" codeSpace="ISO639-2">eng</LanguageCode>
+  </language>
+  <characterSet>
+    <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
+  </characterSet>
+  <hierarchyLevel>
+    <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</MD_ScopeCode>
+  </hierarchyLevel>
+  <hierarchyLevelName>
+    <gco:CharacterString>dataset</gco:CharacterString>
+  </hierarchyLevelName>
+  <contact>
+    <CI_ResponsibleParty>
+      <organisationName>
+        <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
+      </organisationName>
+      <positionName>
+        <gco:CharacterString>Metadata Analyst</gco:CharacterString>
+      </positionName>
+      <contactInfo>
+        <CI_Contact>
+          <phone>
+            <CI_Telephone>
+              <voice>
+                <gco:CharacterString>650-723-2746</gco:CharacterString>
+              </voice>
+            </CI_Telephone>
+          </phone>
+          <address>
+            <CI_Address>
+              <deliveryPoint>
+                <gco:CharacterString>Branner Earth Sciences Library</gco:CharacterString>
+              </deliveryPoint>
+              <deliveryPoint>
+                <gco:CharacterString>Mitchell Bldg. 2nd floor</gco:CharacterString>
+              </deliveryPoint>
+              <deliveryPoint>
+                <gco:CharacterString>397 Panama Mall</gco:CharacterString>
+              </deliveryPoint>
+              <city>
+                <gco:CharacterString>Stanford</gco:CharacterString>
+              </city>
+              <administrativeArea>
+                <gco:CharacterString>California</gco:CharacterString>
+              </administrativeArea>
+              <postalCode>
+                <gco:CharacterString>94305</gco:CharacterString>
+              </postalCode>
+              <country>
+                <gco:CharacterString>US</gco:CharacterString>
+              </country>
+              <electronicMailAddress>
+                <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
+              </electronicMailAddress>
+            </CI_Address>
+          </address>
+        </CI_Contact>
+      </contactInfo>
+      <role>
+        <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115">pointOfContact</CI_RoleCode>
+      </role>
+    </CI_ResponsibleParty>
+  </contact>
+  <dateStamp>
+    <gco:Date>2013-11-14</gco:Date>
+  </dateStamp>
+  <metadataStandardName>
+    <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
+  </metadataStandardName>
+  <metadataStandardVersion>
+    <gco:CharacterString>2007</gco:CharacterString>
+  </metadataStandardVersion>
+  <spatialRepresentationInfo>
+    <MD_Georectified>
+      <numberOfDimensions>
+        <gco:Integer>2</gco:Integer>
+      </numberOfDimensions>
+      <axisDimensionProperties>
+        <MD_Dimension>
+          <dimensionName>
+            <MD_DimensionNameTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_DimensionNameTypeCode" codeListValue="column" codeSpace="ISOTC211/19115">column</MD_DimensionNameTypeCode>
+          </dimensionName>
+          <dimensionSize>
+            <gco:Integer>43200</gco:Integer>
+          </dimensionSize>
+          <resolution>
+            <gco:Measure uom="Degree">0.008333</gco:Measure>
+          </resolution>
+        </MD_Dimension>
+      </axisDimensionProperties>
+      <axisDimensionProperties>
+        <MD_Dimension>
+          <dimensionName>
+            <MD_DimensionNameTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_DimensionNameTypeCode" codeListValue="row" codeSpace="ISOTC211/19115">row</MD_DimensionNameTypeCode>
+          </dimensionName>
+          <dimensionSize>
+            <gco:Integer>20880</gco:Integer>
+          </dimensionSize>
+          <resolution>
+            <gco:Measure uom="Degree">0.008333</gco:Measure>
+          </resolution>
+        </MD_Dimension>
+      </axisDimensionProperties>
+      <cellGeometry>
+        <MD_CellGeometryCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CellGeometryCode" codeListValue="area" codeSpace="ISOTC211/19115">area</MD_CellGeometryCode>
+      </cellGeometry>
+      <transformationParameterAvailability>
+        <gco:Boolean>true</gco:Boolean>
+      </transformationParameterAvailability>
+      <checkPointAvailability>
+        <gco:Boolean>false</gco:Boolean>
+      </checkPointAvailability>
+      <cornerPoints>
+        <gml:Point gml:id="idp82432">
+          <gml:pos>-180.000000 -90.000000</gml:pos>
+        </gml:Point>
+      </cornerPoints>
+      <cornerPoints>
+        <gml:Point gml:id="idp83056">
+          <gml:pos>-180.000000 84.000000</gml:pos>
+        </gml:Point>
+      </cornerPoints>
+      <cornerPoints>
+        <gml:Point gml:id="idp83680">
+          <gml:pos>180.000000 84.000000</gml:pos>
+        </gml:Point>
+      </cornerPoints>
+      <cornerPoints>
+        <gml:Point gml:id="idp84304">
+          <gml:pos>180.000000 -90.000000</gml:pos>
+        </gml:Point>
+      </cornerPoints>
+      <centerPoint>
+        <gml:Point gml:id="idp84928">
+          <gml:pos>-0.000000 -3.000000</gml:pos>
+        </gml:Point>
+      </centerPoint>
+      <pointInPixel>
+        <MD_PixelOrientationCode>center</MD_PixelOrientationCode>
+      </pointInPixel>
+    </MD_Georectified>
+  </spatialRepresentationInfo>
+  <referenceSystemInfo>
+    <MD_ReferenceSystem>
+      <referenceSystemIdentifier>
+        <RS_Identifier>
+          <code>
+            <gco:CharacterString>4326</gco:CharacterString>
+          </code>
+          <codeSpace>
+            <gco:CharacterString>EPSG</gco:CharacterString>
+          </codeSpace>
+          <version>
+            <gco:CharacterString>7.9.4</gco:CharacterString>
+          </version>
+        </RS_Identifier>
+      </referenceSystemIdentifier>
+    </MD_ReferenceSystem>
+  </referenceSystemInfo>
+  <identificationInfo>
+    <MD_DataIdentification>
+      <citation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>LandScan 2012 Global Population Database</gco:CharacterString>
+          </title>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:Date>2013-07-15</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
+              </dateType>
+            </CI_Date>
+          </date>
+          <edition>
+            <gco:CharacterString>2012</gco:CharacterString>
+          </edition>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>Oak Ridge National Laboratory</gco:CharacterString>
+              </organisationName>
+              <contactInfo>
+                <CI_Contact>
+                  <address>
+                    <CI_Address>
+                      <city>
+                        <gco:CharacterString>Oak Ridge</gco:CharacterString>
+                      </city>
+                      <administrativeArea>
+                        <gco:CharacterString>Tennessee</gco:CharacterString>
+                      </administrativeArea>
+                      <postalCode>
+                        <gco:CharacterString>37831</gco:CharacterString>
+                      </postalCode>
+                      <country>
+                        <gco:CharacterString>US</gco:CharacterString>
+                      </country>
+                      <electronicMailAddress>
+                        <gco:CharacterString>bhaduribl@ornl.gov</gco:CharacterString>
+                      </electronicMailAddress>
+                    </CI_Address>
+                  </address>
+                </CI_Contact>
+              </contactInfo>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>Oak Ridge National Laboratory</gco:CharacterString>
+              </organisationName>
+              <contactInfo>
+                <CI_Contact>
+                  <address>
+                    <CI_Address>
+                      <city>
+                        <gco:CharacterString>Oak Ridge</gco:CharacterString>
+                      </city>
+                      <administrativeArea>
+                        <gco:CharacterString>Tennessee</gco:CharacterString>
+                      </administrativeArea>
+                      <postalCode>
+                        <gco:CharacterString>37831</gco:CharacterString>
+                      </postalCode>
+                      <country>
+                        <gco:CharacterString>US</gco:CharacterString>
+                      </country>
+                      <electronicMailAddress>
+                        <gco:CharacterString>bhaduribl@ornl.gov</gco:CharacterString>
+                      </electronicMailAddress>
+                    </CI_Address>
+                  </address>
+                </CI_Contact>
+              </contactInfo>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Bright, Edward A.</gco:CharacterString>
+              </individualName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Coleman, Phillip R. </gco:CharacterString>
+              </individualName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Rose, Amy N.</gco:CharacterString>
+              </individualName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <presentationForm>
+            <CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" codeSpace="ISOTC211/19115">mapDigital</CI_PresentationFormCode>
+          </presentationForm>
+          <series>
+            <CI_Series>
+              <name>
+                <gco:CharacterString>East View LandScan Global Population Database</gco:CharacterString>
+              </name>
+              <issueIdentification>
+                <gco:CharacterString>2012</gco:CharacterString>
+              </issueIdentification>
+            </CI_Series>
+          </series>
+        </CI_Citation>
+      </citation>
+      <abstract>
+        <gco:CharacterString>LandScan Global Population Database 2012. Population counts at 30 arc second resolution (1 km. or finer).This release represents the fourteenth version of LandScan and succeeds all previous versions. Using an innovative approach with Geographic Information System and Remote Sensing, ORNL's LandScan is the community standard for global population distribution. At approximately 1 km resolution (30" X 30"), LandScan is the finest resolution global population distribution data available and represents an ambient population (average over 24 hours). The LandScan algorithm, an R&amp;amp;D 100 Award Winner, uses spatial data and imagery analysis technologies and a multi-variable dasymetric modeling approach to disaggregate census counts within an administrative boundary. Since no single population distribution model can account for the differences in spatial data availability, quality, scale, and accuracy as well as the differences in cultural settlement practices, LandScan population distribution models are tailored to match the data conditions and geographical nature of each individual country and region." --from the Oak Ridge National Laboratory LandScan Web site, Sept. 12, 2013. There is also a "Layer" file (lspop2012.lyr) for ArcGIS. This dataset is part of the LandScan 2012 Global Population Database.</gco:CharacterString>
+      </abstract>
+      <purpose>
+        <gco:CharacterString>Developed for the U. S. Department of Defense."The values of the cells are integer population counts representing an average, or ambient, population distribution. An ambient population integrates diurnal movements and collective travel habits into a single measure (Dobson et al. 2000). Since natural or man made emergencies may occur at any time of the day, the goal of the LandScan model is to develop a population distribution surface in totality, not just the locations of where people sleep. Because of this ambient nature, care should be taken with direct comparisons of LandScan data with other population distribution surfaces." --from the Oak Ridge National Laboratory LandScan Web site, Sept. 12, 2013.</gco:CharacterString>
+      </purpose>
+      <credit>
+        <gco:CharacterString>Bright, Edward A., Coleman, Phillip R., Rose, Amy N., and Oak Ridge National Laboratory. (2013) LandScan 2012 Global Population Database. Oak Ridge National Laboratory, UT-Battelle, LLC.</gco:CharacterString>
+      </credit>
+      <status>
+        <MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed" codeSpace="ISOTC211/19115">completed</MD_ProgressCode>
+      </status>
+      <pointOfContact>
+        <CI_ResponsibleParty>
+          <individualName>
+            <gco:CharacterString>Amy L. King</gco:CharacterString>
+          </individualName>
+          <organisationName>
+            <gco:CharacterString>Oak Ridge National Laboratory</gco:CharacterString>
+          </organisationName>
+          <positionName>
+            <gco:CharacterString>GIS Analyst</gco:CharacterString>
+          </positionName>
+          <contactInfo>
+            <CI_Contact>
+              <address>
+                <CI_Address>
+                  <city>
+                    <gco:CharacterString>Oak Ridge</gco:CharacterString>
+                  </city>
+                  <administrativeArea>
+                    <gco:CharacterString>Tennessee</gco:CharacterString>
+                  </administrativeArea>
+                  <postalCode>
+                    <gco:CharacterString>37831</gco:CharacterString>
+                  </postalCode>
+                  <country>
+                    <gco:CharacterString>US</gco:CharacterString>
+                  </country>
+                  <electronicMailAddress>
+                    <gco:CharacterString>kingal@ornl.gov</gco:CharacterString>
+                  </electronicMailAddress>
+                </CI_Address>
+              </address>
+            </CI_Contact>
+          </contactInfo>
+          <role>
+            <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" codeSpace="ISOTC211/19115">pointOfContact</CI_RoleCode>
+          </role>
+        </CI_ResponsibleParty>
+      </pointOfContact>
+      <resourceMaintenance>
+        <MD_MaintenanceInformation>
+          <maintenanceAndUpdateFrequency>
+            <MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="annually" codeSpace="ISOTC211/19115">annually</MD_MaintenanceFrequencyCode>
+          </maintenanceAndUpdateFrequency>
+        </MD_MaintenanceInformation>
+      </resourceMaintenance>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>Earth</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="place" codeSpace="ISOTC211/19115">place</MD_KeywordTypeCode>
+          </type>
+          <thesaurusName>
+            <CI_Citation>
+              <title>
+                <gco:CharacterString>GeoNames</gco:CharacterString>
+              </title>
+              <date>
+                <CI_Date>
+                  <date>
+                    <gco:Date>2012-11-01</gco:Date>
+                  </date>
+                  <dateType>
+                    <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision" codeSpace="ISOTC211/19115">revision</CI_DateTypeCode>
+                  </dateType>
+                </CI_Date>
+              </date>
+              <edition>
+                <gco:CharacterString>3.1</gco:CharacterString>
+              </edition>
+              <identifier>
+                <MD_Identifier>
+                  <code>
+                    <gco:CharacterString>http://www.geonames.org/</gco:CharacterString>
+                  </code>
+                </MD_Identifier>
+              </identifier>
+            </CI_Citation>
+          </thesaurusName>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>2012</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="temporal" codeSpace="ISOTC211/19115">temporal</MD_KeywordTypeCode>
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>Population geography</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Human geography</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Population</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" codeSpace="ISOTC211/19115">theme</MD_KeywordTypeCode>
+          </type>
+          <thesaurusName>
+            <CI_Citation>
+              <title>
+                <gco:CharacterString>lcsh</gco:CharacterString>
+              </title>
+              <date>
+                <CI_Date>
+                  <date>
+                    <gco:Date>2011-04-26</gco:Date>
+                  </date>
+                  <dateType>
+                    <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision" codeSpace="ISOTC211/19115">revision</CI_DateTypeCode>
+                  </dateType>
+                </CI_Date>
+              </date>
+              <identifier>
+                <MD_Identifier>
+                  <code>
+                    <gco:CharacterString>http://id.loc.gov/authorities/subjects.html</gco:CharacterString>
+                  </code>
+                </MD_Identifier>
+              </identifier>
+            </CI_Citation>
+          </thesaurusName>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>Downloadable Data</gco:CharacterString>
+          </keyword>
+          <thesaurusName uuidref="723f6998-058e-11dc-8314-0800200c9a66"/>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <resourceConstraints>
+        <MD_LegalConstraints>
+          <accessConstraints>
+            <MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115">restricted</MD_RestrictionCode>
+          </accessConstraints>
+          <useConstraints>
+            <MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="restricted" codeSpace="ISOTC211/19115">restricted</MD_RestrictionCode>
+          </useConstraints>
+          <otherConstraints>
+            <gco:CharacterString>Licensee agrees to use its best efforts to provide UT-Batelle information on an annual basis about its utilization of the dataset including a list of publications or presentations wherein the dataset is used. If this dataset is used in a publication or presentation, please notify the distributor so that information can be shared with the dataset originator. Licensee agrees to apply the following notice to all tangible forms of products, including graphs or pictorial presentations, which are produced or generated utilizing the licensed LandScan 2012 High Resolution Global Population Dataset, or to the packaging thereof if direct application to products is not feasible: Notice: This product was made utilizing the LandScan 2012&#x2122; High Resolution Global Population Dataset copyrighted by UT-Battelle, LLC, operator of Oak Ridge National Laboratory under Contract No. DE-AC05-00OR22725 with the United States Department of Energy. The United States Government has certain rights in this Dataset. NEITHER UT-BATTELLE, LLC NOR THE UNITED STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL LIABILITY OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF THE Dataset. If the product is a single image or something similar where space does not permit use of the entire notice shown above, Licensee shall apply the following credit line to such images or similar products: Source: LandScan 2012&#x2122;, ORNL, UT-Battelle, LLC.</gco:CharacterString>
+          </otherConstraints>
+        </MD_LegalConstraints>
+      </resourceConstraints>
+      <aggregationInfo>
+        <MD_AggregateInformation>
+          <aggregateDataSetName>
+            <CI_Citation>
+              <title>
+                <gco:CharacterString>LandScan 2012 Global Population Database</gco:CharacterString>
+              </title>
+              <date>
+                <CI_Date>
+                  <date>
+                    <gco:Date>2013-07-15</gco:Date>
+                  </date>
+                  <dateType>
+                    <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
+                  </dateType>
+                </CI_Date>
+              </date>
+              <edition>
+                <gco:CharacterString>2012</gco:CharacterString>
+              </edition>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <organisationName>
+                    <gco:CharacterString>Oak Ridge National Laboratory</gco:CharacterString>
+                  </organisationName>
+                  <contactInfo>
+                    <CI_Contact>
+                      <address>
+                        <CI_Address>
+                          <city>
+                            <gco:CharacterString>Oak Ridge</gco:CharacterString>
+                          </city>
+                          <administrativeArea>
+                            <gco:CharacterString>Tennessee</gco:CharacterString>
+                          </administrativeArea>
+                          <postalCode>
+                            <gco:CharacterString>37831</gco:CharacterString>
+                          </postalCode>
+                          <country>
+                            <gco:CharacterString>US</gco:CharacterString>
+                          </country>
+                        </CI_Address>
+                      </address>
+                    </CI_Contact>
+                  </contactInfo>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <organisationName>
+                    <gco:CharacterString>Oak Ridge National Laboratory</gco:CharacterString>
+                  </organisationName>
+                  <contactInfo>
+                    <CI_Contact>
+                      <address>
+                        <CI_Address>
+                          <city>
+                            <gco:CharacterString>Oak Ridge</gco:CharacterString>
+                          </city>
+                          <administrativeArea>
+                            <gco:CharacterString>Tennessee</gco:CharacterString>
+                          </administrativeArea>
+                          <postalCode>
+                            <gco:CharacterString>37831</gco:CharacterString>
+                          </postalCode>
+                          <country>
+                            <gco:CharacterString>US</gco:CharacterString>
+                          </country>
+                        </CI_Address>
+                      </address>
+                    </CI_Contact>
+                  </contactInfo>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <individualName>
+                    <gco:CharacterString>Coleman, Phillip R. </gco:CharacterString>
+                  </individualName>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <individualName>
+                    <gco:CharacterString>Bright, Edward A.</gco:CharacterString>
+                  </individualName>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <citedResponsibleParty>
+                <CI_ResponsibleParty>
+                  <individualName>
+                    <gco:CharacterString>Rose, Amy N.</gco:CharacterString>
+                  </individualName>
+                  <role>
+                    <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                  </role>
+                </CI_ResponsibleParty>
+              </citedResponsibleParty>
+              <presentationForm>
+                <CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" codeSpace="ISOTC211/19115">mapDigital</CI_PresentationFormCode>
+              </presentationForm>
+              <series>
+                <CI_Series>
+                  <name>
+                    <gco:CharacterString>East View LandScan Global Population Database</gco:CharacterString>
+                  </name>
+                  <issueIdentification>
+                    <gco:CharacterString>2012</gco:CharacterString>
+                  </issueIdentification>
+                </CI_Series>
+              </series>
+            </CI_Citation>
+          </aggregateDataSetName>
+          <associationType>
+            <DS_AssociationTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DS_AssociationTypeCode" codeListValue="largerWorkCitation" codeSpace="ISOTC211/19115">largerWorkCitation</DS_AssociationTypeCode>
+          </associationType>
+        </MD_AggregateInformation>
+      </aggregationInfo>
+      <spatialRepresentationType>
+        <MD_SpatialRepresentationTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="grid" codeSpace="ISOTC211/19115">grid</MD_SpatialRepresentationTypeCode>
+      </spatialRepresentationType>
+      <language>
+        <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng" codeSpace="ISO639-2">eng</LanguageCode>
+      </language>
+      <characterSet>
+        <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
+      </characterSet>
+      <topicCategory>
+        <MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
+      </topicCategory>
+      <topicCategory>
+        <MD_TopicCategoryCode>society</MD_TopicCategoryCode>
+      </topicCategory>
+      <environmentDescription>
+        <gco:CharacterString>Microsoft Windows 7 Version 6.1 (Build 7601) Service Pack 1; Esri ArcGIS 10.1.0.3035</gco:CharacterString>
+      </environmentDescription>
+      <extent>
+        <EX_Extent>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <extentTypeCode>
+                <gco:Boolean>true</gco:Boolean>
+              </extentTypeCode>
+              <westBoundLongitude>
+                <gco:Decimal>-180</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>180</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>-90</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>84</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+        </EX_Extent>
+      </extent>
+      <extent>
+        <EX_Extent>
+          <temporalElement>
+            <EX_TemporalExtent>
+              <extent>
+                <gml:TimePeriod gml:id="idm40160">
+                  <gml:beginPosition>2012-01-01T00:00:00</gml:beginPosition>
+                  <gml:endPosition>2012-12-31T00:00:00</gml:endPosition>
+                </gml:TimePeriod>
+              </extent>
+            </EX_TemporalExtent>
+          </temporalElement>
+        </EX_Extent>
+      </extent>
+      <supplementalInformation>
+        <gco:CharacterString>IMPORTANT: For correct population analysis using ESRI products assure that the following parameters are set:- Use ONLY Geographic, WGS84 projection parameters.- Spatial Analysis cell size is 0.008333333333333 (double precision)- Spatial Analysis extent should be set to an exact multiple of the cell size (for example 35.25, 35.50, 35.0)Converting (including on-the-fly projections) a grid to other projections or coordinate systems causes population cells to be re-sampled, and hence population counts will be incorrect.In ESRI ArcMap, load the LandScan grid first in order to maintain the original geographic (lat-lon) projection."The dataset has a spatial resolution of 30 arc-seconds and is output in a geographical coordinate system - World Geodetic System (WGS) 84 datum. The 30 arc-second cell, or 0.008333333 decimal degrees, represents approximately 1 km2 near the equator. Since the data is in a spherical coordinate system, cell width decreases in a relationship that varies with the cosine of the latitude of the cell. Thus a cell at 60 degrees latitude would have a width that is half that of a cell at the equator (cos60 = 0.5). The height of the cells does not vary. The values of the cells are integer population counts, not population density, since the cells vary in size. Population counts are normalized to sum to each sub-national administrative unit estimate. For this reason, projecting the data in a raster format to a different coordinate system (including on-the-fly projections) will result in a re-sampling of the data and the integrity of normalized population counts will be compromised. Also prior to all spatial analysis, users should ensure that extents are set to an exact multiple of the cell size (for example 35.25, 35.50, 35.0) to avoid 'shifting' of the dataset." --from the Oak Ridge National Laboratory LandScan Web site, Sept. 12, 2013.</gco:CharacterString>
+      </supplementalInformation>
+    </MD_DataIdentification>
+  </identificationInfo>
+  <contentInfo>
+    <MD_ImageDescription>
+      <attributeDescription gco:nilReason="missing"/>
+      <contentType>
+        <MD_CoverageContentTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CoverageContentTypeCode" codeListValue="physicalMeasurement" codeSpace="ISOTC211/19115">physicalMeasurement</MD_CoverageContentTypeCode>
+      </contentType>
+      <dimension>
+        <MD_Band>
+          <descriptor>
+            <gco:CharacterString>lspop2012</gco:CharacterString>
+          </descriptor>
+          <maxValue>
+            <gco:Real>174619</gco:Real>
+          </maxValue>
+          <minValue>
+            <gco:Real>0</gco:Real>
+          </minValue>
+          <units>
+            <gml:UnitDefinition gml:id="idp108944">
+              <gml:identifier codeSpace="GML_UomSymbol">Unified Code of Units of Measure</gml:identifier>
+            </gml:UnitDefinition>
+          </units>
+          <bitsPerValue>
+            <gco:Integer>32</gco:Integer>
+          </bitsPerValue>
+        </MD_Band>
+      </dimension>
+    </MD_ImageDescription>
+  </contentInfo>
+  <contentInfo>
+    <MD_FeatureCatalogueDescription>
+      <complianceCode>
+        <gco:Boolean>false</gco:Boolean>
+      </complianceCode>
+      <language>
+        <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng" codeSpace="ISO639-2">eng</LanguageCode>
+      </language>
+      <includedWithDataset>
+        <gco:Boolean>true</gco:Boolean>
+      </includedWithDataset>
+      <featureCatalogueCitation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>Feature Catalog for LandScan 2012 Global Population Database</gco:CharacterString>
+          </title>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:Date>2013-07-15</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" codeSpace="ISOTC211/19115">publication</CI_DateTypeCode>
+              </dateType>
+            </CI_Date>
+          </date>
+          <identifier>
+            <MD_Identifier>
+              <code>
+                <gco:CharacterString>a3bc75b2-8ce2-437f-b2db-4e202ffe1359</gco:CharacterString>
+              </code>
+            </MD_Identifier>
+          </identifier>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>Oak Ridge National Laboratory</gco:CharacterString>
+              </organisationName>
+              <contactInfo>
+                <CI_Contact>
+                  <address>
+                    <CI_Address>
+                      <city>
+                        <gco:CharacterString>Oak Ridge</gco:CharacterString>
+                      </city>
+                      <administrativeArea>
+                        <gco:CharacterString>Tennessee</gco:CharacterString>
+                      </administrativeArea>
+                      <postalCode>
+                        <gco:CharacterString>37831</gco:CharacterString>
+                      </postalCode>
+                      <country>
+                        <gco:CharacterString>US</gco:CharacterString>
+                      </country>
+                      <electronicMailAddress>
+                        <gco:CharacterString>bhaduribl@ornl.gov</gco:CharacterString>
+                      </electronicMailAddress>
+                    </CI_Address>
+                  </address>
+                </CI_Contact>
+              </contactInfo>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Coleman, Phillip R. </gco:CharacterString>
+              </individualName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Bright, Edward A.</gco:CharacterString>
+              </individualName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+          <citedResponsibleParty>
+            <CI_ResponsibleParty>
+              <individualName>
+                <gco:CharacterString>Rose, Amy N.</gco:CharacterString>
+              </individualName>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </citedResponsibleParty>
+        </CI_Citation>
+      </featureCatalogueCitation>
+    </MD_FeatureCatalogueDescription>
+  </contentInfo>
+  <distributionInfo>
+    <MD_Distribution>
+      <distributionFormat>
+        <MD_Format>
+          <name>
+            <gco:CharacterString>Raster Dataset</gco:CharacterString>
+          </name>
+          <version gco:nilReason="missing"/>
+        </MD_Format>
+      </distributionFormat>
+      <distributor>
+        <MD_Distributor>
+          <distributorContact>
+            <CI_ResponsibleParty>
+              <organisationName>
+                <gco:CharacterString>Stanford Geospatial Center</gco:CharacterString>
+              </organisationName>
+              <contactInfo>
+                <CI_Contact>
+                  <phone>
+                    <CI_Telephone>
+                      <voice>
+                        <gco:CharacterString>650-723-2746</gco:CharacterString>
+                      </voice>
+                    </CI_Telephone>
+                  </phone>
+                  <address>
+                    <CI_Address>
+                      <deliveryPoint>
+                        <gco:CharacterString>Branner Earth Sciences Library</gco:CharacterString>
+                      </deliveryPoint>
+                      <deliveryPoint>
+                        <gco:CharacterString>Mitchell Bldg. 2nd floor</gco:CharacterString>
+                      </deliveryPoint>
+                      <deliveryPoint>
+                        <gco:CharacterString>397 Panama Mall</gco:CharacterString>
+                      </deliveryPoint>
+                      <city>
+                        <gco:CharacterString>Stanford</gco:CharacterString>
+                      </city>
+                      <administrativeArea>
+                        <gco:CharacterString>California</gco:CharacterString>
+                      </administrativeArea>
+                      <postalCode>
+                        <gco:CharacterString>94305</gco:CharacterString>
+                      </postalCode>
+                      <country>
+                        <gco:CharacterString>US</gco:CharacterString>
+                      </country>
+                      <electronicMailAddress>
+                        <gco:CharacterString>brannerlibrary@stanford.edu</gco:CharacterString>
+                      </electronicMailAddress>
+                    </CI_Address>
+                  </address>
+                </CI_Contact>
+              </contactInfo>
+              <role>
+                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="distributor" codeSpace="ISOTC211/19115">distributor</CI_RoleCode>
+              </role>
+            </CI_ResponsibleParty>
+          </distributorContact>
+        </MD_Distributor>
+      </distributor>
+      <transferOptions>
+        <MD_DigitalTransferOptions>
+          <onLine>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://wms.cartographic.com/landscan </URL>
+              </linkage>
+              <name>
+                <gco:CharacterString>LandScan Global Web Applications</gco:CharacterString>
+              </name>
+              <description>
+                <gco:CharacterString>East View Geospatial LandScan Global Archive Web Applications page</gco:CharacterString>
+              </description>
+              <function>
+                <CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information" codeSpace="ISOTC211/19115">information</CI_OnLineFunctionCode>
+              </function>
+            </CI_OnlineResource>
+          </onLine>
+        </MD_DigitalTransferOptions>
+      </transferOptions>
+    </MD_Distribution>
+  </distributionInfo>
+  <dataQualityInfo>
+    <DQ_DataQuality>
+      <scope>
+        <DQ_Scope>
+          <level>
+            <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</MD_ScopeCode>
+          </level>
+        </DQ_Scope>
+      </scope>
+      <report>
+        <DQ_QuantitativeAttributeAccuracy>
+          <result gco:nilReason="missing"/>
+        </DQ_QuantitativeAttributeAccuracy>
+      </report>
+      <report>
+        <DQ_CompletenessCommission>
+          <evaluationMethodDescription>
+            <gco:CharacterString>Global coverage</gco:CharacterString>
+          </evaluationMethodDescription>
+          <result gco:nilReason="missing"/>
+        </DQ_CompletenessCommission>
+      </report>
+      <lineage>
+        <LI_Lineage>
+          <source>
+            <LI_Source>
+              <description>
+                <gco:CharacterString>Multiple input datasets</gco:CharacterString>
+              </description>
+              <sourceCitation>
+                <CI_Citation>
+                  <title gco:nilReason="missing"/>
+                  <date gco:nilReason="missing"/>
+                  <citedResponsibleParty>
+                    <CI_ResponsibleParty>
+                      <organisationName>
+                        <gco:CharacterString>United States. National Geospatial Intelligence Agengy</gco:CharacterString>
+                      </organisationName>
+                      <contactInfo>
+                        <CI_Contact>
+                          <phone>
+                            <CI_Telephone>
+                              <voice>
+                                <gco:CharacterString>800-455-0899</gco:CharacterString>
+                              </voice>
+                            </CI_Telephone>
+                          </phone>
+                          <address>
+                            <CI_Address>
+                              <deliveryPoint>
+                                <gco:CharacterString>Maritime Safety Office</gco:CharacterString>
+                              </deliveryPoint>
+                              <deliveryPoint>
+                                <gco:CharacterString>MS N64 SH</gco:CharacterString>
+                              </deliveryPoint>
+                              <city>
+                                <gco:CharacterString>Springfield</gco:CharacterString>
+                              </city>
+                              <administrativeArea>
+                                <gco:CharacterString>Virginia</gco:CharacterString>
+                              </administrativeArea>
+                              <postalCode>
+                                <gco:CharacterString>22150</gco:CharacterString>
+                              </postalCode>
+                              <country>
+                                <gco:CharacterString>US</gco:CharacterString>
+                              </country>
+                            </CI_Address>
+                          </address>
+                        </CI_Contact>
+                      </contactInfo>
+                      <role>
+                        <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                      </role>
+                    </CI_ResponsibleParty>
+                  </citedResponsibleParty>
+                </CI_Citation>
+              </sourceCitation>
+            </LI_Source>
+          </source>
+          <source>
+            <LI_Source>
+              <description>
+                <gco:CharacterString>Administrative boundaries for some selected countries: The Global Administrative Unit Layers (GAUL) dataset, implemented by FAO within the EC FAO Food Security for Action Programme. </gco:CharacterString>
+              </description>
+              <sourceCitation>
+                <CI_Citation>
+                  <title>
+                    <gco:CharacterString>Global Administrative Unit Layers (GAUL) dataset</gco:CharacterString>
+                  </title>
+                  <date gco:nilReason="missing"/>
+                </CI_Citation>
+              </sourceCitation>
+            </LI_Source>
+          </source>
+          <source>
+            <LI_Source>
+              <sourceCitation>
+                <CI_Citation>
+                  <title>
+                    <gco:CharacterString>Country Boundaries</gco:CharacterString>
+                  </title>
+                  <date gco:nilReason="missing"/>
+                  <citedResponsibleParty>
+                    <CI_ResponsibleParty>
+                      <organisationName>
+                        <gco:CharacterString>Office of the Geographer, U.S. Department of State.</gco:CharacterString>
+                      </organisationName>
+                      <role>
+                        <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="ISOTC211/19115">originator</CI_RoleCode>
+                      </role>
+                    </CI_ResponsibleParty>
+                  </citedResponsibleParty>
+                </CI_Citation>
+              </sourceCitation>
+            </LI_Source>
+          </source>
+        </LI_Lineage>
+      </lineage>
+    </DQ_DataQuality>
+  </dataQualityInfo>
+</MD_Metadata>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl-test.stanford.edu/dd452vk1873">
+    <gfc:FC_FeatureCatalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.isotc211.org/2005/gfc" xsi:schemaLocation="http://www.isotc211.org/2005/gfc http://www.isotc211.org/2005/gfc/gfc.xsd" uuid="a3bc75b2-8ce2-437f-b2db-4e202ffe1359">
+  <gmx:name>
+    <gco:CharacterString>Feature Catalog for LandScan 2012 Global Population Database</gco:CharacterString>
+  </gmx:name>
+  <gmx:scope>
+    <gco:CharacterString>Population geography; Human geography; Population</gco:CharacterString>
+  </gmx:scope>
+  <gmx:versionNumber gco:nilReason="unknown"/>
+  <gmx:versionDate>
+    <gco:Date>2013</gco:Date>
+  </gmx:versionDate>
+  <gmx:language>
+    <gco:CharacterString>eng; US</gco:CharacterString>
+  </gmx:language>
+  <gmx:characterSet>
+    <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115"/>
+  </gmx:characterSet>
+  <gfc:producer>
+    <gmd:CI_ResponsibleParty>
+      <gmd:organisationName>
+        <gco:CharacterString>Oak Ridge National Laboratory</gco:CharacterString>
+      </gmd:organisationName>
+      <gmd:role>
+        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="originator" codeSpace="006"/>
+      </gmd:role>
+    </gmd:CI_ResponsibleParty>
+  </gfc:producer>
+  <gfc:featureType>
+    <gfc:FC_FeatureType>
+      <gfc:typeName>
+        <gco:LocalName>lspop2012.vat</gco:LocalName>
+      </gfc:typeName>
+      <gfc:definition>
+        <gco:CharacterString>LandScan Global Population Database 2012</gco:CharacterString>
+      </gfc:definition>
+      <gfc:isAbstract>
+        <gco:Boolean>false</gco:Boolean>
+      </gfc:isAbstract>
+      <gfc:featureCatalogue uuidref="a3bc75b2-8ce2-437f-b2db-4e202ffe1359"/>
+      <gfc:carrierOfCharacteristics>
+        <gfc:FC_FeatureAttribute>
+          <gfc:memberName>
+            <gco:LocalName>Rowid</gco:LocalName>
+          </gfc:memberName>
+          <gfc:definition>
+            <gco:CharacterString>Internal feature number.</gco:CharacterString>
+          </gfc:definition>
+          <gfc:cardinality gco:nilReason="unknown"/>
+          <gfc:definitionReference>
+            <gfc:FC_DefinitionReference>
+              <gfc:definitionSource>
+                <gfc:FC_DefinitionSource>
+                  <gfc:source>
+                    <gmd:CI_Citation>
+                      <gmd:title>
+                        <gco:CharacterString>Esri</gco:CharacterString>
+                      </gmd:title>
+                      <gmd:date gco:nilReason="unknown"/>
+                      <gmd:citedResponsibleParty>
+                        <gmd:CI_ResponsibleParty>
+                          <gmd:organisationName>
+                            <gco:CharacterString>Esri</gco:CharacterString>
+                          </gmd:organisationName>
+                          <gmd:role>
+                            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="resourceProvider" codeSpace="001"/>
+                          </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                      </gmd:citedResponsibleParty>
+                    </gmd:CI_Citation>
+                  </gfc:source>
+                </gfc:FC_DefinitionSource>
+              </gfc:definitionSource>
+            </gfc:FC_DefinitionReference>
+          </gfc:definitionReference>
+          <gfc:valueType>
+            <gco:TypeName>
+              <gco:aName>
+                <gco:CharacterString>OID</gco:CharacterString>
+              </gco:aName>
+            </gco:TypeName>
+          </gfc:valueType>
+        </gfc:FC_FeatureAttribute>
+      </gfc:carrierOfCharacteristics>
+      <gfc:carrierOfCharacteristics>
+        <gfc:FC_FeatureAttribute>
+          <gfc:memberName>
+            <gco:LocalName>VALUE</gco:LocalName>
+          </gfc:memberName>
+          <gfc:definition>
+            <gco:CharacterString>Number of people per cell</gco:CharacterString>
+          </gfc:definition>
+          <gfc:cardinality gco:nilReason="unknown"/>
+          <gfc:definitionReference>
+            <gfc:FC_DefinitionReference>
+              <gfc:definitionSource>
+                <gfc:FC_DefinitionSource>
+                  <gfc:source>
+                    <gmd:CI_Citation>
+                      <gmd:title>
+                        <gco:CharacterString>ORNL</gco:CharacterString>
+                      </gmd:title>
+                      <gmd:date gco:nilReason="unknown"/>
+                      <gmd:citedResponsibleParty>
+                        <gmd:CI_ResponsibleParty>
+                          <gmd:organisationName>
+                            <gco:CharacterString>ORNL</gco:CharacterString>
+                          </gmd:organisationName>
+                          <gmd:role>
+                            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="resourceProvider" codeSpace="001"/>
+                          </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                      </gmd:citedResponsibleParty>
+                    </gmd:CI_Citation>
+                  </gfc:source>
+                </gfc:FC_DefinitionSource>
+              </gfc:definitionSource>
+            </gfc:FC_DefinitionReference>
+          </gfc:definitionReference>
+          <gfc:valueType>
+            <gco:TypeName>
+              <gco:aName>
+                <gco:CharacterString>Integer</gco:CharacterString>
+              </gco:aName>
+            </gco:TypeName>
+          </gfc:valueType>
+        </gfc:FC_FeatureAttribute>
+      </gfc:carrierOfCharacteristics>
+      <gfc:carrierOfCharacteristics>
+        <gfc:FC_FeatureAttribute>
+          <gfc:memberName>
+            <gco:LocalName>COUNT</gco:LocalName>
+          </gfc:memberName>
+          <gfc:definition>
+            <gco:CharacterString>Number of cells with same population value</gco:CharacterString>
+          </gfc:definition>
+          <gfc:cardinality gco:nilReason="unknown"/>
+          <gfc:definitionReference>
+            <gfc:FC_DefinitionReference>
+              <gfc:definitionSource>
+                <gfc:FC_DefinitionSource>
+                  <gfc:source>
+                    <gmd:CI_Citation>
+                      <gmd:title>
+                        <gco:CharacterString>ORNL</gco:CharacterString>
+                      </gmd:title>
+                      <gmd:date gco:nilReason="unknown"/>
+                      <gmd:citedResponsibleParty>
+                        <gmd:CI_ResponsibleParty>
+                          <gmd:organisationName>
+                            <gco:CharacterString>ORNL</gco:CharacterString>
+                          </gmd:organisationName>
+                          <gmd:role>
+                            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="resourceProvider" codeSpace="001"/>
+                          </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                      </gmd:citedResponsibleParty>
+                    </gmd:CI_Citation>
+                  </gfc:source>
+                </gfc:FC_DefinitionSource>
+              </gfc:definitionSource>
+            </gfc:FC_DefinitionReference>
+          </gfc:definitionReference>
+          <gfc:valueType>
+            <gco:TypeName>
+              <gco:aName>
+                <gco:CharacterString>Integer</gco:CharacterString>
+              </gco:aName>
+            </gco:TypeName>
+          </gfc:valueType>
+        </gfc:FC_FeatureAttribute>
+      </gfc:carrierOfCharacteristics>
+    </gfc:FC_FeatureType>
+  </gfc:featureType>
+</gfc:FC_FeatureCatalogue>
+  </rdf:Description>
+</rdf:RDF>
