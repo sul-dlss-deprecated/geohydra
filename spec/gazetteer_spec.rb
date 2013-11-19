@@ -38,14 +38,14 @@ describe GeoHydra::Gazetteer do
     end
   end
   
-  describe '#find_lcnaf_by_keyword' do
+  describe '#find_lc_by_keyword' do
     it "nil case" do
-      g.find_lcnaf_by_keyword(nil).should == nil      
-      g.find_lcnaf_by_keyword('asdfasdfasdf').should == nil      
+      g.find_lc_by_keyword(nil).should == nil      
+      g.find_lc_by_keyword('asdfasdfasdf').should == nil      
     end
     K2LC.each do |k,lcsh|
       it k do
-        r = g.find_lcnaf_by_keyword(k)
+        r = g.find_lc_by_keyword(k)
         r.should == lcsh
       end
     end

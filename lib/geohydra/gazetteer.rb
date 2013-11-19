@@ -10,28 +10,46 @@ module GeoHydra
     
     def initialize
       @registry = {}
-      CSV.foreach(CSV_FN, :encoding => 'UTF-8') do |v|#, {:headers => true, }) do |v|
+      CSV.foreach(CSV_FN, :encoding => 'UTF-8') do |v|
         @registry[v[0]] = {
           :id => v[1].to_i,
           :lc => v[2],
-          :uri => "http://geonames.org/#{v[1].to_i}"
+          :lcid => v[3]
         }
       end
     end
     
-    # @return [Integer] geonames id
-    def find_id_by_keyword(kw)
-      @registry.include?(kw) ? @registry[kw][:id].to_i : nil
+    def _get(k, i)
+      return nil unless @registry.include?(k)
+      @registry[k][i]
     end
     
+    # @return [Integer] geonames id
+    def find_id_by_keyword(k)
+      _get(k, :id)
+    end
+
     # @return [String] library of congress name
-    def find_lcnaf_by_keyword(kw)
-      @registry.include?(kw) ? @registry[kw][:lc] : nil
+    def find_lc_by_keyword(k)
+      _get(k, :lc)
+    end
+    
+    # @return [String] library of congress valueURI
+    def find_lcuri_by_keyword(k)
+      lcid = _get(k, :lcid)
+      if lcid =~ /^lcsh:(\d+)$/
+        "http://id.loc.gov/authorities/subjects/sh#{$1}"
+      elsif lcid =~ /^lcnaf:(\d+)$/
+        "http://id.loc.gov/authorities/names/n#{$1}"
+      else
+        nil
+      end
     end
 
     # @return [String] geonames uri
-    def find_uri_by_keyword(kw)
-      @registry.include?(kw) ? @registry[kw][:uri] : nil
+    def find_uri_by_keyword(k)
+      return nil if _get(k, :id).nil?
+      "http://geonames.org/#{_get(k, :id)}"
     end
   
     # @return [String] The keyword
