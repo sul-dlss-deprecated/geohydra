@@ -165,7 +165,7 @@ end
 
 def export_attachments(druid, flags)
   Dir.glob("#{flags[:stagedir]}/#{druid.id}/content/*") do |fn|
-    unless %w{.png .jpg}.include?(File.extname(fn)) or File.basename(fn) =~ /\.zip$/i
+    unless %w{.png .jpg .zip}.include?(File.extname(fn))
       afn = File.join(druid.content_dir, File.basename(fn))
       FileUtils.link fn, afn, :verbose => flags[:debug], :force => true
       yield afn if block_given?
