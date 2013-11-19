@@ -38,9 +38,9 @@ module GeoHydra
     # Converts a ISO 19139 into MODS v3
     # @param [String] fn with data as ISO 19139 XML.
     # @return [Nokogiri::XML::Document] the MODS v3 metadata
-    # @deprecated
+    # @deprecated Use to_geoMetadataDS instead
     def self.to_mods fn
-      doc = Dor::GeoMetadataDS.from_xml File.read(fn)
+      doc = Dor::GeoMetadataDS.from_xml File.open(fn)
       doc.to_mods
     end
     
@@ -86,13 +86,14 @@ module GeoHydra
     # @return [Nokogiri::XML::Document] the geoMetadataDS with RDF
     def self.to_geoMetadataDS isoXml, fcXml, flags = {}
       raise ArgumentError, "PURL is required" if flags['purl'].nil?
+      raise ArgumentError, "ISO 19139 is required" if isoXml.nil? or isoXml.root.nil?
       Nokogiri::XML("
 <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">
   <rdf:Description rdf:about=\"#{flags['purl']}\">
     #{isoXml.root.to_s}
   </rdf:Description>
   <rdf:Description rdf:about=\"#{flags['purl']}\">
-    #{fcXml.root.to_s}
+    #{fcXml.nil?? '' : fcXml.root.to_s}
   </rdf:Description>
 </rdf:RDF>")
     end
