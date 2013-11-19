@@ -1,5 +1,12 @@
 GIT
-  remote: corn.stanford.edu:/afs/ir/dev/dlss/git/lyberteam/assembly-objectfile.git
+  remote: https://github.com/drh-stanford/version_bumper.git
+  revision: 0a682b031a6ba6c3de635687b7f1986be5bcd9a5
+  branch: patch_tag
+  specs:
+    version_bumper (0.4.1.pre1)
+
+GIT
+  remote: https://github.com/sul-dlss/assembly-objectfile.git
   revision: 4e5ce5941b5b980f7049d1a9eaad87f13f880a56
   specs:
     assembly-objectfile (1.6.0)
@@ -7,13 +14,6 @@ GIT
       mime-types
       mini_exiftool (~> 1.6)
       nokogiri
-
-GIT
-  remote: https://github.com/drh-stanford/version_bumper.git
-  revision: 0a682b031a6ba6c3de635687b7f1986be5bcd9a5
-  branch: patch_tag
-  specs:
-    version_bumper (0.4.1.pre1)
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
