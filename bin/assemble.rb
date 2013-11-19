@@ -176,7 +176,7 @@ end
 def export_zip(druid, flags)
   # export content into zip files
   Dir.glob(File.join(flags[:stagedir], "#{druid.id}/content/*.zip")) do |fn|
-    ofn = "#{druid.content_dir}" + File.basename(fn)
+    ofn = File.join(druid.content_dir, File.basename(fn))
     FileUtils.link fn, ofn, :verbose => flags[:verbose], :force => true
     yield ofn if block_given?
   end
