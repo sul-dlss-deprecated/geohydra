@@ -12,6 +12,7 @@ require 'json'
 #
 #   * Changes subject/geographic with GeoNames as authority to have the correct valueURI
 #   * Adds correct rdf:resource to geo extension
+#   * Adds a LCSH or LCNAF keyword if needed
 #
 def resolve_placenames(modsFn, flags)
   puts "Processing #{modsFn}" if flags[:verbose]
@@ -19,23 +20,29 @@ def resolve_placenames(modsFn, flags)
   r = mods.xpath('//mods:geographic[@authority=\'geonames\']', { 'mods' => 'http://www.loc.gov/mods/v3' })
   r.each do |i|
     ap({:i => i}) if flags[:debug]
-    k = i.content # Gazetteer keyword
+    k = i.content 
+    
+    # Verify Gazetteer keyword
     uri = @@g.find_uri_by_keyword(k)
     if uri.nil?
       puts "WARNING: Missing gazetteer entry for '#{k}'" if flags[:verbose]
       next
-    else
-      i['valueURI'] = uri
-      coverages = mods.xpath('//mods:extension//dc:coverage', { 'mods' => 'http://www.loc.gov/mods/v3', 'dc' => 'http://purl.org/dc/elements/1.1/' })
-      coverages.each do |j|
-        if j['dc:title'] == k
-          puts "Correcting dc:coverage@rdf:resource for #{k}" if flags[:debug]
-          j['rdf:resource'] = uri
-        end
+    end
+
+    # Ensure correct valueURI for subject/geographic for GeoNames
+    i['valueURI'] = uri
+
+    # Correct any linkages for placenames in the geo extension
+    coverages = mods.xpath('//mods:extension//dc:coverage', { 'mods' => 'http://www.loc.gov/mods/v3', 'dc' => 'http://purl.org/dc/elements/1.1/' })
+    coverages.each do |j|
+      if j['dc:title'] == k
+        puts "Correcting dc:coverage@rdf:resource for #{k}" if flags[:debug]
+        j['rdf:resource'] = uri
       end
     end
     
-    lc= @@g.find_lc_by_keyword(k)
+    # Add a LC heading if needed
+    lc = @@g.find_lc_by_keyword(k)
     ap({:lc => lc}) if flags[:debug]
     unless lc.nil? or k == lc
       puts "Adding Library of Congress entry to end of MODS record" if flags[:verbose]
@@ -49,6 +56,7 @@ def resolve_placenames(modsFn, flags)
     ap({:i => i}) if flags[:debug]
   end
   
+  # Save XML tree
   mods.write_to(File.open(modsFn, 'wb'), :encoding => 'UTF-8', :indent => 2)
 end
 
