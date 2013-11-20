@@ -45,11 +45,18 @@ module GeoHydra
         nil
       end
     end
+    
+    def find_lcauth_by_keyword(k)
+      lcid = _get(k, :lcid)
+      return $1 if lcid =~ /^(lcsh|lcnaf):/
+      nil
+    end
+    
 
     # @return [String] geonames uri
     def find_uri_by_keyword(k)
       return nil if _get(k, :id).nil?
-      "http://geonames.org/#{_get(k, :id)}"
+      "http://sws.geonames.org/#{_get(k, :id)}/"
     end
   
     # @return [String] The keyword

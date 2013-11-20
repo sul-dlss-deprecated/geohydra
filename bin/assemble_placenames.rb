@@ -31,6 +31,8 @@ def resolve_placenames(modsFn, flags)
 
     # Ensure correct valueURI for subject/geographic for GeoNames
     i['valueURI'] = uri
+    i['authority'] = 'geonames'
+    i['authorityURI'] = 'http://www.geonames.org/ontology#'
 
     # Correct any linkages for placenames in the geo extension
     coverages = mods.xpath('//mods:extension//dc:coverage', { 'mods' => 'http://www.loc.gov/mods/v3', 'dc' => 'http://purl.org/dc/elements/1.1/' })
@@ -48,7 +50,7 @@ def resolve_placenames(modsFn, flags)
       puts "Adding Library of Congress entry to end of MODS record" if flags[:verbose]
       i.parent.parent << Nokogiri::XML("
 <subject>
-  <geographic authority='#{@@g.find_lcuri_by_keyword(k)}'>
+  <geographic authority='#{@@g.find_lcauth_by_keyword(k)} valueURI='#{@@g.find_lcuri_by_keyword(k)}'>
     #{lc}
   </geographic>
 </subject>").root
