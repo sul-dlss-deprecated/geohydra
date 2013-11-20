@@ -16,7 +16,7 @@ require 'json'
 def resolve_placenames(modsFn, flags)
   puts "Processing #{modsFn}" if flags[:verbose]
   mods = Nokogiri::XML(File.open(modsFn, 'rb'))
-  r = mods.xpath('//mods:geographic[@authority=\'GeoNames\']', { 'mods' => 'http://www.loc.gov/mods/v3' })
+  r = mods.xpath('//mods:geographic[@authority=\'geonames\']', { 'mods' => 'http://www.loc.gov/mods/v3' })
   r.each do |i|
     ap({:i => i}) if flags[:debug]
     k = i.content # Gazetteer keyword
@@ -35,11 +35,16 @@ def resolve_placenames(modsFn, flags)
       end
     end
     
-    lcnaf = @@g.find_lcnaf_by_keyword(k)
-    ap({:lcnaf => lcnaf}) if flags[:debug]
-    unless lcnaf.nil? or k == lcnaf
-      puts "Adding Library of Congress NAF entry to end of MODS record" if flags[:verbose]
-      i.parent.parent << Nokogiri::XML("<subject><geographic authorityURI='http://id.loc.gov/authorities/names'>#{lcnaf}</geographic></subject>").root
+    lc= @@g.find_lc_by_keyword(k)
+    ap({:lc => lc}) if flags[:debug]
+    unless lc.nil? or k == lc
+      puts "Adding Library of Congress entry to end of MODS record" if flags[:verbose]
+      i.parent.parent << Nokogiri::XML("
+<subject>
+  <geographic authority='#{@@g.find_lcuri_by_keyword(k)}'>
+    #{lc}
+  </geographic>
+</subject>").root
     end
     ap({:i => i}) if flags[:debug]
   end
