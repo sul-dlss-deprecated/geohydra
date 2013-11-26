@@ -53,7 +53,8 @@ module GeoHydra
     end
     
 
-    # @return [String] geonames uri
+    # @see http://www.geonames.org/ontology/documentation.html
+    # @return [String] geonames uri (includes trailing / as specified)
     def find_uri_by_keyword(k)
       return nil if _get(k, :id).nil?
       "http://sws.geonames.org/#{_get(k, :id)}/"

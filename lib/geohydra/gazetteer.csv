@@ -1,36 +1,36 @@
 "geonames_kw","geonames_id","lc_kw","lc_id"
 "Earth",6295630,"Earth (Planet)",lcsh:85040427
-"United States",6252001,"United States"
-"India",1269750,"India"
-"State of Arunāchal Pradesh",1278341,
-"State of Assam",1278253,"Assam (India)"
-"State of  Bihār",1275715,"Bihar (India)"
-"Bilāspur",1275638,
-"Mumbai",1275339,"Mumbai (India)"
-"Union Territory of Chandīgarh",1274744,
-"Union Territory of Damān and Diu",1271155,"Daman and Diu (India)"
-"National Capital Territory of Delhi",1273293,"Delhi (India)"
-"Goa",1271157,"Goa (India : State)"
-"State of Gujarāt",1270770,"Gujarat (India)"
-"Haryana",1270260,"Haryana (India)"
-"State of Himāchal Pradesh",1270101,"Himachal Pradesh (India)"
-"State of Jammu and Kashmīr",1269320,"Jammu and Kashmir (India)"
-"State of Jharkhand",1444365,"Jharkhand (India)"
-"State of Karnātaka",1267701,"Karnataka (India)"
-"State of Kerala",1267254,"Kerala (India)"
-"Kachchh",1268731,"Kachchh (India)"
-"State of Madhya Pradesh",1264542,"Madhya Pradesh (India)"
-"State of Mahārāshtra",1264418,"Maharashtra (India)"
-"State of Manipur",1263706,"Manipur (India)"
-"Meghalaya",1263207,
-"Mizoram",1262963,
-"Nagaland",1262271,
-"Orissa",1261029,
-"Patiala",1260108,
-"Punjab",1259223,
-"Rajasthan",1258899,
-"Sikkim",1256312,
-"Tamil Nadu",1255053,
-"Tripura",1254169,
-"Uttar Pradesh",1253626,
-"West Bengal",1252881,
+"United States",6252001,"United States",
+"India",1269750,"India",
+"State of Arunāchal Pradesh",1278341,,
+"State of Assam",1278253,"Assam (India)",
+"State of  Bihār",1275715,"Bihar (India)",
+"Bilāspur",1275638,,
+"Mumbai",1275339,"Mumbai (India)",
+"Union Territory of Chandīgarh",1274744,,
+"Union Territory of Damān and Diu",1271155,"Daman and Diu (India)",
+"National Capital Territory of Delhi",1273293,"Delhi (India)",
+"Goa",1271157,"Goa (India : State)",
+"State of Gujarāt",1270770,"Gujarat (India)",
+"Haryana",1270260,"Haryana (India)",
+"State of Himāchal Pradesh",1270101,"Himachal Pradesh (India)",
+"State of Jammu and Kashmīr",1269320,"Jammu and Kashmir (India)",
+"State of Jharkhand",1444365,"Jharkhand (India)",
+"State of Karnātaka",1267701,"Karnataka (India)",
+"State of Kerala",1267254,"Kerala (India)",
+"Kachchh",1268731,"Kachchh (India)",
+"State of Madhya Pradesh",1264542,"Madhya Pradesh (India)",
+"State of Mahārāshtra",1264418,"Maharashtra (India)",
+"State of Manipur",1263706,"Manipur (India)",
+"Meghalaya",1263207,,
+"Mizoram",1262963,,
+"Nagaland",1262271,,
+"Orissa",1261029,,
+"Patiala",1260108,,
+"Punjab",1259223,,
+"Rajasthan",1258899,,
+"Sikkim",1256312,,
+"Tamil Nadu",1255053,,
+"Tripura",1254169,,
+"Uttar Pradesh",1253626,,
+"West Bengal",1252881,,
