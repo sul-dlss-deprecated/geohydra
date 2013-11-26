@@ -49,6 +49,7 @@ module GeoHydra
     def find_lcauth_by_keyword(k)
       lcid = _get(k, :lcid)
       return $1 if lcid =~ /^(lcsh|lcnaf):/
+      return 'lcsh' unless find_lc_by_keyword(k).nil? # default to lcsh if present
       nil
     end
     

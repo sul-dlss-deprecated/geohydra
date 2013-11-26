@@ -49,17 +49,19 @@ def resolve_placenames(modsFn, flags)
     unless lc.nil? or k == lc
       puts "Adding Library of Congress entry to end of MODS record" if flags[:verbose]
       lcauth = @@g.find_lcauth_by_keyword(k)
-      lcuri = @@g.find_lcuri_by_keyword(k)
-      unless lcuri.nil?
-        lcuri = " valueURI='#{lcuri}'"
-      end
-      i.parent.parent << Nokogiri::XML("
+      unless lcauth.nil?
+        lcuri = @@g.find_lcuri_by_keyword(k)
+        unless lcuri.nil?
+          lcuri = " valueURI='#{lcuri}'"
+        end
+        i.parent.parent << Nokogiri::XML("
 <subject>
   <geographic authority='#{lcauth}'#{lcuri}>
     #{lc}
   </geographic>
 </subject>
 ").root
+      end
     end
     ap({:i => i}) if flags[:debug]
   end
