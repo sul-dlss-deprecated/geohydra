@@ -17,22 +17,23 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 5d15af10369ffedb5ac7f4775a250f32ae2ed6ca
+  revision: ac9ba241a1317c4b573933a2c509684b7bebbe5e
   branch: geoMetadata
   specs:
-    dor-services (4.2.28)
+    dor-services (4.4.4)
       active-fedora (~> 5.6, >= 5.6.3)
+      activesupport
       confstruct (>= 0.2.2)
-      dor-workflow-service (~> 1.3)
+      dor-workflow-service (~> 1.4)
       druid-tools (>= 0.2.3)
       equivalent-xml (>= 0.2.2)
       json
       lyber-utils
-      moab-versioning (>= 1.2.1)
+      moab-versioning (= 1.3.0)
       net-sftp
       net-ssh
       net-ssh-krb (>= 0.3.0)
-      nokogiri (~> 1.5.10)
+      nokogiri (>= 1.5.10)
       om
       progressbar
       rest-client
@@ -80,13 +81,13 @@ GIT
 PATH
   remote: .
   specs:
-    geohydra (0.2.3.5)
+    geohydra (0.2.3.6)
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
       assembly-objectfile
       confstruct
-      dor-services (~> 4.2.20)
+      dor-services (>= 4.2)
       druid-tools (~> 0.2)
       fastimage
       json
@@ -175,9 +176,9 @@ GEM
       validatable
     mediashelf-loggable (0.4.9)
     method_source (0.8.2)
-    mime-types (1.25)
+    mime-types (1.25.1)
     mini_exiftool (1.7.0)
-    moab-versioning (1.3.1)
+    moab-versioning (1.3.0)
       confstruct
       happymapper
       hashery (>= 2.0.0)
@@ -204,7 +205,7 @@ GEM
       nokogiri (>= 1.4.2)
     pg (0.17.0)
     progressbar (0.21.0)
-    pry (0.9.12.3)
+    pry (0.9.12.4)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
@@ -263,7 +264,7 @@ GEM
       om (>= 1.5.0)
       stomp
       xml-simple
-    stanford-mods (0.0.21)
+    stanford-mods (0.0.22)
       mods
     stomp (1.3.1)
     systemu (2.5.2)
