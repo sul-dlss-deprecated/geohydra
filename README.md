@@ -80,6 +80,11 @@ To load the `workspace` and generate metadata files from the `stage`, use:
 To project all Shapefiles into EPSG:4326 (WGS84), as needed:
 
     % bundle exec bin/derive_wgs84.rb druid1...
+    
+Upload workspace files to lyber-services-prod:/dor/workspace:
+
+    % cd /var/geomdtk/current/workspace
+    % rsync -av ./ lyberadmin@lyber-services-prod:/dor/workspace/
 
 Accessioning
 ============
@@ -87,6 +92,8 @@ Accessioning
 To upload the druid metadata to DOR:
 
     % bundle exec bin/accession.rb druid1 [druid2 druid3...]
+    
+Use Argo to initiate the assemblyWF.    
 
 To upload the druid packages to PostGIS, you will need `shp2pgsql` then use:
 
