@@ -17,7 +17,7 @@ require 'json'
 def resolve_placenames(modsFn, flags)
   puts "Processing #{modsFn}" if flags[:verbose]
   mods = Nokogiri::XML(File.open(modsFn, 'rb'))
-  r = mods.xpath('//mods:geographic[@authority=\'geonames\']', { 'mods' => 'http://www.loc.gov/mods/v3' })
+  r = mods.xpath('//mods:geographic', { 'mods' => 'http://www.loc.gov/mods/v3' })
   r.each do |i|
     ap({:i => i}) if flags[:debug]
     k = i.content 
@@ -65,9 +65,7 @@ end
 def main(flags)
   File.umask(002)
   puts "Searching for MODS records..." if flags[:verbose]
-  puts flags[:workspacedir] + '/**/' + DruidTools::Druid.glob + '/metadata/descMetadata.xml' if flags[:debug]
   Dir.glob(flags[:workspacedir] + '/**/' + DruidTools::Druid.glob + '/metadata/descMetadata.xml') do |modsFn|
-    ap({:modsFn => modsFn}) if flags[:debug]
     resolve_placenames(modsFn, flags)
   end
 end
@@ -93,7 +91,7 @@ EOM
     end
   end.parse!
 
-  %w{tmpdir stagedir workspacedir}.each do |k|
+  %w{workspacedir}.each do |k|
     d = flags[k.to_sym]
     raise ArgumentError, "Missing directory #{d}" unless d.nil? or File.directory? d
   end
