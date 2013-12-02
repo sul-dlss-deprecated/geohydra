@@ -70,8 +70,8 @@ To package up the .shp files into .zip files:
 
     % bundle exec bin/assemble_data.rb
 
-Preparing `workspace`
-=====================
+Preparing workspace with assembly
+=================================
 
 To load the `workspace` and generate metadata files from the `stage`, use:
 
@@ -80,6 +80,11 @@ To load the `workspace` and generate metadata files from the `stage`, use:
 To project all Shapefiles into EPSG:4326 (WGS84), as needed:
 
     % bundle exec bin/derive_wgs84.rb druid1...
+    
+Upload workspace files to lyber-services-prod:/dor/workspace:
+
+    % cd /var/geomdtk/current/workspace
+    % rsync -av ./ lyberadmin@lyber-services-prod:/dor/workspace/
 
 Accessioning
 ============
@@ -87,6 +92,8 @@ Accessioning
 To upload the druid metadata to DOR:
 
     % bundle exec bin/accession.rb druid1 [druid2 druid3...]
+    
+Use Argo to initiate the assemblyWF.    
 
 To upload the druid packages to PostGIS, you will need `shp2pgsql` then use:
 
@@ -105,51 +112,55 @@ To upload the OpenGeoPortal Solr documents, use:
 Data Wrangling
 ==============
 
-The file system structure will initially look like this (see [Consul
-page](https://consul.stanford.edu/x/C5xSC) for a description.). The `geoOptions.json` contain meta-metadata about the package:
+Step 1: Preparing for stage
+---------------------------
 
-    { 
-      "druid"        : "zz943vx1492", 
-      "geometryType" : "Point" 
-    }
-
-Note that you can use `scripts/build.rb` to help build out a `druid/` folder
-with data for upload if you don't already have the below structure ready. It
-should look like this, where the temp files for the shapefiles are all hard
-links to reduce space requirements: This is pre-`stage`:
+The file system structure will initially look like the following (see [Consul
+page](https://consul.stanford.edu/x/C5xSC) for a description) where the temp
+files for the shapefiles are all hard links to reduce space requirements: This
+is *pre-stage*:
 
     zv925hd6723/
-      metadata/
-      content/
       temp/
         geoOptions.json
         OGWELLS.dbf
         OGWELLS.prj
-        OGWELLS.sbn
-        OGWELLS.sbx
         OGWELLS.shp
         OGWELLS.shp.xml
         OGWELLS.shx
 
+The `geoOptions.json` contain meta-metadata about the package, including the
+druid, geometry type, and filename. These files can be generated using
+bin/build_stage_options.rb but it requires manual supervision.
+
+    { "druid":"cg716wc7949", 
+      "geometryType":"Raster", 
+      "filename":"world_admin1.tif" }
+
+Step 2: Staged
+--------------
+
 Once staged, the data look like this:
 
     zv925hd6723/
-      metadata/
       content/
         data.zip
         preview.jpg
       temp/
         geoOptions.json
-        OGWELLS-iso19139-fc.shp.xml
-        OGWELLS-iso19139.shp.xml
+        OGWELLS-iso19139-fc.xml
+        OGWELLS-iso19139.xml
 
 
-then at the end of processing -- prior to accessioning -- it will look like in
-your workspace:
+Step 3: Assembly
+----------------
+
+Then at the end of assembly processing -- see above prior to accessioning -- it will
+look like in your workspace:
 
     zv925hd6723/
       metadata/
-        contentMetadata.xml
+        contentMetadata.xml (generated later by accessioning scriptie)
         descMetadata.xml
         geoMetadata.xml
       content/
