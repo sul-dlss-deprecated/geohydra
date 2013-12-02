@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activerecord', '~> 3.2.0'
   s.add_dependency 'activesupport', '~> 3.2.0'
   s.add_dependency 'activerecord-postgresql-adapter'
+  s.add_dependency 'awesome_print'
   
   # SUL-DLSS gems
   s.add_dependency 'assembly-objectfile'
@@ -36,7 +37,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'mods'
   s.add_dependency 'rgeoserver', '~> 0.6.0'
 
-  s.add_development_dependency 'awesome_print'
   s.add_development_dependency 'equivalent-xml'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'

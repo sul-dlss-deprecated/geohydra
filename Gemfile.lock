@@ -61,6 +61,7 @@ PATH
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
       assembly-objectfile
+      awesome_print
       confstruct
       dor-services (~> 4.2)
       druid-tools (~> 0.2)
@@ -263,7 +264,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print
   dor-services!
   equivalent-xml
   geohydra!
