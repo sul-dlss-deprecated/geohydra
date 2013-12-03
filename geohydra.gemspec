@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'confstruct'
   s.add_dependency 'json'
   s.add_dependency 'fastimage'  
-  s.add_dependency 'nokogiri', '~> 1.5.10'
+  s.add_dependency 'nokogiri', '~> 1.6'
   s.add_dependency 'rest-client'
   s.add_dependency 'rsolr'
   s.add_dependency 'rgeo'
@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activerecord-postgresql-adapter'
   s.add_dependency 'awesome_print'
   
-  # SUL-DLSS gems
+  # SUL-DLSS gems on github
   s.add_dependency 'assembly-objectfile'
   s.add_dependency 'dor-services', '~> 4.2'
   s.add_dependency 'druid-tools', '~> 0.2'
