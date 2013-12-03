@@ -76,6 +76,10 @@ Preparing workspace with assembly
 To load the `workspace` and generate metadata files from the `stage`, use:
 
     % bundle exec bin/assemble.rb
+    
+If you're using a gazetteer, then post-process the MODS records with:
+
+    % bundle exec bin/assemble_placenames.rb_
 
 To project all Shapefiles into EPSG:4326 (WGS84), as needed:
 
