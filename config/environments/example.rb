@@ -3,6 +3,7 @@ module GeoHydra
     geohydra do
       workspace "/var/geomdtk/current/workspace"
       stage "/var/geomdtk/current/stage"
+      tmpdir "/var/geomdtk/current/tmp"
     end
 
     geonetwork do
@@ -60,18 +61,14 @@ Dor::Config.configure do
     url 'https://user:mypassowrd@host/fedora'
   end
   
-  gsearch do
-    url 'http://user:mypassword@host/solr'
-  end
-
-  solrizer do
-    url 'http://user:mypassword@host/solr'
-  end
-  
   ssl do
     cert_file File.join(File.dirname(__FILE__) + '/../certs', "my.crt")
     key_file  File.join(File.dirname(__FILE__) + '/../certs', "my.key")
     key_pass ''
+  end
+  
+  purl do
+    base_url 'http://purl.my.host/'
   end
 
   suri do
@@ -84,23 +81,5 @@ Dor::Config.configure do
   
   workflow do
     url 'http://user:mypassword@host/workflow/'
-  end
-  
-  content do
-    content_user 'myuser'
-    content_base_dir '/my/content'
-    content_server 'my.content.host'
-    ssh_auth 'gssapi-with-mic'
-  end
-  
-  stacks do
-    document_cache_storage_root '/my/document/cache'
-    document_cache_host 'my.document.cache.host'
-    document_cache_user 'my.document.cache.user'
-    local_workspace_root '/my/local/workspace'
-    storage_root '/my/remote/stacks'
-    host 'my.stacks.host'
-    user 'my.stacks.user'
-    ssh_auth 'gssapi-with-mic'
   end
 end
