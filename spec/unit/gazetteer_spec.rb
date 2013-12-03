@@ -78,7 +78,7 @@ describe GeoHydra::Gazetteer do
     K2ID.each do |k,id|
       it k do
         r = g.find_uri_by_keyword(k)
-        r.should == "http://geonames.org/#{id}"
+        r.should == "http://sws.geonames.org/#{id}/"
       end
     end
   end
