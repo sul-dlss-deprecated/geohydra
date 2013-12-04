@@ -77,7 +77,7 @@ GIT
 PATH
   remote: .
   specs:
-    geohydra (0.2.3.8)
+    geohydra (0.2.3.9)
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
