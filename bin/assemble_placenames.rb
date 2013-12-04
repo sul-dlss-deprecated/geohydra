@@ -56,9 +56,7 @@ def resolve_placenames(modsFn, flags)
         end
         i.parent.parent << Nokogiri::XML("
 <subject>
-  <geographic authority='#{lcauth}'#{lcuri}>
-    #{lc}
-  </geographic>
+  <geographic authority='#{lcauth}'#{lcuri}>#{lc}</geographic>
 </subject>
 ").root
       end
