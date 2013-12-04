@@ -12,6 +12,28 @@ require 'mods'
 ENV['RGEOSERVER_CONFIG'] ||= ENV_FILE + '_rgeoserver.yml'
 require 'rgeoserver'
 
+def do_raster(c, ws, layername, layer, flags)
+  ap({:catalog => c, :workspace => ws, :name => layername, :layer => layer}) if flags[:debug]
+  
+  cs = RGeoServer::CoverageStore.new c, :workspace => ws, :name => layername
+  ap({:coveragestore => cs}) if flags[:debug]
+  raise ArgumentError, "Missing CoverageStore #{layername}: #{cs}" if cs.new?
+  
+  cv = RGeoServer::Coverage.new c, :workspace => ws, :coverage_store => cs, :name => layername
+  raise ArgumentError, "Missing Coverage #{layername}: #{cv}" if cv.new?
+  
+  %w{title abstract keywords metadata_links}.each do |i|
+    raise ArgumentError, "Layer is missing #{i}" unless layer.include?(i) and not layer[i].empty?
+  end
+  cv.enabled = true
+  cv.title = layer['title']
+  cv.abstract = layer['abstract']  
+  cv.keywords = [cv.keywords, layer['keywords']].flatten.compact.uniq
+  cv.metadata_links = layer['metadata_links']
+  puts "Saving #{cv}" if flags[:verbose]
+  cv.save
+end
+
 def do_vector(c, ws, ds, layername, layer, flags)
   ap({:catalog => c, :workspace => ws, :data_store => ds, :name => layername, :layer => layer}) if flags[:debug]
   
@@ -33,20 +55,34 @@ end
 
 def main catalog, ws, layers, flags = {}
   raise ArgumentError, "Layer is malformed" unless not layers.nil? and layers.is_a? Hash and not layers.empty?
-  ap({:ws => ws, :ds => flags[:datastore]}) if flags[:debug]
 
-  ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => flags[:datastore]
-  puts "DataStore: #{ws.name}/#{ds.name}" if flags[:debug]
-  ap({:profile => ds.profile}) if flags[:debug]
-  raise ArgumentError, "Datastore #{ds.name} not found" if ds.new?
+  if flags[:raster]
+    # Iterate over all records and load Coverage info in the catalog
+    layers.each do |k, layer|
+      format = layer['format'].downcase.to_sym
+      case format
+      when :geotiff
+        do_raster catalog, ws, layer['druid'], layer, flags
+      else
+        raise NotImplementedError, "Unsupported format #{format}"    
+      end
+    end
+  else
+    ap({:ws => ws, :ds => flags[:datastore]}) if flags[:debug]
+    ds = RGeoServer::DataStore.new catalog, :workspace => ws, :name => flags[:datastore]
+    puts "DataStore: #{ws.name}/#{ds.name}" if flags[:debug]
+    ap({:profile => ds.profile}) if flags[:debug]
+    raise ArgumentError, "Datastore #{ds.name} not found" if ds.new?
 
-  # Iterate over all records and load FeatureType info in the catalog
-  layers.each do |k, layer|
-    case layer['format'].downcase.to_sym
-    when :shapefile
-      do_vector catalog, ws, ds, layer['druid'], layer, flags
-    else
-      raise NotImplementedError, "Unsupported format #{format}"    
+    # Iterate over all records and load FeatureType info in the catalog
+    layers.each do |k, layer|
+      format = layer['format'].downcase.to_sym
+      case format
+      when :shapefile
+        do_vector catalog, ws, ds, layer['druid'], layer, flags
+      else
+        raise NotImplementedError, "Unsupported format #{format}"    
+      end
     end
   end
 end
@@ -58,16 +94,16 @@ def from_druid druid, flags
 
   mods_fn = File.join(druid.metadata_dir, 'descMetadata.xml')
   mods = Mods::Record.new
-  mods.from_url(mods_fn)
+  mods.from_str(File.read(mods_fn))
   
   h = { 
-    'vector' => {
+    (flags[:raster] ? 'raster' : 'vector') => {
       'druid' => druid.id,
-      'format' => 'Shapefile',
+      'format' => (flags[:raster] ? 'GeoTIFF' : 'Shapefile'),
       'title' => mods.full_titles.first,
       'abstract' => mods.term_values(:abstract).compact.join("\n"),
       'keywords' => [mods.term_values([:subject, 'topic']),
-                     mods.term_values([:subject, 'geographic'])].flatten.compact,
+                     mods.term_values([:subject, 'geographic'])].flatten.compact.collect {|k| k.strip},
       'metadata_links' => [{
         'metadataType' => 'TC211',
         'content' => "http://purl.stanford.edu/#{druid.id}.geoMetadata"
@@ -83,6 +119,7 @@ begin
   flags = {
     :debug => false,
     :verbose => false,
+    :raster => false,
     :workspacedir => GeoHydra::Config.geohydra.workspace || '/var/geomdtk/current/workspace',
     :datastore => GeoHydra::Config.geoserver.datastore || 'geoserver',
     :workspace => GeoHydra::Config.geoserver.workspace || 'druid',
@@ -96,6 +133,9 @@ Usage: #{File.basename(__FILE__)} [options] [druid ... | < druids]
     opts.on("-v", "--verbose", "Run verbosely") do
       flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
+    end
+    opts.on("--raster", "Use rasters for given druids") do
+      flags[:raster] = true
     end
     opts.on("-d DIR", "Workspace directory (default: #{flags[:workspacedir]})") do |v|
       raise ArgumentError, "Invalid directory #{v}" unless File.directory?(v)
