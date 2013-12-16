@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   
   # SUL-DLSS gems on github
   s.add_dependency 'assembly-objectfile'
-  s.add_dependency 'dor-services', '~> 4.2'
+  s.add_dependency 'dor-services', '>= 4.4.5'
   s.add_dependency 'druid-tools', '~> 0.2'
   s.add_dependency 'mods'
   s.add_dependency 'rgeoserver', '~> 0.6.0'
