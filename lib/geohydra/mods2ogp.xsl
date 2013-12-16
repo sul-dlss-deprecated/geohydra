@@ -24,7 +24,7 @@
        - purl - complete URL with aa111bb1111 (len = 11)
 
      -->
-<xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" exclude-result-prefixes="gmd gco gml mods rdf xsl">
+<xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" exclude-result-prefixes="gmd gco gml mods rdf xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
@@ -80,14 +80,15 @@
           <!-- REQUIRED -->
           <xsl:value-of select="mods:titleInfo/mods:title[not(@type)]"/>
         </field>
-        <xsl:for-each select="mods:extension/rdf:RDF[@rdf:type='geo']/rdf:Description[@rdf:type='geo#geometryType']">
+        <!-- <xsl:value-of select="'XXX'"/> -->
+        <xsl:for-each select="mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/dc:type">
           <field name="DataType">
             <xsl:choose>
-              <xsl:when test="substring(., 5)='LineString'">
+              <xsl:when test="substring(., 9)='LineString'">
                 <xsl:text>Line</xsl:text>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select='substring(., 5)'/><!-- strip gml: prefix -->
+                <xsl:value-of select='substring(., 9)'/><!-- strip Dataset# prefix -->
               </xsl:otherwise>
             </xsl:choose>
           </field>
