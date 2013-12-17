@@ -17,18 +17,8 @@ GIT
     version_bumper (0.4.1.pre1)
 
 GIT
-  remote: https://github.com/sul-dlss/assembly-objectfile.git
-  revision: af65fad382affe8f9f887d37ec839a8aef04d9e1
-  branch: master
-  specs:
-    assembly-objectfile (1.6.1)
-      mime-types
-      mini_exiftool
-      nokogiri
-
-GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: de58e3cd4b5c1c8db17fa186c4ee0cb0bd3d2e71
+  revision: 19e78c5ab85d2262210f90b696c44adbe61c6932
   branch: geoMetadata
   specs:
     dor-services (4.4.5)
@@ -81,7 +71,7 @@ PATH
       activerecord (~> 3.2.0)
       activerecord-postgresql-adapter
       activesupport (~> 3.2.0)
-      assembly-objectfile
+      assembly-objectfile (~> 1.6.2)
       awesome_print
       confstruct
       dor-services (>= 4.4.5)
@@ -130,6 +120,10 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     arel (3.0.3)
+    assembly-objectfile (1.6.2)
+      mime-types
+      mini_exiftool
+      nokogiri
     awesome_print (1.2.0)
     bagit (0.3.2)
       docopt (~> 0.5.0)
@@ -274,7 +268,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  assembly-objectfile!
   dor-services!
   equivalent-xml
   geohydra!

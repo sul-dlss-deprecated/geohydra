@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'awesome_print'
   
   # SUL-DLSS gems on github
-  s.add_dependency 'assembly-objectfile'
+  s.add_dependency 'assembly-objectfile', '~> 1.6.2'
   s.add_dependency 'dor-services', '>= 4.4.5'
   s.add_dependency 'druid-tools', '~> 0.2'
   s.add_dependency 'mods'
