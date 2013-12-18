@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.description = %q{Geospatial MetaData ToolKit for use in a GeoHydra head}
   s.has_rdoc = true
   s.licenses = ['ALv2', 'Stanford University']
+  s.homepage = 'https://github.com/sul-dlss/geohydra'
   
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- spec/*`.split("\n")
