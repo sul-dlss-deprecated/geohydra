@@ -60,37 +60,37 @@ section below.
 
 To generate the `geoOptions.json` files which contain inspections of the Shapefiles:
 
-    % bundle exec bin/build_stage_options.rb
+    % bin/geohydra build_stage_options
 
 To ingest ArcGIS `*.shp.xml` files and transform into ISO 19139 files
 
-    % bundle exec bin/ingest_arcgis.rb
+    % bin/geohydra ingest_arcgis
     
 To package up the .shp files into .zip files:
 
-    % bundle exec bin/assemble_data.rb
+    % bin/geohydra assemble_data
 
 Preparing workspace with assembly
 =================================
 
 To load the `workspace` and generate metadata files from the `stage`, use:
 
-    % bundle exec bin/assemble.rb
+    % bin/geohydra assemble
     
 If you're using a gazetteer, then post-process the MODS records with:
 
-    % bundle exec bin/assemble_placenames.rb_
+    % bin/geohydra assemble_placenames
 
 To project all Shapefiles into EPSG:4326 (WGS84), as needed:
 
-    % bundle exec bin/derive_wgs84.rb druid1...
+    % bin/geohydra derive_wgs84 druid1...
     
 Accessioning
 ============
 
 To upload the druid metadata to DOR:
 
-    % bundle exec bin/accession.rb druid1 [druid2 druid3...]
+    % bin/geohydra accession druid1 [druid2 druid3...]
     
 Upload workspace files to lyberservices-prod:/dor/assembly:
 
@@ -101,17 +101,17 @@ Use Argo to initiate the assemblyWF.
 
 To upload the druid packages to PostGIS, you will need `shp2pgsql` then use:
 
-    % bundle exec bin/loader_postgis.rb druid1 [druid2 druid3...]
+    % bin/geohydra loader_postgis druid1 [druid2 druid3...]
 
 Then, login to GeoServer and import the data layers from PostGIS
 
-    % bundle exec bin/sync_geoserver_metadata.rb
+    % bin/geohydra sync_geoserver_metadata
 
 To upload the druid packages to GeoServer use OpenGeo's *Import Data* feature. Or if you need an automated tool see `bin/loader.rb`.
 
 To upload the OpenGeoPortal Solr documents, use:
 
-    % bundle exec bin/solr_indexer.rb 
+    % bin/geohydra solr_indexer
 
 Data Wrangling
 ==============

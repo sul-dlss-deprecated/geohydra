@@ -50,41 +50,40 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/rgeoserver.git
-  revision: acf3c2d4e032c09b763165f2a42fa2a20e486561
-  branch: 0.6.x
+  revision: 487f866115a213c4b10f3c133c48d1d9e4a0b585
   specs:
-    rgeoserver (0.6.4.3)
-      activemodel (~> 3.2.14)
-      activesupport (~> 3.2.14)
-      confstruct (~> 0.2.5)
-      mime-types (~> 1.24)
-      nokogiri (~> 1.5)
-      rest-client (~> 1.6.7)
-      rgeo (~> 0.3.20)
-      rgeo-shapefile (~> 0.2.3)
-      rubyzip (~> 0.9.9)
+    rgeoserver (0.7)
+      activemodel (~> 3.2.0)
+      activesupport (~> 3.2.0)
+      confstruct (~> 0.2.0)
+      mime-types (~> 2.0)
+      nokogiri (~> 1.6.0)
+      rest-client (~> 1.6.0)
+      rgeo (~> 0.3.0)
+      rgeo-shapefile (~> 0.2.0)
+      rubyzip (~> 0.9.0)
 
 PATH
   remote: .
   specs:
-    geohydra (0.2.3.10)
+    geohydra (0.3)
       activerecord (~> 3.2.0)
-      activerecord-postgresql-adapter
+      activerecord-postgresql-adapter (~> 0.0.1)
       activesupport (~> 3.2.0)
       assembly-objectfile (~> 1.6.2)
-      awesome_print
-      confstruct
-      dor-services (>= 4.4.5)
+      awesome_print (~> 1.2.0)
+      confstruct (~> 0.2.5)
+      dor-services (~> 4.4.5)
       druid-tools (~> 0.2)
-      fastimage
-      json
-      mods
-      nokogiri (~> 1.6)
-      rest-client
-      rgeo
-      rgeo-shapefile
-      rgeoserver (~> 0.6.0)
-      rsolr
+      fastimage (~> 1.5.4)
+      json (~> 1.8.1)
+      mods (~> 0.0.22)
+      nokogiri (~> 1.6.0)
+      rest-client (~> 1.6.7)
+      rgeo (~> 0.3.20)
+      rgeo-shapefile (~> 0.2.3)
+      rgeoserver (~> 0.7.0)
+      rsolr (~> 1.0.9)
 
 GEM
   remote: https://rubygems.org/
@@ -162,7 +161,7 @@ GEM
     libxml-ruby (2.7.0)
     mediashelf-loggable (0.4.9)
     method_source (0.8.2)
-    mime-types (1.25.1)
+    mime-types (2.0)
     mini_exiftool (2.3.0)
     mini_portile (0.5.2)
     moab-versioning (1.3.0)

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+  echo "Usage: geohydra command [flags]"
+  exit -1
+fi
+
+fn=$1
+shift
+
+bundle exec bin/$fn.rb $*
