@@ -10,9 +10,8 @@ GIT
       validatable
 
 GIT
-  remote: https://github.com/drh-stanford/version_bumper.git
-  revision: 0a682b031a6ba6c3de635687b7f1986be5bcd9a5
-  branch: patch_tag
+  remote: https://github.com/jondot/version_bumper.git
+  revision: 250977316e3bf2079f1a660e03e28ee98256ddc0
   specs:
     version_bumper (0.4.1.pre1)
 
