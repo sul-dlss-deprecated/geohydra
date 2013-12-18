@@ -117,7 +117,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     arel (3.0.3)
-    assembly-objectfile (1.6.2)
+    assembly-objectfile (1.6.3)
       mime-types
       mini_exiftool
       nokogiri
