@@ -1,11 +1,19 @@
 #!/bin/bash
 
-if [ $# -eq 0 ]; then
+usage() {
   echo "Usage: geohydra command [flags]"
+  echo "Available commands:"
+  ls bin/*.rb | sed -e 's/^bin./      /' -e 's/.rb$//'
   exit -1
-fi
+}
+
+[ $# -eq 0 ] && usage
 
 fn=$1
 shift
+
+[ $fn = '--help' ] && usage
+[ $fn = 'help' ] && usage
+[ ! -x bin/$fn.rb ] && usage
 
 bundle exec bin/$fn.rb $*
