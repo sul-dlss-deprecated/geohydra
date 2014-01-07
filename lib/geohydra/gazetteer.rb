@@ -41,6 +41,8 @@ module GeoHydra
         "http://id.loc.gov/authorities/subjects/sh#{$1}"
       elsif lcid =~ /^lcnaf:(\d+)$/ or lcid =~ /^n(\d+)$/
         "http://id.loc.gov/authorities/names/n#{$1}"
+      elsif lcid =~ /^no(\d+)$/
+        "http://id.loc.gov/authorities/names/no#{$1}"
       else
         nil
       end
@@ -49,7 +51,8 @@ module GeoHydra
     def find_lcauth_by_keyword(k)
       lcid = _get(k, :lcid)
       return $1 if lcid =~ /^(lcsh|lcnaf):/
-      return "lc#{$1}" if lcid =~ /^(sh|n)\d+$/
+      return 'lcsh' if lcid =~ /^sh\d+$/
+      return 'lcnaf' if lcid =~ /^(n|no)\d+$/
       return 'lcsh' unless find_lc_by_keyword(k).nil? # default to lcsh if present
       nil
     end
