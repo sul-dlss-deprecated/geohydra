@@ -1,9 +1,11 @@
 #!/bin/bash
 
 usage() {
-  echo "Usage: geohydra command [flags]"
-  echo "Available commands:"
-  ls bin/*.rb | sed -e 's/^bin./      /' -e 's/.rb$//'
+  echo "Usage:"
+  echo "          geohydra command [flags]"
+  echo "          geohydra help"
+  echo "Commands:"
+  ls bin/*.rb | sed -e 's/^bin./          /' -e 's/.rb$//'
   exit -1
 }
 
@@ -12,8 +14,7 @@ usage() {
 fn=$1
 shift
 
-[ $fn = '--help' ] && usage
-[ $fn = 'help' ] && usage
-[ ! -x bin/$fn.rb ] && usage
+[ $fn = '--help' -o $fn = 'help' ] && usage
+[ ! -x bin/$fn.rb ] && echo "ERROR: Invalid command: Missing bin/$fn.rb" && usage
 
 bundle exec bin/$fn.rb $*
