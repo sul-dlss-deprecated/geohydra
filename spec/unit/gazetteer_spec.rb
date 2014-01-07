@@ -11,22 +11,26 @@ require 'geohydra'
 g = GeoHydra::Gazetteer.new
 # ap({:g => g})
 
-K2ID = {
+K2GEONAMESID = {
   'United States' => 6252001,
-  'Union Territory of Chandīgarh' => 1274744,
-  'State of Mahārāshtra' => 1264418
+  'Chandīgarh' => 1274744,
+  'Mahārāshtra' => 1264418
 }
 
-K2LC = {
+K2LCSH = {
   'Earth' => 'Earth (Planet)',
   'United States' => 'United States',
-  'Union Territory of Chandīgarh' => nil,
-  'State of Mahārāshtra' => 'Maharashtra (India)'
+  'Chandīgarh' => 'Chandīgarh (India : Union Territory)',
+  'Mahārāshtra' => 'Maharashtra (India)'
 }
 
 K2LCURI = {
-  'Earth' => 'http://id.loc.gov/authorities/subjects/sh85040427'
+  'Earth' => 'http://id.loc.gov/authorities/subjects/sh85040427',
+  'United States' => 'http://id.loc.gov/authorities/names/n78095330',
+  'Chandīgarh' => 'http://id.loc.gov/authorities/names/n81109268',
+  'Mahārāshtra' => 'http://id.loc.gov/authorities/names/n50000932'
 }
+
 
 describe GeoHydra::Gazetteer do
   
@@ -35,9 +39,10 @@ describe GeoHydra::Gazetteer do
       g.find_id_by_keyword(nil).should == nil      
       g.find_id_by_keyword('adsfadsfasdf').should == nil      
     end
-    K2ID.each do |k,id|
+    K2GEONAMESID.each do |k,id|
       it k do
         r = g.find_id_by_keyword(k)
+        # ap({:k => k, :id => id, :r => r})
         r.should == id
       end
     end
@@ -48,7 +53,7 @@ describe GeoHydra::Gazetteer do
       g.find_lc_by_keyword(nil).should == nil      
       g.find_lc_by_keyword('asdfasdfasdf').should == nil      
     end
-    K2LC.each do |k,lcsh|
+    K2LCSH.each do |k,lcsh|
       it k do
         r = g.find_lc_by_keyword(k)
         r.should == lcsh
@@ -75,7 +80,7 @@ describe GeoHydra::Gazetteer do
       g.find_uri_by_keyword(nil).should == nil      
       g.find_uri_by_keyword('asdfasdfasdf').should == nil      
     end
-    K2ID.each do |k,id|
+    K2GEONAMESID.each do |k,id|
       it k do
         r = g.find_uri_by_keyword(k)
         r.should == "http://sws.geonames.org/#{id}/"
@@ -88,7 +93,7 @@ describe GeoHydra::Gazetteer do
       g.find_keyword_by_id(nil).should == nil      
       g.find_keyword_by_id(-1).should == nil      
     end
-    K2ID.each do |k,id|
+    K2GEONAMESID.each do |k,id|
       it id do
         r = g.find_keyword_by_id(id)
         r.should == k

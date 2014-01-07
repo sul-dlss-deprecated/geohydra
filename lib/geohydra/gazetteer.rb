@@ -37,9 +37,9 @@ module GeoHydra
     # @return [String] library of congress valueURI
     def find_lcuri_by_keyword(k)
       lcid = _get(k, :lcid)
-      if lcid =~ /^lcsh:(\d+)$/
+      if lcid =~ /^lcsh:(\d+)$/ or lcid =~ /^sh(\d+)$/
         "http://id.loc.gov/authorities/subjects/sh#{$1}"
-      elsif lcid =~ /^lcnaf:(\d+)$/
+      elsif lcid =~ /^lcnaf:(\d+)$/ or lcid =~ /^n(\d+)$/
         "http://id.loc.gov/authorities/names/n#{$1}"
       else
         nil
@@ -49,6 +49,7 @@ module GeoHydra
     def find_lcauth_by_keyword(k)
       lcid = _get(k, :lcid)
       return $1 if lcid =~ /^(lcsh|lcnaf):/
+      return "lc#{$1}" if lcid =~ /^(sh|n)\d+$/
       return 'lcsh' unless find_lc_by_keyword(k).nil? # default to lcsh if present
       nil
     end
