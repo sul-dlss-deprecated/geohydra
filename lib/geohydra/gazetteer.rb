@@ -15,13 +15,17 @@ module GeoHydra
           :id => v[1].to_i,
           :lc => v[2],
           :lcid => v[3]
-        }
+        } unless v[0] == 'geonames_kw'
       end
     end
     
     def _get(k, i)
       return nil unless @registry.include?(k)
       @registry[k][i]
+    end
+    
+    def each
+      @registry.each_key {|k| yield k }
     end
     
     # @return [Integer] geonames id
