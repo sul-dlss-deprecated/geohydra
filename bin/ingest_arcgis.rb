@@ -7,7 +7,9 @@ require 'fileutils'
 def extract_thumbnail fn, flags
   if fn =~ %r{^(.*)\.(shp|tif)\.xml$}i or File.basename(fn) == 'metadata.xml'
     puts "Processing #{fn} for JPEG" if flags[:verbose]
-    GeoHydra::Transform.extract_thumbnail fn, File.join(File.dirname(fn), 'preview.jpg')
+    thumbnail_fn = File.join(File.dirname(fn), 'preview.jpg')
+    puts "Writing to #{thumbnail_fn}" if flags[:debug]
+    GeoHydra::Transform.extract_thumbnail fn, thumbnail_fn
   else
     raise OptionParser::InvalidOption, "File <#{fn}> is not ESRI metadata format"
   end
@@ -25,19 +27,29 @@ def process_file fn, flags
     raise OptionParser::InvalidOption, "File <#{fn}> is not named correctly"
   end
   
-  ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
-  unless FileUtils.uptodate?(ofn, [fn]) and FileUtils.uptodate?(ofn_fc, [fn])
-    GeoHydra::Transform.from_arcgis fn, ofn, ofn_fc
-    extract_thumbnail(fn, flags)
-    dstdir = "#{File.dirname(fn)}/../content/"
-    FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
-    system("mv #{File.dirname(fn)}/*.jpg #{dstdir}/")
+  if flags[:rebuild] or not (FileUtils.uptodate?(ofn, [fn]) and FileUtils.uptodate?(ofn_fc, [fn]))
+    ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
+    begin
+      GeoHydra::Transform.from_arcgis fn, ofn, ofn_fc
+      extract_thumbnail(fn, flags)
+      if flags[:mv_jpg]
+        dstdir = "#{File.dirname(fn)}/../content/"
+        FileUtils.mkdir_p(dstdir) unless File.directory?(dstdir)
+        system("mv #{File.dirname(fn)}/*.jpg #{dstdir}/")
+        
+      end
+    rescue Exception => e
+      puts e
+    end
+    
   end
 end
 
 flags = {
   :verbose => false,
   :debug => false,
+  :rebuild => false,
+  :mv_jpg => true,
   :directory => '/var/geomdtk/current/stage'
 }
 OptionParser.new do |opts|
