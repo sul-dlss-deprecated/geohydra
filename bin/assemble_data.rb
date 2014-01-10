@@ -21,7 +21,7 @@ def assemble(path, flags)
       fn !~ /\.zip$/
     end
     metadata_fns = []
-    Dir.glob(File.join(File.dirname(shp), "#{basename}-iso19139*.xml")).each do |fn|
+    Dir.glob(File.join(File.dirname(shp), "#{basename}-iso19*.xml")).each do |fn|
       metadata_fns << fn
     end
     cmd =  "zip -vj '#{zipfn}' #{fns.join(' ')} #{metadata_fns.join(' ')}"
@@ -36,7 +36,7 @@ begin
   flags = {
     :debug => false,
     :verbose => false,
-    :srcdir => '/var/geomdtk/current/stage'
+    :srcdir => GeoHydra::Config.geohydra.stage || '/var/geomdtk/current/stage'
   }
 
   OptionParser.new do |opts|
@@ -50,7 +50,7 @@ EOM
   end.parse!
 
   
-  flags[:srcdir] = ARGV.pop unless File.directory?(flags[:srcdir])
+  flags[:srcdir] = ARGV.pop if ARGV.size > 0
   raise ArgumentError, "Missing directory #{flags[:srcdir]}" unless flags[:srcdir] and File.directory?(flags[:srcdir])
 
   puts "Searching for druid folders in #{flags[:srcdir]}..." if flags[:verbose]
