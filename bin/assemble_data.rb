@@ -24,6 +24,7 @@ def assemble(path, flags)
     Dir.glob(File.join(File.dirname(shp), "#{basename}-iso19*.xml")).each do |fn|
       metadata_fns << fn
     end
+    system "mkdir -p #{File.dirname(zipfn)}" unless File.directory?(File.dirname(zipfn))
     cmd =  "zip -vj '#{zipfn}' #{fns.join(' ')} #{metadata_fns.join(' ')}"
     ap({:cmd => cmd, :fns => fns}) if flags[:debug]
     system cmd
