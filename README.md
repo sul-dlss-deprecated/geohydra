@@ -135,7 +135,7 @@ is *pre-stage*:
 
 The `geoOptions.json` contain meta-metadata about the package, including the
 druid, geometry type, and filename. These files can be generated using
-bin/build_stage_options.rb but it requires manual supervision.
+`bin/build_stage_options.rb` but it requires manual supervision.
 
     { "druid":"cg716wc7949", 
       "geometryType":"Raster", 
