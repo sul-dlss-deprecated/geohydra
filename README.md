@@ -152,7 +152,7 @@ Once staged, the data look like this:
         preview.jpg
       temp/
         geoOptions.json
-        OGWELLS-iso19139-fc.xml
+        OGWELLS-iso19110.xml
         OGWELLS-iso19139.xml
 
 

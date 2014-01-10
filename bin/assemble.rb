@@ -48,7 +48,7 @@ def find_local(druid, xml, fcXml, flags)
     File.open(ifn, "w") {|f| f << xml.to_s}
   end
   
-  fcfn = File.join(druid.temp_dir, 'iso19139-fc.xml')
+  fcfn = File.join(druid.temp_dir, 'iso19110.xml')
   unless File.exist?(fcfn)
     File.open(fcfn, "w") {|f| f << fcXml.to_s}
   end

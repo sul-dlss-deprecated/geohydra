@@ -19,10 +19,10 @@ def process_file fn, flags
   puts "Processing #{fn}" if flags[:verbose]
   if fn =~ %r{^(.*).(shp|tif).xml$}
     ofn = $1 + '-iso19139.xml'
-    ofn_fc = $1 + '-iso19139-fc.xml'
+    ofn_fc = $1 + '-iso19110.xml'
   elsif File.basename(fn) == 'metadata.xml'
     ofn = File.join(File.dirname(fn), 'metadata.iso19139.xml')
-    ofn_fc = File.join(File.dirname(fn), 'metadata.iso19139-fc.xml')
+    ofn_fc = File.join(File.dirname(fn), 'metadata.iso19110.xml')
   else
     raise OptionParser::InvalidOption, "File <#{fn}> is not named correctly"
   end
