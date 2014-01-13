@@ -5,8 +5,6 @@ require 'druid-tools'
 require 'optparse'
 require 'json'
 
-@@g = GeoHydra::Gazetteer.new
-
 #
 # Resolves placenames using local gazetteer
 #
@@ -14,7 +12,7 @@ require 'json'
 #   * Adds correct rdf:resource to geo extension
 #   * Adds a LCSH or LCNAF keyword if needed
 #
-def resolve_placenames(modsFn, flags)
+def resolve_placenames(g, modsFn, flags)
   puts "Processing #{modsFn}" if flags[:verbose]
   mods = Nokogiri::XML(File.open(modsFn, 'rb'))
   r = mods.xpath('//mods:geographic', { 'mods' => 'http://www.loc.gov/mods/v3' })
@@ -23,7 +21,7 @@ def resolve_placenames(modsFn, flags)
     k = i.content 
     
     # Verify Gazetteer keyword
-    uri = @@g.find_uri_by_keyword(k)
+    uri = g.find_uri_by_keyword(k)
     if uri.nil?
       puts "WARNING: Missing gazetteer entry for '#{k}'" if flags[:verbose]
       next
@@ -44,13 +42,13 @@ def resolve_placenames(modsFn, flags)
     end
     
     # Add a LC heading if needed
-    lc = @@g.find_lc_by_keyword(k)
+    lc = g.find_lc_by_keyword(k)
     ap({:lc => lc}) if flags[:debug]
     unless lc.nil? or k == lc
       puts "Adding Library of Congress entry to end of MODS record" if flags[:verbose]
-      lcauth = @@g.find_lcauth_by_keyword(k)
+      lcauth = g.find_lcauth_by_keyword(k)
       unless lcauth.nil?
-        lcuri = @@g.find_lcuri_by_keyword(k)
+        lcuri = g.find_lcuri_by_keyword(k)
         unless lcuri.nil?
           lcuri = " valueURI='#{lcuri}'"
         end
@@ -69,10 +67,11 @@ def resolve_placenames(modsFn, flags)
 end
 
 def main(flags)
+  g = GeoHydra::Gazetteer.new
   File.umask(002)
   puts "Searching for MODS records..." if flags[:verbose]
   Dir.glob(flags[:workspacedir] + '/**/' + DruidTools::Druid.glob + '/metadata/descMetadata.xml') do |modsFn|
-    resolve_placenames(modsFn, flags)
+    resolve_placenames(g, modsFn, flags)
   end
 end
 
