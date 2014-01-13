@@ -248,7 +248,7 @@ def main(flags)
     Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '/content/data.zip') do |zipfn|
       Dir.glob(File.join(File.dirname(zipfn), '..', 'temp', '*iso19139.xml')) do |xmlfn|
         druid = File.basename(File.dirname(File.dirname(zipfn)))
-        obj = Struct.new(:content, :status, :druid, :zipfn, :fc).new(File.read(xmlfn), nil, druid, zipfn, File.read(xmlfn.gsub('.xml', '-fc.xml')))
+        obj = Struct.new(:content, :status, :druid, :zipfn, :fc).new(File.read(xmlfn), nil, druid, zipfn, File.read(xmlfn.gsub('19139.xml', '19110.xml')))
         ap({:zipfn => zipfn, :obj => obj}) if flags[:debug]
         doit client, nil, obj, flags
       end
