@@ -37,7 +37,7 @@ def resolve_placenames(g, modsFn, flags)
     coverages.each do |j|
       if j['dc:title'] == k
         puts "Correcting dc:coverage@rdf:resource for #{k}" if flags[:debug]
-        j['rdf:resource'] = (uri + '/about.rdf').sub('//', '/')
+        j['rdf:resource'] = uri + 'about.rdf'
       end
     end
     
