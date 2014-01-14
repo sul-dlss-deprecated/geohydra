@@ -134,7 +134,7 @@
             </xsl:if>
           </xsl:for-each>
         </field>
-        <xsl:for-each select="mods:extension/rdf:RDF[@rdf:type='geo']/rdf:Description[@rdf:type='geo#boundingBox']/gml:Envelope">
+        <xsl:for-each select="mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope">
           <xsl:variable name="x2" select="number(substring-before(gml:upperCorner/text(), ' '))"/>
           <xsl:variable name="x1" select="number(substring-before(gml:lowerCorner/text(), ' '))"/>
           <xsl:variable name="y2" select="number(substring-after(gml:upperCorner/text(), ' '))"/>
