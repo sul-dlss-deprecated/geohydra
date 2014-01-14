@@ -256,8 +256,9 @@ module GeoHydra
             ns['mods'] = v
           end
         end
-        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@rdf:type="geo"]/rdf:RDF/rdf:Description[@rdf:type="geo#boundingBox"]/*', ns).first
+        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy', ns).first
         ap({:geoData => geoData, :geoDataClass => geoData.class}) if flags[:debug]
+        raise ArgumentError, "#{@druid.druid} missing MODS geo extension" if geoData.nil?
 
         # Create the contentMetadata
         $stderr.puts "Creating content..." if flags[:verbose]
