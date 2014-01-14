@@ -18,7 +18,7 @@ describe GeoHydra::Transform do
         it 'ISO19139 to geoMetadata' do
           iso = Nokogiri::XML(File.open(fn))
           
-          isoFcFn = File.open(fn.gsub('iso19139', 'iso19139-fc'))
+          isoFcFn = File.open(fn.gsub('iso19139', 'iso19110'))
           if File.exist?(isoFcFn)
             isoFc = Nokogiri::XML(File.open(isoFcFn))
           else
