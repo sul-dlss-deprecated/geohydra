@@ -24,12 +24,11 @@
        - purl - complete URL with aa111bb1111 (len = 11)
 
      -->
-<xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" exclude-result-prefixes="gmd gco gml mods rdf xsl">
+<xsl:stylesheet xmlns="http://lucene.apache.org/solr/4/document" xmlns:gml="http://www.opengis.net/gml/3.2/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" exclude-result-prefixes="gml mods rdf xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
     <xsl:variable name="druid" select="substring($purl, string-length($purl)-10)"/>
-    <xsl:variable name="datatype" select="substring-after(mods:extension/rdf:RDF[@rdf:type='geo']/rdf:Description[@rdf:type='geo#geometryType']/text(), 'gml:')"/>
     <add>
       <doc>
         <field name="LayerId">
