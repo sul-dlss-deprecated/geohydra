@@ -214,7 +214,7 @@ def doit(client, uuid, obj, flags)
   geoMetadata.purl = File.join(flags[:purl], druid.id)
 
   dfn = convert_geo2mods(druid, geoMetadata, flags)
-  sfn = convert_geo2solrspatial(druid, geoMetadata, flags)
+  sfn = convert_geo2solrspatial(druid, geoMetadata, flags) if flags[:geoblacklight]
   
   ofn = convert_mods2ogpsolr(druid, dfn, flags)
   
@@ -264,6 +264,7 @@ begin
     :geonetwork => false,
     :geoserver => GeoHydra::Config.ogp.geoserver,
     :solr => GeoHydra::Config.ogp.solr,
+    :geoblacklight => false,
     :purl => GeoHydra::Config.ogp.purl,
     :stagedir => GeoHydra::Config.geohydra.stage || 'stage',
     :xinclude => false,
