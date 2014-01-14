@@ -225,7 +225,13 @@ module GeoHydra
 
       # now item is registered, so generate mods
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
-      item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
+      if item.datastreams.include? 'geoMetadata'
+        item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
+      else
+        item.datastreams['geoMetadata'] = geoMetadata
+      end
+
+      $stderr.puts "Assigning descMetadata for #{item.id}" if flags[:verbose]
       item.datastreams['descMetadata'].content = descMetadataXML
       ap({:descMetadata => item.datastreams['descMetadata']}) if flags[:debug]
 
