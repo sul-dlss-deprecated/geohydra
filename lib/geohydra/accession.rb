@@ -283,8 +283,10 @@ module GeoHydra
       end
 
       # save changes
-      $stderr.puts "Saving #{item.id}" if flags[:verbose]
-      item.save
+      unless flags[:dryrun]
+        $stderr.puts "Saving #{item.id}" if flags[:verbose]
+        item.save
+      end
     end
   
   end

@@ -24,6 +24,7 @@ begin
     :contentMetadata => true,
     :debug => false,
     :shelve => false,
+    :dryrun => false,
     :workspacedir => GeoHydra::Config.geohydra.workspace || 'workspace'
   }
 
@@ -53,6 +54,9 @@ EOM
     end
     opts.on('--test', 'Verify configuration then exit') do
       flags[:configtest] = true
+    end
+    opts.on('--dryrun', 'Do not save objects') do
+      flags[:dryrun] = true
     end
     opts.on('--tmpdir DIR', "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |d|
       flags[:tmpdir] = d
