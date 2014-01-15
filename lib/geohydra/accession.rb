@@ -157,13 +157,14 @@ module GeoHydra
         raise ArgumentError, "Invalid rights: #{flags[:rights]}" 
       end
 
-      # setup input metadata
-      xml = File.read(@druid.find_metadata('geoMetadata.xml'))
-      geoMetadata = Dor::GeoMetadataDS.from_xml(xml)
-      ap({:geoMetadata => geoMetadata}) if flags[:debug]
+      # load assembled GeoMetadata
+      geoMetadataXML = File.read(@druid.find_metadata('geoMetadata.xml'))
+      geoMetadata = Dor::GeoMetadataDS.from_xml(geoMetadataXML)
+      # ap({:geoMetadataDS => geoMetadata}) if flags[:debug]
 
+      # load assembled MODS
       descMetadataXML = File.read(@druid.find_metadata('descMetadata.xml'))
-      ap({:descMetadata => descMetadataXML}) if flags[:debug]
+      # ap({:descMetadataXML => descMetadataXML}) if flags[:debug]
 
       # required parameters
       opts = {
@@ -198,12 +199,15 @@ module GeoHydra
           item = nil
         rescue ActiveFedora::ObjectNotFoundError => e
           # no object to delete
+          $stderr.puts "Warning: #{item.id} not found to purge" if flags[:verbose]
         end
       end
 
       begin
         # Load item
         item = Dor::Item.find(@druid.druid)
+        ap({:foundItem => item}) if flags[:debug]
+        
         # add collection when we don't use registration service
         unless opts[:collection].nil?
           item.add_collection(opts[:collection]) 
@@ -223,13 +227,12 @@ module GeoHydra
       # verify that we found the item
       raise ArgumentError, "#{@druid.druid} not found" if item.nil? 
 
-      # now item is registered, so generate mods
+      # now item is registered, so load GeoMetadataDS
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
-      if item.datastreams.include? 'geoMetadata'
-        item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
-      else
-        item.datastreams['geoMetadata'] = geoMetadata
+      unless item.datastreams.include?('geoMetadata')
+        item.build_datastream('geoMetadata')
       end
+      item.datastreams['geoMetadata'].content = geoMetadata.to_xml
 
       $stderr.puts "Assigning descMetadata for #{item.id}" if flags[:verbose]
       item.datastreams['descMetadata'].content = descMetadataXML
