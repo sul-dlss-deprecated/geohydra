@@ -157,14 +157,13 @@ module GeoHydra
         raise ArgumentError, "Invalid rights: #{flags[:rights]}" 
       end
 
-      # load assembled GeoMetadata
-      geoMetadataXML = File.read(@druid.find_metadata('geoMetadata.xml'))
-      geoMetadata = Dor::GeoMetadataDS.from_xml(geoMetadataXML)
-      # ap({:geoMetadataDS => geoMetadata}) if flags[:debug]
+      # setup input metadata
+      xml = File.read(@druid.find_metadata('geoMetadata.xml'))
+      geoMetadata = Dor::GeoMetadataDS.from_xml(xml)
+      ap({:geoMetadata => geoMetadata}) if flags[:debug]
 
-      # load assembled MODS
       descMetadataXML = File.read(@druid.find_metadata('descMetadata.xml'))
-      # ap({:descMetadataXML => descMetadataXML}) if flags[:debug]
+      ap({:descMetadata => descMetadataXML}) if flags[:debug]
 
       # required parameters
       opts = {
@@ -199,15 +198,12 @@ module GeoHydra
           item = nil
         rescue ActiveFedora::ObjectNotFoundError => e
           # no object to delete
-          $stderr.puts "Warning: #{item.id} not found to purge" if flags[:verbose]
         end
       end
 
       begin
         # Load item
         item = Dor::Item.find(@druid.druid)
-        ap({:foundItem => item}) if flags[:debug]
-        
         # add collection when we don't use registration service
         unless opts[:collection].nil?
           item.add_collection(opts[:collection]) 
@@ -227,14 +223,9 @@ module GeoHydra
       # verify that we found the item
       raise ArgumentError, "#{@druid.druid} not found" if item.nil? 
 
-      # now item is registered, so load GeoMetadataDS
+      # now item is registered, so generate mods
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
-      unless item.datastreams.include?('geoMetadata')
-        item.build_datastream('geoMetadata')
-      end
-      item.datastreams['geoMetadata'].content = geoMetadata.to_xml
-
-      $stderr.puts "Assigning descMetadata for #{item.id}" if flags[:verbose]
+      item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
       item.datastreams['descMetadata'].content = descMetadataXML
       ap({:descMetadata => item.datastreams['descMetadata']}) if flags[:debug]
 
@@ -265,9 +256,8 @@ module GeoHydra
             ns['mods'] = v
           end
         end
-        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description/gml:boundedBy', ns).first
+        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@rdf:type="geo"]/rdf:RDF/rdf:Description[@rdf:type="geo#boundingBox"]/*', ns).first
         ap({:geoData => geoData, :geoDataClass => geoData.class}) if flags[:debug]
-        raise ArgumentError, "#{@druid.druid} missing MODS geo extension" if geoData.nil?
 
         # Create the contentMetadata
         $stderr.puts "Creating content..." if flags[:verbose]
@@ -293,10 +283,8 @@ module GeoHydra
       end
 
       # save changes
-      unless flags[:dryrun]
-        $stderr.puts "Saving #{item.id}" if flags[:verbose]
-        item.save
-      end
+      $stderr.puts "Saving #{item.id}" if flags[:verbose]
+      item.save
     end
   
   end
