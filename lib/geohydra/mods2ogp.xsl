@@ -46,8 +46,8 @@
           <xsl:value-of select="mods:relatedItem/mods:titleInfo/mods:title"/>
         </field>
         <field name="Access">
-          <!-- REQUIRED -->
-          <xsl:text>Restricted</xsl:text>
+          <!-- REQUIRED -- Uses Public due to GIS-7 -->
+          <xsl:text>Public</xsl:text>
         </field>
         <field name="Institution">
           <!-- REQUIRED -->
