@@ -158,12 +158,8 @@ module GeoHydra
       end
 
       # setup input metadata
-      xml = File.read(@druid.find_metadata('geoMetadata.xml'))
-      geoMetadata = Dor::GeoMetadataDS.from_xml(xml)
-      ap({:geoMetadata => geoMetadata}) if flags[:debug]
-
+      geoMetadata = Dor::GeoMetadataDS.from_xml(@druid.find_metadata('geoMetadata.xml'))
       descMetadataXML = File.read(@druid.find_metadata('descMetadata.xml'))
-      ap({:descMetadata => descMetadataXML}) if flags[:debug]
 
       # required parameters
       opts = {
@@ -223,9 +219,13 @@ module GeoHydra
       # verify that we found the item
       raise ArgumentError, "#{@druid.druid} not found" if item.nil? 
 
-      # now item is registered, so generate mods
+      raise ArgumentError, "#{@druid.druid} geoMetadataDS not found" if item.datastreams['geoMetadata'].nil? 
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
-      item.datastreams['geoMetadata'].content = geoMetadata.ng_xml.to_xml
+      item.datastreams['geoMetadata'].content = geoMetadata.to_xml
+      ap({:geoMetadata => item.datastreams['geoMetadata']}) if flags[:debug]
+      
+      # generate mods
+      raise ArgumentError, "#{@druid.druid} descMetadataDS not found" if item.datastreams['descMetadata'].nil? 
       item.datastreams['descMetadata'].content = descMetadataXML
       ap({:descMetadata => item.datastreams['descMetadata']}) if flags[:debug]
 
@@ -260,14 +260,16 @@ module GeoHydra
         ap({:geoData => geoData, :geoDataClass => geoData.class}) if flags[:debug]
 
         # Create the contentMetadata
+        raise ArgumentError, "#{@druid.druid} contentMetadataDS not found" if item.datastreams['contentMetadata'].nil? 
+        
         $stderr.puts "Creating content..." if flags[:verbose]
         xml = create_content_metadata objects, geoData, flags
         item.datastreams['contentMetadata'].content = xml
-        ap({:contentMetadataDS => item.datastreams['contentMetadata'].ng_xml}) if flags[:debug]
+        ap({:contentMetadataDS => item.datastreams['contentMetadata'].to_xml}) if flags[:debug]
         
         puts "Saving contentMetadata..." if flags[:verbose]
         File.open(druid.metadata_dir + '/contentMetadata.xml', 'w') do |f|
-          f << item.datastreams['contentMetadata'].ng_xml.to_xml
+          f << item.datastreams['contentMetadata'].to_xml
         end
         
         if flags[:shelve]
