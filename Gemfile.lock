@@ -11,8 +11,8 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 78d0d13db5d653c3f92a6ac9cbf63c5ca7c1db5b
-  branch: develop
+  revision: a9936c4db880e0cdca4972d71bf45ab0a0dd44d7
+  branch: geoMetadata-4.4.13
   specs:
     dor-services (4.4.14)
       active-fedora (~> 5.6, >= 5.6.3)
@@ -29,7 +29,7 @@ GIT
       nokogiri (>= 1.6.0)
       om
       progressbar
-      rdf (= 1.0.10.2)
+      rdf (= 1.0.9)
       rest-client
       rsolr-ext
       ruby-cache
@@ -187,7 +187,7 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     rake (10.1.1)
-    rdf (1.0.10.2)
+    rdf (1.0.9)
       addressable (>= 2.3)
     rdf-rdfxml (0.3.9)
       rdf (>= 0.3.11)
