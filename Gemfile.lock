@@ -10,17 +10,11 @@ GIT
       validatable
 
 GIT
-  remote: https://github.com/jondot/version_bumper.git
-  revision: 250977316e3bf2079f1a660e03e28ee98256ddc0
-  specs:
-    version_bumper (0.4.1.pre1)
-
-GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 44054bc8523141d324ab06cc1475a20c2bba33df
+  revision: 78d0d13db5d653c3f92a6ac9cbf63c5ca7c1db5b
   branch: develop
   specs:
-    dor-services (4.4.13)
+    dor-services (4.4.14)
       active-fedora (~> 5.6, >= 5.6.3)
       activesupport
       confstruct (>= 0.2.2)
@@ -71,7 +65,7 @@ PATH
       assembly-objectfile (~> 1.6.2)
       awesome_print (~> 1.2.0)
       confstruct (~> 0.2.5)
-      dor-services (~> 4.4.5)
+      dor-services (~> 4.4.14)
       druid-tools (~> 0.2)
       fastimage (~> 1.5.4)
       json (~> 1.8.1)
@@ -117,7 +111,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     arel (3.0.3)
-    assembly-objectfile (1.6.3)
+    assembly-objectfile (1.6.4)
       mime-types
       mini_exiftool
       nokogiri
@@ -144,7 +138,7 @@ GEM
     equivalent-xml (0.4.0)
       nokogiri (>= 1.4.3)
     fastercsv (1.5.5)
-    fastimage (1.5.4)
+    fastimage (1.5.5)
       addressable (~> 2.3, >= 2.3.5)
     happymapper (0.4.1)
       libxml-ruby (~> 2.0)
@@ -170,7 +164,7 @@ GEM
       iso-639
       nokogiri
       nom-xml
-    multi_json (1.8.2)
+    multi_json (1.8.4)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
@@ -186,13 +180,13 @@ GEM
       deprecation
       mediashelf-loggable
       nokogiri (>= 1.4.2)
-    pg (0.17.0)
+    pg (0.17.1)
     progressbar (0.21.0)
     pry (0.9.12.4)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rake (10.1.0)
+    rake (10.1.1)
     rdf (1.0.10.2)
       addressable (>= 2.3)
     rdf-rdfxml (0.3.9)
@@ -201,7 +195,7 @@ GEM
     rdf-xsd (1.0.2.1)
       nokogiri (>= 1.5.0)
       rdf (>= 0.3.4)
-    rdoc (4.0.1)
+    rdoc (4.1.1)
       json (~> 1.4)
     redcarpet (3.0.0)
     rest-client (1.6.7)
@@ -224,7 +218,7 @@ GEM
     rspec-mocks (2.14.4)
     ruby-cache (0.3.0)
     ruby-graphviz (1.0.9)
-    rubydora (1.6.5)
+    rubydora (1.7.0)
       activemodel
       activesupport
       deprecation
@@ -251,7 +245,8 @@ GEM
     tzinfo (0.3.38)
     uuidtools (2.1.4)
     validatable (1.6.7)
-    xml-simple (1.1.2)
+    version_bumper (0.3.0)
+    xml-simple (1.1.3)
     yard (0.8.7.3)
 
 PLATFORMS
@@ -268,5 +263,5 @@ DEPENDENCIES
   redcarpet
   rgeoserver!
   rspec
-  version_bumper!
+  version_bumper
   yard
