@@ -27,7 +27,7 @@ module GeoHydra
     # XSLT file locations
     XSLT = {
       :arcgis     => self.search_for_xsl('ArcGIS2ISO19139.xsl'),
-      :arcgis_fc  => self.search_for_xsl('arcgis_to_iso19139_fc.xsl')
+      :arcgis_fc  => self.search_for_xsl('arcgis_to_iso19110.xsl')
     }
     
     # XSLT processor
