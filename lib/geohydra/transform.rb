@@ -9,6 +9,7 @@ module GeoHydra
     def self.search_for_xsl(filename)
       path = %w{
         lib
+        lib/geohydra
         lib/geomdtk
         /usr/share/tomcat6/webapps/geonetwork/xsl/conversion/import
         /var/geonetwork/2.8.0/lib
