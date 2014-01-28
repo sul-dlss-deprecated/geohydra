@@ -262,7 +262,7 @@ module GeoHydra
             ns['mods'] = v
           end
         end
-        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
+        geoData = item.datastreams['descMetadata'].ng_xml.dup.xpath('//mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
         ap({:geoData => geoData, :geoDataClass => geoData.class}) if flags[:debug]
 
         # Create the contentMetadata
