@@ -157,9 +157,10 @@ module GeoHydra
         raise ArgumentError, "Invalid rights: #{flags[:rights]}" 
       end
 
-      # setup input metadata
-      geoMetadata = Dor::GeoMetadataDS.from_xml(@druid.find_metadata('geoMetadata.xml'))
-      descMetadataXML = File.read(@druid.find_metadata('descMetadata.xml'))
+      # setup geoMetadata
+      geoMetadataXML = File.read(@druid.find_metadata('geoMetadata.xml'))
+      geoMetadata = Dor::GeoMetadataDS.from_xml(geoMetadataXML)
+      raise ArgumentError, "#{@druid.druid} geoMetadataDS not loaded" if geoMetadata.nil? 
 
       # required parameters
       opts = {
@@ -219,13 +220,18 @@ module GeoHydra
       # verify that we found the item
       raise ArgumentError, "#{@druid.druid} not found" if item.nil? 
 
+      # load the geoMetadata datastream
+      if item.datastreams['geoMetadata'].nil?
+        item.add_datastream(Dor::GeoMetadataDS.new(item, 'geoMetadata'))
+      end
       raise ArgumentError, "#{@druid.druid} geoMetadataDS not found" if item.datastreams['geoMetadata'].nil? 
       $stderr.puts "Assigning GeoMetadata for #{item.id}" if flags[:verbose]
-      item.datastreams['geoMetadata'].content = geoMetadata.to_xml
+      item.datastreams['geoMetadata'].content = geoMetadataXML
       ap({:geoMetadata => item.datastreams['geoMetadata']}) if flags[:debug]
       
-      # generate mods
+      # load generated MODS
       raise ArgumentError, "#{@druid.druid} descMetadataDS not found" if item.datastreams['descMetadata'].nil? 
+      descMetadataXML = File.read(@druid.find_metadata('descMetadata.xml'))
       item.datastreams['descMetadata'].content = descMetadataXML
       ap({:descMetadata => item.datastreams['descMetadata']}) if flags[:debug]
 
@@ -256,7 +262,7 @@ module GeoHydra
             ns['mods'] = v
           end
         end
-        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@rdf:type="geo"]/rdf:RDF/rdf:Description[@rdf:type="geo#boundingBox"]/*', ns).first
+        geoData = item.datastreams['descMetadata'].ng_xml.xpath('//mods:extension[@displayLabel="geo"]/rdf:RDF/rdf:Description', ns).first
         ap({:geoData => geoData, :geoDataClass => geoData.class}) if flags[:debug]
 
         # Create the contentMetadata
@@ -283,6 +289,9 @@ module GeoHydra
           Dor::DigitalStacksService.shelve_to_stacks @druid.druid, files
         end
       end
+
+      ap({:datastreams => item.datastreams}) if flags[:debug]
+      ap({:geoMetadata_title => item.datastreams['geoMetadata'].title}) if flags[:debug]
 
       # save changes
       $stderr.puts "Saving #{item.id}" if flags[:verbose]
