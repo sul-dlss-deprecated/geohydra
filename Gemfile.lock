@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: 6a1cd826585c2091ab04a2137303682c7a39257c
+  revision: 6dfb0b7f1534cec12db0135b81a7c6c34030314c
   branch: develop
   specs:
     dor-services (4.4.15)
@@ -183,7 +183,7 @@ GEM
       nokogiri (>= 1.4.2)
     pg (0.17.1)
     progressbar (0.21.0)
-    pry (0.9.12.4)
+    pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
