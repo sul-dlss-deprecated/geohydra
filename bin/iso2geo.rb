@@ -51,8 +51,8 @@ EOM
     end
   end.parse!
   
-  %w{purl geoMetadata iso19110 iso19139}.each do |k|
-    raise ArgumentError, "Missing required option --#{k}" if flags[k.to_sym].nil?
+  %w{purl iso19139 geoMetadata}.each do |k|
+    raise ArgumentError, "Missing required --#{k} flag" if flags[k.to_sym].nil?
   end
   
   ap({:flags => flags}) if flags[:debug]
