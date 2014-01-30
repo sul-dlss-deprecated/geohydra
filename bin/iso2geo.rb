@@ -5,22 +5,22 @@ require 'nokogiri'
 require 'optparse'
 
 def main(flags)
-  isoXml = Nokogiri::XML(flags[:iso19139File])
+  isoXml = Nokogiri::XML(flags[:iso19139])
   if isoXml.nil? or isoXml.root.nil?
     raise ArgumentError, "Empty ISO 19139" 
   end
-  if flags[:iso19110File].nil?
+  if flags[:iso19110].nil?
     fcXml = nil
   else
-    fcXml = Nokogiri::XML(flags[:iso19110File]) 
+    fcXml = Nokogiri::XML(flags[:iso19110]) 
   end
 
   ap({:isoXml => isoXml, :fcXml => fcXml, :flags => flags}) if flags[:debug]
 
   # GeoMetadataDS
-  puts "Generating #{flags[:geoMetadataFile]}" if flags[:verbose]
+  puts "Generating #{flags[:geoMetadata]}" if flags[:verbose]
   xml = GeoHydra::Transform.to_geoMetadataDS(isoXml, fcXml, { 'purl' => flags[:purl] }) 
-  File.open(flags[:geoMetadataFile], 'w') {|f| f << xml.to_xml(:indent => 2) }  
+  File.open(flags[:geoMetadata], 'w') {|f| f << xml.to_xml(:indent => 2) }  
 end
 
 # __MAIN__
@@ -43,11 +43,11 @@ EOM
     end
     %w{19110 19139}.each do |n|
       opts.on("--iso#{n} FILE", "Input file with ISO #{n} XML") do |v|
-        flags["iso#{n}File".to_sym] = v
+        flags["iso#{n}".to_sym] = v
       end
     end
     opts.on('--geoMetadata FILE', "Output file with ISO 19139/19110 XML") do |v|
-      flags[:geoMetadataFile] = v
+      flags[:geoMetadata] = v
     end
   end.parse!
   
