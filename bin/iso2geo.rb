@@ -5,14 +5,14 @@ require 'nokogiri'
 require 'optparse'
 
 def main(flags)
-  isoXml = Nokogiri::XML(flags[:iso19139])
+  isoXml = Nokogiri::XML(File.read(flags[:iso19139]))
   if isoXml.nil? or isoXml.root.nil?
     raise ArgumentError, "Empty ISO 19139" 
   end
   if flags[:iso19110].nil?
     fcXml = nil
   else
-    fcXml = Nokogiri::XML(flags[:iso19110]) 
+    fcXml = Nokogiri::XML(File.read(flags[:iso19110]))
   end
 
   ap({:isoXml => isoXml, :fcXml => fcXml, :flags => flags}) if flags[:debug]
@@ -20,7 +20,7 @@ def main(flags)
   # GeoMetadataDS
   puts "Generating #{flags[:geoMetadata]}" if flags[:verbose]
   xml = GeoHydra::Transform.to_geoMetadataDS(isoXml, fcXml, { 'purl' => flags[:purl] }) 
-  File.open(flags[:geoMetadata], 'w') {|f| f << xml.to_xml(:indent => 2) }  
+  File.open(flags[:geoMetadata], 'wb') {|f| f << xml.to_xml(:indent => 2) }  
 end
 
 # __MAIN__
