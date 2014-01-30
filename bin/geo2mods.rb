@@ -4,7 +4,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 require 'optparse'
 require 'json'
 
-def geo2mods(purl, ifn, optfn, ofn, flags, defaultGeometryType = 'Polygon', defaultZipName = 'data.zip')
+def main(flags)
+  defaultGeometryType = 'Polygon'
+  defaultZipName = 'data.zip'
+  purl, ifn, optfn, ofn = flags[:purl], flags[:geoMetadata], flags[:geoOptions], flags[:descMetadata]
+  
   puts "Processing #{purl} #{ifn}" if flags[:verbose]
 
   puts "Loading extra out-of-band options #{optfn}" if flags[:debug]
@@ -14,7 +18,7 @@ def geo2mods(purl, ifn, optfn, ofn, flags, defaultGeometryType = 'Polygon', defa
     ap({:optfn => optfn, :h => h, :flags => flags}) if flags[:debug]
   else
     puts "WARNING: missing options .json parameters: #{optfn}"
-    flags[:geometryType] ||= 'Polygon' # XXX: placeholder
+    flags[:geometryType] ||= defaultGeometryType # XXX: placeholder
   end
 
   # Load datastream
@@ -29,10 +33,6 @@ def geo2mods(purl, ifn, optfn, ofn, flags, defaultGeometryType = 'Polygon', defa
   File.open(flags[:descMetadata], 'wb') do |f| 
     f << geoMetadataDS.to_mods.to_xml(:index => 2) 
   end
-end
-
-def main(flags)
-  geo2mods(flags[:purl], flags[:geoMetadata], flags[:geoOptions], flags[:descMetadata], flags)
 end
 
 # __MAIN__
@@ -65,7 +65,7 @@ EOM
   end.parse!
 
   %w{purl geoMetadata geoOptions descMetadata}.each do |k|
-    raise ArgumentError, "Missing --#{k} flag" if flags[k.to_sym].nil?
+    raise ArgumentError, "Missing required --#{k} flag" if flags[k.to_sym].nil?
   end
 
   ap({:flags => flags}) if flags[:debug]
