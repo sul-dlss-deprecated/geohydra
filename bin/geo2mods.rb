@@ -12,7 +12,7 @@ def main(flags)
   puts "Processing #{purl} #{ifn}" if flags[:verbose]
 
   puts "Loading extra out-of-band options #{optfn}" if flags[:debug]
-  if File.exist?(optfn)
+  if not optfn.nil? and File.exist?(optfn)
     h = JSON.parse(File.read(optfn))
     flags = flags.merge(h).symbolize_keys
     ap({:optfn => optfn, :h => h, :flags => flags}) if flags[:debug]
@@ -64,7 +64,7 @@ EOM
     end
   end.parse!
 
-  %w{purl geoMetadata geoOptions descMetadata}.each do |k|
+  %w{purl geoMetadata descMetadata}.each do |k|
     raise ArgumentError, "Missing required --#{k} flag" if flags[k.to_sym].nil?
   end
 
