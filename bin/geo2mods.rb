@@ -50,6 +50,9 @@ EOM
       flags[:debug] = true if flags[:verbose]
       flags[:verbose] = true
     end
+    opts.on('--purl URI', "PURL with druid") do |v|
+      flags[:purl] = v
+    end
     opts.on('--geoMetadata FILE', "Input file with ISO 19139/19110 XML") do |v|
       flags[:geoMetadata] = v
     end
@@ -61,7 +64,7 @@ EOM
     end
   end.parse!
 
-  %w{geoMetadata geoOptions descMetadata}.each do |k|
+  %w{purl geoMetadata geoOptions descMetadata}.each do |k|
     raise ArgumentError, "Missing --#{k} flag" if flags[k.to_sym].nil?
   end
 
