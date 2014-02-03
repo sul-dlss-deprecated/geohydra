@@ -10,14 +10,28 @@ require 'geohydra'
 
 describe GeoHydra::Utils do
   
-  describe '#shapefile?' do
-    %w{foo.shp this-is-a-very-long-long-long-name.shp}.each do |fn|
+  describe '#shapefile? successes' do
+    %w{ foo.shp 
+        with_underscore.shp 
+        with-hyphen.shp 
+        ThisHasCaps.Shp 
+        ALLCAPS.SHP
+        withNu9b3rs.shp 
+        thisisaverylonglonglonglonglonglonglonglonglonglonglonglonglonglonglongname.shp
+      }.each do |fn|
       it fn do
         GeoHydra::Utils.shapefile?(fn).should == true
       end
     end
 
-    %w{foo.shx this-is-a-very-long-long-long-name.shx foo.shp.xml}.each do |fn|
+  end
+  
+  describe "#shapefile? failures" do
+    %w{ foo.shx 
+        foo.shp.xml 
+        with#punct.shp 
+        with\ space.shp
+      }.each do |fn|
       it fn do
         GeoHydra::Utils.shapefile?(fn).should == false
       end

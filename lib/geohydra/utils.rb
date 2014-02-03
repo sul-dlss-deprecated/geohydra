@@ -12,7 +12,7 @@ module GeoHydra
     
     # @see http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf pg2
     def self.shapefile?(fn)
-      File.basename(fn).downcase =~ /^([ a-z0-9_-]+)\.shp$/
+      File.basename(fn).downcase =~ /^([a-z0-9_-]+)\.shp$/
       $1.present?
     end
   end

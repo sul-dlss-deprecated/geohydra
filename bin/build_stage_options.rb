@@ -6,7 +6,7 @@ require 'json'
 def doit(shp)
   r = {}
   r['druid'] = File.basename(File.dirname(File.dirname(shp)))
-  raise ArgumentError, "Not a shapefile: #{shp}" unless GeoHydra::Utils.shapefile?(shp)
+  raise ArgumentError, "SyntaxError: Not a shapefile: #{shp}" unless GeoHydra::Utils.shapefile?(shp)
   r['geometryType'] = GeoHydra::Transform.geometry_type(shp)
   r['filename'] = File.basename(shp)
   File.open(File.join(File.dirname(shp), 'geoOptions.json'), 'w') do |f|

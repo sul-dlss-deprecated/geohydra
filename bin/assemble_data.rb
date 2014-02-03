@@ -7,7 +7,7 @@ def assemble(path, flags)
   ap({:path => path, :flags => flags}) if flags[:debug]
   File.umask(002)
   Dir.glob(File.join(path, '**', '*.shp')) do |shp|
-    raise ArgumentError, shp unless GeoHydra::Utils.shapefile?(shp)
+    raise ArgumentError, "SyntaxError: Not a shapefile #{shp}" unless GeoHydra::Utils.shapefile?(shp)
 
     ap({:shp => shp}) if flags[:debug]
     geometry_type = GeoHydra::Transform.geometry_type(shp)
