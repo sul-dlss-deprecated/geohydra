@@ -17,4 +17,4 @@ shift
 [ $fn = '--help' -o $fn = 'help' ] && usage
 [ ! -x bin/$fn.rb ] && echo "ERROR: Invalid command: Missing bin/$fn.rb" && usage
 
-bundle exec bin/$fn.rb $*
+bundle exec bin/$fn.rb $@
