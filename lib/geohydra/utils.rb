@@ -1,6 +1,12 @@
 require 'druid-tools'
 
 module GeoHydra
+  class Process
+    def run(args)
+      raise NotImplementedError
+    end
+  end
+
   class Utils
     def self.find_druid_folders(dir = '.')
       # requires extra * for symlinks to directories
