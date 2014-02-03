@@ -305,11 +305,5 @@ EOM
   end
 end
 
-# MAIN
-
-begin
-  Assemble.new().run(ARGV)
-rescue SystemCallError => e
-  $stderr.puts "ERROR: #{e.message}"
-  exit(-1)
-end
+# __MAIN__
+Assemble.new().run(ARGV)

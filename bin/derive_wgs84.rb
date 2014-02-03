@@ -81,9 +81,4 @@ EOM
 end
 
 # __MAIN__
-begin
-  DeriveWGS84.new.run(ARGV)
-rescue SystemCallError => e
-  $stderr.puts "ERROR: #{e.message}"
-  exit(-1)
-end
+DeriveWGS84.new.run(ARGV)

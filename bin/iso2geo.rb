@@ -61,9 +61,4 @@ EOM
 end
 
 # __MAIN__
-begin
-  Iso2Geo.new().run(ARGV)
-rescue SystemCallError => e
-  $stderr.puts "ERROR: #{e.message}"
-  exit(-1)
-end
+Iso2Geo.new().run(ARGV)

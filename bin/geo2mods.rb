@@ -75,9 +75,4 @@ EOM
 end
 
 # __MAIN__
-begin
-  Geo2MODS.new.run(ARGV)
-rescue SystemCallError => e
-  $stderr.puts "ERROR: #{e.message}"
-  exit(-1)
-end
+Geo2MODS.new.run(ARGV)

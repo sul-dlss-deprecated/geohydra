@@ -29,5 +29,5 @@ class BuildStageOptions < GeoHydra::Process
   end
 end
 
-# MAIN
+# __MAIN__
 BuildStageOptions.new.run(ARGV)

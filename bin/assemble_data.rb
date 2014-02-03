@@ -66,9 +66,4 @@ end
 
 
 # __MAIN__
-begin
-  AssembleData.new.run(ARGV)
-rescue SystemCallError => e
-  $stderr.puts "ERROR: #{e.message}"
-  exit(-1)
-end
+AssembleData.new.run(ARGV)
