@@ -202,7 +202,7 @@ class LoaderPostGIS < GeoHydra::Process
         flags[:debug] = true if flags[:verbose]
         flags[:verbose] = true
       end
-      opts.on("-d DIR", "--datadir DIR", "Data directory on GeoServer (default: #{flags[:datadir]})") do |v|
+      opts.on("-d DIR", "--datadir DIR", "Data directory (default: #{flags[:datadir]})") do |v|
         raise ArgumentError, "Invalid directory #{v}" unless File.directory?(v)
         flags[:datadir] = v
       end    
