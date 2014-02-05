@@ -117,11 +117,10 @@ class LoaderPostGIS < GeoHydra::Process
       :workspacedir => GeoHydra::Config.geohydra.workspace || 'workspace',
       :schema => GeoHydra::Config.postgis.schema || 'druid'
     }
+    args = %w{--help} if args.nil? or args.empty?
   
     OptionParser.new do |opts|
-      opts.banner = "
-  Usage: #{File.basename(__FILE__)} [-v] [druid ... | < druids]
-"
+      opts.banner = "Usage: #{File.basename(__FILE__)} [-v] druid [druid...]"
       opts.on('-v', '--verbose', 'Run verbosely, use multiple times for debug level output') do
         flags[:debug] = true if flags[:verbose]  # -vv
         flags[:verbose] = true
@@ -137,9 +136,11 @@ class LoaderPostGIS < GeoHydra::Process
       end
     end.parse!(args)
 
-    ap({:flags => flags}) if flags[:debug]
-      
-    (args.size > 0 ? args : $stdin).each do |s|
+    ap({:args => args, :flags => flags}) if flags[:debug]
+    
+    raise OptionParser::MissingArgument, "At least one druid required" if args.size == 0
+
+    args.each do |s|
       druid = DruidTools::Druid.new(s.strip, flags[:workspacedir])
       main(druid2layer(druid, flags), flags)
     end
