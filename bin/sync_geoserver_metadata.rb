@@ -107,7 +107,7 @@ class SyncGeoserverMetadata < GeoHydra::Process
                        mods.term_values([:subject, 'geographic'])].flatten.compact.collect {|k| k.strip},
         'metadata_links' => [{
           'metadataType' => 'TC211',
-          'content' => "http://purl.stanford.edu/#{druid.id}.geoMetadata"
+          'content' => "http://purl.stanford.edu/#{druid.id}.iso19139"
         }]
       }
     }
