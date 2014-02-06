@@ -55,13 +55,14 @@ class LoaderPostGIS < GeoHydra::Process
     projection = layer[:projection] || flags[:projection]
     schema = layer[:schema] || flags[:schema]
     encoding = layer[:encoding] || flags[:encoding]
+    ap({:druid => druid, :zipfn => zipfn, :projection => projection, :schema => schema, :encoding => encoding}) if flags[:debug]
 
     raise NotImplementedError, "Unsupported format: #{format}" unless format == :shapefile
 
     Dir.mktmpdir('shp', druid.temp_dir) do |d|
       begin
         system("unzip -oj '#{zipfn}' -d '#{d}'")
-        system("ls -la #{d}")
+        system("ls -la #{d}") if flags[:debug]
         Dir.glob("#{d}/*.shp") do |shp|
           # XXX: HARD CODED projection here -- extract from MODS or ISO19139
           # XXX: Perhaps put the .sql data into the content directory as .zip for derivative
@@ -130,7 +131,7 @@ class LoaderPostGIS < GeoHydra::Process
       end
 
       %w{schema encoding}.each do |k|
-        opts.on("--#{k} #{k.upcase}", "PostGIS #{k} (default: #{flags[k.to_sym]})") do |v|
+        opts.on("--#{k} #{k.upcase}", "PostGIS flag #{k} (default: #{flags[k.to_sym]})") do |v|
           flags[k.to_sym] = v
         end
       end
@@ -142,6 +143,7 @@ class LoaderPostGIS < GeoHydra::Process
 
     args.each do |s|
       druid = DruidTools::Druid.new(s.strip, flags[:workspacedir])
+      puts "Processing #{druid.id}" if flags[:verbose]
       main(druid2layer(druid, flags), flags)
     end
   end
