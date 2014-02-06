@@ -216,8 +216,7 @@ class Assemble < GeoHydra::Process
 
     dfn = convert_geo2mods(druid, geoMetadata, flags)
     sfn = convert_geo2solrspatial(druid, geoMetadata, flags) if flags[:geoblacklight]
-  
-    ofn = convert_mods2ogpsolr(druid, dfn, flags)
+    ofn = convert_mods2ogpsolr(druid, dfn, flags) if flags[:ogp]
   
     if flags[:geonetwork]
       export_images(druid, uuid, flags)
@@ -264,7 +263,8 @@ class Assemble < GeoHydra::Process
       :geonetwork => false,
       :geoserver => GeoHydra::Config.ogp.geoserver,
       :solr => GeoHydra::Config.ogp.solr,
-      :geoblacklight => false,
+      :geoblacklight => true,
+      :ogp => true,
       :purl => GeoHydra::Config.ogp.purl,
       :stagedir => GeoHydra::Config.geohydra.stage || 'stage',
       :xinclude => false,
@@ -276,7 +276,7 @@ class Assemble < GeoHydra::Process
       opts.banner = <<EOM
   Usage: #{File.basename(__FILE__)} [options]
 EOM
-      opts.on('--geonetwork', 'Run against GeoNetwork server') do |v|
+      opts.on('--geonetwork', 'Run against GeoNetwork server (deprecated)') do |v|
         flags[:geonetwork] = true
       end
       opts.on('-v', '--verbose', 'Run verbosely') do |v|
@@ -291,6 +291,12 @@ EOM
       end
       opts.on('--tmpdir DIR', "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |v|
         flags[:tmpdir] = v
+      end
+      opts.on('--[no-]geoblacklight', 'Generate solrSpatial.xml') do |v|
+        flags[:geoblacklight] = true
+      end
+      opts.on('--[no-]ogp', 'Generate ogpSolr.xml') do |v|
+        flags[:ogp] = true
       end
     end.parse!(args)
 
