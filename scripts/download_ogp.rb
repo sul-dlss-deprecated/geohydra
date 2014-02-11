@@ -2,7 +2,7 @@
 
 require 'open-uri'
 
-class IngestOgp
+class DownloadOgp
   URL = {
     'tufts' => 'http://geodata.tufts.edu/solr/select',
     'stanford' => 'http://geoportal.stanford.edu/solr/ogp/select',
@@ -68,7 +68,8 @@ class IngestOgp
                   'rows' => rows,
                   'wt' => 'json',
                   'indent' => 'on',
-                  'fl' => FIELDS)
+                  'fl' => FIELDS
+                  )
       puts "    #{url}" if $DEBUG
       open(url) do |res|
         File.open(fn, 'wb') do |f|
@@ -82,7 +83,7 @@ class IngestOgp
 end
 
 # __MAIN__
-ogp = IngestOgp.new
+ogp = DownloadOgp.new
 ogp.download('Stanford', 'Stanford', 269)
 ogp.download('Berkeley', 'Berkeley', 407)
 ogp.download('Tufts', 'MassGIS', 596)
