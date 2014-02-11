@@ -69,7 +69,7 @@ class IngestOgp
                   'wt' => 'json',
                   'indent' => 'on',
                   'fl' => FIELDS)
-      puts "    #{url}"
+      puts "    #{url}" if $DEBUG
       open(url) do |res|
         File.open(fn, 'wb') do |f|
           f.write(res.read())
