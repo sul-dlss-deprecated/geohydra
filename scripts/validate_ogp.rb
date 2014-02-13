@@ -69,6 +69,6 @@ end
 # __MAIN__
 ValidateOgp.new('valid.json') do |ogp|
   Dir.glob("data/*.json") do |fn|
-    ogp.validate_file(fn, File.basename(fn))
+    ogp.validate_file(fn)
   end
 end
