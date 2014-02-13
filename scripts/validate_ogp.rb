@@ -22,13 +22,31 @@ class ValidateOgp
 
   def validate(layer)
     id = layer['LayerId']
-    return if id.nil?
 
-    %w{MinX MinY MaxX MaxY LayerDisplayName}.each do |k|
+    %w{LayerId Name Institution Access MinX MinY MaxX MaxY LayerDisplayName Location}.each do |k|
       if layer[k].nil? or layer[k].to_s.empty?
-        puts "#{id} missing #{k}"
+        puts "ERROR: #{id} missing #{k}"
         return
       end
+    end
+
+    k = 'DataType'
+    if ([layer[k]] & %w{Line Point Polygon Raster}).empty?
+      puts "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
+      return
+    end
+
+    k = 'Access'
+    if ([layer[k]] & %w{Public Restricted}).empty?
+      puts "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
+      return
+    end
+
+    k = 'Location'
+    if layer[k]['wms'].nil?
+      puts "ERROR: #{id} has no WMS location"
+      ap({:location => layer[k]})
+      return
     end
 
     k = 'GeoReferenced'
