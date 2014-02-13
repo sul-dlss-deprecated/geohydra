@@ -1,13 +1,12 @@
 #!/usr/bin/env ruby
 
-require 'awesome_print'
 require 'json'
 require 'rsolr'
 
 class IngestOgp
-  def initialize(url = 'http://localhost:18080/solr/ogp-dev')
-    @solr = RSolr.connect(:url => url)
-    ap({:solr => @solr})
+  def initialize(collection, url)
+    raise ArgumentError, 'Collection not defined' unless collection.is_a? String
+    @solr = RSolr.connect(:url => (url + '/' + collection))
     yield self
     close
   end
@@ -36,14 +35,15 @@ class IngestOgp
   def close
     @solr.commit
     @solr.optimize
+    @solr = nil
   end
   
 end
 
 
 # __MAIN__
-IngestOgp.new do |ogp|
-  Dir.glob("valid.json") do |fn|
+IngestOgp.new(ARGV[0], (ARGV[1].nil?? 'http://localhost:18080/solr' : ARGV[1])) do |ogp|
+  Dir.glob("valid*.json") do |fn|
     ogp.ingest(fn)
   end
 end
