@@ -42,15 +42,15 @@ class ValidateOgp
   end
 
   def close
-    @output.write "\nnil]\n"
+    @output.write "\n {} \n]\n"
     @output.close
   end
 end
 
 
 # __MAIN__
-ValidateOgp.new('out.json') do |ogp|
+ValidateOgp.new('out/out.json') do |ogp|
   Dir.glob("data/*.json") do |fn|
-    ogp.validate_file(fn)
+    ogp.validate_file(fn, File.basename(fn))
   end
 end

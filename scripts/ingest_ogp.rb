@@ -5,28 +5,32 @@ require 'json'
 require 'rsolr'
 
 class IngestOgp
-  def initialize(url = 'http://localhost:8080/solr/ogp-dev')
-    @solr_url = url
+  def initialize(url = 'http://localhost:18080/solr/ogp-dev')
+    @solr = RSolr.connect(:url => url)
+    ap({:solr => @solr})
+    yield self
+    close
   end
   
   def ingest(fn)
     puts "Ingesting #{fn}"
     json = JSON::parse(File.read(fn))
-    json['response']['docs'].each do |doc|
-      # ap({:doc => doc})
+    n = 0
+    json.each do |doc|
+      next unless doc.is_a? Hash
+      next if doc['LayerId'].nil?
       doc.delete('_version_')
       doc.delete('timestamp')
       putc "."
       @solr.add doc
+      n += 1
+      if n % 1000 == 0
+        @solr.commit 
+        puts "\ncommit 1000 records, #{n} total\n"
+      end
     end
-    puts
+    puts "\n#{n} records\n"
     @solr.commit
-    json['response']['docs'].length
-  end
-  
-  def open
-    @solr = RSolr.connect(:url => @solr_url)
-    ap({:solr => @solr})
   end
   
   def close
@@ -38,9 +42,8 @@ end
 
 
 # __MAIN__
-ogp = IngestOgp.new
-ogp.open
-Dir.glob("data/*.json") do |fn|
-  ogp.ingest(fn)
+IngestOgp.new do |ogp|
+  Dir.glob("out/*.json") do |fn|
+    ogp.ingest(fn)
+  end
 end
-ogp.close

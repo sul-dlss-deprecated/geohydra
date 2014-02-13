@@ -1,7 +1,6 @@
 #!/bin/bash -x
 c=ogp-dev
-d=/var/geomdtk/current/workspace
-h=localhost:28080
+h=localhost:18080
 s=http
 
 curl "$s://${h}/solr/${c}/update" --data '<delete><query>*:*</query></delete>' -H 'Content-type:text/xml; charset=utf-8'
