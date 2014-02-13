@@ -43,7 +43,7 @@ end
 
 # __MAIN__
 IngestOgp.new do |ogp|
-  Dir.glob("out/*.json") do |fn|
+  Dir.glob("valid.json") do |fn|
     ogp.ingest(fn)
   end
 end
