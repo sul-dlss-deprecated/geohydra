@@ -41,12 +41,12 @@ class ValidateOgp
     end
     
     %w{MinX MaxX}.each do |lon|
-      raise ArgumentError, "ERROR: Invalid longitude value: #{layer[lon]}" unless lon?(layer[lon])
+      raise ArgumentError, "ERROR: #{id}: Invalid longitude value: #{layer[lon]}" unless lon?(layer[lon])
     end
 
     
     %w{MinY MaxY}.each do |lat|
-      raise ArgumentError, "ERROR: Invalid latitude value: #{layer[lat]}" unless lat?(layer[lat])
+      raise ArgumentError, "ERROR: #{id} Invalid latitude value: #{layer[lat]}" unless lat?(layer[lat])
     end
     
     k = 'Institution'
@@ -56,7 +56,7 @@ class ValidateOgp
     end
 
     k = 'DataType'
-    if ([layer[k]] & %w{Line Paper\ Map Point Polygon Raster}).empty?
+    if ([layer[k]] & %w{Line Paper\ Map Point Polygon Raster LibraryRecord}).empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
       return
     end
@@ -76,12 +76,8 @@ class ValidateOgp
     end
 
     k = 'Location'
-    begin
-      layer[k] = validate_location(layer[k])
-      if layer[k].nil? or layer[k].empty?
-        raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
-      end
-    rescue ArgumentError
+    layer[k] = validate_location(id, layer[k])
+    if layer[k].nil? or layer[k].empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
     end
 
@@ -113,11 +109,11 @@ class ValidateOgp
   
   private
   
-  def validate_location(location)
+  def validate_location(id, location)
     begin
       x = JSON::parse(location)
       if x['wms'].nil? or (x['wcs'].nil? and x['wfs'].nil?)
-        raise ArgumentError, "Missing WMS or WCS/WFS: #{x}"
+        raise ArgumentError, "ERROR: #{id}: Missing WMS or WCS/WFS: #{x}"
       end
       
       %w{wms wcs wfs}.each do |protocol|
@@ -128,16 +124,16 @@ class ValidateOgp
             end
             
             unless x[protocol].is_a? Array
-              raise ArgumentError, "Unknown #{protocol} value: #{x}"
+              raise ArgumentError, "ERROR: #{id}: Unknown #{protocol} value: #{x}"
             end
             
             x[protocol].each do |url|
               uri = URI.parse(url)
-              raise ArgumentError, "Invalid URL: #{uri}" unless uri.kind_of?(URI::HTTP) or uri.kind_of?(URI::HTTPS)
+              raise ArgumentError, "ERROR: #{id}: Invalid URL: #{uri}" unless uri.kind_of?(URI::HTTP) or uri.kind_of?(URI::HTTPS)
             end
           end
         rescue Exception => e
-          raise ArgumentError, "Invalid #{k}: #{x}"
+          raise ArgumentError, "ERROR: #{id}: Invalid #{k}: #{x}"
         end        
       end
       
@@ -145,8 +141,7 @@ class ValidateOgp
 
       return x.to_json
     rescue JSON::ParserError => e
-      ap({:location => location})
-      return nil
+      raise ArgumentError, "ERROR: #{id}: Invalid JSON: #{location}"
     end
     nil
   end
