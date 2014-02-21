@@ -49,7 +49,7 @@ class TransformOgp
       :dc_date_dt => layer['ContentDate'],
       :dc_description_t => layer['Abstract'],
       :dc_format_s => "Dataset##{layer['DataType']}",
-      :dc_identifier_s => id,
+      :dc_identifier_s => (layer['Insititution'] == 'Stanford' ? "edu.stanford.purl:druid:#{id}" : id),
       :dc_language_s => "en",
       :dc_publisher_s => layer['Publisher'],
       :dc_relation_url => location['purl'],
@@ -94,7 +94,7 @@ class TransformOgp
   private
   
   def splitter(s)
-    a = s.split(/;/)
+    a = s.split(/\s*;\s*/)
     if a.size == 1
       a = s.split(a.first)
     end
