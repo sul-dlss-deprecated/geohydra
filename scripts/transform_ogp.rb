@@ -58,7 +58,7 @@ class TransformOgp
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
       :dc_title_s => layer['LayerDisplayName'],
       # :dc_type_s => nil,
-      :layer_id => id,
+      :layer_id => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_name_s => layer['Name'],
       :layer_nw_latlon => "#{n},#{w}",
       :layer_se_latlon => "#{s},#{e}",
