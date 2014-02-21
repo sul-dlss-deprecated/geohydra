@@ -49,7 +49,7 @@ class TransformOgp
       :dc_date_dt => layer['ContentDate'],
       :dc_description_t => layer['Abstract'],
       :dc_format_s => "Dataset##{layer['DataType']}",
-      :dc_identifier_s => (layer['Institution'] == 'Stanford' ? "http://purl.stanford.edu/#{id}" : id),
+      :dc_identifier_s => (layer['Institution'] == 'Stanford' ? "purl.stanford.edu:#{id}" : id),
       :dc_language_s => "en",
       :dc_publisher_s => layer['Publisher'],
       :dc_relation_url => location['purl'],
