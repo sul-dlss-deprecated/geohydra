@@ -16,8 +16,7 @@ class IngestOgp
     json = JSON::parse(File.read(fn))
     n = 0
     json.each do |doc|
-      next unless doc.is_a? Hash
-      next if doc['LayerId'].nil?
+      next unless doc.is_a? Hash and not doc.empty?
       doc.delete('_version_')
       doc.delete('timestamp')
       putc "."
@@ -43,7 +42,7 @@ end
 
 # __MAIN__
 IngestOgp.new(ARGV[0], (ARGV[1].nil?? 'http://localhost:18080/solr' : ARGV[1])) do |ogp|
-  Dir.glob("valid*.json") do |fn|
+  Dir.glob("transformed*.json") do |fn|
     ogp.ingest(fn)
   end
 end

@@ -75,7 +75,7 @@ class TransformOgp
       new_layer[k] = '' if v.nil? or v.empty?
     end
 
-    %w{dc_relation_s layer_wms_s layer_wfs_s layer_wcs_s}.each do |k|
+    %w{dc_relation_url layer_wms_url layer_wfs_url layer_wcs_url}.each do |k|
       k = k.to_sym
       if new_layer[k].is_a? Array
         new_layer[k] = URI(new_layer[k].first)
