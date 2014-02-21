@@ -53,7 +53,7 @@ class TransformOgp
       :dc_language_s => "en",
       :dc_publisher_s => layer['Publisher'],
       :dc_relation_url => location['purl'],
-      :dc_rights_s => (layer['Insititution'] == 'Stanford' ? 'Restricted' : layer['Access']),
+      :dc_rights_s => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']),
       :dc_source_s => layer['Institution'],
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
       :dc_title_s => layer['LayerDisplayName'],
