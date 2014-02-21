@@ -6,20 +6,10 @@ require 'uri'
 
 class TransformOgp
   def initialize(fn)
-    @wms_servers = {}
     @output = File.open(fn, 'wb')
     @output.write "[\n"
     yield self
     self.close
-  end
-
-
-  def splitter(s)
-    a = s.split(/;/)
-    if a.size == 1
-      a = s.split(a.first)
-    end
-    a
   end
 
   def transform_file(fn)
@@ -41,18 +31,21 @@ class TransformOgp
   end
 
   def transform(layer)
-    id = layer['LayerId']
+    id = layer['LayerId'].to_s.strip
     puts "Tranforming #{id}"
+    
     raise ArgumentError, "ERROR: #{id} no location" if layer['Location'].nil? or layer['Location'].empty?
     location = JSON::parse(layer['Location'])
-    s = layer['MinY']
-    w = layer['MinX']
-    n = layer['MaxY']
-    e = layer['MaxX']
+    raise ArgumentError, "ERROR: #{id} has malformed location" unless location.is_a? Hash
+    
+    s = layer['MinY'].to_f
+    w = layer['MinX'].to_f
+    n = layer['MaxY'].to_f
+    e = layer['MaxX'].to_f
     new_layer = {
-      :dc_contributor_s => nil,
+      # :dc_contributor_s => nil,
       :dc_coverage_sm => splitter(layer['PlaceKeywords']),
-      :dc_creator_s => nil,
+      # :dc_creator_s => nil,
       :dc_date_dt => layer['ContentDate'],
       :dc_description_t => layer['Abstract'],
       :dc_format_s => "Dataset##{layer['DataType']}",
@@ -64,11 +57,13 @@ class TransformOgp
       :dc_source_s => layer['Institution'],
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
       :dc_title_s => layer['LayerDisplayName'],
-      :dc_type_s => nil,
+      # :dc_type_s => nil,
       :layer_id => id,
-      :layer_nw_pt => "POINT(#{w} #{n})",
-      :layer_se_pt => "POINT(#{e} #{s})",
-      :layer_bbox => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      :layer_nw_latlon => "#{n},#{w}",
+      :layer_se_latlon => "#{s},#{e}",
+      # :layer_nw_pt => "POINT(#{w} #{n})",
+      # :layer_se_pt => "POINT(#{e} #{s})",
+      # :layer_bbox => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
       :layer_wms_url => location['wms'],
       :layer_wfs_url => location['wfs'],
       :layer_wcs_url => location['wcs'],
@@ -94,11 +89,18 @@ class TransformOgp
   def close
     @output.write "\n {} \n]\n"
     @output.close
-    ap({:wms_servers => @wms_servers})
   end
   
   private
   
+  def splitter(s)
+    a = s.split(/;/)
+    if a.size == 1
+      a = s.split(a.first)
+    end
+    a
+  end
+
   def validate_location(id, location)
     begin
       x = JSON::parse(location)
@@ -127,8 +129,6 @@ class TransformOgp
         end        
       end
       
-      @wms_servers[x['wms'].first] = true      
-
       return x.to_json
     rescue JSON::ParserError => e
       raise ArgumentError, "ERROR: #{id}: Invalid JSON: #{location}"
