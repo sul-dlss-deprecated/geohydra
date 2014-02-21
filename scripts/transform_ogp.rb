@@ -59,6 +59,7 @@ class TransformOgp
       :dc_title_s => layer['LayerDisplayName'],
       # :dc_type_s => nil,
       :layer_id => id,
+      :layer_name_s => layer['Name'],
       :layer_nw_latlon => "#{n},#{w}",
       :layer_se_latlon => "#{s},#{e}",
       # :layer_nw_pt => "POINT(#{w} #{n})",
