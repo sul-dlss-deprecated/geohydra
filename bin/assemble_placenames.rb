@@ -22,7 +22,7 @@ class AssemblePlacenames < GeoHydra::Process
       k = i.content 
     
       # Verify Gazetteer keyword
-      uri = g.find_uri_by_keyword(k)
+      uri = g.find_placename_uri(k)
       if uri.nil?
         puts "WARNING: Missing gazetteer entry for '#{k}'" if flags[:verbose]
         next
@@ -43,13 +43,13 @@ class AssemblePlacenames < GeoHydra::Process
       end
     
       # Add a LC heading if needed
-      lc = g.find_lc_by_keyword(k)
+      lc = g.find_loc_keyword(k)
       ap({:lc => lc}) if flags[:debug]
       unless lc.nil? or k == lc
         puts "Adding Library of Congress entry to end of MODS record" if flags[:verbose]
-        lcauth = g.find_lcauth_by_keyword(k)
+        lcauth = g.find_loc_authority(k)
         unless lcauth.nil?
-          lcuri = g.find_lcuri_by_keyword(k)
+          lcuri = g.find_loc_authority(k)
           unless lcuri.nil?
             lcuri = " valueURI='#{lcuri}'"
           end

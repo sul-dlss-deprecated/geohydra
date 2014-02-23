@@ -15,7 +15,8 @@ K2GEONAMESID = {
   'United States' => 6252001,
   'Chandīgarh' => 1274744,
   'Mahārāshtra' => 1264418,
-  'Chandni Chowk' => 6619404
+  'Chandni Chowk' => 6619404,
+  'Adamour, Haryana (India)' => 7646705
 }
 
 K2LCSH = {
@@ -37,56 +38,56 @@ K2LCURI = {
 
 describe GeoHydra::Gazetteer do
   
-  describe '#find_id_by_keyword' do
+  describe '#find_id' do
     it "nil case" do
-      g.find_id_by_keyword(nil).should == nil      
-      g.find_id_by_keyword('adsfadsfasdf').should == nil      
+      g.find_id(nil).should == nil      
+      g.find_id('adsfadsfasdf').should == nil      
     end
     K2GEONAMESID.each do |k,id|
       it k do
-        r = g.find_id_by_keyword(k)
+        r = g.find_id(k)
         # ap({:k => k, :id => id, :r => r})
         r.should == id
       end
     end
   end
   
-  describe '#find_lc_by_keyword' do
+  describe '#find_loc_keyword' do
     it "nil case" do
-      g.find_lc_by_keyword(nil).should == nil      
-      g.find_lc_by_keyword('asdfasdfasdf').should == nil      
+      g.find_loc_keyword(nil).should == nil      
+      g.find_loc_keyword('asdfasdfasdf').should == nil      
     end
     K2LCSH.each do |k,lcsh|
       it k do
-        r = g.find_lc_by_keyword(k)
+        r = g.find_loc_keyword(k)
         r.should == lcsh
       end
     end
   end
 
-  describe '#find_lcuri_by_keyword' do
+  describe '#find_loc_uri' do
     it "nil case" do
-      g.find_lcuri_by_keyword(nil).should == nil      
-      g.find_lcuri_by_keyword('asdfasdfasdf').should == nil      
+      g.find_loc_uri(nil).should == nil      
+      g.find_loc_uri('asdfasdfasdf').should == nil      
     end
     K2LCURI.each do |k,lcuri|
       it k do
-        r = g.find_lcuri_by_keyword(k)
+        r = g.find_loc_uri(k)
         r.should == lcuri
       end
     end
   end
   
   
-  describe '#find_lcauth_by_keyword' do
+  describe '#find_loc_authority' do
     it "nil case" do
-      g.find_lcauth_by_keyword(nil).should == nil      
-      g.find_lcauth_by_keyword('asdfasdfasdf').should == nil      
+      g.find_loc_authority(nil).should == nil      
+      g.find_loc_authority('asdfasdfasdf').should == nil      
     end
     K2LCURI.each do |k,lcuri|
       it k do
-        uri = g.find_lcuri_by_keyword(k)
-        r = g.find_lcauth_by_keyword(k)
+        uri = g.find_loc_uri(k)
+        r = g.find_loc_authority(k)
         if uri.start_with?('http://id.loc.gov/authorities/subjects/sh')
           r.should == 'lcsh'
         else
@@ -97,14 +98,14 @@ describe GeoHydra::Gazetteer do
   end
   
 
-  describe '#find_uri_by_keyword' do
+  describe '#find_placename_uri' do
     it "nil case" do
-      g.find_uri_by_keyword(nil).should == nil      
-      g.find_uri_by_keyword('asdfasdfasdf').should == nil      
+      g.find_placename_uri(nil).should == nil      
+      g.find_placename_uri('asdfasdfasdf').should == nil      
     end
     K2GEONAMESID.each do |k,id|
       it k do
-        r = g.find_uri_by_keyword(k)
+        r = g.find_placename_uri(k)
         r.should == "http://sws.geonames.org/#{id}/"
       end
     end

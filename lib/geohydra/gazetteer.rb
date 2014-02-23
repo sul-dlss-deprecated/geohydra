@@ -10,47 +10,40 @@ module GeoHydra
     
     def initialize
       @registry = {}
-      n = 0
-      CSV.foreach(CSV_FN, :encoding => 'UTF-8') do |v|
-        n += 1
-        next if n == 1
+      CSV.foreach(CSV_FN, :encoding => 'UTF-8', :headers => true) do |v|
+        ap({:v0 => v[0], :v1 => v[1], :v2 => v[2].to_i, :v3 => v[3], :v4 => v[4]}) if $DEBUG
         k = v[0].to_s.strip
         k = v[1].to_s.strip if k.nil? or k.empty?
         @registry[k] = {
           :geonames_placename => v[1].to_s.strip,
           :geonames_id => v[2].to_i,
-          :loc_name => v[3].to_s.strip,
+          :loc_keyword => v[3].to_s.strip,
           :loc_id => v[4]
         }
       end
     end
-    
-    def _get(k, i)
-      return nil unless @registry.include?(k)
-      @registry[k][i]
-    end
-    
+
     def each
       @registry.each_key {|k| yield k }
     end
 
     # @return [String] geonames name
-    def find_placename_by_keyword(k)
+    def find_placename(k)
       _get(k, :geonames_placename)
     end
     
     # @return [Integer] geonames id
-    def find_id_by_keyword(k)
+    def find_id(k)
       _get(k, :geonames_id)
     end
 
     # @return [String] library of congress name
-    def find_lc_by_keyword(k)
-      _get(k, :loc_name)
+    def find_loc_keyword(k)
+      _get(k, :loc_keyword)
     end
     
     # @return [String] library of congress valueURI
-    def find_lcuri_by_keyword(k)
+    def find_loc_uri(k)
       lcid = _get(k, :loc_id)
       if lcid =~ /^lcsh:(\d+)$/ or lcid =~ /^sh(\d+)$/
         "http://id.loc.gov/authorities/subjects/sh#{$1}"
@@ -63,19 +56,20 @@ module GeoHydra
       end
     end
     
-    def find_lcauth_by_keyword(k)
+    # @return [String] authority name
+    def find_loc_authority(k)
       lcid = _get(k, :loc_id)
       return $1 if lcid =~ /^(lcsh|lcnaf):/
       return 'lcsh' if lcid =~ /^sh\d+$/
       return 'lcnaf' if lcid =~ /^(n|no)\d+$/
-      return 'lcsh' unless find_lc_by_keyword(k).nil? # default to lcsh if present
+      return 'lcsh' unless find_loc_keyword(k).nil? # default to lcsh if present
       nil
     end
     
 
     # @see http://www.geonames.org/ontology/documentation.html
     # @return [String] geonames uri (includes trailing / as specified)
-    def find_uri_by_keyword(k)
+    def find_placename_uri(k)
       return nil if _get(k, :geonames_id).nil?
       "http://sws.geonames.org/#{_get(k, :geonames_id)}/"
     end
@@ -87,6 +81,14 @@ module GeoHydra
       end
       nil
     end
+
+    private
+    def _get(k, i)
+      return nil unless @registry.include?(k)
+      raise ArgumentError unless i.is_a? Symbol
+      @registry[k][i]
+    end
+
   end
 end
 
