@@ -33,6 +33,23 @@ class TransformOgp
   def transform(layer)
     id = layer['LayerId'].to_s.strip
     puts "Tranforming #{id}"
+
+    uuid = case layer['Institution']
+    when 'Stanford'
+      'purl.stanford.edu:' + id
+    when 'Tufts'
+      'geodata.tufts.edu:' + id
+    when 'MassGIS'
+      'massgis.state.ma.us:' + id
+    when 'Berkeley'
+      'gis.lib.berkeley.edu:' + id
+    when 'MIT'
+      'arrowsmith.mit.edu:' + id
+    when 'Harvard'
+      'hul.harvard.edu:' + id
+    else
+      id
+    end
     
     raise ArgumentError, "ERROR: #{id} no location" if layer['Location'].nil? or layer['Location'].empty?
     location = JSON::parse(layer['Location'])
@@ -49,7 +66,7 @@ class TransformOgp
       :dc_date_dt => layer['ContentDate'],
       :dc_description_t => layer['Abstract'],
       :dc_format_s => "Dataset##{layer['DataType']}",
-      :dc_identifier_s => (layer['Institution'] == 'Stanford' ? "http://purl.stanford.edu/#{id}" : id),
+      :dc_identifier_s => uuid,
       :dc_language_s => "en",
       :dc_publisher_s => layer['Publisher'],
       :dc_relation_url => location['purl'],
@@ -58,7 +75,8 @@ class TransformOgp
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
       :dc_title_s => layer['LayerDisplayName'],
       # :dc_type_s => nil,
-      :layer_id => id,
+      :layer_id => layer['WorkspaceName'] + ':' + layer['Name'],
+      :layer_name_s => layer['Name'],
       :layer_nw_latlon => "#{n},#{w}",
       :layer_se_latlon => "#{s},#{e}",
       # :layer_nw_pt => "POINT(#{w} #{n})",
