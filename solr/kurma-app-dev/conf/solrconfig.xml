@@ -84,7 +84,7 @@
   <!-- If a 'dir' option (with or without a regex) is used and nothing
        is found that matches, a warning will be logged.
     -->
-  <lib dir="/non/existent/dir/yields/warning" /> 
+  
 
   <!-- an exact 'path' can be used instead of a 'dir' to specify a 
        specific jar file.  This will cause a serious error to be logged 
@@ -800,7 +800,7 @@
      <lst name="defaults">
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
-       <str name="df">text</str>
+<!--       <str name="df">text</str>-->
      </lst>
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
@@ -862,7 +862,7 @@
        <str name="echoParams">explicit</str>
        <str name="wt">json</str>
        <str name="indent">true</str>
-       <str name="df">text</str>
+       <!--<str name="df">text</str>-->
      </lst>
   </requestHandler>
 
