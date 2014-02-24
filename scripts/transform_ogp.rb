@@ -70,18 +70,18 @@ class TransformOgp
     new_layer = {
       # :dc_contributor_s => nil,
       :dc_coverage_sm => splitter(layer['PlaceKeywords']),
-      :dc_creator_s => layer['Publisher'], # XXX: fake data
+      :dc_creator_t => layer['Publisher'], # XXX: fake data
       :dc_date_dt => layer['ContentDate'],
       :dc_description_t => layer['Abstract'],
       :dc_format_s => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
       :dc_identifier_s => uuid,
       :dc_language_s => "en", # XXX: fake data
-      :dc_publisher_s => layer['Publisher'],
+      :dc_publisher_t => layer['Publisher'],
       :dc_relation_url => location['purl'].nil?? '' : ('IsPartOf ' + clean_uri(location['purl'])),
       :dc_rights_s => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']), # XXX: fake data for Stanford -- always restricted
       :dc_source_s => layer['Institution'],
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
-      :dc_title_s => layer['LayerDisplayName'],
+      :dc_title_t => layer['LayerDisplayName'],
       :dc_type_s => "Dataset##{layer['DataType']}",
       :layer_id => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_name_s => layer['Name'],
