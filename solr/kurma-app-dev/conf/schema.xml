@@ -35,8 +35,10 @@
       -->
     <dynamicField name="*_latlon" type="location" stored="true" indexed="true" multiValued="false"/>
     <!-- <dynamicField name="*_pt" type="location_rpt" stored="true" indexed="true" multiValued="false"/>
-    <dynamicField name="*_bbox" type="location_rpt" stored="true" indexed="true" multiValued="false"/>
-    <dynamicField name="*_polygon" type="location_rpt" stored="true" indexed="true" multiValued="false"/>-->
+    <dynamicField name="*_bbox" type="location_rpt" stored="true" indexed="true" multiValued="false"/>-->
+    <dynamicField name="*_pt" type="text"/>
+    <dynamicField name="*_bbox" type="text"/>
+    
   </fields>
   <types>
     <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
@@ -49,6 +51,6 @@
     <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_f"/>
     <!--<fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" 
       spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
-      geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/>-->
+      geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/>-->      
   </types>
 </schema>
