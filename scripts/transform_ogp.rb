@@ -11,6 +11,13 @@ class TransformOgp
     yield self
     self.close
   end
+  
+  def clean_uri(s)
+    unless s.nil? or s.empty?
+      return (s.is_a?(Array) ? URI(s.first) : URI(s)).to_s
+    end
+    ''
+  end
 
   def transform_file(fn)
     stats = { :accepted => 0, :rejected => 0 }
@@ -34,22 +41,23 @@ class TransformOgp
     id = layer['LayerId'].to_s.strip
     puts "Tranforming #{id}"
 
-    uuid = case layer['Institution']
+    prefix = case layer['Institution']
     when 'Stanford'
-      'purl.stanford.edu:' + id
+      'purl.stanford.edu'
     when 'Tufts'
-      'geodata.tufts.edu:' + id
+      'geodata.tufts.edu'
     when 'MassGIS'
-      'massgis.state.ma.us:' + id
+      'massgis.state.ma.us'
     when 'Berkeley'
-      'gis.lib.berkeley.edu:' + id
+      'gis.lib.berkeley.edu'
     when 'MIT'
-      'arrowsmith.mit.edu:' + id
+      'arrowsmith.mit.edu'
     when 'Harvard'
-      'hul.harvard.edu:' + id
+      'hul.harvard.edu'
     else
-      id
+      ''
     end
+    uuid = 'urn:' + prefix + ':' + URI.encode(id)
     
     raise ArgumentError, "ERROR: #{id} no location" if layer['Location'].nil? or layer['Location'].empty?
     location = JSON::parse(layer['Location'])
@@ -62,30 +70,33 @@ class TransformOgp
     new_layer = {
       # :dc_contributor_s => nil,
       :dc_coverage_sm => splitter(layer['PlaceKeywords']),
-      # :dc_creator_s => nil,
+      :dc_creator_s => layer['Publisher'], # XXX: fake data
       :dc_date_dt => layer['ContentDate'],
       :dc_description_t => layer['Abstract'],
-      :dc_format_s => "Dataset##{layer['DataType']}",
+      :dc_format_s => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
       :dc_identifier_s => uuid,
-      :dc_language_s => "en",
+      :dc_language_s => "en", # XXX: fake data
       :dc_publisher_s => layer['Publisher'],
-      :dc_relation_url => location['purl'],
-      :dc_rights_s => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']),
+      :dc_relation_url => location['purl'].nil?? '' : ('IsPartOf ' + clean_uri(location['purl'])),
+      :dc_rights_s => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']), # XXX: fake data for Stanford -- always restricted
       :dc_source_s => layer['Institution'],
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
       :dc_title_s => layer['LayerDisplayName'],
-      # :dc_type_s => nil,
+      :dc_type_s => "Dataset##{layer['DataType']}",
       :layer_id => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_name_s => layer['Name'],
-      :layer_nw_latlon => "#{n},#{w}",
-      :layer_se_latlon => "#{s},#{e}",
-      # :layer_nw_pt => "POINT(#{w} #{n})",
-      # :layer_se_pt => "POINT(#{e} #{s})",
-      # :layer_bbox => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
-      :layer_wms_url => location['wms'],
-      :layer_wfs_url => location['wfs'],
-      :layer_wcs_url => location['wcs'],
-      :layer_metadata_url => location['purl'],
+      :layer_collection_s => 'My Collection', # XXX: fake data
+      :layer_srs_s => 'EPSG:4326', # XXX: fake data
+      :layer_ne_latlon => "#{n},#{e}",
+      :layer_sw_latlon => "#{s},#{w}",
+      :layer_ne_pt => "POINT(#{e} #{n})",
+      :layer_sw_pt => "POINT(#{w} #{s})",
+      :layer_bbox => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      :layer_wms_url => clean_uri(location['wms']),
+      :layer_wfs_url => clean_uri(location['wfs']),
+      :layer_wcs_url => clean_uri(location['wcs']),
+      :layer_metadata_url => clean_uri(location['purl']),
+      :layer_preview_url => location['purl'].nil?? '' : (clean_uri(location['purl']) + '/preview.jpg'),
       :layer_workspace_s => layer['WorkspaceName']
     }
 
@@ -95,8 +106,8 @@ class TransformOgp
 
     %w{dc_relation_url layer_wms_url layer_wfs_url layer_wcs_url}.each do |k|
       k = k.to_sym
-      if new_layer[k].is_a? Array
-        new_layer[k] = URI(new_layer[k].first)
+      if new_layer[k].is_a? Array and not new_layer[k].first.nil?
+        new_layer[k] = clean_uri(new_layer[k].first)
       end
     end
 
@@ -138,8 +149,8 @@ class TransformOgp
             end
             
             x[protocol].each do |url|
-              uri = URI.parse(url)
-              raise ArgumentError, "ERROR: #{id}: Invalid URL: #{uri}" unless uri.kind_of?(URI::HTTP) or uri.kind_of?(URI::HTTPS)
+              uri = clean_uri.parse(url)
+              raise ArgumentError, "ERROR: #{id}: Invalid URL: #{uri}" unless uri.kind_of?(clean_uri::HTTP) or uri.kind_of?(clean_uri::HTTPS)
             end
           end
         rescue Exception => e

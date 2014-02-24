@@ -3,6 +3,7 @@
 require 'awesome_print'
 require 'json'
 require 'uri'
+require 'date'
 
 class ValidateOgp
   def initialize(fn)
@@ -90,6 +91,15 @@ class ValidateOgp
     k = 'Area'
     unless layer[k] > 0
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
+    end
+    
+    k = 'ContentDate'
+    if layer[k].nil? or layer[k].empty?
+      raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
+    end
+    dt = Date.rfc3339(layer[k])
+    if dt.year < 1500 or dt.year > 2100
+      raise ArgumentError, "ERROR: #{id} has suspect #{k}: #{layer[k]}"
     end
     
     # k = 'FgdcText'
