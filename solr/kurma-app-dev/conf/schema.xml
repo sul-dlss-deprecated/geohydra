@@ -53,4 +53,6 @@
       spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
       geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/>-->      
   </types>
+  
+  <copyField source="*_t" dest="text"/>
 </schema>
