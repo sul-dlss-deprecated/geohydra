@@ -11,7 +11,7 @@ usage() {
 
 [ $# -eq 0 ] && usage
 
-fn=$1
+fn=`basename $1 .rb`
 shift
 
 [ $fn = '--help' -o $fn = 'help' ] && usage
