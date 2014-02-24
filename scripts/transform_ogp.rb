@@ -68,6 +68,7 @@ class TransformOgp
     n = layer['MaxY'].to_f
     e = layer['MaxX'].to_f
     new_layer = {
+      :uuid => uuid,
       # :dc_contributor_s => nil,
       :dc_coverage_sm => splitter(layer['PlaceKeywords']),
       :dc_creator_t => layer['Publisher'], # XXX: fake data
