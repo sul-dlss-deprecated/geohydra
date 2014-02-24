@@ -83,7 +83,7 @@ class TransformOgp
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
       :dc_title_t => layer['LayerDisplayName'],
       :dc_type_s => "Dataset##{layer['DataType']}",
-      :layer_id => layer['WorkspaceName'] + ':' + layer['Name'],
+      :layer_id_s => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_name_s => layer['Name'],
       :layer_collection_s => 'My Collection', # XXX: fake data
       :layer_srs_s => 'EPSG:4326', # XXX: fake data
