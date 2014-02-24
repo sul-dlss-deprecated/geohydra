@@ -13,6 +13,7 @@
     <dynamicField name="*_s" type="string" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_sm" type="string" stored="true" indexed="true" multiValued="true"/>
     <dynamicField name="*_url" type="string" stored="true" indexed="false" multiValued="false"/>
+    <dynamicField name="*_f" type="tfloat" stored="true" indexed="false" multiValued="false"/>
     
     <!-- flexible types -->
     <dynamicField name="*_ti" type="text" stored="false" indexed="true" multiValued="false"/>
