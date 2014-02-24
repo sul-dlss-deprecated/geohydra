@@ -21,17 +21,19 @@ class IngestArcGIS < GeoHydra::Process
     if fn =~ %r{^(.*).(shp|tif).xml$}
       ofn = $1 + '-iso19139.xml'
       ofn_fc = $1 + '-iso19110.xml'
+      ofn_fgdc = $1 + '-fgdc.xml'
     elsif File.basename(fn) == 'metadata.xml'
       ofn = File.join(File.dirname(fn), 'metadata.iso19139.xml')
       ofn_fc = File.join(File.dirname(fn), 'metadata.iso19110.xml')
+      ofn_fgdc = File.join(File.dirname(fn), 'metadata.fgdc.xml')
     else
       raise OptionParser::InvalidOption, "File <#{fn}> is not named correctly"
     end
   
     if flags[:rebuild] or not (FileUtils.uptodate?(ofn, [fn]) and FileUtils.uptodate?(ofn_fc, [fn]))
-      ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc}) if flags[:debug]
+      ap({:fn => fn, :ofn => ofn, :ofn_fc => ofn_fc, :ofn_fgdc => ofn_fgdc}) if flags[:debug]
       begin
-        GeoHydra::Transform.from_arcgis fn, ofn, ofn_fc
+        GeoHydra::Transform.from_arcgis fn, ofn, ofn_fc, ofn_fgdc
         extract_thumbnail(fn, flags)
         if flags[:mv_jpg]
           dstdir = "#{File.dirname(fn)}/../content/"

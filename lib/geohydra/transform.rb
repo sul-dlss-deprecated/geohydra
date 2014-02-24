@@ -28,7 +28,8 @@ module GeoHydra
     # XSLT file locations
     XSLT = {
       :arcgis     => self.search_for_xsl('ArcGIS2ISO19139.xsl'),
-      :arcgis_fc  => self.search_for_xsl('arcgis_to_iso19110.xsl')
+      :arcgis_fc  => self.search_for_xsl('arcgis_to_iso19110.xsl'),
+      :arcgis_fgdc=> self.search_for_xsl('ArcGIS2FGDC.xsl')
     }
     
     # XSLT processor
@@ -49,11 +50,15 @@ module GeoHydra
     # @param [String] fn Input file
     # @param [String] ofn Output file
     # @param [String] ofn_fc Output file for the Feature Catalog (optional)
-    def self.from_arcgis fn, ofn, ofn_fc = nil
+    def self.from_arcgis fn, ofn, ofn_fc = nil, ofn_fgdc = nil
       system("#{XSLTPROC} #{XSLT[:arcgis]} '#{fn}' | #{XMLLINT} -o '#{ofn}' -")
       unless ofn_fc.nil?
         system("#{XSLTPROC} #{XSLT[:arcgis_fc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fc}' -")
       end
+      unless ofn_fgdc.nil?
+        system("#{XSLTPROC} #{XSLT[:arcgis_fgdc]} '#{fn}' | #{XMLLINT} -o '#{ofn_fgdc}' -")
+      end
+      
     end
     
     # @return [Hash]
