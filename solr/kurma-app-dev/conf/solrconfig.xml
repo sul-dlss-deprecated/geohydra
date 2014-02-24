@@ -68,6 +68,7 @@
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
        <str name="df">layer_id</str>
+       <str name="pf">dc_title_s^4</str>
      </lst>
   </requestHandler>
   <requestHandler name="/query" class="solr.SearchHandler">
@@ -76,6 +77,7 @@
        <str name="wt">json</str>
        <str name="indent">true</str>
        <str name="df">layer_id</str>
+       <str name="pf">dc_title_s^4</str>
      </lst>
   </requestHandler>
   <requestHandler name="/get" class="solr.RealTimeGetHandler">
