@@ -67,7 +67,6 @@
      <lst name="defaults">
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
-       <str name="qf">dc_title_s^2</str>
      </lst>
   </requestHandler>
   <requestHandler name="/query" class="solr.SearchHandler">
@@ -75,7 +74,6 @@
        <str name="echoParams">explicit</str>
        <str name="wt">json</str>
        <str name="indent">true</str>
-       <str name="qf">dc_title_s^2</str>
      </lst>
   </requestHandler>
   <requestHandler name="/get" class="solr.RealTimeGetHandler">
