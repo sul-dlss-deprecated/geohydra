@@ -76,18 +76,19 @@ class TransformOgp
       :dc_description_t => layer['Abstract'],
       :dc_format_s => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
       :dc_identifier_s => uuid,
-      :dc_language_s => "en", # XXX: fake data
+      :dc_language_s => 'en', # XXX: fake data
       :dc_publisher_t => layer['Publisher'],
       :dc_relation_url => location['purl'].nil?? '' : ('IsPartOf ' + clean_uri(location['purl'])),
       :dc_rights_s => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']), # XXX: fake data for Stanford -- always restricted
       :dc_source_s => layer['Institution'],
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
       :dc_title_t => layer['LayerDisplayName'],
-      :dc_type_s => "Dataset##{layer['DataType']}",
+      :dc_type_s => 'Dataset',
       :layer_id_s => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_name_s => layer['Name'],
       :layer_collection_s => 'My Collection', # XXX: fake data
       :layer_srs_s => 'EPSG:4326', # XXX: fake data
+      :layer_type_s => layer['DataType'],
       :layer_ne_latlon => "#{n},#{e}",
       :layer_sw_latlon => "#{s},#{w}",
       :layer_ne_pt => "POINT(#{e} #{n})",
