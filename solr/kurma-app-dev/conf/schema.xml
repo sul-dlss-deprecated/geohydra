@@ -44,7 +44,8 @@
     <!-- default types -->
     <dynamicField name="*_d"    type="double" stored="true" indexed="true"/>
     <dynamicField name="*_dt"   type="date"   stored="true" indexed="true"/>
-    <dynamicField name="*_f"    type="tfloat" stored="true" indexed="true"/>
+    <dynamicField name="*_f"    type="float"  stored="true" indexed="true"/>
+    <dynamicField name="*_ft"   type="tfloat" stored="true" indexed="true"/>
     <dynamicField name="*_i"    type="int"    stored="true" indexed="true"/>
     <dynamicField name="*_it"   type="tint"   stored="true" indexed="true"/>
     <dynamicField name="*_s"    type="string" stored="true" indexed="true"/>
@@ -304,5 +305,6 @@
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
   <copyField source="*_t" dest="text" maxChars="10000"/>
+  <copyField source="dc_source_s" dest="text"/>
 </schema>
 
