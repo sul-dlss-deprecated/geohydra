@@ -83,7 +83,7 @@ class TransformOgp
       :dc_identifier_s => uuid,
       :dc_language_s => 'en', # XXX: fake data
       :dc_publisher_t => layer['Publisher'],
-      :dc_relation_url => location['purl'].nil?? '' : ('IsPartOf ' + clean_uri(location['purl'])),
+      :dc_relation_url => location['purl'].nil?? '' : ('IsReferencedBy ' + clean_uri(location['purl'])),
       :dc_rights_s => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']), # XXX: fake data for Stanford -- always restricted
       :dc_source_s => layer['Institution'],
       :dc_subject_sm => splitter(layer['ThemeKeywords']),
