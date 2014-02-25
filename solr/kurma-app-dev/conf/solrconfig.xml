@@ -736,42 +736,8 @@
       <str name="mm">100%</str>
       <str name="q.alt">*:*</str>
       <str name="qf">text^0.5 dc_source_s^10.0 dc_title_t^10.0 dc_description_t^5.0 dc_subjects_sm^5.0 </str>
-    </lst>
-    <!-- In addition to defaults, "appends" params can be specified
-         to identify values which should be appended to the list of
-         multi-val params from the query (or the existing "defaults").
-      -->
-    <!-- In this example, the param "fq=instock:true" would be appended to
-         any query time fq params the user may specify, as a mechanism for
-         partitioning the index, independent of any user selected filtering
-         that may also be desired (perhaps as a result of faceted searching).
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "appends" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <!--
-       <lst name="appends">
-         <str name="fq">inStock:true</str>
-       </lst>
-      -->
-    <!-- "invariants" are a way of letting the Solr maintainer lock down
-         the options available to Solr clients.  Any params values
-         specified here are used regardless of what values may be specified
-         in either the query, the "defaults", or the "appends" params.
-
-         In this example, the facet.field and facet.query params would
-         be fixed, limiting the facets clients can use.  Faceting is
-         not turned on by default - but if the client does specify
-         facet=true in the request, these are the only facets they
-         will be able to see counts for; regardless of what other
-         facet.field or facet.query params they may specify.
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "invariants" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <lst name="invariants">
+      <str name="facet">true</str>
+      <str name="facet.mincount">1</str>
       <str name="facet.field">dc_coverage_sm</str>
       <str name="facet.field">dc_language_s</str>
       <str name="facet.field">dc_rights_s</str>
@@ -782,6 +748,7 @@
       <str name="facet.field">layer_type_s</str>
     </lst>
   </requestHandler>
+  
   <!-- realtime get handler, guaranteed to return the latest stored fields of
        any document, without the need to commit or open a new searcher.  The
        current implementation relies on the updateLog feature being enabled. -->
