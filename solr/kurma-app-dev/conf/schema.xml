@@ -305,6 +305,12 @@
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
   <copyField source="*_t" dest="text" maxChars="10000"/>
+  <copyField source="dc_coverage_sm" dest="text"/>
+  <copyField source="dc_identifier_s" dest="text"/>
   <copyField source="dc_source_s" dest="text"/>
+  <copyField source="dc_subject_sm" dest="text"/>
+  <copyField source="layer_collection_s" dest="text"/>
+  <copyField source="layer_name_s" dest="text"/>
+  <copyField source="layer_type_s" dest="text"/>
 </schema>
 
