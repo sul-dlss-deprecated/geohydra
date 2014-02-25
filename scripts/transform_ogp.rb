@@ -3,6 +3,7 @@
 require 'awesome_print'
 require 'json'
 require 'uri'
+require 'date'
 
 class TransformOgp
   def initialize(fn)
@@ -67,12 +68,16 @@ class TransformOgp
     w = layer['MinX'].to_f
     n = layer['MaxY'].to_f
     e = layer['MaxX'].to_f
+    
+    dt = DateTime.rfc3339(layer['ContentDate'])
+    
     new_layer = {
       :uuid => uuid,
       # :dc_contributor_s => nil,
       :dc_coverage_sm => splitter(layer['PlaceKeywords']),
       :dc_creator_t => layer['Publisher'], # XXX: fake data
-      :dc_date_dt => layer['ContentDate'],
+      :dc_date_dt => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
+      :dc_date_it => dt.year, # XXX: migrate to copyField
       :dc_description_t => layer['Abstract'],
       :dc_format_s => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
       :dc_identifier_s => uuid,
@@ -103,7 +108,7 @@ class TransformOgp
     }
 
     new_layer.each do |k, v|
-      new_layer[k] = '' if v.nil? or v.empty?
+      new_layer[k] = '' if v.nil? or (v.respond_to?(:empty?) and v.empty?)
     end
 
     %w{dc_relation_url layer_wms_url layer_wfs_url layer_wcs_url}.each do |k|

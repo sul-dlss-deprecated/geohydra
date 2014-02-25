@@ -46,6 +46,7 @@
     <dynamicField name="*_dt"   type="date"   stored="true" indexed="true"/>
     <dynamicField name="*_f"    type="tfloat" stored="true" indexed="true"/>
     <dynamicField name="*_i"    type="int"    stored="true" indexed="true"/>
+    <dynamicField name="*_it"   type="tint"   stored="true" indexed="true"/>
     <dynamicField name="*_s"    type="string" stored="true" indexed="true"/>
     <dynamicField name="*_sm"   type="string" stored="true" indexed="true" multiValued="true" />
     <dynamicField name="*_t"    type="text"   stored="true" indexed="true" termVectors="true" termPositions="true" termOffsets="true"/>
