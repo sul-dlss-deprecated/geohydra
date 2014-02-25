@@ -96,9 +96,10 @@ class TransformOgp
       :layer_type_s => layer['DataType'],
       :layer_ne_latlon => "#{n},#{e}",
       :layer_sw_latlon => "#{s},#{w}",
-      :layer_ne_pt => "POINT(#{e} #{n})",
-      :layer_sw_pt => "POINT(#{w} #{s})",
-      :layer_bbox => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      :layer_ne_pt => "#{e} #{n}",
+      :layer_sw_pt => "#{w} #{s}",
+      :layer_bbox => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
+      :layer_geom => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
       :layer_wms_url => clean_uri(location['wms']),
       :layer_wfs_url => clean_uri(location['wfs']),
       :layer_wcs_url => clean_uri(location['wcs']),
