@@ -26,13 +26,13 @@ class TransformOgp
     json = JSON::parse(File.read(fn))
     json.each do |doc| # contains JSON Solr query results
       unless doc.empty?
-	begin
-	  transform(doc)
-	  stats[:accepted] += 1
-	rescue ArgumentError => e
-	  puts e
-	  stats[:rejected] += 1
-	end
+        begin
+          transform(doc)
+          stats[:accepted] += 1
+        rescue ArgumentError => e
+          puts e
+          stats[:rejected] += 1
+        end
       end
     end
     stats
@@ -42,23 +42,25 @@ class TransformOgp
     id = layer['LayerId'].to_s.strip
     puts "Tranforming #{id}"
 
+    # For URN style @see http://www.ietf.org/rfc/rfc2141.txt
+    # For ARK @see https://wiki.ucop.edu/display/Curation/ARK
     prefix = case layer['Institution']
     when 'Stanford'
-      'purl.stanford.edu'
+      'http://purl.stanford.edu/'
     when 'Tufts'
-      'geodata.tufts.edu'
+      'urn:geodata.tufts.edu:'
     when 'MassGIS'
-      'massgis.state.ma.us'
+      'urn:massgis.state.ma.us:'
     when 'Berkeley'
-      'gis.lib.berkeley.edu'
+      'http://ark.cdlib.org/ark:/'
     when 'MIT'
-      'arrowsmith.mit.edu'
+      'urn:arrowsmith.mit.edu:'
     when 'Harvard'
-      'hul.harvard.edu'
+      'urn:hul.harvard.edu:'
     else
       ''
     end
-    uuid = 'urn:' + prefix + ':' + URI.encode(id)
+    uuid = prefix + URI.encode(id)
     
     raise ArgumentError, "ERROR: #{id} no location" if layer['Location'].nil? or layer['Location'].empty?
     location = JSON::parse(layer['Location'])
@@ -71,52 +73,72 @@ class TransformOgp
     
     dt = DateTime.rfc3339(layer['ContentDate'])
     
+    purl = location['purl']
+    if purl.is_a? Array
+      purl = purl.first
+    end
+    if purl.nil? and uuid =~ /^http/
+      purl = uuid
+    end
+    
+    # @see http://dublincore.org/documents/dcmi-terms/
+    # @see http://wiki.dublincore.org/index.php/User_Guide/Creating_Metadata
+    # @see http://www.ietf.org/rfc/rfc5013.txt
     new_layer = {
-      :uuid => uuid,
-      # :dc_contributor_s => nil,
-      :dc_coverage_sm => splitter(layer['PlaceKeywords']),
-      :dc_creator_t => layer['Publisher'], # XXX: fake data
-      :dc_date_dt => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
-      :dc_date_it => dt.year, # XXX: migrate to copyField
-      :dc_description_t => layer['Abstract'],
-      :dc_format_s => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
-      :dc_identifier_s => uuid,
-      :dc_language_s => 'en', # XXX: fake data
-      :dc_publisher_t => layer['Publisher'],
-      :dc_relation_url => location['purl'].nil?? '' : ('IsReferencedBy ' + clean_uri(location['purl'])),
-      :dc_rights_s => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']), # XXX: fake data for Stanford -- always restricted
-      :dc_source_s => layer['Institution'],
-      :dc_subject_sm => splitter(layer['ThemeKeywords']),
-      :dc_title_t => layer['LayerDisplayName'],
-      :dc_type_s => 'Dataset',
-      :layer_id_s => layer['WorkspaceName'] + ':' + layer['Name'],
-      :layer_name_s => layer['Name'],
-      :layer_collection_s => 'My Collection', # XXX: fake data
-      :layer_srs_s => 'EPSG:4326', # XXX: fake data
-      :layer_type_s => layer['DataType'],
-      :layer_ne_latlon => "#{n},#{e}",
-      :layer_sw_latlon => "#{s},#{w}",
-      :layer_ne_pt => "#{e} #{n}",
-      :layer_sw_pt => "#{w} #{s}",
-      :layer_bbox => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
-      :layer_geom => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
-      :layer_wms_url => clean_uri(location['wms']),
-      :layer_wfs_url => clean_uri(location['wfs']),
-      :layer_wcs_url => clean_uri(location['wcs']),
-      :layer_metadata_url => clean_uri(location['purl']),
-      :layer_preview_url => location['purl'].nil?? '' : (clean_uri(location['purl']) + '/preview.jpg'),
-      :layer_workspace_s => layer['WorkspaceName']
+      :uuid               => uuid,
+      :dc_coverage_sm     => splitter(layer['PlaceKeywords']),
+      :dc_creator_t       => '',#layer['Publisher'], # XXX: fake data
+      :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
+      :dc_description_t   => layer['Abstract'],
+      :dc_format_s        => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
+      :dc_identifier_s    => uuid,
+      :dc_language_s      => 'en', # XXX: fake data
+      :dc_publisher_t     => layer['Publisher'],
+      :dc_relation_url    => purl.nil?? '' : ('IsReferencedBy ' + clean_uri(purl)),
+      :dc_rights_s        => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']), # XXX: fake data for Stanford -- always restricted
+      :dc_source_s        => layer['Institution'],
+      :dc_subject_sm      => splitter(layer['ThemeKeywords']),
+      :dc_title_t         => layer['LayerDisplayName'],
+      :dc_type_s          => 'Dataset',
+      :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
+      :layer_collection_s => (layer['Institution'] == 'Stanford' ? 'My Collection' : ''), # XXX: fake data
+      :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
+      :layer_metadata_url => (layer['Institution'] == 'Stanford' ? purl : ''),
+      :layer_ne_latlon    => "#{n},#{e}",
+      :layer_ne_pt        => "#{e} #{n}",
+      :layer_preview_image_url  => (layer['Institution'] == 'Stanford' ? "https://stacks.stanford.edu/file/druid:#{id}/preview.jpg" : ''),
+      :layer_srs_s        => 'EPSG:4326', # XXX: fake data
+      :layer_sw_latlon    => "#{s},#{w}",
+      :layer_sw_pt        => "#{w} #{s}",
+      :layer_type_s       => layer['DataType'],
+      :layer_wcs_url      => location['wcs'],
+      :layer_wfs_url      => location['wfs'],
+      :layer_wms_url      => location['wms'],
+      :layer_year_i       => dt.year, # XXX: migrate to copyField
+      :ogp_area_f         => layer['Area'],
+      :ogp_center_x_f     => layer['CenterX'],
+      :ogp_center_y_f     => layer['CenterY'],
+      :ogp_georeferenced_b   => (layer['GeoReferenced'].to_s.downcase == 'true'),
+      :ogp_halfheight_f   => layer['HalfHeight'],
+      :ogp_halfwidth_f    => layer['HalfWidth'],
+      :ogp_layer_id_s     => layer['LayerId'],
+      :ogp_name_s         => layer['Name'],
+      :ogp_location_s     => layer['Location'],
+      :ogp_workspace_s    => layer['WorkspaceName']
     }
 
-    new_layer.each do |k, v|
-      new_layer[k] = '' if v.nil? or (v.respond_to?(:empty?) and v.empty?)
-    end
-
-    %w{dc_relation_url layer_wms_url layer_wfs_url layer_wcs_url}.each do |k|
+    %w{layer_wms_url layer_wfs_url layer_wcs_url layer_metadata_url layer_preview_image_url}.each do |k|
       k = k.to_sym
       if new_layer[k].is_a? Array and not new_layer[k].first.nil?
         new_layer[k] = clean_uri(new_layer[k].first)
+      else
+        new_layer[k] = clean_uri(new_layer[k])
       end
+    end
+
+    new_layer.each do |k, v|
+      new_layer.delete(k) if v.nil? or (v.respond_to?(:empty?) and v.empty?)
     end
 
     @output.write JSON::pretty_generate(new_layer)
