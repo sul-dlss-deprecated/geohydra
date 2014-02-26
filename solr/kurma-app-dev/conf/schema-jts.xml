@@ -36,87 +36,46 @@
       default: a value that should be used if no value is specified
         when adding a document.
     -->
-    <field name="_version_" type="long" stored="true" indexed="true"/>
-    <field name="timestamp" type="date" stored="true" indexed="true" default="NOW"/>
-    <field name="uuid" type="string" stored="true" indexed="true" required="true"/>
-    <field name="text" type="text" stored="false" indexed="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" required="true"/>
+    <field name="_version_" type="long"   stored="true" indexed="true"/>
+    <field name="timestamp" type="date"   stored="true" indexed="true" default="NOW"/>
+    <field name="id"        type="uuid"   stored="true" indexed="true" default="NEW"/>
+    
+    <!-- core generated fields -->
+    <field name="uuid" type="string" stored="true"  indexed="true" required="true"/>
+    <field name="text" type="text"   stored="false" indexed="true" multiValued="true" termVectors="true" termPositions="true" termOffsets="true" required="true"/>
 
-    <!-- default types -->
-    <dynamicField name="*_d"    type="double" stored="true" indexed="true"/>
-    <dynamicField name="*_dt"   type="date"   stored="true" indexed="true"/>
-    <dynamicField name="*_f"    type="float"  stored="true" indexed="true"/>
-    <dynamicField name="*_ft"   type="tfloat" stored="true" indexed="true"/>
-    <dynamicField name="*_i"    type="int"    stored="true" indexed="true"/>
-    <dynamicField name="*_it"   type="tint"   stored="true" indexed="true"/>
-    <dynamicField name="*_s"    type="string" stored="true" indexed="true"/>
-    <dynamicField name="*_sm"   type="string" stored="true" indexed="true" multiValued="true" />
-    <dynamicField name="*_t"    type="text"   stored="true" indexed="true" termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_url"  type="string" stored="true"/>
-        
-    <!-- 
-         flexible types 
-    <dynamicField name="*_ti"     type="text" stored="false" indexed="true"/>
-    <dynamicField name="*_ts"     type="text" stored="true"  indexed="false"/>
-    <dynamicField name="*_tsi"    type="text" stored="true"  indexed="true"/>
-    <dynamicField name="*_tim"    type="text" stored="false" indexed="true"  multiValued="true" />
-    <dynamicField name="*_tsm"    type="text" stored="true"  indexed="false" multiValued="true" />
-    <dynamicField name="*_tsim"   type="text" stored="true"  indexed="true"  multiValued="true" />
-    
-    <dynamicField name="*_tiv"    type="text" stored="false" indexed="true" termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_timv"   type="text" stored="false" indexed="true"  multiValued="true"  termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_tsiv"   type="text" stored="true"  indexed="true" termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_tsimv"  type="text" stored="true"  indexed="true"  multiValued="true"  termVectors="true" termPositions="true" termOffsets="true"/>
-    
-    <dynamicField name="*_si"     type="string" stored="false" indexed="true"/>
-    <dynamicField name="*_ss"     type="string" stored="true"  indexed="false"/>
-    <dynamicField name="*_ssi"    type="string" stored="true"  indexed="true"/>
-    <dynamicField name="*_sim"    type="string" stored="false" indexed="true"  multiValued="true"/>
-    <dynamicField name="*_ssm"    type="string" stored="true"  indexed="false" multiValued="true"/>
-    <dynamicField name="*_ssim"   type="string" stored="true"  indexed="true"  multiValued="true"/>
-    
-    <dynamicField name="*_ii"     type="int" stored="false" indexed="true"/>
-    <dynamicField name="*_is"     type="int" stored="true"  indexed="false"/>
-    <dynamicField name="*_isi"    type="int" stored="true"  indexed="true"/>
-    <dynamicField name="*_iim"    type="int" stored="false" indexed="true"  multiValued="true"/>
-    <dynamicField name="*_ism"    type="int" stored="true"  indexed="false" multiValued="true"/>
-    <dynamicField name="*_isim"   type="int" stored="true"  indexed="true"  multiValued="true"/>
+    <!-- dynamic field with type by suffix -->
+    <dynamicField name="*_b"    type="boolean" stored="true"  indexed="true"/>
+    <dynamicField name="*_d"    type="double"  stored="true"  indexed="true"/>
+    <dynamicField name="*_dr"   type="tdouble" stored="true"  indexed="true"/>
+    <dynamicField name="*_dt"   type="date"    stored="true"  indexed="true"/>
+    <dynamicField name="*_dtr"  type="tdate"   stored="true"  indexed="true"/>
+    <dynamicField name="*_f"    type="float"   stored="true"  indexed="true"/>
+    <dynamicField name="*_fr"   type="tfloat"  stored="true"  indexed="true"/>
+    <dynamicField name="*_i"    type="int"     stored="true"  indexed="true"/>
+    <dynamicField name="*_ir"   type="tint"    stored="true"  indexed="true"/>
+    <dynamicField name="*_l"    type="long"    stored="true"  indexed="true"/>
+    <dynamicField name="*_lr"   type="tlong"   stored="true"  indexed="true"/>
+    <dynamicField name="*_s"    type="string"  stored="true"  indexed="true"/>
+    <dynamicField name="*_si"   type="string"  stored="false" indexed="true"/>
+    <dynamicField name="*_sim"  type="string"  stored="false" indexed="true" multiValued="true" />
+    <dynamicField name="*_sm"   type="string"  stored="true"  indexed="true" multiValued="true" />
+    <dynamicField name="*_t"    type="text"    stored="true"  indexed="true" termVectors="true" termPositions="true" termOffsets="true"/>
+    <dynamicField name="*_ti"   type="text"    stored="false" indexed="true" termVectors="true" termPositions="true" termOffsets="true"/>
+    <dynamicField name="*_url"  type="string"  stored="true"  indexed="false"/>
+    <dynamicField name="rnd_*"  type="random"  stored="false" indexed="true" />
+    <dynamicField name="*_blob" type="binary"  stored="true"  indexed="false"/>
 
-    <dynamicField name="*_li"     type="long" stored="false" indexed="true"/>
-    <dynamicField name="*_ls"     type="long" stored="true"  indexed="false"/>
-    <dynamicField name="*_lsi"    type="long" stored="true"  indexed="true"/>
-    <dynamicField name="*_lim"    type="long" stored="false" indexed="true"  multiValued="true"/>
-    <dynamicField name="*_lsm"    type="long" stored="true"  indexed="false" multiValued="true"/>
-    <dynamicField name="*_lsim"   type="long" stored="true"  indexed="true"  multiValued="true"/>
-        
-    <dynamicField name="*_di"     type="date" stored="false" indexed="true"/>
-    <dynamicField name="*_ds"     type="date" stored="true"  indexed="false"/>
-    <dynamicField name="*_dsi"    type="date" stored="true"  indexed="true"/>
-    <dynamicField name="*_dim"    type="date" stored="false" indexed="true"  multiValued="true"/>
-    <dynamicField name="*_dsm"    type="date" stored="true"  indexed="false" multiValued="true"/>
-    <dynamicField name="*_dsim"   type="date" stored="true"  indexed="true"  multiValued="true"/>
-
-    <dynamicField name="*_bi"     type="boolean" stored="false" indexed="true"/>
-    <dynamicField name="*_bs"     type="boolean" stored="true"  indexed="false"/>
-    <dynamicField name="*_bsi"    type="boolean" stored="true"  indexed="true"/>
-    
-    <dynamicField name="*_fi"     type="tfloat" stored="false"  indexed="true"/>
-    <dynamicField name="*_fs"     type="tfloat" stored="true"   indexed="false"/>
-    <dynamicField name="*_fsi"    type="tfloat" stored="false"  indexed="true"/>
-    -->
-    
     <!-- Spatial field types:
     
          Solr3:
-           <field name="my_point">83.1,-117.312</field> 
-             as (y,x)
-             
-           <field name="my_location">83.1,-117.312</field> 
+           <field name="my_latlon">83.1,-117.312</field> 
              as (y,x)
 
          Solr4:             
-           <field name="my_geohash">u4pruydqqvj</field>
-             see http://en.wikipedia.org/wiki/Geohash
-             
+           <field name="my_pt">-117.312 83.1</field> 
+             as (x,y)
+
            <field name="my_bbox">-117.312 83.1 -115.39 84.31</field> 
              as (minx miny maxx maxy)
              
@@ -126,10 +85,12 @@
     <dynamicField name="*_latlon" type="location"     stored="true" indexed="true"/>
     <dynamicField name="*_pt"     type="location_rpt" stored="true" indexed="true"/>
     <dynamicField name="*_bbox"   type="location_rpt" stored="true" indexed="true"/>
-    <dynamicField name="*_geom"   type="location_rpt" stored="true" indexed="true"/>
+    <dynamicField name="*_geom"   type="location_jts" stored="true" indexed="true"/>
   </fields>
 
-  <types>    
+  <types>
+    <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
+
     <!-- The StrField type is not analyzed, but indexed/stored verbatim.
        It supports doc values but in that case the field needs to be
        single-valued and either required or have a default value.
@@ -268,19 +229,6 @@
       </analyzer>
     </fieldType>
     
-    <!-- This point type indexes the coordinates as separate fields (subFields)
-      If subFieldType is defined, it references a type, and a dynamic field
-      definition is created matching *___<typename>.  Alternately, if 
-      subFieldSuffix is defined, that is used to create the subFields.
-      Example: if subFieldType="double", then the coordinates would be
-        indexed in fields myloc_0___double,myloc_1___double.
-      Example: if subFieldSuffix="_d" then the coordinates would be indexed
-        in fields myloc_0_d,myloc_1_d
-      The subFields are an implementation detail of the fieldType, and end
-      users normally should not need to know about them.
-      
-    -->
-    <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
 
     <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
     <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_d"/>
@@ -290,20 +238,29 @@
       http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
     -->
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
-      spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
-      geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees" />
+               distErrPct="0.025"
+               maxDistErr="0.000009"
+               units="degrees"
+            />
+
+    <fieldType name="location_jts" class="solr.SpatialRecursivePrefixTreeFieldType"
+               spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+               distErrPct="0.025"
+               maxDistErr="0.000009"
+               units="degrees"
+            />
   </types>
   
   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
-  <copyField source="*_t" dest="text" maxChars="10000"/>
-  <copyField source="dc_coverage_sm" dest="text"/>
-  <copyField source="dc_identifier_s" dest="text"/>
-  <copyField source="dc_source_s" dest="text"/>
-  <copyField source="dc_subject_sm" dest="text"/>
-  <copyField source="layer_collection_s" dest="text"/>
-  <copyField source="layer_name_s" dest="text"/>
-  <copyField source="layer_type_s" dest="text"/>
+  <copyField source="*_t"                 dest="text" maxChars="10000"/>
+  <copyField source="dc_coverage_sm"      dest="text"/>
+  <copyField source="dc_identifier_s"     dest="text"/>
+  <copyField source="dc_rights_s"         dest="text"/>
+  <copyField source="dc_source_s"         dest="text"/>
+  <copyField source="dc_subject_sm"       dest="text"/>
+  <copyField source="layer_collection_s"  dest="text"/>
+  <copyField source="layer_type_s"        dest="text"/>
 </schema>
 
