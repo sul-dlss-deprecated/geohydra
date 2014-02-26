@@ -83,6 +83,7 @@
     <dynamicField name="*_latlon" type="location"     stored="true" indexed="true"/>
     <dynamicField name="*_pt"     type="location_rpt" stored="true" indexed="true"/>
     <dynamicField name="*_bbox"   type="location_rpt" stored="true" indexed="true"/>
+    <dynamicField name="*_geom"   type="string"       stored="true" indexed="true"/>
   </fields>
 
   <types>
