@@ -95,12 +95,13 @@
   <requestHandler name="/query" class="solr.SearchHandler">
     <lst name="defaults">
       <int name="rows">10</int>
+      <str name="wt">json</str>
+      <str name="indent">2</str>
       <str name="defType">edismax</str>
       <str name="df">text</str>
-      <str name="echoParams">explicit</str>
+      <str name="echoParams">all</str>
       <str name="fl">*,score</str>
-      <str name="mm">100%</str>
-      <str name="q.alt">*:*</str>
+      <str name="sort">score desc, dc_title_s asc</str>
       <str name="qf">
         text^1
         dc_description_t^2
