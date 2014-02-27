@@ -65,6 +65,7 @@
     <dynamicField name="*_url"  type="string"  stored="true"  indexed="false"/>
     <dynamicField name="rnd_*"  type="random"  stored="false" indexed="true" />
     <dynamicField name="*_blob" type="binary"  stored="true"  indexed="false"/>
+    <dynamicField name="*_sort" type="text_sort" stored="false" indexed="true" multiValued="false"/>
 
     <!-- Spatial field types:
     
@@ -227,6 +228,16 @@
       </analyzer>
     </fieldType>
     
+    <fieldType name="text_sort" class="solr.TextField" sortMissingLast="true" omitNorms="true">
+      <analyzer>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.TrimFilterFactory" />
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt" />
+        <filter class="solr.PatternReplaceFilterFactory" pattern="([^a-z0-9 ])" replacement="" replace="all"
+        />
+      </analyzer>
+    </fieldType>
 
     <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
     <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_d"/>
@@ -254,5 +265,7 @@
   <copyField source="dc_rights_s"         dest="text"/>
   <copyField source="layer_collection_s"  dest="text"/>
   <copyField source="layer_type_s"        dest="text"/>
+  
+  <copyField source="dc_title_t" dest="dc_title_sort" maxChars="1000"/>
 </schema>
 
