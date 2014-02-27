@@ -9,6 +9,7 @@
   </process>  
   <process name="load-raster" sequence="3">
     <prereq>start-delivery-pipeline</prereq>
+    <prereq>load-postgis</prereq><!-- XXX: force linear -->
     <label>Load raster into GeoTIFF data store</label>
   </process>  
   <process name="load-geoserver" sequence="4">

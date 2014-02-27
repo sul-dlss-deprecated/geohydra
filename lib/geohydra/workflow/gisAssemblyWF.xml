@@ -17,6 +17,7 @@
   </process>
   <process name="wrangle-data" sequence="5">
     <prereq>register-druid</prereq>
+    <prereq>approve-metadata</prereq><!-- XXX: force linear -->
     <label>Wrangle the data into the digital work</label>
   </process>
   <process name="approve-data" sequence="6">
@@ -37,10 +38,12 @@
   </process>  
   <process name="extract-thumbnail" sequence="10">
     <prereq>approve-metadata</prereq>
+    <prereq>finish-data</prereq><!-- XXX: force linear -->
     <label>Extract thumbnail preview</label>
   </process>
   <process name="extract-iso19139" sequence="11">
     <prereq>approve-metadata</prereq>
+    <prereq>extract-thumbnail</prereq><!-- XXX: force linear -->
     <label>Extract ISO 19139 metadata from ArcCatalog</label>
   </process>
   <process name="generate-mods" sequence="12">
@@ -72,6 +75,7 @@
   </process>
   <process name="start-delivery-workflow" sequence="18">
     <prereq>finish-gis-assembly-pipeline</prereq>
+    <prereq>start-assembly-workflow</prereq><!-- XXX: force linear -->
     <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
   </process>
 </workflow-def>

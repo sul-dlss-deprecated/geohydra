@@ -13,6 +13,7 @@
   </process>  
   <process name="generate-geoblacklight" sequence="4">
     <prereq>start-gis-discovery-pipeline</prereq>
+    <prereq>load-ogp</prereq><!-- XXX: force linear -->
     <label>Generate Solr document for GeoBlacklight</label>
   </process>
   <process name="load-geoblacklight" sequence="5">
