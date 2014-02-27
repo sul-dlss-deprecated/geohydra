@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
-
+#
+# Usage: validate_ogp [output.json]
+#
+#  Requires data/*.json as input and output to valid.json
+#
 require 'awesome_print'
 require 'json'
 require 'uri'
