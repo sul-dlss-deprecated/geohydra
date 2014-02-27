@@ -1,10 +1,17 @@
 #!/usr/bin/env ruby
+#
+# Usage: transform_ogp output.json
+#
+#  Reads valid*.json in current directory
+#
 
 require 'awesome_print'
 require 'json'
 require 'uri'
 require 'date'
 
+# Transforms an OGP schema into GeoBlacklight. Requires input of a JSON array
+# of OGP hashs.
 class TransformOgp
   def initialize(fn)
     @output = File.open(fn, 'wb')
@@ -13,6 +20,8 @@ class TransformOgp
     self.close
   end
   
+  # @param [String|Array] s the URI to clean up
+  # @return [String] a normalized URI
   def clean_uri(s)
     unless s.nil? or s.empty?
       return (s.is_a?(Array) ? URI(s.first) : URI(s)).to_s
@@ -20,6 +29,8 @@ class TransformOgp
     ''
   end
 
+  # @param [String] fn filename of JSON array of OGP hash objects
+  # @return [Hash] stats about :accepted vs. :rejected records
   def transform_file(fn)
     stats = { :accepted => 0, :rejected => 0 }
     puts "Parsing #{fn}"
@@ -38,6 +49,8 @@ class TransformOgp
     stats
   end
 
+  # Transforms a single OGP record into a GeoBlacklight record
+  # @param [Hash] layer an OGP hash for a given layer
   def transform(layer)
     id = layer['LayerId'].to_s.strip
     puts "Tranforming #{id}"
@@ -62,52 +75,68 @@ class TransformOgp
     end
     uuid = prefix + URI.encode(id)
     
+    # Parse out the Location to get the WMS/WFS/WCS URLs
     raise ArgumentError, "ERROR: #{id} no location" if layer['Location'].nil? or layer['Location'].empty?
     location = JSON::parse(layer['Location'])
     raise ArgumentError, "ERROR: #{id} has malformed location" unless location.is_a? Hash
     
+    # Parse out the bounding box
     s = layer['MinY'].to_f
     w = layer['MinX'].to_f
     n = layer['MaxY'].to_f
     e = layer['MaxX'].to_f
     
+    # Parse out the ContentDate date/time
     dt = DateTime.rfc3339(layer['ContentDate'])
     
-    purl = location['purl']
-    if purl.is_a? Array
-      purl = purl.first
-    end
-    if purl.nil? and uuid =~ /^http/
-      purl = uuid
+    # Parse out the PURL and other metadata for Stanford
+    if layer['Institution'] == 'Stanford'
+      access = 'Restricted' # always restricted, XXX: fake data if really Public
+      collection = 'My Collection' # XXX: need to parse out of MODS
+      preview_jpg = "https://stacks.stanford.edu/file/druid:#{id}/preview.jpg"
+      purl = location['purl']
+      if purl.is_a? Array
+        purl = purl.first
+      end
+      if purl.nil? and uuid =~ /^http/
+        purl = uuid
+      end
+    else
+      access = layer['Access']
+      collection = ''
+      preview_jpg = ''
+      purl = ''      
     end
     
+    # Make the conversion from OGP to GeoBlacklight
+    #
     # @see http://dublincore.org/documents/dcmi-terms/
     # @see http://wiki.dublincore.org/index.php/User_Guide/Creating_Metadata
     # @see http://www.ietf.org/rfc/rfc5013.txt
     new_layer = {
       :uuid               => uuid,
-      :dc_coverage_sm     => splitter(layer['PlaceKeywords']),
-      :dc_creator_t       => '',#layer['Publisher'], # XXX: fake data
+      :dc_coverage_sm     => string2array(layer['PlaceKeywords']),
+      :dc_creator_t       => '', # not used
       :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
       :dc_description_t   => layer['Abstract'],
       :dc_format_s        => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
       :dc_identifier_s    => uuid,
       :dc_language_s      => 'en', # XXX: fake data
       :dc_publisher_t     => layer['Publisher'],
-      :dc_relation_url    => purl.nil?? '' : ('IsReferencedBy ' + clean_uri(purl)),
-      :dc_rights_s        => (layer['Institution'] == 'Stanford' ? 'Restricted' : layer['Access']), # XXX: fake data for Stanford -- always restricted
+      :dc_relation_url    => purl.empty?? '' : ('IsReferencedBy ' + clean_uri(purl)),
+      :dc_rights_s        => access,
       :dc_source_s        => layer['Institution'],
-      :dc_subject_sm      => splitter(layer['ThemeKeywords']),
+      :dc_subject_sm      => string2array(layer['ThemeKeywords']),
       :dc_title_t         => layer['LayerDisplayName'],
       :dc_type_s          => 'Dataset',
       :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
-      :layer_collection_s => (layer['Institution'] == 'Stanford' ? 'My Collection' : ''), # XXX: fake data
+      :layer_collection_s => collection,
       :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
-      :layer_metadata_url => (layer['Institution'] == 'Stanford' ? purl : ''),
+      :layer_metadata_url => purl,
       :layer_ne_latlon    => "#{n},#{e}",
       :layer_ne_pt        => "#{e} #{n}",
-      :layer_preview_image_url  => (layer['Institution'] == 'Stanford' ? "https://stacks.stanford.edu/file/druid:#{id}/preview.jpg" : ''),
+      :layer_preview_image_url  => preview_jpg,
       :layer_srs_s        => 'EPSG:4326', # XXX: fake data
       :layer_sw_latlon    => "#{s},#{w}",
       :layer_sw_pt        => "#{w} #{s}",
@@ -128,6 +157,7 @@ class TransformOgp
       :ogp_workspace_s    => layer['WorkspaceName']
     }
 
+    # For the layer URLs, ensure that they are clean
     %w{layer_wms_url layer_wfs_url layer_wcs_url layer_metadata_url layer_preview_image_url}.each do |k|
       k = k.to_sym
       if new_layer[k].is_a? Array and not new_layer[k].first.nil?
@@ -137,10 +167,12 @@ class TransformOgp
       end
     end
 
+    # Remove any fields that are blank
     new_layer.each do |k, v|
       new_layer.delete(k) if v.nil? or (v.respond_to?(:empty?) and v.empty?)
     end
 
+    # Write the JSON record for the GeoBlacklight layer
     @output.write JSON::pretty_generate(new_layer)
     @output.write "\n,\n"
   end
@@ -152,14 +184,17 @@ class TransformOgp
   
   private
   
-  def splitter(s)
-    a = s.split(/\s*;\s*/)
+  # @param [String] s has semi-colon delimited array
+  # @return [Array] results as array
+  def string2array(s)
+    a = s.split(/\s*[;,]\s*/)
     if a.size == 1
       a = s.split(a.first)
     end
     a
   end
 
+  # Ensure that the WMS/WFS/WCS location values are as expected
   def validate_location(id, location)
     begin
       x = JSON::parse(location)
@@ -206,6 +241,7 @@ end
 
 
 # __MAIN__
+#
 TransformOgp.new(ARGV[0].nil?? 'transformed.json' : ARGV[0]) do |ogp|
   stats = { :accepted => 0, :rejected => 0 }
   Dir.glob('valid*.json') do |fn|
@@ -215,3 +251,35 @@ TransformOgp.new(ARGV[0].nil?? 'transformed.json' : ARGV[0]) do |ogp|
   end
   ap({:statistics => stats})
 end
+
+# example input data
+__END__
+[
+{
+  "Abstract": "The boundaries of each supervisorial district in Sonoma County based on 2000 census. Redrawn in 2001 using Autobound.",
+  "Access": "Public",
+  "Area": 0.9463444815860053,
+  "Availability": "Online",
+  "CenterX": -122.942159,
+  "CenterY": 38.4580755,
+  "ContentDate": "2000-01-01T01:01:01Z",
+  "DataType": "Polygon",
+  "FgdcText": "...",
+  "GeoReferenced": true,
+  "HalfHeight": 0.39885650000000084,
+  "HalfWidth": 0.593161000000002,
+  "Institution": "Berkeley",
+  "LayerDisplayName": "SCGISDB2_BASE_ADM_SUPERVISOR",
+  "LayerId": "28722/bk0012h5s52",
+  "Location": "{\"wms\":[\"http://gis.lib.berkeley.edu:8080/geoserver/wms\"],\"tilecache\":[\"http://gis.lib.berkeley.edu:8080/geoserver/gwc/service/wms\"],\"download\":\"\",\"wfs\":[\"http://gis.lib.berkeley.edu:8080/geoserver/wfs\"]}",
+  "MaxX": -122.348998,
+  "MaxY": 38.856932,
+  "MinX": -123.53532,
+  "MinY": 38.059219,
+  "Name": "ADM_SUPERVISOR",
+  "PlaceKeywords": "Sonoma County County of Sonoma Sonoma California Bay Area",
+  "Publisher": "UC Berkeley Libraries",
+  "ThemeKeywords": "Supervisorial districts 1st District 2nd District 3rd District 4th District 5th District",
+  "WorkspaceName": "UCB"
+}
+]
