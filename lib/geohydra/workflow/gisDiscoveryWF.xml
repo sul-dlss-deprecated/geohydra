@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<workflow-def id="gisDiscoveryWF" repository="dor">
+  <process name="start-gis-discovery-pipeline" sequence="1" status="completed">
+    <label>Initiate GIS discovery pipeline for the object</label>
+  </process>  
+  <process name="generate-ogp" sequence="2">
+    <prereq>start-gis-discovery-pipeline</prereq>
+    <label>Generate Solr document for OpenGeoPortal</label>
+  </process>
+  <process name="load-ogp" sequence="3">
+    <prereq>generate-ogp</prereq>
+    <label>Load Solr document into OpenGeoPortal</label>
+  </process>  
+  <process name="generate-geoblacklight" sequence="4">
+    <prereq>start-gis-discovery-pipeline</prereq>
+    <label>Generate Solr document for GeoBlacklight</label>
+  </process>
+  <process name="load-geoblacklight" sequence="5">
+    <prereq>generate-geoblacklight</prereq>
+    <label>Load Solr document into GeoBlacklight</label>
+  </process>
+  <process name="finish-gis-discovery-pipeline" sequence="6">
+    <prereq>load-ogp</prereq>
+    <prereq>load-geoblacklight</prereq>
+    <label>Finalize GIS discovery pipeline for the object</label>
+  </process> 
+</workflow-def>

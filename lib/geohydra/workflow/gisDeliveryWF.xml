@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<workflow-def id="gisDeliveryWF" repository="dor">
+  <process name="start-gis-delivery-pipeline" sequence="1" status="completed">
+    <label>Initiate delivery pipeline for the object</label>
+  </process>  
+  <process name="load-postgis" sequence="2">
+    <prereq>start-gis-delivery-pipeline</prereq>
+    <label>Load vector data into PostGIS database</label>
+  </process>  
+  <process name="load-raster" sequence="3">
+    <prereq>start-delivery-pipeline</prereq>
+    <label>Load raster into GeoTIFF data store</label>
+  </process>  
+  <process name="load-geoserver" sequence="4">
+    <prereq>load-postgis</prereq>
+    <prereq>load-raster</prereq>
+    <label>Load data into GeoServer</label>
+  </process>
+  <process name="load-geowebcache" sequence="5">
+    <prereq>load-geoserver</prereq>
+    <label>Load data into GeoWebCache</label>
+  </process>
+  <process name="finish-gis-delivery-pipeline" sequence="6">
+    <prereq>load-geowebcache</prereq>
+    <label>Finalize delivery pipeline for the object</label>
+  </process> 
+  <process name="start-gis-discovery-workflow" sequence="7">
+    <prereq>finish-gis-delivery-pipeline</prereq>
+    <label>Kickstart GIS discovery workflow with gisDiscoveryWF</label>
+  </process> 
+</workflow-def>

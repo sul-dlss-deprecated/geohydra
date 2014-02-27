@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<workflow-def id="gisAssemblyWF" repository="dor">
+  <process name="start-gis-assembly-pipeline" sequence="1" status="completed">
+    <label>Initiate assembly pipeline for the object</label>
+  </process>
+  <process name="register-druid" sequence="2">
+    <prereq>start-gis-assembly-pipeline</prereq>
+    <label>Ensure proper registration of druid, source ID, and label</label>
+  </process>
+  <process name="author-metadata" sequence="3">
+    <prereq>register-druid</prereq>
+    <label>Author metadata using ArcCatalog</label>
+  </process>
+  <process name="approve-metadata" sequence="4">
+    <prereq>author-metadata</prereq>
+    <label>Approve metadata quality and release for workflow pipeline</label>
+  </process>
+  <process name="wrangle-data" sequence="5">
+    <prereq>register-druid</prereq>
+    <label>Wrangle the data into the digital work</label>
+  </process>
+  <process name="approve-data" sequence="6">
+    <prereq>wrangle-data</prereq>
+    <label>Approve data quality for digital work and release for workflow pipeline</label>
+  </process>
+  <process name="normalize-data" sequence="7">
+    <prereq>approve-data</prereq>
+    <label>Reproject the data into common SRS projection and/or file format</label>
+  </process>  
+  <process name="package-data" sequence="8">
+    <prereq>normalize-data</prereq>
+    <label>Package the digital work and derivative data files</label>
+  </process>
+  <process name="finish-data" sequence="9">
+    <prereq>package-data</prereq>
+    <label>Finalize the data preparation</label>
+  </process>  
+  <process name="extract-thumbnail" sequence="10">
+    <prereq>approve-metadata</prereq>
+    <label>Extract thumbnail preview</label>
+  </process>
+  <process name="extract-iso19139" sequence="11">
+    <prereq>approve-metadata</prereq>
+    <label>Extract ISO 19139 metadata from ArcCatalog</label>
+  </process>
+  <process name="generate-mods" sequence="12">
+    <prereq>extract-iso19139</prereq>
+    <prereq>finish-data</prereq>
+    <label>Convert ISO 19139 into MODS</label>
+  </process>
+  <process name="assign-placenames" sequence="13">
+    <prereq>generate-mods</prereq>
+    <label>Insert linked data into MODS record from gazetteer</label>
+  </process>
+  <process name="finish-metadata" sequence="14">
+    <prereq>extract-thumbnail</prereq>
+    <prereq>assign-placenames</prereq>
+    <label>Finalize the data preparation</label>
+  </process>  
+  <process name="generate-content-metadata" sequence="15">
+    <prereq>finish-metadata</prereq>
+    <prereq>finish-data</prereq>
+    <label>Generate contentMetadata manifest</label>
+  </process>  
+  <process name="finish-gis-assembly-pipeline" sequence="16">
+    <prereq>generate-content-metadata</prereq>
+    <label>Finalize assembly pipeline to prepare for assembly/delivery/discovery</label>
+  </process>
+  <process name="start-assembly-workflow" sequence="17">
+    <prereq>finish-gis-assembly-pipeline</prereq>
+    <label>Kickstart the core assembly workflow at assemblyWF</label>
+  </process>
+  <process name="start-delivery-workflow" sequence="18">
+    <prereq>finish-gis-assembly-pipeline</prereq>
+    <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
+  </process>
+</workflow-def>
