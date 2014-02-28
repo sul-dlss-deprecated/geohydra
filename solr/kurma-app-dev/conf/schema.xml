@@ -86,7 +86,7 @@
     <dynamicField name="*_latlon" type="location"     stored="true" indexed="true"/>
     <dynamicField name="*_pt"     type="location_rpt" stored="true" indexed="true"/>
     <dynamicField name="*_bbox"   type="location_rpt" stored="true" indexed="true"/>
-    <dynamicField name="*_geom"   type="string"       stored="true" indexed="true"/>
+    <dynamicField name="*_geom"   type="location_jts" stored="true" indexed="true"/>
   </fields>
 
   <types>
@@ -254,6 +254,13 @@
                units="degrees"
             />
 
+    <fieldType name="location_jts" class="solr.SpatialRecursivePrefixTreeFieldType"
+               spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+               distErrPct="0.025"
+               maxDistErr="0.000009"
+               units="degrees"
+            />
+
   </types>
   
   <!-- core text search -->
@@ -276,5 +283,11 @@
   <copyField source="dc_source_s"        dest="dc_source_ti"        maxChars="100"/>
   <copyField source="layer_collection_s" dest="layer_collection_ti" maxChars="1000"/>
   <copyField source="layer_type_s"       dest="layer_type_ti"       maxChars="100"/>
+  
+  <!-- for sorting -->
+  <copyField source="dc_title_t"         dest="dc_title_sort"/>
+  <copyField source="dc_identifier_s"    dest="dc_identifier_sort"/>
+  <copyField source="layer_collection_s" dest="layer_collection_sort"/>
+  
 </schema>
 
