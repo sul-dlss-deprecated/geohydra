@@ -189,7 +189,7 @@ class TransformOgp
   def string2array(s)
     a = s.split(/\s*[;,]\s*/)
     if a.size == 1
-      a = s.split(a.first)
+      a = a.first.to_s.split
     end
     a
   end
