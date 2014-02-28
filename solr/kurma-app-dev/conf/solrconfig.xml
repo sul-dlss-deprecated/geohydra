@@ -90,9 +90,9 @@
     <httpCaching never304="true"/>
    </requestDispatcher>
 
-  <requestHandler name="/select" class="solr.SearchHandler"/>
+  <requestHandler name="/search" class="solr.SearchHandler"/>
 
-  <requestHandler name="/search" class="solr.SearchHandler">
+  <requestHandler name="/select" class="solr.SearchHandler">
     <lst name="defaults">
       <int name="rows">10</int>
       <str name="wt">json</str>
@@ -101,25 +101,27 @@
       <str name="df">text</str>
       <str name="echoParams">all</str>
       <str name="fl">*,score</str>
-      <str name="sort">score desc, dc_title_sort asc</str>
+      <str name="sort">score desc, dc_title_t asc</str>
       <str name="qf">
         text^1
         dc_description_t^2
-        dc_publisher_t^3
-        layer_collection_s^5
-        dc_subject_sm^5
-        dc_coverage_sm^5
-        dc_title_t^8
-        dc_source_s^10
-        dc_rights_s^10
-        layer_type_s^10
-        dc_identifier_s^20
+        dc_publisher_ti^3
+        layer_collection_t^5
+        dc_subject_tmi^5
+        dc_coverage_tmi^5
+        dc_title_t^10
+        dc_source_ti^20
+        dc_rights_ti^20
+        layer_type_ti^20
+        dc_identifier_s^100
       </str>
       <bool name="facet">true</bool>
       <int name="facet.mincount">1</int>
       <int name="facet.limit">10</int>
       <str name="facet.field">dc_coverage_sm</str>
+      <str name="facet.field">dc_format_s</str>
       <str name="facet.field">dc_language_s</str>
+      <str name="facet.field">dc_publisher_s</str>
       <str name="facet.field">dc_rights_s</str>
       <str name="facet.field">dc_source_s</str>
       <str name="facet.field">dc_subject_sm</str>
