@@ -116,13 +116,13 @@ class TransformOgp
     new_layer = {
       :uuid               => uuid,
       :dc_coverage_sm     => string2array(layer['PlaceKeywords']),
-      :dc_creator_t       => '', # not used
+      # :dc_creator_s       => '', # not used
       :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
       :dc_description_t   => layer['Abstract'],
       :dc_format_s        => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
       :dc_identifier_s    => uuid,
       :dc_language_s      => 'en', # XXX: fake data
-      :dc_publisher_t     => layer['Publisher'],
+      :dc_publisher_s     => layer['Publisher'],
       :dc_relation_url    => purl.empty?? '' : ('IsReferencedBy ' + clean_uri(purl)),
       :dc_rights_s        => access,
       :dc_source_s        => layer['Institution'],
