@@ -187,7 +187,7 @@ class TransformOgp
   # @param [String] s has semi-colon delimited array
   # @return [Array] results as array
   def string2array(s)
-    a = s.split(/\s*[;,]\s*/)
+    a = s.split(/\s*[;,:>]\s*/)
     if a.size == 1
       a = a.first.to_s.split
     end
