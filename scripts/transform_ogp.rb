@@ -191,7 +191,7 @@ class TransformOgp
     if a.size == 1
       a = a.first.to_s.split
     end
-    a
+    a.uniq
   end
 
   # Ensure that the WMS/WFS/WCS location values are as expected
