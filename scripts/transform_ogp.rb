@@ -13,30 +13,7 @@ require 'date'
 # Transforms an OGP schema into GeoBlacklight. Requires input of a JSON array
 # of OGP hashs.
 class TransformOgp
-  KNOWN_KEYWORDS = [
-    'United States',
-    'North America',
-    'North Pacific Ocean',
-    'North Atlantic Ocean',
-    'South Atlantic Ocean',
-    'Gulf of Mexico',
-    'San Francisco Bay Area',
-    'San Francisco',
-    'Indian Ocean',
-    'Pacific Ocean',
-    'Atlantic Ocean',
-    'Soviet Union',
-    'Antarctic Ocean',
-    'New York',
-    'New Mexico',
-    'Latin America',
-    'New Hampshire',
-    'New England',
-    'United Arab Emirates',
-    'New York (State)',
-    'Great Lakes Region (North America)',
-    'British Columbia'
-  ]
+
   def initialize(fn)
     @output = File.open(fn, 'wb')
     @output.write "[\n"
@@ -129,7 +106,9 @@ class TransformOgp
       access = layer['Access']
       collection = ''
       preview_jpg = ''
-      purl = ''      
+      purl = ''
+      layer['ThemeKeywords'] = '' # not properly delimited
+      layer['PlaceKeywords'] = '' # not properly delimited
     end
     
     # Make the conversion from OGP to GeoBlacklight
@@ -160,6 +139,7 @@ class TransformOgp
       :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
       :layer_collection_s => collection,
       :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      :layer_slug_s       => to_slug(id, layer),
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_metadata_url => purl,
       :layer_ne_latlon    => "#{n},#{e}",
@@ -209,19 +189,43 @@ class TransformOgp
     @output.write "\n {} \n]\n"
     @output.close
   end
-  
-  private
-  
+    
   # @param [String] s has semi-colon/comma/gt delimited array
   # @return [Array] results as array
   def string2array(s)
-    if KNOWN_KEYWORDS.include?(s)
-      s
-    elsif s =~ /[;,>]/
+    if s =~ /[;,>]/
       s.split(/\s*[;,>]\s*/).uniq
+    elsif s.size > 0
+      [s]
     else
-      s.split.first # only extract first word
+      nil
     end
+  end
+  
+  @@slugs = {}
+  def to_slug(id, layer)
+    # strip out schema and usernames
+    name = layer['Name'].sub('SDE_DATA.', '').sub('SDE.', '').sub('SDE2.', '').sub('GISPORTAL.GISOWNER01.', '').sub('GISDATA.', '').sub('MORIS.', '')
+    unless name.size > 1 
+      # use first word of title is empty name
+      name = layer['LayerDisplayName'].split.first 
+    end
+    slug = layer['Institution'] + '-' + name
+    
+    # slugs should only have a-z, A-Z, 0-9, and -
+    slug.gsub!(/[^a-zA-Z0-9\-]/, '-')
+    slug.gsub!(/[\-]+/, '-')
+    
+    # only lowercase
+    slug.downcase!
+    
+    # ensure slugs are unique for this pass
+    if @@slugs.include?(slug)
+      slug += '-' + sprintf("%06d", Random.rand(999999))
+    end
+    @@slugs[slug] = true
+
+    slug
   end
 
   # Ensure that the WMS/WFS/WCS location values are as expected
