@@ -13,6 +13,30 @@ require 'date'
 # Transforms an OGP schema into GeoBlacklight. Requires input of a JSON array
 # of OGP hashs.
 class TransformOgp
+  KNOWN_KEYWORDS = [
+    'United States',
+    'North America',
+    'North Pacific Ocean',
+    'North Atlantic Ocean',
+    'South Atlantic Ocean',
+    'Gulf of Mexico',
+    'San Francisco Bay Area',
+    'San Francisco',
+    'Indian Ocean',
+    'Pacific Ocean',
+    'Atlantic Ocean',
+    'Soviet Union',
+    'Antarctic Ocean',
+    'New York',
+    'New Mexico',
+    'Latin America',
+    'New Hampshire',
+    'New England',
+    'United Arab Emirates',
+    'New York (State)',
+    'Great Lakes Region (North America)',
+    'British Columbia'
+  ]
   def initialize(fn)
     @output = File.open(fn, 'wb')
     @output.write "[\n"
@@ -191,7 +215,9 @@ class TransformOgp
   # @param [String] s has semi-colon/comma/gt delimited array
   # @return [Array] results as array
   def string2array(s)
-    if s =~ /[;,>]/
+    if KNOWN_KEYWORDS.include?(s)
+      s
+    elsif s =~ /[;,>]/
       s.split(/\s*[;,>]\s*/).uniq
     else
       s.split.first # only extract first word
