@@ -119,9 +119,13 @@ class TransformOgp
       # :dc_creator_s       => '', # not used
       :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
       :dc_description_t   => layer['Abstract'],
-      :dc_format_s        => (layer['DataType'] == 'Raster' ? 'image/tiff' : 'application/x-esri-shapefile'), # XXX: fake data
+      :dc_format_s        => (
+        layer['DataType'] == 'Raster' ? 
+        'GeoTIFF' : # 'image/tiff' : 
+        'Shapefile' # 'application/x-esri-shapefile'
+      ), # XXX: fake data
       :dc_identifier_s    => uuid,
-      :dc_language_s      => 'en', # XXX: fake data
+      :dc_language_s      => 'English', # 'en', # XXX: fake data
       :dc_publisher_s     => layer['Publisher'],
       :dc_relation_url    => purl.empty?? '' : ('IsReferencedBy ' + clean_uri(purl)),
       :dc_rights_s        => access,
@@ -140,7 +144,7 @@ class TransformOgp
       :layer_srs_s        => 'EPSG:4326', # XXX: fake data
       :layer_sw_latlon    => "#{s},#{w}",
       :layer_sw_pt        => "#{w} #{s}",
-      :layer_type_s       => layer['DataType'],
+      :layer_type_s       => layer['DataType'].to_s.capitalize,
       :layer_wcs_url      => location['wcs'],
       :layer_wfs_url      => location['wfs'],
       :layer_wms_url      => location['wms'],
@@ -187,7 +191,11 @@ class TransformOgp
   # @param [String] s has semi-colon/comma/gt delimited array
   # @return [Array] results as array
   def string2array(s)
-    s.split(/\s*[;,>]\s+/).uniq
+    if s =~ /[;,>]/
+      s.split(/\s*[;,>]\s*/).uniq
+    else
+      s.split.first # only extract first word
+    end
   end
 
   # Ensure that the WMS/WFS/WCS location values are as expected
