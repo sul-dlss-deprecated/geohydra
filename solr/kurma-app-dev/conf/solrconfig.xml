@@ -65,7 +65,7 @@
     <listener event="newSearcher" class="solr.QuerySenderListener">
       <arr name="queries">
        <lst><str name="q">stanford</str></lst>
-       <lst><str name="q">harvard</str></lst>
+       <lst><str name="q">polygon</str></lst>
       </arr>
     </listener>
     <listener event="firstSearcher" class="solr.QuerySenderListener">
@@ -100,14 +100,15 @@
         text^1
         dc_description_t^2
         dc_publisher_ti^3
-        layer_collection_t^5
+        layer_collection_t^4
         dc_subject_tmi^5
         dc_coverage_tmi^5
-        dc_title_t^10
-        dc_source_ti^20
-        dc_rights_ti^20
-        layer_type_ti^20
-        dc_identifier_s^100
+        dc_title_t^6
+        dc_source_ti^7
+        dc_rights_ti^8
+        layer_type_ti^9
+        layer_slug_ti^10
+        dc_identifier_s^10
       </str>
       <bool name="facet">true</bool>
       <int name="facet.mincount">1</int>

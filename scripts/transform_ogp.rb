@@ -111,6 +111,8 @@ class TransformOgp
       layer['PlaceKeywords'] = '' # not properly delimited
     end
     
+    slug = to_slug(id, layer)
+    
     # Make the conversion from OGP to GeoBlacklight
     #
     # @see http://dublincore.org/documents/dcmi-terms/
@@ -139,7 +141,7 @@ class TransformOgp
       :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
       :layer_collection_s => collection,
       :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
-      :layer_slug_s       => to_slug(id, layer),
+      :layer_slug_s       => slug,
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_metadata_url => purl,
       :layer_ne_latlon    => "#{n},#{e}",
@@ -152,17 +154,17 @@ class TransformOgp
       :layer_wcs_url      => location['wcs'],
       :layer_wfs_url      => location['wfs'],
       :layer_wms_url      => location['wms'],
-      :layer_year_i       => dt.year, # XXX: migrate to copyField
-      :ogp_area_f         => layer['Area'],
-      :ogp_center_x_f     => layer['CenterX'],
-      :ogp_center_y_f     => layer['CenterY'],
-      :ogp_georeferenced_b   => (layer['GeoReferenced'].to_s.downcase == 'true'),
-      :ogp_halfheight_f   => layer['HalfHeight'],
-      :ogp_halfwidth_f    => layer['HalfWidth'],
-      :ogp_layer_id_s     => layer['LayerId'],
-      :ogp_name_s         => layer['Name'],
-      :ogp_location_s     => layer['Location'],
-      :ogp_workspace_s    => layer['WorkspaceName']
+      :layer_year_i       => dt.year#, # XXX: migrate to copyField
+      # :ogp_area_f         => layer['Area'],
+      # :ogp_center_x_f     => layer['CenterX'],
+      # :ogp_center_y_f     => layer['CenterY'],
+      # :ogp_georeferenced_b   => (layer['GeoReferenced'].to_s.downcase == 'true'),
+      # :ogp_halfheight_f   => layer['HalfHeight'],
+      # :ogp_halfwidth_f    => layer['HalfWidth'],
+      # :ogp_layer_id_s     => layer['LayerId'],
+      # :ogp_name_s         => layer['Name'],
+      # :ogp_location_s     => layer['Location'],
+      # :ogp_workspace_s    => layer['WorkspaceName']
     }
 
     # For the layer URLs, ensure that they are clean
