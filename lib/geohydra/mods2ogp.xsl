@@ -128,9 +128,7 @@
         <field name="PlaceKeywords">
           <xsl:for-each select="mods:subject/mods:geographic">
             <xsl:value-of select="text()"/>
-            <xsl:if test="position()!=last()">
-              <xsl:text>; </xsl:text>
-            </xsl:if>
+            <xsl:text>; </xsl:text>
           </xsl:for-each>
         </field>
         <xsl:for-each select="mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope">
