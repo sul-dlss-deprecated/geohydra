@@ -20,8 +20,7 @@
      this file, see http://wiki.apache.org/solr/SolrConfigXml. 
 -->
 <config>
-
-  <luceneMatchVersion>LUCENE_43</luceneMatchVersion>
+  <luceneMatchVersion>4.6</luceneMatchVersion>
   <dataDir>${solr.data.dir:}</dataDir>
   <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}"/>
   <codecFactory class="solr.SchemaCodecFactory"/>
@@ -63,13 +62,10 @@
     <enableLazyFieldLoading>true</enableLazyFieldLoading>
     <queryResultWindowSize>20</queryResultWindowSize>
     <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
-
     <listener event="newSearcher" class="solr.QuerySenderListener">
       <arr name="queries">
-        <!--
-           <lst><str name="q">solr</str><str name="sort">price asc</str></lst>
-           <lst><str name="q">rocks</str><str name="sort">weight asc</str></lst>
-          -->
+       <lst><str name="q">stanford</str></lst>
+       <lst><str name="q">harvard</str></lst>
       </arr>
     </listener>
     <listener event="firstSearcher" class="solr.QuerySenderListener">
@@ -79,10 +75,8 @@
         </lst>
       </arr>
     </listener>
- 
     <useColdSearcher>false</useColdSearcher>
- 
-    <maxWarmingSearchers>1</maxWarmingSearchers>
+    <maxWarmingSearchers>2</maxWarmingSearchers>
   </query>
 
   <requestDispatcher handleSelect="false">
@@ -95,29 +89,33 @@
   <requestHandler name="/select" class="solr.SearchHandler">
     <lst name="defaults">
       <int name="rows">10</int>
+      <str name="wt">json</str>
+      <int name="indent">2</int>
       <str name="defType">edismax</str>
       <str name="df">text</str>
-      <str name="echoParams">explicit</str>
+      <str name="echoParams">all</str>
       <str name="fl">*,score</str>
-      <str name="q.alt">*:*</str>
+      <str name="sort">score desc, dc_title_sort asc</str>
       <str name="qf">
         text^1
         dc_description_t^2
-        dc_publisher_t^3
-        layer_collection_s^5
-        dc_subject_sm^5
-        dc_coverage_sm^5
-        dc_title_t^8
-        dc_source_s^10
-        dc_rights_s^10
-        layer_type_s^10
-        dc_identifier_s^20
+        dc_publisher_ti^3
+        layer_collection_t^5
+        dc_subject_tmi^5
+        dc_coverage_tmi^5
+        dc_title_t^10
+        dc_source_ti^20
+        dc_rights_ti^20
+        layer_type_ti^20
+        dc_identifier_s^100
       </str>
-      <str name="facet">true</str>
-      <str name="facet.mincount">1</str>
-      <str name="facet.limit">10</str>
+      <bool name="facet">true</bool>
+      <int name="facet.mincount">1</int>
+      <int name="facet.limit">10</int>
       <str name="facet.field">dc_coverage_sm</str>
+      <str name="facet.field">dc_format_s</str>
       <str name="facet.field">dc_language_s</str>
+      <str name="facet.field">dc_publisher_s</str>
       <str name="facet.field">dc_rights_s</str>
       <str name="facet.field">dc_source_s</str>
       <str name="facet.field">dc_subject_sm</str>
@@ -147,6 +145,10 @@
     <str name="healthcheckFile">server-enabled.txt</str>
   </requestHandler>
   
+  <requestHandler name="/analysis/field" 
+                  startup="lazy"
+                  class="solr.FieldAnalysisRequestHandler" />
+                  
   <!-- Legacy config for the admin interface -->
   <admin>
     <defaultQuery>*:*</defaultQuery>
