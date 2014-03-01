@@ -184,14 +184,10 @@ class TransformOgp
   
   private
   
-  # @param [String] s has semi-colon delimited array
+  # @param [String] s has semi-colon/comma/gt delimited array
   # @return [Array] results as array
   def string2array(s)
-    a = s.split(/\s*[;,>]\s*/)
-    if a.size == 1
-      a = a.first.to_s.split
-    end
-    a.uniq
+    s.split(/\s*[;,>]\s+/).uniq
   end
 
   # Ensure that the WMS/WFS/WCS location values are as expected
