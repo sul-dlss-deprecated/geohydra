@@ -132,7 +132,7 @@ class TransformOgp
       :dc_identifier_s    => uuid,
       :dc_language_s      => 'English', # 'en', # XXX: fake data
       :dc_publisher_s     => layer['Publisher'],
-      :dc_relation_url    => purl.empty?? '' : ('IsReferencedBy ' + clean_uri(purl)),
+      :dc_relation_url    => purl.empty?? '' : clean_uri(purl),
       :dc_rights_s        => access,
       :dc_source_s        => layer['Institution'],
       :dc_subject_sm      => string2array(layer['ThemeKeywords']),
@@ -143,9 +143,9 @@ class TransformOgp
       :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
       :layer_slug_s       => slug,
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
-      :layer_metadata_url => purl,
+      # :layer_info_url     => purl,
       :layer_ne_pt        => "#{n},#{e}",
-      :layer_preview_image_url  => preview_jpg,
+      # :layer_preview_image_url  => preview_jpg,
       :layer_srs_s        => 'EPSG:4326', # XXX: fake data
       :layer_sw_pt        => "#{s},#{w}",
       :layer_type_s       => layer['DataType'].to_s.capitalize,
