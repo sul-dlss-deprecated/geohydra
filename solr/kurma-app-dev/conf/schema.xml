@@ -47,13 +47,13 @@
            <field name="my_bbox">-117.312 83.1 -115.39 84.31</field> 
              as (W S E N)
 
-           <field name="my_bbox">POLYGON((1 8, 1 9, 2 9, 2 8, 1 8))</field> 
-             as WKT point, linestring, polygon
+           <field name="my_geom">POLYGON((1 8, 1 9, 2 9, 2 8, 1 8))</field> 
+             as WKT for point, linestring, polygon
 
       -->
-    <dynamicField name="*_pt"     type="location"     stored="true" indexed="true"/>
-    <dynamicField name="*_bbox"   type="location_rpt" stored="true" indexed="true"/>
-    <dynamicField name="*_geom"   type="location_jts" stored="true" indexed="true"/>
+    <dynamicField name="*_pt"   type="location"     stored="true" indexed="true"/>
+    <dynamicField name="*_bbox" type="location_rpt" stored="true" indexed="true"/>
+    <dynamicField name="*_geom" type="location_jts" stored="true" indexed="true"/>
   </fields>
 
   <types>
