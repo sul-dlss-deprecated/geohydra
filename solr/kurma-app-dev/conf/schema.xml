@@ -41,7 +41,7 @@
     <field name="uuid"      type="string" stored="true" indexed="true" required="true"/>
     
     <!-- core generated fields -->
-    <field name="text" type="text" stored="false" indexed="true" multiValued="true" 
+    <field name="text" type="text_en" stored="false" indexed="true" multiValued="true" 
                        termVectors="true" termPositions="true" termOffsets="true" 
                        required="true"/>
 
@@ -60,13 +60,13 @@
     <dynamicField name="*_blob" type="binary"  stored="true"  indexed="false"/>
 
     <!-- dynamic Text fields by suffix -->
-    <dynamicField name="*_t"    type="text" stored="true"  indexed="true" 
+    <dynamicField name="*_t"    type="text_en" stored="true"  indexed="true" 
                                 termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_tm"   type="text" stored="true"  indexed="true" multiValued="true" 
+    <dynamicField name="*_tm"   type="text_en" stored="true"  indexed="true" multiValued="true" 
                                 termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_ti"   type="text" stored="false" indexed="true" 
+    <dynamicField name="*_ti"   type="text_en" stored="false" indexed="true" 
                                 termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_tmi"  type="text" stored="false" indexed="true" multiValued="true" 
+    <dynamicField name="*_tmi"  type="text_en" stored="false" indexed="true" multiValued="true" 
                                 termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_sort" type="text_sort" stored="false" indexed="true" multiValued="false"/>
 
@@ -112,13 +112,13 @@
          (lang/stopwords_en.txt), down cases, protects words from protwords.txt, and
          finally applies Porter's stemming.  The query time analyzer
          also applies synonyms from synonyms.txt. -->
-    <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+    <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
         <tokenizer class="solr.StandardTokenizerFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
         <filter class="solr.LowerCaseFilterFactory"/>
-        <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
         <filter class="solr.EnglishPossessiveFilterFactory"/>
+        <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
         <filter class="solr.PorterStemFilterFactory"/>
       </analyzer>
       <analyzer type="query">
@@ -126,8 +126,8 @@
         <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
         <filter class="solr.LowerCaseFilterFactory"/>
-        <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
         <filter class="solr.EnglishPossessiveFilterFactory"/>
+        <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
         <filter class="solr.PorterStemFilterFactory"/>
       </analyzer>
     </fieldType>
