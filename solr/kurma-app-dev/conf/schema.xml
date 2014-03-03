@@ -51,9 +51,9 @@
              as WKT for point, linestring, polygon
 
       -->
-    <dynamicField name="*_pt"   type="location"     stored="true" indexed="true"/>
-    <dynamicField name="*_bbox" type="location_rpt" stored="true" indexed="true"/>
-    <dynamicField name="*_geom" type="location_jts" stored="true" indexed="true"/>
+    <dynamicField name="*_pt"     type="location"     stored="true" indexed="true"/>
+    <dynamicField name="*_bbox"   type="location_rpt" stored="true" indexed="true"/>
+    <dynamicField name="*_geom"   type="location_jts" stored="true" indexed="true"/>
   </fields>
 
   <types>

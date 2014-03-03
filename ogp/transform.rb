@@ -9,6 +9,7 @@ require 'awesome_print'
 require 'json'
 require 'uri'
 require 'date'
+require 'nokogiri'
 
 # Transforms an OGP schema into GeoBlacklight. Requires input of a JSON array
 # of OGP hashs.
@@ -17,6 +18,7 @@ class TransformOgp
   def initialize(fn)
     @output = File.open(fn, 'wb')
     @output.write "[\n"
+    @fgdcdir = 'fgdc'
     yield self
     self.close
   end
@@ -52,7 +54,7 @@ class TransformOgp
 
   # Transforms a single OGP record into a GeoBlacklight record
   # @param [Hash] layer an OGP hash for a given layer
-  def transform(layer)
+  def transform(layer, skip_fgdc = true)
     id = layer['LayerId'].to_s.strip
     puts "Tranforming #{id}"
 
@@ -144,12 +146,10 @@ class TransformOgp
       :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
       :layer_collection_s => collection,
       :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
-      :layer_ne_geom      => "POINT(#{e} #{n})",
-      :layer_sw_geom      => "POINT(#{w} #{s})",
+      :layer_ne_pt        => "#{n},#{e}",
+      :layer_sw_pt        => "#{s},#{w}",
       :layer_slug_s       => slug,
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
-      :layer_sw_pt        => "#{s},#{w}",
-      :layer_ne_pt        => "#{n},#{e}",
       :layer_srs_s        => 'EPSG:4326', # XXX: fake data
       :layer_geom_type_s  => layer_geom_type.capitalize,
       :layer_wcs_url      => location['wcs'],
@@ -186,6 +186,11 @@ class TransformOgp
     # Write the JSON record for the GeoBlacklight layer
     @output.write JSON::pretty_generate(new_layer)
     @output.write "\n,\n"
+    
+    unless skip_fgdc or layer['FgdcText'].nil? or layer['FgdcText'].empty?
+      xml = Nokogiri::XML(layer['FgdcText'])
+      xml.write_xml_to(File.open('fgdc' + '/' + slug + '.xml', 'wb'), :encoding => 'UTF-8', :indent => 2)
+    end
   end
 
   def close
