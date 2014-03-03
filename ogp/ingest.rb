@@ -22,9 +22,9 @@ class IngestOgp
       putc "."
       @solr.add doc
       n += 1
-      if n % 1000 == 0
+      if n % 100 == 0
         @solr.commit 
-        puts "\ncommit 1000 records, #{n} total\n"
+        puts "\ncommit 100 records, #{n} total\n"
       end
     end
     puts "\n#{n} records\n"

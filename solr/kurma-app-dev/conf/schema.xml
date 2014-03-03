@@ -136,7 +136,7 @@
   <copyField source="dc_source_s"        dest="text"/>
   <copyField source="dc_subject_sm"      dest="text"/>
   <copyField source="layer_collection_s" dest="text"/>
-  <copyField source="layer_type_s"       dest="text"/>
+  <copyField source="layer_geom_type_s"  dest="text"/>
   <copyField source="layer_slug_s"       dest="text"/>
 
   <!-- for scoring formula -->
@@ -146,7 +146,7 @@
   <copyField source="dc_rights_s"        dest="dc_rights_ti"        maxChars="100"/>
   <copyField source="dc_source_s"        dest="dc_source_ti"        maxChars="100"/>
   <copyField source="layer_collection_s" dest="layer_collection_ti" maxChars="1000"/>
-  <copyField source="layer_type_s"       dest="layer_type_ti"       maxChars="100"/>
+  <copyField source="layer_geom_type_s"  dest="layer_geom_type_ti"       maxChars="100"/>
   <copyField source="layer_slug_s"       dest="layer_slug_ti"       maxChars="100"/>
 
   <!-- for sorting text fields -->

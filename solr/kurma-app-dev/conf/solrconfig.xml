@@ -106,7 +106,7 @@
         dc_title_t^6
         dc_source_ti^7
         dc_rights_ti^8
-        layer_type_ti^9
+        layer_geom_type_ti^9
         layer_slug_ti^10
         dc_identifier_s^10
       </str>
@@ -122,7 +122,7 @@
       <str name="facet.field">dc_subject_sm</str>
       <str name="facet.field">layer_collection_s</str>
       <str name="facet.field">layer_srs_s</str>
-      <str name="facet.field">layer_type_s</str>
+      <str name="facet.field">layer_geom_type_s</str>
       <str name="facet.field">layer_year_i</str>
     </lst>
   </requestHandler>

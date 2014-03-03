@@ -113,6 +113,9 @@ class TransformOgp
     
     slug = to_slug(id, layer)
     
+    layer_geom_type = layer['DataType'].to_s.downcase
+    layer_geom_type = 'raster' if layer_geom_type == 'paper map'
+    
     # Make the conversion from OGP to GeoBlacklight
     #
     # @see http://dublincore.org/documents/dcmi-terms/
@@ -125,7 +128,7 @@ class TransformOgp
       :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
       :dc_description_t   => layer['Abstract'],
       :dc_format_s        => (
-        layer['DataType'] == 'Raster' ? 
+        (layer_geom_type == 'raster') ? 
         'GeoTIFF' : # 'image/tiff' : 
         'Shapefile' # 'application/x-esri-shapefile'
       ), # XXX: fake data
@@ -141,14 +144,14 @@ class TransformOgp
       :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
       :layer_collection_s => collection,
       :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      :layer_ne_geom      => "POINT(#{e} #{n})",
+      :layer_sw_geom      => "POINT(#{w} #{s})",
       :layer_slug_s       => slug,
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
-      # :layer_info_url     => purl,
-      :layer_ne_pt        => "#{n},#{e}",
-      # :layer_preview_image_url  => preview_jpg,
-      :layer_srs_s        => 'EPSG:4326', # XXX: fake data
       :layer_sw_pt        => "#{s},#{w}",
-      :layer_type_s       => layer['DataType'].to_s.capitalize,
+      :layer_ne_pt        => "#{n},#{e}",
+      :layer_srs_s        => 'EPSG:4326', # XXX: fake data
+      :layer_geom_type_s  => layer_geom_type.capitalize,
       :layer_wcs_url      => location['wcs'],
       :layer_wfs_url      => location['wfs'],
       :layer_wms_url      => location['wms'],
