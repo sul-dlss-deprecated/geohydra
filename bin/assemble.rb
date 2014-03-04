@@ -103,6 +103,30 @@ class Assemble < GeoHydra::Process
     sfn
   end
 
+  def convert_mods2geoblacklight(druid, dfn, flags)
+    raise ArgumentError, 'Missing required :geoserver flag' if flags[:geoserver].nil?
+    raise ArgumentError, 'Missing required :purl flag' if flags[:purl].nil?
+
+    geoserver = flags[:geoserver]
+    purl = "#{flags[:purl]}/#{druid.id}"
+
+    # OGP Solr document from descMetadataDS
+    sfn = File.join(druid.temp_dir, 'geoblacklightSolr.xml')
+    FileUtils.rm_f(sfn) if File.exist?(sfn)
+    cmd = ['xsltproc',
+            "--stringparam geoserver_root '#{geoserver}'",
+            "--stringparam purl '#{purl}'",
+            "--output '#{sfn}'",
+            "'#{File.expand_path(File.dirname(__FILE__) + '/../lib/geohydra/mods2geoblacklight.xsl')}'",
+            "'#{dfn}'"
+            ].join(' ')
+    puts "Generating #{sfn} using #{cmd}" if flags[:verbose]
+    ap({:cmd => cmd}) if flags[:debug]
+    system(cmd)
+
+    sfn
+  end
+  
   def convert_mods2ogpsolr(druid, dfn, flags)
     raise ArgumentError, 'Missing required :geoserver flag' if flags[:geoserver].nil?
     raise ArgumentError, 'Missing required :purl flag' if flags[:purl].nil?
@@ -110,7 +134,7 @@ class Assemble < GeoHydra::Process
     geoserver = flags[:geoserver]
     purl = "#{flags[:purl]}/#{druid.id}"
 
-    # OGP Solr document from GeoMetadataDS
+    # OGP Solr document from descMetadataDS
     sfn = File.join(druid.temp_dir, 'ogpSolr.xml')
     FileUtils.rm_f(sfn) if File.exist?(sfn)
     cmd = ['xsltproc',
@@ -215,7 +239,7 @@ class Assemble < GeoHydra::Process
     geoMetadata.purl = File.join(flags[:purl], druid.id)
 
     dfn = convert_geo2mods(druid, geoMetadata, flags)
-    sfn = convert_geo2solrspatial(druid, geoMetadata, flags) if flags[:geoblacklight]
+    sfn = convert_mods2geoblacklight(druid, dfn, flags) if flags[:geoblacklight]
     ofn = convert_mods2ogpsolr(druid, dfn, flags) if flags[:ogp]
   
     if flags[:geonetwork]
@@ -292,11 +316,11 @@ EOM
       opts.on('--tmpdir DIR', "Temporary directory for assembly (default: #{flags[:tmpdir]})") do |v|
         flags[:tmpdir] = v
       end
-      opts.on('--[no-]geoblacklight', 'Generate solrSpatial.xml') do |v|
-        flags[:geoblacklight] = true
+      opts.on('--[no-]geoblacklight', 'Generate geoblacklightSolr.xml') do |v|
+        flags[:geoblacklight] = v
       end
       opts.on('--[no-]ogp', 'Generate ogpSolr.xml') do |v|
-        flags[:ogp] = true
+        flags[:ogp] = v
       end
     end.parse!(args)
 
