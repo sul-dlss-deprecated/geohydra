@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-     geo2mods.xsl - Transformation from FGDC into MODS v3 
+     fgdc2mods.xsl - Transformation from FGDC into MODS v3 
      
      
-     Copyright 2013, The Board of Trustees of the Leland Stanford Junior University
+     Copyright 2013-2014, The Board of Trustees of the Leland Stanford Junior University
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -731,66 +731,33 @@
         </accessCondition>
       </xsl:for-each>
         
-        <!-- Output geo extension to MODS -->
-        <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-          <extension displayLabel="geo" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-            <rdf:RDF xmlns:gml="http://www.opengis.net/gml/3.2/" xmlns:dc="http://purl.org/dc/elements/1.1/">
-              <rdf:Description>
-                <xsl:attribute name="rdf:about">
-                  <xsl:value-of select="$purl"/>
-                </xsl:attribute>
-                <!-- Output MIME type -->
-                <dc:format>
-                  <xsl:value-of select="$format"/>
-                </dc:format>
-                <!-- Output Dataset# point, linestring, polygon, raster, etc. -->
-                <dc:type>
-                  <xsl:text>Dataset#</xsl:text>
-                  <xsl:value-of select="$geometryType"/>
-                </dc:type>
-                <!-- Output bounding box -->
-                <gml:boundedBy>
-                  <gml:Envelope>
-                    <xsl:attribute name="gml:srsName">
-                      <xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
-                      <xsl:text>:</xsl:text>
-                      <xsl:value-of select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
-                    </xsl:attribute>
-                    <gml:lowerCorner>
-                      <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal"/>
-                      <xsl:text> </xsl:text>
-                      <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal"/>
-                    </gml:lowerCorner>
-                    <gml:upperCorner>
-                      <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal"/>
-                      <xsl:text> </xsl:text>
-                      <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal"/>
-                    </gml:upperCorner>
-                  </gml:Envelope>
-                </gml:boundedBy>
-                <!-- Output linked data to GeoNames: An external process will clean these up -->
-                <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords">
-                  <xsl:if test="gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']">
-                    <xsl:for-each select="gmd:keyword">
-                      <dc:coverage>
-                        <xsl:attribute name="rdf:resource">
-                          <xsl:value-of select="../../@xlink:href"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="dc:language">
-                          <xsl:value-of select="../../../../../gmd:language/gmd:LanguageCode"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="dc:title">
-                          <xsl:value-of select="."/>
-                        </xsl:attribute>
-                      </dc:coverage>
-                    </xsl:for-each>
-                  </xsl:if>
-                </xsl:for-each>
-              </rdf:Description>
-            </rdf:RDF>
-          </extension>
-        </xsl:if>
-      
+      <!-- Output minimal geo extension to MODS -->
+      <xsl:if test="idinfo/spdom/bounding">
+        <extension displayLabel="geo" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:RDF xmlns:gml="http://www.opengis.net/gml/3.2/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+            <rdf:Description>
+              <gml:boundedBy>
+                <gml:Envelope>
+                  <xsl:attribute name="gml:srsName">
+                    <xsl:text>EPSG:4326</xsl:text>
+                  </xsl:attribute>
+                  <gml:lowerCorner>
+                    <xsl:value-of select="idinfo/spdom/bounding/westbc"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="idinfo/spdom/bounding/southbc"/>
+                  </gml:lowerCorner>
+                  <gml:upperCorner>
+                    <xsl:value-of select="idinfo/spdom/bounding/eastbc"/>
+                    <xsl:text> </xsl:text>
+                    <xsl:value-of select="idinfo/spdom/bounding/northbc"/>
+                  </gml:upperCorner>
+                </gml:Envelope>
+              </gml:boundedBy>
+            </rdf:Description>
+          </rdf:RDF>
+        </extension>
+      </xsl:if>
+    
     </mods>
   </xsl:template>
 </xsl:stylesheet>
