@@ -125,10 +125,11 @@ class TransformOgp
     # @see http://www.ietf.org/rfc/rfc5013.txt
     new_layer = {
       :uuid               => uuid,
-      :dc_coverage_sm     => string2array(layer['PlaceKeywords']),
-      # :dc_creator_s       => '', # not used
+      :dc_coverage_spatial_sm => string2array(layer['PlaceKeywords']),
+      :dc_coverage_temporal_sm => dt.year, # XXX: fake data
+      :dc_creator_s       => layer['Publisher'], # XXX: fake data
       :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
-      :dc_description_t   => layer['Abstract'],
+      :dc_description_s   => layer['Abstract'],
       :dc_format_s        => (
         (layer_geom_type == 'raster') ? 
         'GeoTIFF' : # 'image/tiff' : 
@@ -141,7 +142,7 @@ class TransformOgp
       :dc_rights_s        => access,
       :dc_source_s        => layer['Institution'],
       :dc_subject_sm      => string2array(layer['ThemeKeywords']),
-      :dc_title_t         => layer['LayerDisplayName'],
+      :dc_title_s         => layer['LayerDisplayName'],
       :dc_type_s          => 'Dataset',
       :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
       :layer_collection_s => collection,
