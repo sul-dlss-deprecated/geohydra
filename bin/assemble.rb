@@ -272,7 +272,16 @@ class Assemble < GeoHydra::Process
       Dir.glob(flags[:stagedir] + '/' + DruidTools::Druid.glob + '/content/data.zip') do |zipfn|
         Dir.glob(File.join(File.dirname(zipfn), '..', 'temp', '*iso19139.xml')) do |xmlfn|
           druid = File.basename(File.dirname(File.dirname(zipfn)))
-          obj = Struct.new(:content, :status, :druid, :zipfn, :fc).new(File.read(xmlfn), nil, druid, zipfn, File.read(xmlfn.gsub('19139.xml', '19110.xml')))
+          begin
+            fcXml = File.read(xmlfn.gsub('19139.xml', '19110.xml'))
+          rescue Exception => e
+            begin
+              fcXml = File.read(xmlfn.gsub('19139.xml', '19139-fc.xml'))
+            rescue Exception => e
+              fcXml = ''
+            end            
+          end          
+          obj = Struct.new(:content, :status, :druid, :zipfn, :fc).new(File.read(xmlfn), nil, druid, zipfn, fcXml)
           ap({:zipfn => zipfn, :obj => obj}) if flags[:debug]
           doit client, nil, obj, flags
         end
