@@ -8,8 +8,7 @@
     
     <!-- core generated fields -->
     <field name="text" type="text_en" stored="false" indexed="true" multiValued="true" 
-                       termVectors="true" termPositions="true" termOffsets="true" 
-                       required="true"/>
+                       termVectors="true" termPositions="true" termOffsets="true" />
 
     <!-- dynamic field with simple types by suffix -->
     <dynamicField name="*_b"    type="boolean" stored="true"  indexed="true"/>
@@ -19,16 +18,17 @@
     <dynamicField name="*_i"    type="int"     stored="true"  indexed="true"/>
     <dynamicField name="*_l"    type="long"    stored="true"  indexed="true"/>
     <dynamicField name="*_s"    type="string"  stored="true"  indexed="true"/>
+    <dynamicField name="*_ss"   type="string"  stored="true"  indexed="false"/>
     <dynamicField name="*_si"   type="string"  stored="false" indexed="true"/>
     <dynamicField name="*_sim"  type="string"  stored="false" indexed="true" multiValued="true" />
     <dynamicField name="*_sm"   type="string"  stored="true"  indexed="true" multiValued="true" />
     <dynamicField name="*_url"  type="string"  stored="true"  indexed="false"/>
     <dynamicField name="*_blob" type="binary"  stored="true"  indexed="false"/>
 
-    <!-- dynamic Text fields by suffix -->
-    <dynamicField name="*_t"    type="text_en" stored="true"  indexed="true" 
+    <!-- dynamic Text fields by suffix without storage -->
+    <dynamicField name="*_t"    type="text_en" stored="false"  indexed="true" 
                                 termVectors="true" termPositions="true" termOffsets="true"/>
-    <dynamicField name="*_tm"   type="text_en" stored="true"  indexed="true" multiValued="true" 
+    <dynamicField name="*_tm"   type="text_en" stored="false"  indexed="true" multiValued="true" 
                                 termVectors="true" termPositions="true" termOffsets="true"/>
     <dynamicField name="*_ti"   type="text_en" stored="false" indexed="true" 
                                 termVectors="true" termPositions="true" termOffsets="true"/>
@@ -125,32 +125,32 @@
                units="degrees"
             />
   </types>
-  
-  <!-- core text search -->
-  <copyField source="*_t"                dest="text" maxChars="10000"/>
-  <copyField source="dc_coverage_sm"     dest="text"/>
-  <copyField source="dc_format_s"        dest="text"/>
-  <copyField source="dc_identifier_s"    dest="text"/>
-  <copyField source="dc_publisher_s"     dest="text"/>
-  <copyField source="dc_rights_s"        dest="text"/>
-  <copyField source="dc_source_s"        dest="text"/>
-  <copyField source="dc_subject_sm"      dest="text"/>
-  <copyField source="layer_collection_s" dest="text"/>
-  <copyField source="layer_geom_type_s"  dest="text"/>
-  <copyField source="layer_slug_s"       dest="text"/>
 
   <!-- for scoring formula -->
-  <copyField source="dc_coverage_sm"     dest="dc_coverage_tmi"/>
-  <copyField source="dc_subject_sm"      dest="dc_subject_tmi"/>
+  <copyField source="dc_coverage_spatial_sm" dest="dc_coverage_spatial_tmi" maxChars="10000"/>
+  <copyField source="dc_coverage_temporal_sm" dest="dc_coverage_temporal_tmi" maxChars="10000"/>
+  <copyField source="dc_creator_s"       dest="dc_creator_ti"       maxChars="1000"/>
+  <copyField source="dc_description_s"   dest="dc_description_ti"   maxChars="10000"/>
+  <copyField source="dc_format_s"        dest="dc_format_ti"        maxChars="100"/>  
+  <copyField source="dc_identifier_s"    dest="dc_identifier_ti"    maxChars="100"/>
   <copyField source="dc_publisher_s"     dest="dc_publisher_ti"     maxChars="1000"/>
   <copyField source="dc_rights_s"        dest="dc_rights_ti"        maxChars="100"/>
   <copyField source="dc_source_s"        dest="dc_source_ti"        maxChars="100"/>
+  <copyField source="dc_subject_sm"      dest="dc_subject_tmi"      maxChars="10000"/>
+  <copyField source="dc_title_s"         dest="dc_title_ti"         maxChars="1000"/>
   <copyField source="layer_collection_s" dest="layer_collection_ti" maxChars="1000"/>
-  <copyField source="layer_geom_type_s"  dest="layer_geom_type_ti"       maxChars="100"/>
+  <copyField source="layer_geom_type_s"  dest="layer_geom_type_ti"  maxChars="100"/>
   <copyField source="layer_slug_s"       dest="layer_slug_ti"       maxChars="100"/>
 
+  <!-- core text search -->
+  <copyField source="*_ti"               dest="text" />
+  <copyField source="*_tmi"              dest="text" />
+
   <!-- for sorting text fields -->
-  <copyField source="dc_title_t"         dest="dc_title_sort"/>
+  <copyField source="dc_title_s"         dest="dc_title_sort"/>
+  <copyField source="dc_creator_s"       dest="dc_creator_sort"/>
+  <copyField source="dc_publisher_s"     dest="dc_publisher_sort"/>
+  <copyField source="layer_collection_s" dest="layer_collection_sort"/>
 
 </schema>
 
