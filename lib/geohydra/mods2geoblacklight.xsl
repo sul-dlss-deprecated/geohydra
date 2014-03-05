@@ -169,14 +169,14 @@
             <xsl:value-of select="$y2"/>
           </field>
           <field name="layer_sw_pt">
-            <xsl:value-of select="$x1"/>
-            <xsl:text> </xsl:text>
             <xsl:value-of select="$y1"/>
+            <xsl:text>,</xsl:text>
+            <xsl:value-of select="$x1"/>
           </field>
           <field name="layer_ne_pt">
-            <xsl:value-of select="$x2"/>
-            <xsl:text> </xsl:text>
             <xsl:value-of select="$y2"/>
+            <xsl:text>,</xsl:text>
+            <xsl:value-of select="$x2"/>
           </field>
           <field name="layer_srs_s">
             <xsl:value-of select="@gml:srsName"/>
