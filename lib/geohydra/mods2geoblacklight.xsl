@@ -61,6 +61,7 @@
           <xsl:when test="mods:originInfo/mods:dateValid">
             <field name="dc_date_dt">
               <xsl:value-of select="substring(mods:originInfo/mods:dateIssued, 1, 4)"/>
+              <xsl:text>-01-01T01:01:01Z</xsl:text>
             </field>
           </xsl:when>
         </xsl:choose>
