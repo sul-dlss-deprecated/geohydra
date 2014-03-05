@@ -53,7 +53,7 @@
       -->
     <dynamicField name="*_pt"     type="location"     stored="true" indexed="true"/>
     <dynamicField name="*_bbox"   type="location_rpt" stored="true" indexed="true"/>
-    <dynamicField name="*_geom"   type="location_jts" stored="true" indexed="true"/>
+    <dynamicField name="*_geom"   type="string" stored="true" indexed="true"/> <!-- XXX: no JTS -->
   </fields>
 
   <types>
@@ -118,12 +118,14 @@
             />
 
     <!-- JTS-enabled spatial predicates; requires JTS installation -->
+    <!-- XXX: no JTS
     <fieldType name="location_jts" class="solr.SpatialRecursivePrefixTreeFieldType"
                spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
                distErrPct="0.025"
                maxDistErr="0.000009"
                units="degrees"
-            />
+            /> 
+      -->
   </types>
 
   <!-- for scoring formula -->

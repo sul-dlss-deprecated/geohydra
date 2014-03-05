@@ -20,7 +20,7 @@
      this file, see http://wiki.apache.org/solr/SolrConfigXml. 
 -->
 <config>
-  <luceneMatchVersion>4.6</luceneMatchVersion>
+  <luceneMatchVersion>LUCENE_CURRENT</luceneMatchVersion>
   <dataDir>${solr.data.dir:}</dataDir>
   <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}"/>
   <codecFactory class="solr.SchemaCodecFactory"/>
