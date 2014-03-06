@@ -127,7 +127,7 @@ class TransformOgp
       :uuid               => uuid,
       :dc_coverage_spatial_sm => string2array(layer['PlaceKeywords']),
       :dc_coverage_temporal_sm => dt.year, # XXX: fake data
-      :dc_creator_s       => layer['Publisher'], # XXX: fake data
+      :dc_creator_s       => layer['Originator'],
       :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
       :dc_description_s   => layer['Abstract'],
       :dc_format_s        => (
