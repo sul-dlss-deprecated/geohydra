@@ -24,8 +24,7 @@
      * geometryType: One of Point, LineString, Polygon, Curve, or Grid (Raster). 
        see
      http://www.schemacentral.com/sc/niem21/t-gml32_GeometryPropertyType.html
-     * purl - e.g., http://purl.stanford.edu/aa111bb2222
-     * zipName - e.g., data.zip
+     * purl - e.g., http://purl.stanford.edu/aa111bb2222 or another UUID/URN
      * format - e.g., MIME type application/x-esri-shapefile
      
      May need other element sources for formats if not in 'formname' tag
@@ -38,7 +37,7 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd" 
   xmlns:gml="http://www.opengis.net/gml"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  version="2.0" exclude-result-prefixes="gml gmd gco gmi xsl">
+  version="1.0" exclude-result-prefixes="gml gmd gco gmi xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:param name="format" select="'application/x-esri-shapefile'"/>
@@ -736,6 +735,18 @@
         <extension displayLabel="geo" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
           <rdf:RDF xmlns:gml="http://www.opengis.net/gml/3.2/" xmlns:dc="http://purl.org/dc/elements/1.1/">
             <rdf:Description>
+              <xsl:attribute name="rdf:about">
+                <xsl:value-of select="$purl"/>
+              </xsl:attribute>
+              <!-- Output MIME type -->
+              <dc:format>
+                <xsl:value-of select="$format"/>
+              </dc:format>
+              <!-- Output Dataset# point, linestring, polygon, raster, etc. -->
+              <dc:type>
+                <xsl:text>Dataset#</xsl:text>
+                <xsl:value-of select="$geometryType"/>
+              </dc:type>
               <gml:boundedBy>
                 <gml:Envelope>
                   <xsl:attribute name="gml:srsName">
