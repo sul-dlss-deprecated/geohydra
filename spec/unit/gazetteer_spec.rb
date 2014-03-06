@@ -14,7 +14,7 @@ g = GeoHydra::Gazetteer.new
 K2GEONAMESID = {
   'United States' => 6252001,
   'Chandīgarh' => 1274744,
-  'Mahārāshtra' => 1264418,
+  'Maharashtra (India)' => 1264418,
   'Chandni Chowk' => 6619404,
   'Adamour, Haryana (India)' => 7646705
 }
@@ -23,7 +23,7 @@ K2LCSH = {
   'Earth' => 'Earth (Planet)',
   'United States' => 'United States',
   'Chandīgarh' => 'Chandīgarh (India : Union Territory)',
-  'Mahārāshtra' => 'Maharashtra (India)',
+  'Maharashtra (India)' => 'Maharashtra (India)',
   'Chandni Chowk' => 'Chandni Chowk (Delhi, India)'
 }
 
@@ -31,7 +31,7 @@ K2LCURI = {
   'Earth' => 'http://id.loc.gov/authorities/subjects/sh85040427',
   'United States' => 'http://id.loc.gov/authorities/names/n78095330',
   'Chandīgarh' => 'http://id.loc.gov/authorities/names/n81109268',
-  'Mahārāshtra' => 'http://id.loc.gov/authorities/names/n50000932',
+  'Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n50000932',
   'Chandni Chowk' => 'http://id.loc.gov/authorities/names/no2004006256'
 }
 

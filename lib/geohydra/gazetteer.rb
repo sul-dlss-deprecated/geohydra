@@ -3,6 +3,9 @@
 require 'csv'
 require 'awesome_print'
 
+# Gazetteer data look like this:
+#   "l_kw","geonames_kw","geonames_id","lc_kw","lc_id"
+#   "Ahmadābād District (India)","Ahmadābād",1279234,"Ahmadābād (India : District)","n78019943"
 module GeoHydra
   class Gazetteer
     
@@ -11,20 +14,20 @@ module GeoHydra
     def initialize
       @registry = {}
       CSV.foreach(CSV_FN, :encoding => 'UTF-8', :headers => true) do |v|
-        ap({:v0 => v[0], :v1 => v[1], :v2 => v[2].to_i, :v3 => v[3], :v4 => v[4]}) if $DEBUG
+        ap({:v0 => v[0], :v1 => v[1], :v2 => v[2].to_i, :v3 => v[3], :v4 => v[4], :v5 => v[5]}) if $DEBUG
         k = v[0].to_s.strip
         k = v[1].to_s.strip if k.nil? or k.empty?
         @registry[k] = {
           :geonames_placename => v[1].to_s.strip,
           :geonames_id => v[2].to_i,
           :loc_keyword => v[3].to_s.strip,
-          :loc_id => v[4]
+          :loc_id => v[4].to_s.strip
         }
       end
     end
 
     def each
-      @registry.each_key {|k| yield k }
+      @registry.each_key.to_a.sort.each {|k| yield k }
     end
 
     # @return [String] geonames name
