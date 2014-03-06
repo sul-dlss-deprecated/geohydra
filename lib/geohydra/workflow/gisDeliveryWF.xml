@@ -21,15 +21,15 @@
     <prereq>load-geoserver</prereq>
     <label>Load layers into GeoWebCache</label>
   </process>
-  <process name="seed-geowebcache" sequence="5">
+  <process name="seed-geowebcache" sequence="6">
     <prereq>load-geowebcache</prereq>
     <label>Generate tiles for GeoWebCache</label>
   </process>
-  <process name="finish-gis-delivery-pipeline" sequence="6">
+  <process name="finish-gis-delivery-pipeline" sequence="7">
     <prereq>seed-geowebcache</prereq>
     <label>Finalize delivery pipeline for the object</label>
   </process> 
-  <process name="start-gis-discovery-workflow" sequence="7">
+  <process name="start-gis-discovery-workflow" sequence="8">
     <prereq>finish-gis-delivery-pipeline</prereq>
     <label>Kickstart GIS discovery workflow with gisDiscoveryWF</label>
   </process> 
