@@ -3,26 +3,30 @@
   <process name="start-gis-delivery-pipeline" sequence="1" status="completed">
     <label>Initiate delivery pipeline for the object</label>
   </process>  
-  <process name="load-postgis" sequence="2">
+  <process name="load-vector" sequence="2">
     <prereq>start-gis-delivery-pipeline</prereq>
     <label>Load vector data into PostGIS database</label>
   </process>  
   <process name="load-raster" sequence="3">
     <prereq>start-delivery-pipeline</prereq>
-    <prereq>load-postgis</prereq><!-- XXX: force linear -->
+    <prereq>load-vector</prereq><!-- XXX: force linear -->
     <label>Load raster into GeoTIFF data store</label>
   </process>  
   <process name="load-geoserver" sequence="4">
-    <prereq>load-postgis</prereq>
+    <prereq>load-vector</prereq>
     <prereq>load-raster</prereq>
-    <label>Load data into GeoServer</label>
+    <label>Load layers into GeoServer</label>
   </process>
   <process name="load-geowebcache" sequence="5">
     <prereq>load-geoserver</prereq>
-    <label>Load data into GeoWebCache</label>
+    <label>Load layers into GeoWebCache</label>
+  </process>
+  <process name="seed-geowebcache" sequence="5">
+    <prereq>load-geowebcache</prereq>
+    <label>Generate tiles for GeoWebCache</label>
   </process>
   <process name="finish-gis-delivery-pipeline" sequence="6">
-    <prereq>load-geowebcache</prereq>
+    <prereq>seed-geowebcache</prereq>
     <label>Finalize delivery pipeline for the object</label>
   </process> 
   <process name="start-gis-discovery-workflow" sequence="7">
