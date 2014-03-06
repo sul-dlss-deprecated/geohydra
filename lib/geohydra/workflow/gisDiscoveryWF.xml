@@ -11,18 +11,18 @@
     <prereq>generate-ogp</prereq>
     <label>Load Solr document into OpenGeoPortal</label>
   </process>  
-  <process name="generate-geoblacklight" sequence="4">
+  <process name="generate-geosearch" sequence="4">
     <prereq>start-gis-discovery-pipeline</prereq>
     <prereq>load-ogp</prereq><!-- XXX: force linear -->
-    <label>Generate Solr document for GeoBlacklight</label>
+    <label>Generate Solr document for GeoSearch</label>
   </process>
-  <process name="load-geoblacklight" sequence="5">
-    <prereq>generate-geoblacklight</prereq>
-    <label>Load Solr document into GeoBlacklight</label>
+  <process name="load-geosearch" sequence="5">
+    <prereq>generate-geosearch</prereq>
+    <label>Load Solr document into GeoSearch</label>
   </process>
   <process name="finish-gis-discovery-pipeline" sequence="6">
     <prereq>load-ogp</prereq>
-    <prereq>load-geoblacklight</prereq>
+    <prereq>load-geosearch</prereq>
     <label>Finalize GIS discovery pipeline for the object</label>
   </process> 
 </workflow-def>
