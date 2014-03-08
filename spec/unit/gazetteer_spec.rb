@@ -12,11 +12,23 @@ g = GeoHydra::Gazetteer.new
 # ap({:g => g})
 
 K2GEONAMESID = {
-  'United States' => 6252001,
-  'Chandīgarh' => 1274744,
-  'Maharashtra (India)' => 1264418,
-  'Chandni Chowk' => 6619404,
-  'Adamour, Haryana (India)' => 7646705
+  'United States' => 6252001,              # simple
+  'Chandīgarh' => 1274744,                 # with UTF8
+  'Maharashtra (India)' => 1264418,        # without UTF8
+  'Chandni Chowk' => 6619404,              # same as placename
+  'Jāt' => 1269155,                        # same as placename with UTF8
+  'Adamour, Haryana (India)' => 7646705,   # with qualifier
+  'Bhīlwāra (India : District)' => 1275961 # with UTF8 and qualifier
+}
+
+K2PLACENAME = {
+  'United States' => 'United States',
+  'Chandīgarh' => 'Chandīgarh',
+  'Maharashtra (India)' => 'Mahārāshtra',
+  'Chandni Chowk' => 'Chandni Chowk',
+  'Jāt' => 'Jāt',
+  'Adamour, Haryana (India)' => 'Adampur',
+  'Bhīlwāra (India : District)' => 'Bhīlwāra'
 }
 
 K2LCSH = {
@@ -24,7 +36,9 @@ K2LCSH = {
   'United States' => 'United States',
   'Chandīgarh' => 'Chandīgarh (India : Union Territory)',
   'Maharashtra (India)' => 'Maharashtra (India)',
-  'Chandni Chowk' => 'Chandni Chowk (Delhi, India)'
+  'Chandni Chowk' => 'Chandni Chowk (Delhi, India)',
+  'Jāt' => nil,
+  'Bhīlwāra (India : District)' => 'Bhīlwāra (India : District)'
 }
 
 K2LCURI = {
@@ -32,7 +46,9 @@ K2LCURI = {
   'United States' => 'http://id.loc.gov/authorities/names/n78095330',
   'Chandīgarh' => 'http://id.loc.gov/authorities/names/n81109268',
   'Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n50000932',
-  'Chandni Chowk' => 'http://id.loc.gov/authorities/names/no2004006256'
+  'Chandni Chowk' => 'http://id.loc.gov/authorities/names/no2004006256',
+  'Bhīlwāra (India : District)' => 'http://id.loc.gov/authorities/names/n89284170',
+  'Jāt' => nil
 }
 
 
@@ -43,11 +59,9 @@ describe GeoHydra::Gazetteer do
       g.find_id(nil).should == nil      
       g.find_id('adsfadsfasdf').should == nil      
     end
-    K2GEONAMESID.each do |k,id|
+    K2GEONAMESID.each do |k,geonamesid|
       it k do
-        r = g.find_id(k)
-        # ap({:k => k, :id => id, :r => r})
-        r.should == id
+        g.find_id(k).should == geonamesid
       end
     end
   end
@@ -59,8 +73,7 @@ describe GeoHydra::Gazetteer do
     end
     K2LCSH.each do |k,lcsh|
       it k do
-        r = g.find_loc_keyword(k)
-        r.should == lcsh
+        g.find_loc_keyword(k).should == lcsh
       end
     end
   end
@@ -72,8 +85,7 @@ describe GeoHydra::Gazetteer do
     end
     K2LCURI.each do |k,lcuri|
       it k do
-        r = g.find_loc_uri(k)
-        r.should == lcuri
+        g.find_loc_uri(k).should == lcuri
       end
     end
   end
@@ -86,27 +98,42 @@ describe GeoHydra::Gazetteer do
     end
     K2LCURI.each do |k,lcuri|
       it k do
-        uri = g.find_loc_uri(k)
         r = g.find_loc_authority(k)
-        if uri.start_with?('http://id.loc.gov/authorities/subjects/sh')
-          r.should == 'lcsh'
+        if lcuri.nil?
+          r.should == lcuri
         else
-          r.should == 'lcnaf'
+          if lcuri.start_with?('http://id.loc.gov/authorities/subjects/sh')
+            r.should == 'lcsh'
+          elsif lcuri.start_with?('http://id.loc.gov/authorities/names')
+            r.should == 'lcnaf'
+          else
+            r.should == nil
+          end
         end
       end
     end
   end
   
+  describe '#find_placename' do
+    it "nil case" do
+      g.find_placename(nil).should == nil      
+      g.find_placename('asdfasdfasdf').should == nil      
+    end
+    K2PLACENAME.each do |k,placename|
+      it k do
+        g.find_placename(k).should == placename
+      end
+    end
+  end
 
   describe '#find_placename_uri' do
     it "nil case" do
       g.find_placename_uri(nil).should == nil      
       g.find_placename_uri('asdfasdfasdf').should == nil      
     end
-    K2GEONAMESID.each do |k,id|
+    K2GEONAMESID.each do |k,geonamesid|
       it k do
-        r = g.find_placename_uri(k)
-        r.should == "http://sws.geonames.org/#{id}/"
+        g.find_placename_uri(k).should == "http://sws.geonames.org/#{geonamesid}/"
       end
     end
   end
@@ -116,10 +143,9 @@ describe GeoHydra::Gazetteer do
       g.find_keyword_by_id(nil).should == nil      
       g.find_keyword_by_id(-1).should == nil      
     end
-    K2GEONAMESID.each do |k,id|
-      it id do
-        r = g.find_keyword_by_id(id)
-        r.should == k
+    K2GEONAMESID.each do |k,geonamesid|
+      it geonamesid do
+        g.find_keyword_by_id(geonamesid).should == k
       end
     end
   end

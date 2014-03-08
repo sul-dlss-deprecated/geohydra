@@ -14,14 +14,14 @@ module GeoHydra
     def initialize
       @registry = {}
       CSV.foreach(CSV_FN, :encoding => 'UTF-8', :headers => true) do |v|
-        ap({:v0 => v[0], :v1 => v[1], :v2 => v[2].to_i, :v3 => v[3], :v4 => v[4], :v5 => v[5]}) if $DEBUG
-        k = v[0].to_s.strip
-        k = v[1].to_s.strip if k.nil? or k.empty?
+        v = v.each { |k,v| v.to_s.strip }
+        k = v[0]
+        k = v[1] if k.nil? or k.empty?
         @registry[k] = {
-          :geonames_placename => v[1].to_s.strip,
+          :geonames_placename => v[1],
           :geonames_id => v[2].to_i,
-          :loc_keyword => v[3].to_s.strip,
-          :loc_id => v[4].to_s.strip
+          :loc_keyword => (v[3].nil? or v[3].empty?)? nil : v[3],
+          :loc_id => (v[4].nil? or v[4].empty?)? nil : v[4]
         }
       end
     end
