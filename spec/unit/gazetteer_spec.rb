@@ -11,14 +11,17 @@ require 'geohydra'
 g = GeoHydra::Gazetteer.new
 # ap({:g => g})
 
+
 K2GEONAMESID = {
-  'United States' => 6252001,              # simple
-  'Chandīgarh' => 1274744,                 # with UTF8
-  'Maharashtra (India)' => 1264418,        # without UTF8
-  'Chandni Chowk' => 6619404,              # same as placename
-  'Jāt' => 1269155,                        # same as placename with UTF8
-  'Adamour, Haryana (India)' => 7646705,   # with qualifier
-  'Bhīlwāra (India : District)' => 1275961 # with UTF8 and qualifier
+  'United States' => 6252001,                     # simple
+  'Chandīgarh' => 1274744,                        # with UTF8
+  'Maharashtra (India)' => 1264418,               # without UTF8
+  'Chandni Chowk' => 6619404,                     # same as placename
+  'Jāt' => 1269155,                               # same as placename with UTF8
+  'Adamour, Haryana (India)' => 7646705,          # with qualifier
+  'Bhīlwāra (India : District)' => 1275961,       # with UTF8 and qualifier
+  'Anand District, Gujarāt (India)' => 7627221,   # UTF8 in qualifier
+  'Ratnagiri District, Maharashtra (India)' => 1258340 # with qualifier and UTF8 in LCNAF
 }
 
 K2PLACENAME = {
@@ -28,7 +31,9 @@ K2PLACENAME = {
   'Chandni Chowk' => 'Chandni Chowk',
   'Jāt' => 'Jāt',
   'Adamour, Haryana (India)' => 'Adampur',
-  'Bhīlwāra (India : District)' => 'Bhīlwāra'
+  'Bhīlwāra (India : District)' => 'Bhīlwāra',
+  'Anand District, Gujarāt (India)' => 'Anand',
+  'Ratnagiri District, Maharashtra (India)' => 'Ratnagiri District'
 }
 
 K2LCSH = {
@@ -38,7 +43,9 @@ K2LCSH = {
   'Maharashtra (India)' => 'Maharashtra (India)',
   'Chandni Chowk' => 'Chandni Chowk (Delhi, India)',
   'Jāt' => nil,
-  'Bhīlwāra (India : District)' => 'Bhīlwāra (India : District)'
+  'Bhīlwāra (India : District)' => 'Bhīlwāra (India : District)',
+  'Anand District, Gujarāt (India)' => 'Anand (India : District)',
+  'Ratnagiri District, Maharashtra (India)' => 'Ratnāgiri (India : District)'
 }
 
 K2LCURI = {
@@ -48,7 +55,9 @@ K2LCURI = {
   'Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n50000932',
   'Chandni Chowk' => 'http://id.loc.gov/authorities/names/no2004006256',
   'Bhīlwāra (India : District)' => 'http://id.loc.gov/authorities/names/n89284170',
-  'Jāt' => nil
+  'Jāt' => nil,
+  'Anand District, Gujarāt (India)' => 'http://id.loc.gov/authorities/names/n2008050108',
+  'Ratnagiri District, Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n83150618'
 }
 
 
@@ -100,11 +109,11 @@ describe GeoHydra::Gazetteer do
       it k do
         r = g.find_loc_authority(k)
         if lcuri.nil?
-          r.should == lcuri
+          r.should == nil
         else
           if lcuri.start_with?('http://id.loc.gov/authorities/subjects/sh')
             r.should == 'lcsh'
-          elsif lcuri.start_with?('http://id.loc.gov/authorities/names')
+          elsif lcuri.start_with?('http://id.loc.gov/authorities/names/n')
             r.should == 'lcnaf'
           else
             r.should == nil
