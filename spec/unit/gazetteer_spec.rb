@@ -17,11 +17,12 @@ K2GEONAMESID = {
   'Chandīgarh' => 1274744,                        # with UTF8
   'Maharashtra (India)' => 1264418,               # without UTF8
   'Chandni Chowk' => 6619404,                     # same as placename
-  'Jāt' => 1269155,                               # same as placename with UTF8
+  'Jāt' => 1269155,                               # no LC with UTF8
   'Adamour, Haryana (India)' => 7646705,          # with qualifier
   'Bhīlwāra (India : District)' => 1275961,       # with UTF8 and qualifier
   'Anand District, Gujarāt (India)' => 7627221,   # UTF8 in qualifier
-  'Ratnagiri District, Maharashtra (India)' => 1258340 # with qualifier and UTF8 in LCNAF
+  'Ratnagiri District, Maharashtra (India)' => 1258340, # with qualifier and UTF8 in LCNAF
+  'Monterey Harbor (California)' => 5374395 # no LC
 }
 
 K2PLACENAME = {
@@ -33,7 +34,8 @@ K2PLACENAME = {
   'Adamour, Haryana (India)' => 'Adampur',
   'Bhīlwāra (India : District)' => 'Bhīlwāra',
   'Anand District, Gujarāt (India)' => 'Anand',
-  'Ratnagiri District, Maharashtra (India)' => 'Ratnagiri District'
+  'Ratnagiri District, Maharashtra (India)' => 'Ratnagiri District',
+  'Monterey Harbor (California)' => 'Monterey Harbor'
 }
 
 K2LCSH = {
@@ -45,7 +47,8 @@ K2LCSH = {
   'Jāt' => nil,
   'Bhīlwāra (India : District)' => 'Bhīlwāra (India : District)',
   'Anand District, Gujarāt (India)' => 'Anand (India : District)',
-  'Ratnagiri District, Maharashtra (India)' => 'Ratnāgiri (India : District)'
+  'Ratnagiri District, Maharashtra (India)' => 'Ratnāgiri (India : District)',
+  'Monterey Harbor (California)' => nil
 }
 
 K2LCURI = {
@@ -57,7 +60,8 @@ K2LCURI = {
   'Bhīlwāra (India : District)' => 'http://id.loc.gov/authorities/names/n89284170',
   'Jāt' => nil,
   'Anand District, Gujarāt (India)' => 'http://id.loc.gov/authorities/names/n2008050108',
-  'Ratnagiri District, Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n83150618'
+  'Ratnagiri District, Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n83150618',
+  'Monterey Harbor (California)' => nil
 }
 
 
