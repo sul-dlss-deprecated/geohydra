@@ -9,27 +9,27 @@ module GeoHydra
       STATUS.include? status.upcase
     end
     
-    attr_reader :druid, :flags
+    attr_accessor :druid, :flags
 
-    def initialize(args = {})
+    def initialize(data = {})
       @flags = {}
-      @flags[:debug] = false
-      @flags[:geoserver] = GeoHydra::Config.ogp.geoserver || 'http://127.0.0.1:8080/geoserver'
-      @flags[:purl] = GeoHydra::Config.ogp.purl || 'http://purl.stanford.edu'
-      @flags[:solr_url] = GeoHydra::Config.ogp.solr || 'http://127.0.0.1:8983/solr'
-      @flags[:stagedir] = GeoHydra::Config.geohydra.stage || 'stage'
-      @flags[:tmpdir] = GeoHydra::Config.geohydra.tmpdir || 'tmp'
-      @flags[:verbose] = false
-      @flags[:workspacedir] = GeoHydra::Config.geohydra.workspace || 'workspace'
+      @flags[:debug] = data[:debug] || false
+      @flags[:geoserver] = data[:geoserver] || GeoHydra::Config.ogp.geoserver || 'http://127.0.0.1:8080/geoserver'
+      @flags[:purl] = data[:purl] || GeoHydra::Config.ogp.purl || 'http://purl.stanford.edu'
+      @flags[:solr] = data[:solr] || GeoHydra::Config.ogp.solr || 'http://127.0.0.1:8983/solr'
+      @flags[:stagedir] = data[:stagedir] || GeoHydra::Config.geohydra.stage || 'stage'
+      @flags[:tmpdir] = data[:tmpdir] || GeoHydra::Config.geohydra.tmpdir || 'tmp'
+      @flags[:verbose] = data[:verbose] || false
+      @flags[:workspacedir] = data[:workspacedir] || GeoHydra::Config.geohydra.workspace || 'workspace'
       
       @druid = nil
-      druid = _init_druid(args[:druid]) unless args[:druid].nil?
+      @druid = _setup_druid(data[:druid]) unless data[:druid].nil?
     end
     
     # Perform the task
-    # @param [Hash] args
+    # @param [Hash] data
     # @return [String] one of the `Task.STATUS` values
-    def perform(*args)
+    def perform(data = {})
       raise NotImplementedError, 'abstract method'
     end
 
@@ -61,21 +61,21 @@ module GeoHydra
     end
     
     private
-    def _init_druid druid
-      @druid = DruidTools::Druid.new(druid, flags[:workspacedir])
-      raise ArgumentError unless DruidTools::Druid.valid?(@druid.druid)
-      @druid
+    def _setup_druid s
+      druid = DruidTools::Druid.new(s, flags[:workspacedir])
+      raise ArgumentError if druid.nil? or not DruidTools::Druid.valid?(druid.druid)
+      druid
     end
   end
   
   class NoopTask < Task
-    def perform(*args)
+    def perform(data)
       'COMPLETED'
     end
   end
 
   class ManualTask < Task
-    def perform(*args)
+    def perform(data)
       'HOLD'
     end
   end

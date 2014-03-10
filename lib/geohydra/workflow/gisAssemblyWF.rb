@@ -12,13 +12,13 @@ module GeoHydra
     class ApproveDataTask < ManualTask; end
     
     class NormalizeDataTask < Task
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
     
     class PackageDataTask
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
@@ -26,20 +26,20 @@ module GeoHydra
     class FinishDataTask < NoopTask; end
     
     class ExtractThumbnailTask < Task
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
     
     class ExtractIso19139Task < Task
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
     
     class GenerateGeoMetadataTask < Task
-      def perform(*args)
-        druid = args[:druid]
+      def perform(data)
+        initialize(data)
         isoFn = File.join(druid.temp_dir, 'iso19139.xml')
         fcFn = File.join(druid.temp_dir, 'iso19110.xml')
         geoFn = File.join(druid.metadata_dir, 'geoMetadata.xml')
@@ -57,8 +57,8 @@ module GeoHydra
     end
 
     class GenerateModsTask < Task
-      def perform(*args)
-        druid = args[:druid]
+      def perform(data)
+        initialize(data)
         geoFn = File.join(druid.metadata_dir, 'geoMetadata.xml')
         modsFn = File.join(druid.metadata_dir, 'descMetadata.xml')
         log_debug({:geoFn => geoFn, :modsFn => modsFn, :flags => flags})
@@ -66,7 +66,7 @@ module GeoHydra
         unless FileUtils.uptodate?(modsFn, [geoFn])
           # MODS from GeoMetadataDS
           geoMetadata = Dor::GeoMetadataDS.from_xml File.read(geoFn)
-          geoMetadata.geometryType = args[:geometryType] || 'Polygon'
+          geoMetadata.geometryType = data[:geometryType] || 'Polygon'
           geoMetadata.zipName = 'data.zip'
           geoMetadata.purl = to_purl
           
@@ -78,7 +78,7 @@ module GeoHydra
     end
 
     class AssignPlacenamesTask < Task
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
@@ -86,7 +86,7 @@ module GeoHydra
     class FinishMetadataTask < NoopTask; end
     
     class GenerateContentMetadataTask < Task
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
@@ -94,13 +94,13 @@ module GeoHydra
     class FinishGisAssemblyPipeline < NoopTask; end
     
     class StartAssemblyWorkflowTask < Task
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
     
     class StartDeliveryWorkflowTask < Task
-      def perform(*args)
+      def perform(data)
         raise NotImplementedError
       end
     end
