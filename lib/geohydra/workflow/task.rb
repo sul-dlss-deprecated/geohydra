@@ -13,13 +13,14 @@ module GeoHydra
 
     def initialize(args = {})
       @flags = {}
-      @flags[:workspacedir] = GeoHydra::Config.geohydra.workspace || 'workspace'
       @flags[:debug] = false
-      @flags[:verbose] = false
-      @flags[:solr_url] = GeoHydra::Config.ogp.solr || 'http://127.0.0.1:8983/solr'
+      @flags[:geoserver] = GeoHydra::Config.ogp.geoserver || 'http://127.0.0.1:8080/geoserver'
       @flags[:purl] = GeoHydra::Config.ogp.purl || 'http://purl.stanford.edu'
+      @flags[:solr_url] = GeoHydra::Config.ogp.solr || 'http://127.0.0.1:8983/solr'
       @flags[:stagedir] = GeoHydra::Config.geohydra.stage || 'stage'
       @flags[:tmpdir] = GeoHydra::Config.geohydra.tmpdir || 'tmp'
+      @flags[:verbose] = false
+      @flags[:workspacedir] = GeoHydra::Config.geohydra.workspace || 'workspace'
       
       @druid = nil
       druid = _init_druid(args[:druid]) unless args[:druid].nil?
