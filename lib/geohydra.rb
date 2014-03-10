@@ -9,3 +9,6 @@ require 'geohydra/solr'
 require 'geohydra/accession'
 require 'geohydra/utils'
 require 'geohydra/gazetteer'
+
+require 'geohydra/workflow/task'
+require 'geohydra/workflow/gisAssemblyWF'

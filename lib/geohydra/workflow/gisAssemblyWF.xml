@@ -43,37 +43,41 @@
   </process>
   <process name="extract-iso19139" sequence="11">
     <prereq>approve-metadata</prereq>
+    <prereq>finish-data</prereq> <!-- requires shapefile -->
     <prereq>extract-thumbnail</prereq><!-- XXX: force linear -->
     <label>Extract ISO 19139 metadata from ArcCatalog</label>
   </process>
-  <process name="generate-mods" sequence="12">
+  <process name="generate-geo-metadata" sequence="12">
     <prereq>extract-iso19139</prereq>
-    <prereq>finish-data</prereq>
-    <label>Convert ISO 19139 into MODS</label>
+    <label>Convert ISO 19139 metadata into geoMetadata</label>
   </process>
-  <process name="assign-placenames" sequence="13">
+  <process name="generate-mods" sequence="13">
+    <prereq>generate-geoMetadata</prereq>
+    <label>Convert geoMetadata into MODS</label>
+  </process>
+  <process name="assign-placenames" sequence="14">
     <prereq>generate-mods</prereq>
     <label>Insert linked data into MODS record from gazetteer</label>
   </process>
-  <process name="finish-metadata" sequence="14">
+  <process name="finish-metadata" sequence="15">
     <prereq>extract-thumbnail</prereq>
     <prereq>assign-placenames</prereq>
     <label>Finalize the data preparation</label>
   </process>  
-  <process name="generate-content-metadata" sequence="15">
+  <process name="generate-content-metadata" sequence="16">
     <prereq>finish-metadata</prereq>
     <prereq>finish-data</prereq>
     <label>Generate contentMetadata manifest</label>
   </process>  
-  <process name="finish-gis-assembly-pipeline" sequence="16">
+  <process name="finish-gis-assembly-pipeline" sequence="17">
     <prereq>generate-content-metadata</prereq>
     <label>Finalize assembly pipeline to prepare for assembly/delivery/discovery</label>
   </process>
-  <process name="start-assembly-workflow" sequence="17">
+  <process name="start-assembly-workflow" sequence="18">
     <prereq>finish-gis-assembly-pipeline</prereq>
     <label>Kickstart the core assembly workflow at assemblyWF</label>
   </process>
-  <process name="start-delivery-workflow" sequence="18">
+  <process name="start-delivery-workflow" sequence="19">
     <prereq>finish-gis-assembly-pipeline</prereq>
     <prereq>start-assembly-workflow</prereq><!-- XXX: force linear -->
     <label>Kickstart the GIS delivery workflow at gisDeliveryWF</label>
