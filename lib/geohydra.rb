@@ -12,3 +12,5 @@ require 'geohydra/gazetteer'
 
 require 'geohydra/workflow/task'
 require 'geohydra/workflow/gisAssemblyWF'
+require 'geohydra/workflow/gisDeliveryWF'
+require 'geohydra/workflow/gisDiscoveryWF'
