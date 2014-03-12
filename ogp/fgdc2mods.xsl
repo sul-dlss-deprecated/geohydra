@@ -37,7 +37,7 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd" 
   xmlns:gml="http://www.opengis.net/gml"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  version="1.0" exclude-result-prefixes="gml gmd gco gmi xsl">
+  version="2.0" exclude-result-prefixes="gml gmd gco gmi xsl">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:param name="format" select="'application/x-esri-shapefile'"/>
@@ -56,7 +56,7 @@
     <xsl:variable name="geometryType">
       <xsl:choose>
       <xsl:when test="idinfo/keywords/theme/themekey[contains(.,'line')]">
-      <xsl:text>LineString</xsl:text>
+      <xsl:text>Line</xsl:text>
       </xsl:when>
       <xsl:when test="idinfo/keywords/theme/themekey[contains(.,'point')]">
         <xsl:text>Point</xsl:text>
