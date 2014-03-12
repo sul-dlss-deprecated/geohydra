@@ -51,6 +51,85 @@
   <xsl:param name="geoformat" select="'MARC255'"/>
   <xsl:param name="fileIdentifier" select="''"/>
   <xsl:template match="metadata">
+    
+    <!-- geometryType for dc:type -->
+    <xsl:variable name="geometryType">
+      <xsl:choose>
+      <xsl:when test="idinfo/keywords/theme/themekey[contains(.,'line')]">
+      <xsl:text>LineString</xsl:text>
+      </xsl:when>
+      <xsl:when test="idinfo/keywords/theme/themekey[contains(.,'point')]">
+        <xsl:text>Point</xsl:text>
+      </xsl:when>
+      <xsl:when test="idinfo/keywords/theme/themekey[contains(.,'polygon')]">
+        <xsl:text>Polygon</xsl:text>
+      </xsl:when>
+      <xsl:when test="spdoinfo/ptvctinf/esriterm/efeageom">
+        <xsl:value-of select="spdoinfo/ptvctinf/esriterm/efeageom"/>
+      </xsl:when>
+      <xsl:when test="spdoinfo/direct[contains(., 'Raster')]">
+        <xsl:text>Raster</xsl:text>
+      </xsl:when> 
+      <xsl:when test="spdoinfo/ptvctinf/sdtsterm/sdtstype[contains(., 'G-polygon')]">
+        <xsl:text>Polygon</xsl:text>
+      </xsl:when> 
+     </xsl:choose>
+    </xsl:variable>
+    
+    <!-- institution for mods:recordContentSource -->
+    <xsl:variable name="institution">
+      <xsl:choose>
+        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'Harvard')">
+          <xsl:text>Harvard</xsl:text>
+        </xsl:when> 
+        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'Tufts')">
+          <xsl:text>Tufts</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'MIT')">
+          <xsl:text>MIT</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'Massachusetts')">
+          <xsl:text>MassGIS</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(metainfo/metc/cntinfo/cntorgp/cntorg, 'MassGIS')">
+          <xsl:text>MassGIS</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(distinfo/distrib/cntinfo/cntemail, 'state.ma.us')">
+          <xsl:text>MassGIS</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(metainfo/metc/cntinfo/cntemail, 'ca.gov')">
+          <xsl:text>Berkeley</xsl:text>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <!-- fileidentifier for mods:recordIdentifier -->
+    <xsl:variable name="recordID">
+      <xsl:choose>
+        <xsl:when test="contains($institution, 'Tufts')">
+          <xsl:text>urn:geodata.tufts.edu:Tufts.</xsl:text>
+          <xsl:value-of select="substring-before(tokenize(base-uri(), '/')[last()], '.xml')"/>
+        </xsl:when> 
+        <xsl:when test="contains($institution, 'MIT')">
+          <xsl:text>urn:arrowsmith.mit.edu:MIT.SDE_DATA.</xsl:text>
+          <xsl:value-of select="substring-before(tokenize(base-uri(), '/')[last()], '.xml')"/>
+        </xsl:when> 
+        <xsl:when test="contains($institution, 'Harvard')">
+          <xsl:text>urn:hul.harvard.edu:HARVARD.</xsl:text>
+          <xsl:value-of select="substring-before(tokenize(base-uri(), '/')[last()], '.xml')"/>
+        </xsl:when> 
+        <xsl:when test="contains($institution, 'MassGIS')">
+          <xsl:text>urn:massgis.state.ma.us:MassGIS.</xsl:text>
+          <xsl:value-of select="substring-before(tokenize(base-uri(), '/')[last()], '.xml')"/>
+        </xsl:when> 
+        <xsl:when test="contains($institution, 'Berkeley')">
+          <xsl:text>urn:gis.library.berkeley.edu.</xsl:text>
+          <xsl:value-of select="substring-before(tokenize(base-uri(), '/')[last()], '.xml')"/>
+        </xsl:when> 
+      </xsl:choose>
+    </xsl:variable>
+      
+
     <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
         <titleInfo>
           <title>
@@ -489,6 +568,7 @@
            
       <xsl:for-each select="idinfo/crossref">
         <relatedItem>
+          <xsl:attribute name="type">isReferencedBy</xsl:attribute>
          <titleInfo>
             <title>
               <xsl:value-of select="citeinfo/title"/>
@@ -516,7 +596,7 @@
             </xsl:if>
           </originInfo>
         </relatedItem>
-                  </xsl:for-each>
+      </xsl:for-each>
               
             
 <!-- subjects: topic, geographic, temporal, ISO19115TopicCategory -->
@@ -672,7 +752,7 @@
                   <xsl:attribute name="valueURI"><xsl:value-of select="."/></xsl:attribute>
                   <xsl:text>Planning and Cadastral</xsl:text>
                 </xsl:if>
-                <xsl:if test="contains(.,'structural')">
+                <xsl:if test="contains(.,'structure')">
                   <xsl:attribute name="valueURI"><xsl:value-of select="."/></xsl:attribute>
                   <xsl:text>Structures</xsl:text>
                 </xsl:if>
@@ -693,7 +773,7 @@
           </subject>
             </xsl:for-each>
             </xsl:when>
-            <xsl:when test=" contains(themekt, 'FGDC')"/>
+          
             <xsl:when test="contains(themekt, 'LCSH')">
               <xsl:for-each select="themekey">
                 <subject>
@@ -705,18 +785,33 @@
                 </subject>
                </xsl:for-each>
             </xsl:when>
-            <xsl:otherwise>
-              <xsl:for-each select="themekey">
-                <subject>
-                  <topic>
-                    <xsl:attribute name="lang">eng</xsl:attribute>
-                    <xsl:value-of select="."/>
-                  </topic>
-                </subject>
-              </xsl:for-each>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:for-each>
+            
+            <!-- GCMD keywords -->
+            <xsl:when test="contains(themekt, 'GCMD')">
+             <xsl:for-each select="tokenize(themekey, ' &gt; ')">
+              <subject>
+                <topic>
+                  <xsl:attribute name="authority">gcmd</xsl:attribute>
+                  <xsl:attribute name="lang">eng</xsl:attribute>
+                  <xsl:value-of select="."/>
+                </topic>
+              </subject>
+            </xsl:for-each>
+            </xsl:when>
+           <xsl:otherwise>
+             
+             <xsl:for-each select="themekey">
+              <subject>
+                <topic>
+                  <xsl:attribute name="lang">eng</xsl:attribute>
+                <xsl:value-of select="."/>
+               </topic>
+              </subject>
+            </xsl:for-each>
+              </xsl:otherwise>
+          </xsl:choose>   
+  </xsl:for-each>
+    
         <!-- TODO: Need a metadata practice for GIS Dataset's Online Resource. -->
         <!-- access rights to be mapped from restrictionCode/otherRestrictions/APO -->
         <xsl:for-each select="idinfo/accconst">
@@ -729,8 +824,23 @@
           <xsl:value-of select=". "/>
         </accessCondition>
       </xsl:for-each>
+      
+      <!-- MODS recordInfo -->
+      
+      <recordInfo>
+        <recordContentSource>
+          <xsl:value-of select="$institution"/>
+        </recordContentSource>
+        <recordIdentifier>
+          <xsl:value-of select="$recordID"/>
+        </recordIdentifier>
+        <recordOrigin>This record was translated from FGDC Content Standards for Digital Geospatial Metadata to MODS v.3 using an xsl transformation.</recordOrigin>
+          <languageOfCataloging>
+            <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
+          </languageOfCataloging>
+      </recordInfo>
         
-      <!-- Output minimal geo extension to MODS -->
+        <!-- Output minimal geo extension to MODS -->
       <xsl:if test="idinfo/spdom/bounding">
         <extension displayLabel="geo" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
           <rdf:RDF xmlns:gml="http://www.opengis.net/gml/3.2/" xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -768,7 +878,7 @@
           </rdf:RDF>
         </extension>
       </xsl:if>
-    
+      
     </mods>
   </xsl:template>
 </xsl:stylesheet>
