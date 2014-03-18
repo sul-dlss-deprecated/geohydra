@@ -91,6 +91,7 @@ class TransformOgp
     
     # Parse out the ContentDate date/time
     dt = DateTime.rfc3339(layer['ContentDate'])
+    pub_dt = DateTime.rfc3339('2000-01-01T00:00:00Z') # XXX fake data, get from MODS
     
     # Parse out the PURL and other metadata for Stanford
     if layer['Institution'] == 'Stanford'
@@ -106,17 +107,29 @@ class TransformOgp
       end
     else
       access = layer['Access']
-      collection = ''
-      preview_jpg = ''
-      purl = ''
-      layer['ThemeKeywords'] = '' # not properly delimited
-      layer['PlaceKeywords'] = '' # not properly delimited
+      collection = nil
+      preview_jpg = nil
+      purl = nil
+      layer['ThemeKeywords'] = nil # not properly delimited
+      layer['PlaceKeywords'] = nil # not properly delimited
     end
     
     slug = to_slug(id, layer)
     
     layer_geom_type = layer['DataType'].to_s.downcase
     layer_geom_type = 'raster' if layer_geom_type == 'paper map'
+    
+    %w{wcs wfs wms}.each do |k|
+      location[k] = location[k].first if location[k].is_a? Array
+    end
+    refs = []
+    refs << "scheme=\"urn:ogc:serviceType:WebCoverageService\" url=\"#{location['wcs']}\"" if location['wcs']
+    refs << "scheme=\"urn:ogc:serviceType:WebFeatureService\" url=\"#{location['wfs']}\"" if location['wfs']
+    refs << "scheme=\"urn:ogc:serviceType:WebMapService\" url=\"#{location['wms']}\"" if location['wms']
+    refs << "scheme=\"urn:iso:dataFormat:19139\" url=\"#{purl}.iso19139\"" if purl
+    refs << "scheme=\"urn:x-osgeo:link:www\" url=\"#{clean_uri(purl)}\"" if purl
+    refs << "scheme=\"urn:loc:dataFormat:MODS\" url=\"#{purl}.mods\"" if purl
+    refs << "scheme=\"urn:x-osgeo:link:www-thumbnail\", url=\"http://example.com/preview.jpg\""
     
     # Make the conversion from OGP to GeoBlacklight
     #
@@ -125,10 +138,9 @@ class TransformOgp
     # @see http://www.ietf.org/rfc/rfc5013.txt
     new_layer = {
       :uuid               => uuid,
-      :dc_coverage_spatial_sm => string2array(layer['PlaceKeywords']),
-      :dc_coverage_temporal_sm => dt.year, # XXX: fake data
+      
+      # Dublin Core elements
       :dc_creator_s       => layer['Originator'],
-      :dc_date_dt         => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
       :dc_description_s   => layer['Abstract'],
       :dc_format_s        => (
         (layer_geom_type == 'raster') ? 
@@ -138,25 +150,41 @@ class TransformOgp
       :dc_identifier_s    => uuid,
       :dc_language_s      => 'English', # 'en', # XXX: fake data
       :dc_publisher_s     => layer['Publisher'],
-      :dc_relation_url    => purl.empty?? '' : clean_uri(purl),
       :dc_rights_s        => access,
-      :dc_source_s        => layer['Institution'],
       :dc_subject_sm      => string2array(layer['ThemeKeywords']),
       :dc_title_s         => layer['LayerDisplayName'],
-      :dc_type_s          => 'Dataset',
-      :layer_bbox         => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
-      :layer_collection_s => collection,
-      :layer_geom         => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
-      :layer_ne_pt        => "#{n},#{e}",
-      :layer_sw_pt        => "#{s},#{w}",
+      :dc_type_s          => 'Dataset',  # or 'Image' for non-georectified, 
+                                         # or 'PhysicalObject' for non-digitized maps
+      # Dublin Core terms
+      :dct_isPartOf_sm    => collection,
+      # XXX use schema='' url=''
+      # Uses cat-interop styled URNs
+      # @see https://github.com/OSGeo/Cat-Interop/blob/master/link_types.csv
+      :dct_references_sm  => refs,
+      :dct_spatial_sm     => string2array(layer['PlaceKeywords']),
+      :dct_temporal_sm    => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
+      :dct_issued_dt      => pub_dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
+      :dct_provenance_s   => layer['Institution'],
+
+     #
+     # xmlns:georss="http://www.georss.org/georss"
+     # A bounding box is a rectangular region, often used to define the extents of a map or a rough area of interest. A box contains two space seperate latitude-longitude pairs, with each pair separated by whitespace. The first pair is the lower corner, the second is the upper corner.
+      :georss_box_s       => "#{s} #{w} #{n} #{e}",
+      :georss_polygon_s   => "#{n} #{w} #{n} #{e} #{s} #{e} #{s} #{w} #{n} #{w}",
+     
+      # Layer-specific schema
       :layer_slug_s       => slug,
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
       :layer_srs_s        => 'EPSG:4326', # XXX: fake data
       :layer_geom_type_s  => layer_geom_type.capitalize,
-      :layer_wcs_url      => location['wcs'],
-      :layer_wfs_url      => location['wfs'],
-      :layer_wms_url      => location['wms'],
-      :layer_year_i       => dt.year#, # XXX: migrate to copyField
+      
+      # derived fields used only by solr, for which copyField is insufficient
+      :solr_bbox  => "#{w} #{s} #{e} #{n}", # minX minY maxX maxY
+      :solr_ne_pt => "#{n},#{e}",
+      :solr_sw_pt => "#{s},#{w}",
+      :solr_geom  => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      
+      # :layer_year_i       => dt.year#, # XXX: migrate to copyField
       # :ogp_area_f         => layer['Area'],
       # :ogp_center_x_f     => layer['CenterX'],
       # :ogp_center_y_f     => layer['CenterY'],
@@ -168,6 +196,9 @@ class TransformOgp
       # :ogp_location_s     => layer['Location'],
       # :ogp_workspace_s    => layer['WorkspaceName']
     }
+    
+    # Using dct_references_sm = schema (as URN) URL
+    # Using dc_relation_sm = "isPartOf #{collection}"
 
     # For the layer URLs, ensure that they are clean
     %w{layer_wms_url layer_wfs_url layer_wcs_url layer_metadata_url layer_preview_image_url}.each do |k|
@@ -202,9 +233,9 @@ class TransformOgp
   # @param [String] s has semi-colon/comma/gt delimited array
   # @return [Array] results as array
   def string2array(s)
-    if s =~ /[;,>]/
+    if s.to_s =~ /[;,>]/
       s.split(/\s*[;,>]\s*/).uniq
-    elsif s.size > 0
+    elsif s.is_a?(String) and s.size > 0
       [s]
     else
       nil
