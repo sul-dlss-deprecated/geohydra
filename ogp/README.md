@@ -1,8 +1,8 @@
+{toc:maxLevel=2}
 
 h1. Solr schema
 
-The schema is on Github here: https://github.com/sul-dlss/geohydra/blob/master/solr/kurma-app-test/conf/schema.xml.
-The Solr documents are generated from either MODS or from existing OGP documents.
+The schema XML is on Github here: https://github.com/sul-dlss/geohydra/blob/master/solr/kurma-app-test/conf/schema.xml.
 
 h2. Primary key
 
@@ -13,12 +13,14 @@ h2. Primary key
 
 h2. Dublin Core
 
-See the [Dublin Core Elements Guide|http://dublincore.org/documents/2012/06/14/dces/] for semantic descriptions of all of these fields.
+{note}
+See the [Dublin Core Elements Guide|http://dublincore.org/documents/dcmi-terms/] for semantic descriptions of all of these fields. We're using both DC Elements and DC Terms
+{note}
 
-* *dc_coverage_spatial_sm*: Coverage, placenames. Multiple values allowed. Example: "Paris, France".
-* *dc_coverage_temporal_sm*: Coverage, years. Multiple values allowed. Example: "2010".
-* *dc_creator_s*: Author. Example: "Washington, George".
-* *dc_date_dt*: Date in Solr syntax. Example: "2001-01-01T00:00:00Z".
+* *dct_spatial_sm*: Coverage, placenames. Multiple values allowed. Example: "Paris, France".
+* *dct_temporal_sm*: Coverage, years. Multiple values allowed. Example: "2010".
+* *dc_creator_sm*: Author(s). Example: "Washington, George".
+* *dct_issued_dt*: Date in Solr syntax. Example: "2001-01-01T00:00:00Z".
 * *dc_description_s*: Description.
 * *dc_format_s*: File format (not MIME types). Valid values:
 ** "Shapefile"
@@ -26,12 +28,13 @@ See the [Dublin Core Elements Guide|http://dublincore.org/documents/2012/06/14/d
 * *dc_identifier_s*: Unique identifier. Same as UUID.
 * *dc_language_s*: Language. Example: "English".
 * *dc_publisher_s*: Publisher. Example: "ML InfoMap (Firm)".
-* *dc_relation_url*: URL to related item: Multiple values allowed. Example:
-"http://purl.stanford.edu/vr593vj7147"
+* *dct_references_sm*: URLs to referenced resources. Used scheme and url parameters. scheme values are based on [CatInterop|https://github.com/OSGeo/Cat-Interop/blob/master/link_types.csv] Multiple values allowed. Example:
+scheme="urn:ogc:serviceType:WebFeatureService" url="http://geowebservices-restricted.stanford.edu/geoserver
+/wfs"
 * *dc_rights_s*: Rights for access. Valid values:
 ** "Restricted"
 ** "Public"
-* *dc_source_s*: Source institution: Examples:
+* *dct_provenance_s*: Source institution: Examples:
 ** Berkeley
 ** Harvard
 ** MassGIS
@@ -41,28 +44,31 @@ See the [Dublin Core Elements Guide|http://dublincore.org/documents/2012/06/14/d
 * *dc_subject_sm*: Subject. Multiple values allowed. Example: "Human settlements", "Census".
 * *dc_title_s*: Title.
 * *dc_type_s*: Resource type. Valid values: "Dataset".
+* *dct_isPartOf_sm*: Collection to which the layer belongs.
+
+h2. GeoRSS metadata
+
+* *georss_point_s*: Point representation for layer -- i.e., centroid?
+* *georss_box_s*: Bounding box as maximum values for S W N E. Example: "12.62309 76.76 19.91705 84.76618"
+* *georss_polygon_s*: Shape of the layer as a Polygon.
+Example: "n w n e s e s w n w"
 
 h2. Layer-specific metadata
 
-* *layer_bbox*: Bounding box as maximum values for W S E N. Example: "76.76 12.62309 84.76618 19.91705"
-* *layer_collection_s*: Collection to which the layer belongs.
-* *layer_geom*: Shape of the layer as a Point, LineString, or Polygon WKT.
-Example: "POLYGON((76.76 19.91705, 84.76618 19.91705, 84.76618 12.62309, 76.76 12.62309, 76.76 19.91705))"
 * *layer_slug_s*. Unique identifier visible to the user, used for Permalinks.
 * Example: stanford-vr593vj7147.
 * *layer_id_s*. The complete identifier for the WMS/WFS/WCS layer.
 Example: "druid:vr593vj7147",
-* *layer_srs_s*: The spatial reference system for the layer. Example: EPSG:4326.
 * *layer_geom_type_s*. Valid values are: "Point", "Line", "Polygon", and "Raster".
-* *layer_wcs_url*: Service root for the WCS service that holds this layer. _If applicable._ Example: "http://geowebservices-restricted.stanford.edu/geoserver/wcs"
-* *layer_wfs_url*: Service root for the WFS service that holds this layer. _If applicable._ Example: "http://geowebservices-restricted.stanford.edu/geoserver/wfs"
-* *layer_wms_url*: Service root for the WMS service that holds this layer "http://geowebservices-restricted.stanford.edu/geoserver/wms"
 
-h2. Derived metadata
+h2. Derived metadata used by Solr index
 
-* *layer_ne_pt* (from layer_bbox). North-eastern most point of the bounding box, as (y, x). Example: "83.1,-128.5"
-* *layer_sw_pt* (from layer_bbox). South-western most point of the bounding box, as (y, x). Example: "81.2,-130.1"
-* *layer_year_i* (from dc_date_dt): Year for which layer is valid. Example: 2012.
+* *solr_bbox*: Bounding box as maximum values for W S E N. Example: "76.76 12.62309 84.76618 19.91705"
+* *solr_geom*: Shape of the layer as a Point, LineString, or Polygon WKT.
+Example: "POLYGON((76.76 19.91705, 84.76618 19.91705, 84.76618 12.62309, 76.76 12.62309, 76.76 19.91705))"
+* *solr_ne_pt* (from layer_bbox). North-eastern most point of the bounding box, as (y, x). Example: "83.1,-128.5"
+* *solr_sw_pt* (from layer_bbox). South-western most point of the bounding box, as (y, x). Example: "81.2,-130.1"
+* *solr_year_i* (from dc_coverage_temporal_sm): Year for which layer is valid. Example: 2012.
 
 h2. Solr schema syntax
 
@@ -135,7 +141,7 @@ h1. Solr queries
 h2. Solr 3: Pseudo-spatial using _solr.LatLon_
 
 {warning}
-solr.LatLon does not correctly work across the international dateline in these queries
+solr.LatLonType does not correctly work across the international dateline in these queries. _latlon in these examples are assumed to be solr.LatLonType.
 {warning}
 
 h3. Search for point within 50 km of N40 W114
@@ -166,6 +172,10 @@ h3. Search for bounding box _within_ a bounding box of SW=20,-160 NE=70,-70
 {code}
 
 h2. Solr 4 Spatial -- non JTS
+
+{warning}
+_pt and _bbox in these examples are assumed to be solr.SpatialRecursivePrefixTreeFieldType.
+{warning}
 
 h3. Search for point _within_ a bounding box of SW=20,-160 NE=70,-70
 
@@ -200,7 +210,7 @@ h3. Solr 4: ... using polygon containment
 h3. Solr 4: ... using polygon containment for spatial relevancy
 
 {code:xml}
-<str name="q">layer_bbox:"IsWithin(-160 20 -150 30)"^10 text:railroad</str>
+<str name="q">layer_bbox:"IsWithin(-160 20 -150 30)"^10 railroads</str>
 <str name="fq">layer_bbox:"Intersects(-160 20 -150 30)"</str>
 {code}
 
@@ -208,7 +218,7 @@ h3. Solr 4: ... using polygon containment for spatial relevancy
 h2. Solr 4 Spatial -- JTS
 
 {warning}
-This query requires [JTS|http://tsusiatsoftware.net/jts/main.html] installed in Solr 4
+This query requires [JTS|http://tsusiatsoftware.net/jts/main.html] installed in Solr 4, where the spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory" for the solr.SpatialRecursivePrefixTreeFieldType field class.
 {warning}
 
 
@@ -221,21 +231,20 @@ h3. Search for bbox _intersecting_ bounding box of SW=20,-160 NE=70,-70 using po
 {code}
 
 
-
 h2. Scoring formula
 
 {code}
 text^1
 dc_description_ti^2
-dc_creator_ti^3
+dc_creator_tmi^3
 dc_publisher_ti^3
-layer_collection_ti^4
+dct_isPartOf_tmi^4
 dc_subject_tmi^5
-dc_coverage_spatial_tmi^5
-dc_coverage_temporal_tmi^5
+dct_spatial_tmi^5
+dct_temporal_tmi^5
 dc_title_ti^6
 dc_rights_ti^7
-dc_source_ti^8
+dct_provenance_ti^8
 layer_geom_type_ti^9
 layer_slug_ti^10
 dc_identifier_ti^10
@@ -244,18 +253,16 @@ dc_identifier_ti^10
 h2. Facets
 
 {code:xml}
-<str name="facet.field">dc_coverage_spatial_sm</str>
-<str name="facet.field">dc_creator_s</str>
+<str name="facet.field">dct_spatial_sm</str>
 <str name="facet.field">dc_format_s</str>
 <str name="facet.field">dc_language_s</str>
 <str name="facet.field">dc_publisher_s</str>
 <str name="facet.field">dc_rights_s</str>
-<str name="facet.field">dc_source_s</str>
+<str name="facet.field">dct_provenance_s</str>
 <str name="facet.field">dc_subject_sm</str>
-<str name="facet.field">layer_collection_s</str>
+<str name="facet.field">dct_isPartOf_sm</str>
 <str name="facet.field">layer_geom_type_s</str>
-<str name="facet.field">layer_srs_s</str>
-<str name="facet.field">layer_year_i</str>
+<str name="facet.field">solr_year_i</str>
 {code}
 
 
@@ -263,67 +270,77 @@ h2. Facets
 h1. Solr example documents
 
 See [https://github.com/sul-dlss/geohydra/blob/master/ogp/transform.rb].
-Ideally, these metadata would be generated from MODS, or FGDC, or ISO 19139.
+
+These metadata would be generated from the OGP Schema, or MODS, or FGDC, or ISO 19139.
 
 {code}
-      {
-        "uuid": "http://purl.stanford.edu/zy658cr1728",
-        "dc_coverage_spatial_sm": [
-          "Andaman and Nicobar Islands",
-          "Andaman",
-          "Nicobar",
-          "Car Nicobar Island",
-          "Port Blair",
-          "Indira Point",
-          "Diglipur",
-          "Nancowry Island"
-        ],
-        "dc_creator_s": "ML InfoMap (Firm)",
-        "dc_date_dt": "2001-01-01T00:00:00Z",
-        "dc_description_t": "This point dataset shows village locations with socio-demographic and economic Census data for 2001 for the Union Territory of Andaman and Nicobar Islands, India linked to the 2001 Census. Includes village socio-demographic and economic Census attribute data such as total population, population by sex, household, literacy and illiteracy rates, and employment by industry. This layer is part of the VillageMap dataset which includes socio-demographic and economic Census data for 2001 at the village level for all the states of India. This data layer is sourced from secondary government sources, chiefly Survey of India, Census of India, Election Commission, etc. This map Includes data for 547 villages, 3 towns, 2 districts, and 1 union territory.; This dataset is intended for researchers, students, and policy makers for reference and mapping purposes, and may be used for village level demographic analysis within basic applications to support graphical overlays and analysis with other spatial data.; ",
-        "dc_format_s": "Shapefile",
-        "dc_identifier_s": "http://purl.stanford.edu/zy658cr1728",
-        "dc_language_s": "English",
-        "dc_publisher_s": "ML InfoMap (Firm)",
-        "dc_relation_url": "http://purl.stanford.edu/zy658cr1728",
-        "dc_rights_s": "Restricted",
-        "dc_source_s": "Stanford",
-        "dc_subject_sm": [
-          "Human settlements",
-          "Villages",
-          "Census",
-          "Demography",
-          "Population",
-          "Sex ratio",
-          "Housing",
-          "Labor supply",
-          "Caste",
-          "Literacy",
-          "Society",
-          "Location"
-        ],
-        "dc_title_s": "Andaman and Nicobar, India: Village Socio-Demographic and Economic Census Data, 2001",
-        "dc_type_s": "Dataset",
-        "layer_bbox": "92.234924 6.761581 94.262535 13.637013",
-        "layer_collection_s": "My Collection",
-        "layer_geom": "POLYGON((92.234924 13.637013, 94.262535 13.637013, 94.262535 6.761581, 92.234924 6.761581, 92.234924 13.637013))",
-        "layer_ne_pt_0_d": 13.637013,
-        "layer_ne_pt_1_d": 94.262535,
-        "layer_ne_pt": "13.637013,94.262535",
-        "layer_sw_pt_0_d": 6.761581,
-        "layer_sw_pt_1_d": 92.234924,
-        "layer_sw_pt": "6.761581,92.234924",
-        "layer_slug_s": "stanford-zy658cr1728",
-        "layer_id_s": "druid:zy658cr1728",
-        "layer_srs_s": "EPSG:4326",
-        "layer_geom_type_s": "Point",
-        "layer_wfs_url": "http://geowebservices-restricted.stanford.edu/geoserver/wfs",
-        "layer_wms_url": "http://geowebservices-restricted.stanford.edu/geoserver/wms",
-        "layer_year_i": 2001,
-        "_version_": 1461588063304024000,
-        "timestamp": "2014-03-03T20:36:37.138Z",
-        "score": 1.6703978
-      }
+
+  "uuid": "http://purl.stanford.edu/zy658cr1728",
+  "dc_description_s": "This point dataset shows village locations with socio-demographic and economic Census data f
+or 2001 for the Union Territory of Andaman and Nicobar Islands, India linked to the 2001 Census. Includes village s
+ocio-demographic and economic Census attribute data such as total population, population by sex, household, literac
+y and illiteracy rates, and employment by industry. This layer is part of the VillageMap dataset which includes soc
+io-demographic and economic Census data for 2001 at the village level for all the states of India. This data layer 
+is sourced from secondary government sources, chiefly Survey of India, Census of India, Election Commission, etc. T
+his map Includes data for 547 villages, 3 towns, 2 districts, and 1 union territory.; This dataset is intended for 
+researchers, students, and policy makers for reference and mapping purposes, and may be used for village level demo
+graphic analysis within basic applications to support graphical overlays and analysis with other spatial data.; ",
+  "dc_format_s": "Shapefile",
+  "dc_identifier_s": "http://purl.stanford.edu/zy658cr1728",
+  "dc_language_s": "English",
+  "dc_publisher_s": "ML InfoMap (Firm)",
+  "dc_rights_s": "Restricted",
+  "dc_subject_sm": [
+    "Human settlements",
+    "Villages",
+    "Census",
+    "Demography",
+    "Population",
+    "Sex ratio",
+    "Housing",
+    "Labor supply",
+    "Caste",
+    "Literacy",
+    "Society",
+    "",
+    "Location"
+  ],
+  "dc_title_s": "Andaman and Nicobar, India: Village Socio-Demographic and Economic Census Data, 2001",
+  "dc_type_s": "Dataset",
+  "dct_isPartOf_sm": "My Collection",
+  "dct_references_sm": [
+    "scheme=\"urn:ogc:serviceType:WebFeatureService\" url=\"http://geowebservices-restricted.stanford.edu/geoserver/wfs\"",
+    "scheme=\"urn:ogc:serviceType:WebMapService\" url=\"http://geowebservices-restricted.stanford.edu/geoserver/wms\"",
+    "scheme=\"urn:iso:dataFormat:19139\" url=\"http://purl.stanford.edu/zy658cr1728.iso19139\"",
+    "scheme=\"urn:x-osgeo:link:www\" url=\"http://purl.stanford.edu/zy658cr1728\"",
+    "scheme=\"urn:loc:dataFormat:MODS\" url=\"http://purl.stanford.edu/zy658cr1728.mods\"",
+    "scheme=\"urn:x-osgeo:link:www-thumbnail\", url=\"http://example.com/preview.jpg\""
+  ],
+  "dct_spatial_sm": [
+    "Andaman and Nicobar Islands",
+    "Andaman",
+    "Nicobar",
+    "Car Nicobar Island",
+    "Port Blair",
+    "Indira Point",
+    "Diglipur",
+    "Nancowry Island"
+  ],
+  "dct_temporal_sm": "2001-01-01T00:00:00Z",
+  "dct_issued_dt": "2000-01-01T00:00:00Z",
+  "dct_provenance_s": "Stanford",
+  "georss_box_s": "6.761581 92.234924 13.637013 94.262535",
+  "georss_polygon_s": "13.637013 92.234924 13.637013 94.262535 6.761581 94.262535 6.761581 92.234924 13.637013 92.234924",
+  "layer_slug_s": "stanford-zy658cr1728",
+  "layer_id_s": "druid:zy658cr1728",
+  "layer_srs_s": "EPSG:4326",
+  "layer_geom_type_s": "Point",
+  "solr_bbox": "92.234924 6.761581 94.262535 13.637013",
+  "solr_ne_pt": "13.637013,94.262535",
+  "solr_sw_pt": "6.761581,92.234924",
+  "solr_geom": "POLYGON((92.234924 13.637013, 94.262535 13.637013, 94.262535 6.761581, 92.234924 6.761581, 92.234924 13.637013))"
+  "score": 1.6703978
+}
 {code}
 
 h1. Links
