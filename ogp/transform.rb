@@ -123,13 +123,13 @@ class TransformOgp
       location[k] = location[k].first if location[k].is_a? Array
     end
     refs = []
-    refs << "scheme=\"urn:ogc:serviceType:WebCoverageService\" url=\"#{location['wcs']}\"" if location['wcs']
-    refs << "scheme=\"urn:ogc:serviceType:WebFeatureService\" url=\"#{location['wfs']}\"" if location['wfs']
-    refs << "scheme=\"urn:ogc:serviceType:WebMapService\" url=\"#{location['wms']}\"" if location['wms']
-    refs << "scheme=\"urn:iso:dataFormat:19139\" url=\"#{purl}.iso19139\"" if purl
-    refs << "scheme=\"urn:x-osgeo:link:www\" url=\"#{clean_uri(purl)}\"" if purl
-    refs << "scheme=\"urn:loc:dataFormat:MODS\" url=\"#{purl}.mods\"" if purl
-    refs << "scheme=\"urn:x-osgeo:link:www-thumbnail\", url=\"http://example.com/preview.jpg\""
+    refs << "<xlink type=\"simple\" role=\"urn:ogc:serviceType:WebCoverageService\" href=\"#{location['wcs']}\"/>" if location['wcs']
+    refs << "<xlink type=\"simple\" role=\"urn:ogc:serviceType:WebFeatureService\" href=\"#{location['wfs']}\"/>" if location['wfs']
+    refs << "<xlink type=\"simple\" role=\"urn:ogc:serviceType:WebMapService\" href=\"#{location['wms']}\"/>" if location['wms']
+    refs << "<xlink type=\"simple\" role=\"urn:iso:dataFormat:19139\" href=\"#{purl}.iso19139\"/>" if purl
+    refs << "<xlink type=\"simple\" role=\"urn:x-osgeo:link:www\" href=\"#{clean_uri(purl)}\"/>" if purl
+    refs << "<xlink type=\"simple\" role=\"urn:loc:dataFormat:MODS\" href=\"#{purl}.mods\"/>" if purl
+    refs << "<xlink type=\"simple\" role=\"urn:x-osgeo:link:www-thumbnail\", href=\"http://example.com/preview.jpg\"/>"
     
     # Make the conversion from OGP to GeoBlacklight
     #
