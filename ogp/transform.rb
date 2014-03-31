@@ -129,7 +129,7 @@ class TransformOgp
     refs << "<xlink type=\"simple\" role=\"urn:iso:dataFormat:19139\" href=\"#{purl}.iso19139\"/>" if purl
     refs << "<xlink type=\"simple\" role=\"urn:x-osgeo:link:www\" href=\"#{clean_uri(purl)}\"/>" if purl
     refs << "<xlink type=\"simple\" role=\"urn:loc:dataFormat:MODS\" href=\"#{purl}.mods\"/>" if purl
-    refs << "<xlink type=\"simple\" role=\"urn:x-osgeo:link:www-thumbnail\", href=\"http://example.com/preview.jpg\"/>"
+    refs << "<xlink type=\"simple\" role=\"urn:x-osgeo:link:www-thumbnail\" href=\"http://example.com/preview.jpg\"/>"
     
     # Make the conversion from OGP to GeoBlacklight
     #
