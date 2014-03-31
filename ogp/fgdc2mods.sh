@@ -4,5 +4,6 @@ set -x
 for fn in fgdc/*.xml; do
   if [ ! -r mods/`basename $fn` ]; then
     xsltproc-saxon $fn fgdc2mods.xsl mods/`basename $fn`
+    #xsltproc fgdc2mods.xsl $fn > mods/`basename $fn`
   fi
 done
