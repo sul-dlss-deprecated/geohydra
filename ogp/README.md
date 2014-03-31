@@ -43,7 +43,7 @@ scheme="urn:ogc:serviceType:WebFeatureService" url="http://geowebservices-restri
 ** Tufts
 * *dc_subject_sm*: Subject. Multiple values allowed. Example: "Human settlements", "Census".
 * *dc_title_s*: Title.
-* *dc_type_s*: Resource type. Valid values: "Dataset".
+* *dc_type_s*: Resource type. dc:type=Dataset for georectified images, dc:type=Image for digitaized, non-georectified images, or dc:type=PhysicalObject for paper maps (no digitization).
 * *dct_isPartOf_sm*: Collection to which the layer belongs.
 
 h2. GeoRSS metadata
@@ -66,8 +66,8 @@ h2. Derived metadata used by Solr index
 * *solr_bbox*: Bounding box as maximum values for W S E N. Example: "76.76 12.62309 84.76618 19.91705"
 * *solr_geom*: Shape of the layer as a Point, LineString, or Polygon WKT.
 Example: "POLYGON((76.76 19.91705, 84.76618 19.91705, 84.76618 12.62309, 76.76 12.62309, 76.76 19.91705))"
-* *solr_ne_pt* (from layer_bbox). North-eastern most point of the bounding box, as (y, x). Example: "83.1,-128.5"
-* *solr_sw_pt* (from layer_bbox). South-western most point of the bounding box, as (y, x). Example: "81.2,-130.1"
+* *solr_ne_pt* (from solr_bbox). North-eastern most point of the bounding box, as (y, x). Example: "83.1,-128.5"
+* *solr_sw_pt* (from solr_bbox). South-western most point of the bounding box, as (y, x). Example: "81.2,-130.1"
 * *solr_year_i* (from dc_coverage_temporal_sm): Year for which layer is valid. Example: 2012.
 
 h2. Solr schema syntax
@@ -151,7 +151,7 @@ Note: Solr _bbox_ uses circle with radius not rectangles.
 {code:xml}
 <str name="d">50</str>
 <str name="q">*:*</str>
-<str name="sfield">layer_latlon</str>
+<str name="sfield">solr_latlon</str>
 <str name="pt">40,-114</str>
 <str name="fq">{!geofilt}</str>
 {code}
@@ -161,14 +161,14 @@ h3. Search for single point _within_ a bounding box of SW=40,-120 NE=50,-110
 
 {code:xml}
 <str name="q">*:*</str>
-<str name="fq">layer_latlon:[40,-120 TO 50,-110]</str>
+<str name="fq">solr_latlon:[40,-120 TO 50,-110]</str>
 {code}
 
 h3. Search for bounding box _within_ a bounding box of SW=20,-160 NE=70,-70
 
 {code:xml}
 <str name="q">*:*</str>
-<str name="fq">layer_sw_latlon:[20,-160 TO 70,-70] AND layer_ne_latlon:[20,-160 TO 70,-70]</str>
+<str name="fq">solr_sw_latlon:[20,-160 TO 70,-70] AND solr_ne_latlon:[20,-160 TO 70,-70]</str>
 {code}
 
 h2. Solr 4 Spatial -- non JTS
@@ -181,14 +181,14 @@ h3. Search for point _within_ a bounding box of SW=20,-160 NE=70,-70
 
 {code:xml}
 <str name="q">*:*</str>
-<str name="fq">layer_pt:"Intersects(-160 20 -70 70)"</str>
+<str name="fq">solr_pt:"Intersects(-160 20 -70 70)"</str>
 {code}
 
 h3. Search for bounding box _within_ a bounding box of SW=20,-160 NE=70,-70
 
 {code:xml}
 <str name="q">*:*</str>
-<str name="fq">layer_sw_pt:[20,-160 TO 70,-70] AND layer_ne_pt:[20,-160 TO 70,-70]</str>
+<str name="fq">solr_sw_pt:[20,-160 TO 70,-70] AND solr_ne_pt:[20,-160 TO 70,-70]</str>
 {code}
 
 
@@ -196,7 +196,7 @@ h3. Solr 4: ... using polygon intersection
 
 {code:xml}
 <str name="q">*:*</str>
-<str name="fq">layer_bbox:"Intersects(-160 20 -70 70)"</str>
+<str name="fq">solr_bbox:"Intersects(-160 20 -70 70)"</str>
 {code}
 
 
@@ -204,14 +204,14 @@ h3. Solr 4: ... using polygon containment
 
 {code:xml}
 <str name="q">*:*</str>
-<str name="fq">layer_bbox:"IsWithin(-160 20 -150 30)"</str>
+<str name="fq">solr_bbox:"IsWithin(-160 20 -150 30)"</str>
 {code}
 
 h3. Solr 4: ... using polygon containment for spatial relevancy
 
 {code:xml}
-<str name="q">layer_bbox:"IsWithin(-160 20 -150 30)"^10 railroads</str>
-<str name="fq">layer_bbox:"Intersects(-160 20 -150 30)"</str>
+<str name="q">solr_bbox:"IsWithin(-160 20 -150 30)"^10 railroads</str>
+<str name="fq">solr_bbox:"Intersects(-160 20 -150 30)"</str>
 {code}
 
 
@@ -227,7 +227,7 @@ h3. Search for bbox _intersecting_ bounding box of SW=20,-160 NE=70,-70 using po
 
 {code:xml}
 <str name="q">*:*</str>
-<str name="fq">layer_bbox:"Intersects(POLYGON((-160 20, -160 70, -70 70, -70 20, -160 20)))"</str>
+<str name="fq">solr_bbox:"Intersects(POLYGON((-160 20, -160 70, -70 70, -70 20, -160 20)))"</str>
 {code}
 
 
