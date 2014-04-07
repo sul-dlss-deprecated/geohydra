@@ -123,16 +123,16 @@ class TransformOgp
     %w{wcs wfs wms}.each do |k|
       location[k] = location[k].first if location[k].is_a? Array
     end
-    refs = []
-    refs << "<xlink type=\"simple\" role=\"http://www.opengis.net/def/serviceType/ogc/wcs\" href=\"#{location['wcs']}\"/>" if location['wcs']
-    refs << "<xlink type=\"simple\" role=\"http://www.opengis.net/def/serviceType/ogc/wfs\" href=\"#{location['wfs']}\"/>" if location['wfs']
-    refs << "<xlink type=\"simple\" role=\"http://www.opengis.net/def/serviceType/ogc/wms\" href=\"#{location['wms']}\"/>" if location['wms']
+    refs = {}
+    refs['http://www.opengis.net/def/serviceType/ogc/wcs'] = "#{location['wcs']}" if location['wcs']
+    refs['http://www.opengis.net/def/serviceType/ogc/wfs'] = "#{location['wfs']}" if location['wfs']
+    refs['http://www.opengis.net/def/serviceType/ogc/wms'] = "#{location['wms']}" if location['wms']
     if purl
-      refs << "<xlink type=\"simple\" role=\"http://library.stanford.edu/iiif/image-api/1.1/context.json\" href=\"#{purl}.iiif\"/>"
-      refs << "<xlink type=\"simple\" role=\"http://schema.org/thumbnailUrl\" href=\"#{purl}.jpg\"/>"
-      refs << "<xlink type=\"simple\" role=\"http://schema.org/url\" href=\"#{clean_uri(purl)}\"/>"
-      refs << "<xlink type=\"simple\" role=\"http://www.isotc211.org/schemas/2005/gmd/\" href=\"#{purl}.iso19139\"/>"
-      refs << "<xlink type=\"simple\" role=\"http://www.loc.gov/mods/v3\" href=\"#{purl}.mods\"/>"
+      refs["http://library.stanford.edu/iiif/image-api/1.1/context.json"] = "#{purl}.iiif"
+      refs["http://schema.org/thumbnailUrl"] = "#{purl}.jpg"
+      refs["http://schema.org/url"] = "#{clean_uri(purl)}"
+      refs["http://www.isotc211.org/schemas/2005/gmd/"] = "#{purl}.iso19139"
+      refs["http://www.loc.gov/mods/v3"] = "#{purl}.mods"
     end
     
     # Make the conversion from OGP to GeoBlacklight
@@ -161,7 +161,7 @@ class TransformOgp
                                          # or 'PhysicalObject' for non-digitized maps
       # Dublin Core terms
       :dct_isPartOf_sm    => collection.nil?? nil : [collection],
-      :dct_references_sm  => refs,
+      :dct_references_sm  => refs.to_json.to_s,
       :dct_spatial_sm     => string2array(layer['PlaceKeywords']),
       :dct_temporal_sm    => [dt.year.to_s],
       :dct_issued_s       => pub_dt.year.to_s,

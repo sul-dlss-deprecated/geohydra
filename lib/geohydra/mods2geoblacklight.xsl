@@ -64,7 +64,7 @@
           <xsl:text>stanford-</xsl:text><xsl:value-of select="$druid"/>
         </field>
         <xsl:choose>
-          <xsl:when test="mods:originInfo/mods:dateValid">
+          <xsl:when test="mods:originInfo/mods:dateIssued">
             <field name="dct_issued_s">
               <xsl:value-of select="mods:originInfo/mods:dateIssued"/>
             </field>
@@ -77,9 +77,6 @@
           <xsl:choose>
             <xsl:when test="mods:subject/mods:temporal">
               <xsl:value-of select="mods:subject/mods:temporal"/>
-            </xsl:when>
-            <xsl:when test="mods:originInfo/mods:dateIssued">
-              <xsl:value-of select="mods:originInfo/mods:dateIssued"/>
             </xsl:when>
           </xsl:choose>
         </field>
