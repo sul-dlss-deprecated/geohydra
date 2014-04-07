@@ -119,6 +119,7 @@ class TransformOgp
     layer_geom_type = layer['DataType'].to_s.downcase
     layer_geom_type = 'raster' if layer_geom_type == 'paper map'
     
+    # @see https://github.com/OSGeo/Cat-Interop
     %w{wcs wfs wms}.each do |k|
       location[k] = location[k].first if location[k].is_a? Array
     end
@@ -126,10 +127,13 @@ class TransformOgp
     refs << "<xlink type=\"simple\" role=\"http://www.opengis.net/def/serviceType/ogc/wcs\" href=\"#{location['wcs']}\"/>" if location['wcs']
     refs << "<xlink type=\"simple\" role=\"http://www.opengis.net/def/serviceType/ogc/wfs\" href=\"#{location['wfs']}\"/>" if location['wfs']
     refs << "<xlink type=\"simple\" role=\"http://www.opengis.net/def/serviceType/ogc/wms\" href=\"#{location['wms']}\"/>" if location['wms']
-    refs << "<xlink type=\"simple\" role=\"http://www.isotc211.org/schemas/2005/gmd/\" href=\"#{purl}.iso19139\"/>" if purl
-    refs << "<xlink type=\"simple\" role=\"http://schema.org/url\" href=\"#{clean_uri(purl)}\"/>" if purl
-    refs << "<xlink type=\"simple\" role=\"http://www.loc.gov/mods/v3\" href=\"#{purl}.mods\"/>" if purl
-    refs << "<xlink type=\"simple\" role=\"http://schema.org/thumbnailUrl\" href=\"#{purl}.jpg\"/>" if purl
+    if purl
+      refs << "<xlink type=\"simple\" role=\"http://library.stanford.edu/iiif/image-api/1.1/context.json\" href=\"#{purl}.iiif\"/>"
+      refs << "<xlink type=\"simple\" role=\"http://schema.org/thumbnailUrl\" href=\"#{purl}.jpg\"/>"
+      refs << "<xlink type=\"simple\" role=\"http://schema.org/url\" href=\"#{clean_uri(purl)}\"/>"
+      refs << "<xlink type=\"simple\" role=\"http://www.isotc211.org/schemas/2005/gmd/\" href=\"#{purl}.iso19139\"/>"
+      refs << "<xlink type=\"simple\" role=\"http://www.loc.gov/mods/v3\" href=\"#{purl}.mods\"/>"
+    end
     
     # Make the conversion from OGP to GeoBlacklight
     #
@@ -140,7 +144,7 @@ class TransformOgp
       :uuid               => uuid,
       
       # Dublin Core elements
-      :dc_creator_s       => layer['Originator'],
+      :dc_creator_sm      => string2array(layer['Originator']),
       :dc_description_s   => layer['Abstract'],
       :dc_format_s        => (
         (layer_geom_type == 'raster') ? 
@@ -156,14 +160,11 @@ class TransformOgp
       :dc_type_s          => 'Dataset',  # or 'Image' for non-georectified, 
                                          # or 'PhysicalObject' for non-digitized maps
       # Dublin Core terms
-      :dct_isPartOf_sm    => collection,
-      # XXX use schema='' url=''
-      # Uses cat-interop styled URNs
-      # @see https://github.com/OSGeo/Cat-Interop/blob/master/link_types.csv
+      :dct_isPartOf_sm    => collection.nil?? nil : [collection],
       :dct_references_sm  => refs,
       :dct_spatial_sm     => string2array(layer['PlaceKeywords']),
-      :dct_temporal_sm    => dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
-      :dct_issued_dt      => pub_dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
+      :dct_temporal_sm    => [dt.year.to_s],
+      :dct_issued_s       => pub_dt.year.to_s,
       :dct_provenance_s   => layer['Institution'],
 
      #
@@ -183,6 +184,8 @@ class TransformOgp
       :solr_ne_pt => "#{n},#{e}",
       :solr_sw_pt => "#{s},#{w}",
       :solr_geom  => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
+      :solr_year_i => dt.year,
+      :solr_issued_dt => pub_dt.strftime('%FT%TZ') # Solr requires 1995-12-31T23:59:59Z
       
       # :layer_year_i       => dt.year#, # XXX: migrate to copyField
       # :ogp_area_f         => layer['Area'],
@@ -197,24 +200,11 @@ class TransformOgp
       # :ogp_workspace_s    => layer['WorkspaceName']
     }
     
-    # Using dct_references_sm = schema (as URN) URL
-    # Using dc_relation_sm = "isPartOf #{collection}"
-
-    # For the layer URLs, ensure that they are clean
-    %w{layer_wms_url layer_wfs_url layer_wcs_url layer_metadata_url layer_preview_image_url}.each do |k|
-      k = k.to_sym
-      if new_layer[k].is_a? Array and not new_layer[k].first.nil?
-        new_layer[k] = clean_uri(new_layer[k].first)
-      else
-        new_layer[k] = clean_uri(new_layer[k])
-      end
-    end
-
     # Remove any fields that are blank
-    new_layer.each do |k, v|
+    new_layer.each do |k, v| 
       new_layer.delete(k) if v.nil? or (v.respond_to?(:empty?) and v.empty?)
     end
-
+    
     # Write the JSON record for the GeoBlacklight layer
     @output.write JSON::pretty_generate(new_layer)
     @output.write "\n,\n"
