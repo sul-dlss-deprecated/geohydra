@@ -24,6 +24,7 @@
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
   <xsl:strip-space elements="*"/>
   <xsl:template match="/mods:mods">
+    <!-- XXX: Handle other institution naming schemes -->
     <xsl:variable name="druid" select="substring($purl, string-length($purl)-10)"/>
     <add>
       <doc>
@@ -33,9 +34,11 @@
         <field name="dc_identifier_s">
           <xsl:value-of select="$purl"/>
         </field>
-        <field name="layer_collection_s">
+        <!-- XXX: handle multivalued relations -->
+        <field name="dct_isPartOf_sm">
           <xsl:value-of select="mods:relatedItem/mods:titleInfo/mods:title"/>
         </field>
+        <!-- XXX: handle GeoTIFF -->
         <field name="dc_format_s">
           <xsl:text>Shapefile</xsl:text>
         </field>
@@ -45,41 +48,38 @@
         <field name="dc_rights_s">
           <xsl:text>Restricted</xsl:text>
         </field>
-        <field name="dc_source_s">
+        <!-- XXX: Handle other institutions -->
+        <field name="dct_provenance_s">
           <xsl:text>Stanford</xsl:text>
         </field>
         <field name="dc_type_s">
           <xsl:text>Dataset</xsl:text>
         </field>
+        <!-- XXX: Handle other institution naming schemes -->
         <field name="layer_id_s">
           <xsl:text>druid:</xsl:text><xsl:value-of select="$druid"/>
         </field>
+        <!-- XXX: Handle other institutions -->
         <field name="layer_slug_s">
           <xsl:text>stanford-</xsl:text><xsl:value-of select="$druid"/>
         </field>
         <xsl:choose>
           <xsl:when test="mods:originInfo/mods:dateValid">
-            <field name="dc_date_dt">
-              <xsl:value-of select="substring(mods:originInfo/mods:dateIssued, 1, 4)"/>
-              <xsl:text>-01-01T01:01:01Z</xsl:text>
+            <field name="dct_issued_s">
+              <xsl:value-of select="mods:originInfo/mods:dateIssued"/>
             </field>
-          </xsl:when>
-        </xsl:choose>
-
-        <xsl:choose>
-          <xsl:when test="mods:originInfo/mods:dateValid">
-            <field name="layer_year_i">
+            <field name="solr_year_i">
               <xsl:value-of select="substring(mods:originInfo/mods:dateIssued, 1, 4)"/>
             </field>
           </xsl:when>
         </xsl:choose>
-        <field name="dc_coverage_temporal_sm">
+        <field name="dct_temporal_sm">
           <xsl:choose>
             <xsl:when test="mods:subject/mods:temporal">
-              <xsl:value-of select="substring(mods:subject/mods:temporal, 1, 4)"/>
+              <xsl:value-of select="mods:subject/mods:temporal"/>
             </xsl:when>
             <xsl:when test="mods:originInfo/mods:dateIssued">
-              <xsl:value-of select="substring(mods:originInfo/mods:dateIssued, 1, 4)"/>
+              <xsl:value-of select="mods:originInfo/mods:dateIssued"/>
             </xsl:when>
           </xsl:choose>
         </field>
@@ -101,14 +101,11 @@
         <field name="dc_publisher_s">
           <xsl:value-of select="mods:originInfo/mods:publisher"/>
         </field>
-        <field name="dc_creator_s">
-          <xsl:for-each select="mods:name">
+        <xsl:for-each select="mods:name">
+          <field name="dc_creator_sm">
             <xsl:value-of select="mods:namePart"/>
-            <xsl:if test="position()!=last()">
-              <xsl:text>; </xsl:text>
-            </xsl:if>
-          </xsl:for-each>
-        </field>
+          </field>
+        </xsl:for-each>
         <field name="dc_description_s">
           <xsl:for-each select="mods:abstract[@displayLabel='Abstract' or @displayLabel='Purpose']/text()">
             <xsl:value-of select="."/>
@@ -127,16 +124,63 @@
           </field>
         </xsl:for-each>
         <xsl:for-each select="mods:subject/mods:geographic">
-          <field name="dc_coverage_spatial_sm">
+          <field name="dc_spatial_sm">
             <xsl:value-of select="text()"/>
           </field>
         </xsl:for-each>
+        <field name="dct_references_sm">
+          <xlink type="simple" role="http://schema.org/url">
+            <xsl:attribute name="href">
+              <xsl:value-of select="$purl"/>
+            </xsl:attribute>
+          </xlink>
+          <xlink type="simple" role="http://www.opengis.net/def/serviceType/ogc/wms">
+            <xsl:attribute name="href">
+              <xsl:value-of select="$geoserver_root"/>
+              <xsl:text>/wms</xsl:text>
+            </xsl:attribute>
+          </xlink>
+          <xlink type="simple" role="http://www.opengis.net/def/serviceType/ogc/wfs">
+            <xsl:attribute name="href">
+              <xsl:value-of select="$geoserver_root"/>
+              <xsl:text>/wfs</xsl:text>
+            </xsl:attribute>
+          </xlink>
+          <xlink type="simple" role="http://www.opengis.net/def/serviceType/ogc/wcs">
+            <xsl:attribute name="href">
+              <xsl:value-of select="$geoserver_root"/>
+              <xsl:text>/wcs</xsl:text>
+            </xsl:attribute>
+          </xlink>
+        </field>
         <xsl:for-each select="mods:extension[@displayLabel='geo']/rdf:RDF/rdf:Description/gml:boundedBy/gml:Envelope">
-          <xsl:variable name="x2" select="number(substring-before(gml:upperCorner/text(), ' '))"/>
-          <xsl:variable name="x1" select="number(substring-before(gml:lowerCorner/text(), ' '))"/>
-          <xsl:variable name="y2" select="number(substring-after(gml:upperCorner/text(), ' '))"/>
-          <xsl:variable name="y1" select="number(substring-after(gml:lowerCorner/text(), ' '))"/>
-          <field name="layer_geom">
+          <xsl:variable name="x2" select="number(substring-before(gml:upperCorner/text(), ' '))"/><!-- E -->
+          <xsl:variable name="x1" select="number(substring-before(gml:lowerCorner/text(), ' '))"/><!-- W -->
+          <xsl:variable name="y2" select="number(substring-after(gml:upperCorner/text(), ' '))"/><!-- N -->
+          <xsl:variable name="y1" select="number(substring-after(gml:lowerCorner/text(), ' '))"/><!-- S -->
+          <field name="georss_polygon_s">
+            <xsl:text></xsl:text>
+            <xsl:value-of select="$y1"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$x1"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$y2"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$x1"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$y2"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$x2"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$y1"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$x2"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$y1"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$x1"/>
+          </field>
+          <field name="solr_geom">
             <xsl:text>POLYGON((</xsl:text>
             <xsl:value-of select="$x1"/>
             <xsl:text> </xsl:text>
@@ -159,7 +203,16 @@
             <xsl:value-of select="$y1"/>
             <xsl:text>))</xsl:text>
           </field>
-          <field name="layer_bbox">
+          <field name="georss_box_s">
+            <xsl:value-of select="$y1"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$x1"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$y2"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$x2"/>
+          </field>
+          <field name="solr_bbox">
             <xsl:value-of select="$x1"/>
             <xsl:text> </xsl:text>
             <xsl:value-of select="$y1"/>
@@ -168,31 +221,28 @@
             <xsl:text> </xsl:text>
             <xsl:value-of select="$y2"/>
           </field>
-          <field name="layer_sw_pt">
+          <field name="solr_sw_pt">
             <xsl:value-of select="$y1"/>
             <xsl:text>,</xsl:text>
             <xsl:value-of select="$x1"/>
           </field>
-          <field name="layer_ne_pt">
+          <field name="solr_ne_pt">
             <xsl:value-of select="$y2"/>
             <xsl:text>,</xsl:text>
             <xsl:value-of select="$x2"/>
           </field>
-          <field name="layer_srs_s">
+          <!-- <field name="solr_srs_s">
             <xsl:value-of select="@gml:srsName"/>
-          </field>
+          </field> -->
         </xsl:for-each>
-        <field name="layer_wms_url">
+        <field name="solr_wms_url">
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wms</xsl:text>
         </field>
         <!-- XXX: need to check for WFS vs WCS -->
-        <field name="layer_wfs_url">
+        <field name="solr_wfs_url">
           <xsl:value-of select="$geoserver_root"/>
           <xsl:text>/wfs</xsl:text>
-        </field>
-        <field name="dc_relation_url">
-          <xsl:value-of select="$purl"/>
         </field>
       </doc>
     </add>
