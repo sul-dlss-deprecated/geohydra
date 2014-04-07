@@ -124,6 +124,7 @@ class TransformOgp
       location[k] = location[k].first if location[k].is_a? Array
     end
     refs = {}
+    refs['@context'] = "http://github.com/OSGeo/Cat-Interop"
     refs['http://www.opengis.net/def/serviceType/ogc/wcs'] = "#{location['wcs']}" if location['wcs']
     refs['http://www.opengis.net/def/serviceType/ogc/wfs'] = "#{location['wfs']}" if location['wfs']
     refs['http://www.opengis.net/def/serviceType/ogc/wms'] = "#{location['wms']}" if location['wms']
