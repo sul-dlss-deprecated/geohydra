@@ -176,7 +176,7 @@ class TransformOgp
       # Layer-specific schema
       :layer_slug_s       => slug,
       :layer_id_s         => layer['WorkspaceName'] + ':' + layer['Name'],
-      :layer_srs_s        => 'EPSG:4326', # XXX: fake data
+      # :layer_srs_s        => 'EPSG:4326', # XXX: fake data
       :layer_geom_type_s  => layer_geom_type.capitalize,
       
       # derived fields used only by solr, for which copyField is insufficient
@@ -185,7 +185,10 @@ class TransformOgp
       :solr_sw_pt => "#{s},#{w}",
       :solr_geom  => "POLYGON((#{w} #{n}, #{e} #{n}, #{e} #{s}, #{w} #{s}, #{w} #{n}))",
       :solr_year_i => dt.year,
-      :solr_issued_dt => pub_dt.strftime('%FT%TZ') # Solr requires 1995-12-31T23:59:59Z
+      :solr_issued_dt => pub_dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
+      :solr_wms_url => location['wms'],
+      :solr_wfs_url => location['wfs'],
+      :solr_wcs_url => location['wcs']
       
       # :layer_year_i       => dt.year#, # XXX: migrate to copyField
       # :ogp_area_f         => layer['Area'],
