@@ -1,12 +1,15 @@
 #!/usr/bin/env ruby
 
-require 'json'
+require 'csv'
+# require 'json'
 require 'net/http'
-require 'awesome_print'
+# require 'awesome_print'
 
-JSON::parse(File.read('status.json')).each do |h|
-  # ap({:h => h})
-  uri = URI(h['submitted_query'])
+STDOUT.sync = true
+
+CSV.foreach('status.csv') do |url|
+  # ap({:url => url.first})
+  uri = URI(url.first)
   druid = 'unknown'
   druid = $1 if uri.to_s =~ /druid%3A([a-z0-9]+)/
   # ap({:uri => uri})
@@ -17,7 +20,11 @@ JSON::parse(File.read('status.json')).each do |h|
     start = Time.now
     res = Net::HTTP.get_response(uri)
     sz = res.body.size
-    puts [Time.now, druid, res.code, res['content-type'], sz, res['geowebcache-cache-result'], Time.now - start].join(', ')
+    open("images/#{druid}.png", 'wb') do |f|
+      f.write(res.body)
+    end
+    finish = Time.now
+    puts [finish, druid, res.code, res['content-type'], sz, res['geowebcache-cache-result'], finish - start].join(', ')
   rescue => e
     puts e.class, e
   end
