@@ -14,54 +14,52 @@ g = GeoHydra::Gazetteer.new
 
 K2GEONAMESID = {
   'United States' => 6252001,                     # simple
-  'Chandīgarh' => 1274744,                        # with UTF8
+  'Chandīgarh (India : Union Territory)' => 1274744,                        # with UTF8
   'Maharashtra (India)' => 1264418,               # without UTF8
-  'Chandni Chowk' => 6619404,                     # same as placename
-  'Jāt' => 1269155,                               # no LC with UTF8
-  'Adamour, Haryana (India)' => 7646705,          # with qualifier
+  'Chandni Chowk (Delhi, India)' => 6619404,      # same as placename
+  'Jāt (India)' => 1269155,                       # no LC with UTF8
   'Bhīlwāra (India : District)' => 1275961,       # with UTF8 and qualifier
-  'Anand District, Gujarāt (India)' => 7627221,   # UTF8 in qualifier
-  'Ratnagiri District, Maharashtra (India)' => 1258340, # with qualifier and UTF8 in LCNAF
-  'Monterey Harbor (California)' => 5374395 # no LC
+  'Anand (India : District)' => 7627221,   # UTF8 in qualifier
+  'Ratnāgiri (India : District)' => 1258340, # with qualifier and UTF8 in LCNAF
+  'Monterey Harbor (Calif.)' => 5374395 # no LC
 }
 
 K2PLACENAME = {
   'United States' => 'United States',
-  'Chandīgarh' => 'Chandīgarh',
+  'Chandīgarh (India : Union Territory)' => 'Chandīgarh',
   'Maharashtra (India)' => 'Mahārāshtra',
-  'Chandni Chowk' => 'Chandni Chowk',
-  'Jāt' => 'Jāt',
-  'Adamour, Haryana (India)' => 'Adampur',
+  'Chandni Chowk (Delhi, India)' => 'Chandni Chowk',
+  'Jāt (India)' => 'Jāt',
   'Bhīlwāra (India : District)' => 'Bhīlwāra',
-  'Anand District, Gujarāt (India)' => 'Anand',
-  'Ratnagiri District, Maharashtra (India)' => 'Ratnagiri District',
-  'Monterey Harbor (California)' => 'Monterey Harbor'
+  'Anand (India : District)' => 'Anand',
+  'Ratnāgiri (India : District)' => 'Ratnagiri District',
+  'Monterey Harbor (Calif.)' => 'Monterey Harbor'
 }
 
 K2LCSH = {
   'Earth' => 'Earth (Planet)',
   'United States' => 'United States',
-  'Chandīgarh' => 'Chandīgarh (India : Union Territory)',
+  'Chandīgarh (India : Union Territory)' => 'Chandīgarh (India : Union Territory)',
   'Maharashtra (India)' => 'Maharashtra (India)',
-  'Chandni Chowk' => 'Chandni Chowk (Delhi, India)',
-  'Jāt' => nil,
+  'Chandni Chowk (Delhi, India)' => 'Chandni Chowk (Delhi, India)',
+  'Jāt (India)' => nil,
   'Bhīlwāra (India : District)' => 'Bhīlwāra (India : District)',
-  'Anand District, Gujarāt (India)' => 'Anand (India : District)',
-  'Ratnagiri District, Maharashtra (India)' => 'Ratnāgiri (India : District)',
-  'Monterey Harbor (California)' => nil
+  'Anand (India : District)' => 'Anand (India : District)',
+  'Ratnāgiri (India : District)' => 'Ratnāgiri (India : District)',
+  'Monterey Harbor (Calif.)' => nil
 }
 
 K2LCURI = {
   'Earth' => 'http://id.loc.gov/authorities/subjects/sh85040427',
   'United States' => 'http://id.loc.gov/authorities/names/n78095330',
-  'Chandīgarh' => 'http://id.loc.gov/authorities/names/n81109268',
+  'Chandīgarh (India : Union Territory)' => 'http://id.loc.gov/authorities/names/n81109268',
   'Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n50000932',
-  'Chandni Chowk' => 'http://id.loc.gov/authorities/names/no2004006256',
+  'Chandni Chowk (Delhi, India)' => 'http://id.loc.gov/authorities/names/no2004006256',
   'Bhīlwāra (India : District)' => 'http://id.loc.gov/authorities/names/n89284170',
-  'Jāt' => nil,
-  'Anand District, Gujarāt (India)' => 'http://id.loc.gov/authorities/names/n2008050108',
-  'Ratnagiri District, Maharashtra (India)' => 'http://id.loc.gov/authorities/names/n83150618',
-  'Monterey Harbor (California)' => nil
+  'Jāt (India)' => nil,
+  'Anand (India : District)' => 'http://id.loc.gov/authorities/names/n2008050108',
+  'Ratnāgiri (India : District)' => 'http://id.loc.gov/authorities/names/n83150618',
+  'Monterey Harbor (Calif.)' => nil
 }
 
 
