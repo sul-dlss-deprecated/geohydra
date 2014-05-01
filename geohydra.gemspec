@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = 'geohydra'
   s.version = GeoHydra::VERSION
   s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '~> 1.9.3'
+  s.required_ruby_version = '>= 1.9.3'
   s.authors = ['Darren Hardy']
   s.email = ['drh@stanford.edu']
   s.summary = %q{GeoHydra}
@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
+  
+  s.add_dependency 'addressable', '2.3.5' # lockdown as workaround to 2.3.6 frozen error message
 
   s.add_dependency 'activerecord', '~> 3.2.0'
   s.add_dependency 'activerecord-postgresql-adapter', '~> 0.0.1'
@@ -33,10 +35,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'rsolr', '~> 1.0.9'
   
   # SUL-DLSS gems on github
-  s.add_dependency 'dor-services', '~> 4.5.0'
+  s.add_dependency 'dor-services', '~> 4.5'
   s.add_dependency 'druid-tools', '~> 0.2'
   s.add_dependency 'mods', '~> 0.0.23'
-  s.add_dependency 'rgeoserver', '~> 0.7.0'
+  s.add_dependency 'rgeoserver', '~> 0.7'
 
   s.add_development_dependency 'equivalent-xml'
   s.add_development_dependency 'pry'
