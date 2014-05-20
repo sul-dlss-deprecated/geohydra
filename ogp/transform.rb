@@ -128,8 +128,9 @@ class TransformOgp
     refs['http://www.opengis.net/def/serviceType/ogc/wfs'] = "#{location['wfs']}" if location['wfs']
     refs['http://www.opengis.net/def/serviceType/ogc/wms'] = "#{location['wms']}" if location['wms']
     if purl
-      refs["http://schema.org/thumbnailUrl"] = "#{purl}.jpg"
+      refs["http://schema.org/thumbnailUrl"] = "http://stacks.stanford.edu/file/druid:#{id}/preview.jpg"
       refs["http://schema.org/url"] = "#{clean_uri(purl)}"
+      refs["http://schema.org/DownloadAction"] = "http://stacks.stanford.edu/file/druid:#{id}/data.zip"
       refs["http://www.isotc211.org/schemas/2005/gmd/"] = "#{purl}.iso19139"
       refs["http://www.loc.gov/mods/v3"] = "#{purl}.mods"
     end
