@@ -33,7 +33,7 @@ class IngestOgp
   
   def close
     @solr.commit
-    @solr.optimize
+    #@solr.optimize
     @solr = nil
   end
   
