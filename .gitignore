@@ -22,3 +22,4 @@ tmp
 _yardoc
 lib/ArcGIS*.xsl
 lib/saxon*.jar
+*.json
