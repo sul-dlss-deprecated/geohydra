@@ -1,7 +1,7 @@
 GeoHydra
 =======
 
-Geospatial MetaData ToolKit for use as a Geo[Hydra](http://projecthydra.org) head.
+Geospatial MetaData ToolKit for use as a Geo[Hydra](http://projecthydra.org) head. Note that some of the functionality in GeoHydra is now migrated to our automated robot suite at https://github.com/sul-dlss/gis-robot-suite.
 
 Setup
 -----
