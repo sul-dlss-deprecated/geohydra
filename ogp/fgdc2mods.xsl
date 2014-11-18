@@ -75,23 +75,24 @@
       </xsl:when> 
      </xsl:choose>
     </xsl:variable>
-    
+   
     <!-- institution for mods:recordContentSource -->
     <xsl:variable name="institution">
+      <xsl:for-each select="distinfo/distrib">
       <xsl:choose>
-        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'Harvard')">
+        <xsl:when test="contains(cntorgp/cntorg, 'Harvard')">
           <xsl:text>Harvard</xsl:text>
         </xsl:when> 
-        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'Tufts')">
+        <xsl:when test="contains(cntinfo/cntorgp/cntorg, 'Tufts')">
           <xsl:text>Tufts</xsl:text>
         </xsl:when>
-        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'MIT')">
+        <xsl:when test="contains(cntinfo/cntorgp/cntorg, 'MIT')">
           <xsl:text>MIT</xsl:text>
         </xsl:when>
-        <xsl:when test="contains(distinfo/distrib/cntinfo/cntorgp/cntorg, 'Massachusetts')">
+         <xsl:when test="contains(cntinfo/cntorgp/cntorg, 'Massachusetts')">
           <xsl:text>MassGIS</xsl:text>
         </xsl:when>
-        <xsl:when test="contains(metainfo/metc/cntinfo/cntorgp/cntorg, 'MassGIS')">
+        <xsl:when test="contains(//metainfo/metc/cntinfo/cntperp/cntorg, 'MassGIS')">
           <xsl:text>MassGIS</xsl:text>
         </xsl:when>
         <xsl:when test="contains(distinfo/distrib/cntinfo/cntemail, 'state.ma.us')">
@@ -101,8 +102,9 @@
           <xsl:text>Berkeley</xsl:text>
         </xsl:when>
       </xsl:choose>
+      </xsl:for-each>
     </xsl:variable>
-    
+
     <!-- fileidentifier for mods:recordIdentifier -->
     <xsl:variable name="recordID">
       <xsl:choose>
