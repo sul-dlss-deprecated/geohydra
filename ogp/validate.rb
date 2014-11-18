@@ -55,7 +55,7 @@ class ValidateOgp
     end
     
     k = 'Institution'
-    if ([layer[k]] & %w{Berkeley Harvard MIT MassGIS Stanford Tufts}).empty?
+    if ([layer[k]] & %w{Berkeley Harvard MIT MassGIS Stanford Tufts UCLA Minnesota Columbia Columbia\ University}).empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
       return
     end
@@ -69,6 +69,11 @@ class ValidateOgp
     k = 'Access'
     if ([layer[k]] & %w{Public Restricted}).empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
+    end
+
+    k = 'WorkspaceName'
+    if layer[k].nil?
+      layer[k] = layer['Institution']
     end
 
     k = 'Availability'
@@ -93,7 +98,7 @@ class ValidateOgp
     end
     
     k = 'Area'
-    unless layer[k] > 0
+    unless layer[k].to_i >= 0
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
     end
     
