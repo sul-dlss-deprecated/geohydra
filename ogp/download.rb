@@ -5,10 +5,12 @@ require 'open-uri'
 class DownloadOgp
   URL = {
     'tufts' => 'http://geodata.tufts.edu/solr/select',
-    'stanford' => 'http://geoportal.stanford.edu/solr/ogp/select',
     'mit' => 'http://arrowsmith.mit.edu/solr/select',
     'berkeley' => 'http://gis.lib.berkeley.edu:9081/solr4/select',
-    'harvard' => 'http://geodata.tufts.edu/solr/select' # Harvard uses Tufts solr index
+    'harvard' => 'http://geodata.tufts.edu/solr/select', # Harvard uses Tufts solr index
+    'ucla' => 'http://vizsla.oit.ucla.edu:8080/solr/select',
+    'columbia' => 'http://culspatial.cul.columbia.edu/solr/select',
+    'minnesota' => 'http://ec2-54-87-229-228.compute-1.amazonaws.com:8080/solr/collection1/select'
   }
   
   FIELDS = %w{
@@ -84,9 +86,11 @@ end
 
 # __MAIN__
 ogp = DownloadOgp.new
-ogp.download('Stanford', 'Stanford', 269)
-ogp.download('Berkeley', 'Berkeley', 407)
-ogp.download('Tufts', 'MassGIS', 596)
-ogp.download('Tufts', 'Tufts', 2598)
-ogp.download('Tufts', 'Harvard', 8936)
-ogp.download('MIT', 'MIT', 14742)
+ogp.download('Berkeley', 'Berkeley', 450)
+ogp.download('Tufts', 'MassGIS', 600)
+ogp.download('Tufts', 'Tufts', 2850)
+ogp.download('Tufts', 'Harvard', 10000)
+ogp.download('MIT', 'MIT', 9200)
+ogp.download('UCLA', 'UCLA', 200)
+ogp.download('Columbia', 'Columbia', 3600)
+ogp.download('Minnesota', 'Minnesota', 2300)
