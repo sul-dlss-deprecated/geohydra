@@ -54,7 +54,7 @@ class TransformOgp
 
   # Transforms a single OGP record into a GeoBlacklight record
   # @param [Hash] layer an OGP hash for a given layer
-  def transform(layer, skip_fgdc = true)
+  def transform(layer, skip_fgdc = false)
     id = layer['LayerId'].to_s.strip
     puts "Tranforming #{id}"
 
@@ -73,8 +73,14 @@ class TransformOgp
       'urn:arrowsmith.mit.edu:'
     when 'Harvard'
       'urn:hul.harvard.edu:'
+    when 'Minnesota'
+      'urn:minnesota'
+    when 'UCLA'
+      'urn:ucla.edu'
+    when 'Columbia', 'Columbia University'
+      'urn:columbia.edu'
     else
-      ''
+      'urn:UNKNOWN'
     end
     uuid = prefix + URI.encode(id)
     
@@ -109,9 +115,10 @@ class TransformOgp
       purl = nil
       # Because OGP does not deliminate keywords, we use a heuristic here
       %w{PlaceKeywords ThemeKeywords}.each do |k|
-        unless layer[k] =~ /[;,]/ or layer[k].split.size < 4
-          layer[k] = layer[k].split.join(';')
-        end
+        layer[k] = nil
+        # unless layer[k] =~ /[;,]/ or layer[k].split.size < 4
+          # layer[k] = layer[k].split.join(';')
+        # end
       end
     end
     
