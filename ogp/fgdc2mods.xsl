@@ -142,7 +142,7 @@
           <xsl:value-of select="substring-before(tokenize(base-uri(), '/')[last()], '.xml')"/>
         </xsl:when> 
         <xsl:when test="contains($institution, 'Columbia')">
-          <xsl:text>urn:gis.library.columbia.edu</xsl:text>
+          <xsl:text>urn:gis.library.columbia.edu.</xsl:text>
           <xsl:value-of select="substring-before(tokenize(base-uri(), '/')[last()], '.xml')"/>
         </xsl:when> 
       </xsl:choose>
