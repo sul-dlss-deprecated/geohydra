@@ -1,0 +1,6 @@
+#!/bin/bash
+# Usage: xsltproc-libxml2 input.xml stylesheet.xsl output.xml [flags or params]
+i=$1; shift
+s=$1; shift
+o=$1; shift
+xsltproc -o $o $s $i
