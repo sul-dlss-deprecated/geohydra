@@ -38,12 +38,15 @@ class ValidateOgp
   def validate(layer)
     id = layer['LayerId']
 
-    %w{LayerId Name Institution Access MinX MinY MaxX MaxY LayerDisplayName Location}.each do |k|
-      if layer[k].nil? or layer[k].to_s.empty?
+    %w{LayerId Name Institution Access MinX MinY MaxX MaxY LayerDisplayName}.each do |k|
+      if layer[k].nil? || layer[k].to_s.empty?
         raise ArgumentError, "ERROR: #{id} missing #{k}"
         return
       end
     end
+    
+    k = 'LayerId'
+    raise ArgumentError, "ERROR: #{k} is not a String" unless layer[k].is_a? String
     
     %w{MinX MaxX}.each do |lon|
       raise ArgumentError, "ERROR: #{id}: Invalid longitude value: #{layer[lon]}" unless lon?(layer[lon])
@@ -80,14 +83,17 @@ class ValidateOgp
     if layer[k].downcase == 'online' # cleanup 
       layer[k] = 'Online'
     end
-    if ([layer[k]] & %w{Online}).empty?
+    if layer[k].downcase == 'offline'
+      layer[k] = 'Offline'
+    end
+    if ([layer[k]] & %w{Online Offline}).empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
       return
     end
 
     k = 'Location'
     layer[k] = validate_location(id, layer[k])
-    if layer[k].nil? or layer[k].empty?
+    if layer[k].nil?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
     end
 
@@ -108,7 +114,7 @@ class ValidateOgp
     end
     dt = Date.rfc3339(layer[k])
     if dt.year < 1500 or dt.year > 2100
-      raise ArgumentError, "ERROR: #{id} has suspect #{k}: #{layer[k]}"
+      raise ArgumentError, "ERROR: #{id} has invalid #{k}: #{layer[k]}"
     end
     
     # k = 'FgdcText'
@@ -131,11 +137,19 @@ class ValidateOgp
   def validate_location(id, location)
     begin
       x = JSON::parse(location)
-      if x['wms'].nil? or (x['wcs'].nil? and x['wfs'].nil?)
-        raise ArgumentError, "ERROR: #{id}: Missing WMS or WCS/WFS: #{x}"
+      unless x['externalDownload'].nil?
+        x['download'] = x['externalDownload']
+        x.delete('externalDownload')
       end
+      unless x['libRecord'].nil?
+        x['url'] = x['libRecord']
+        x.delete('libRecord')
+      end
+      # if x['download'].nil? && x['wms'].nil? && (x['wcs'].nil? && x['wfs'].nil?) && x['url'].nil?
+      #   raise ArgumentError, "ERROR: #{id}: Missing Download or WMS or WCS/WFS: #{x}"
+      # end
       
-      %w{wms wcs wfs}.each do |protocol|
+      %w{download wms wcs wfs url}.each do |protocol|
         begin
           unless x[protocol].nil?
             if x[protocol].is_a? String
@@ -150,17 +164,20 @@ class ValidateOgp
               uri = URI.parse(url)
               raise ArgumentError, "ERROR: #{id}: Invalid URL: #{uri}" unless uri.kind_of?(URI::HTTP) or uri.kind_of?(URI::HTTPS)
             end
+            
+            # convert from Array to String
+            x[protocol] = x[protocol].first
           end
         rescue Exception => e
-          raise ArgumentError, "ERROR: #{id}: Invalid #{k}: #{x}"
+          raise ArgumentError, "ERROR: #{id}: Invalid key #{protocol}: #{x}"
         end        
       end
       
-      @wms_servers[x['wms'].first] = true      
+      @wms_servers[x['wms']] = true      
 
       return x.to_json
     rescue JSON::ParserError => e
-      raise ArgumentError, "ERROR: #{id}: Invalid JSON: #{location}"
+      raise ArgumentError, "ERROR: #{id}: Invalid JSON in Location: #{location}"
     end
     nil
   end

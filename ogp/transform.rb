@@ -74,18 +74,17 @@ class TransformOgp
     when 'Harvard'
       'urn:hul.harvard.edu:'
     when 'Minnesota'
-      'urn:minnesota'
+      raise ArgumentError, 'urn:umn.edu:'
     when 'UCLA'
-      'urn:ucla.edu'
+      raise ArgumentError, 'urn:ucla.edu:'
     when 'Columbia', 'Columbia University'
-      'urn:columbia.edu'
+      raise ArgumentError, 'urn:columbia.edu:'
     else
-      'urn:UNKNOWN'
+      raise ArgumentError, 'urn:UNKNOWN:'
     end
     uuid = prefix + URI.encode(id)
     
-    # Parse out the Location to get the WMS/WFS/WCS URLs
-    raise ArgumentError, "ERROR: #{id} no location" if layer['Location'].nil? or layer['Location'].empty?
+    # Parse out the Location to get the WMS/WFS/WCS URLs, if available
     location = JSON::parse(layer['Location'])
     raise ArgumentError, "ERROR: #{id} has malformed location" unless location.is_a? Hash
     
@@ -115,7 +114,7 @@ class TransformOgp
       purl = nil
       # Because OGP does not deliminate keywords, we use a heuristic here
       %w{PlaceKeywords ThemeKeywords}.each do |k|
-        layer[k] = nil
+        # layer[k] = nil
         # unless layer[k] =~ /[;,]/ or layer[k].split.size < 4
           # layer[k] = layer[k].split.join(';')
         # end
@@ -135,11 +134,13 @@ class TransformOgp
     refs['http://www.opengis.net/def/serviceType/ogc/wcs'] = "#{location['wcs']}" if location['wcs']
     refs['http://www.opengis.net/def/serviceType/ogc/wfs'] = "#{location['wfs']}" if location['wfs']
     refs['http://www.opengis.net/def/serviceType/ogc/wms'] = "#{location['wms']}" if location['wms']
+    refs['http://schema.org/downloadUrl'] = "#{location['download']}" if location['download']
+    refs['http://schema.org/url'] = "#{location['url']}" if location['url']
     if purl
       refs["http://schema.org/thumbnailUrl"] = "http://stacks.stanford.edu/file/druid:#{id}/preview.jpg"
       refs["http://schema.org/url"] = "#{clean_uri(purl)}"
-      refs["http://schema.org/DownloadAction"] = "http://stacks.stanford.edu/file/druid:#{id}/data.zip"
-      refs["http://www.isotc211.org/schemas/2005/gmd/"] = "#{purl}.iso19139"
+      refs["http://schema.org/downloadUrl"] = "http://stacks.stanford.edu/file/druid:#{id}/data.zip"
+      refs["http://www.isotc211.org/schemas/2005/gmd/"] = "http://opengeometadata.stanford.edu/metadata/edu.stanford.purl/#{id}/iso19139"
       refs["http://www.loc.gov/mods/v3"] = "#{purl}.mods"
     end
     
@@ -163,14 +164,14 @@ class TransformOgp
       :dc_language_s      => 'English', # 'en', # XXX: fake data
       :dc_publisher_s     => layer['Publisher'],
       :dc_rights_s        => access,
-      :dc_subject_sm      => string2array(layer['ThemeKeywords']),
+      :dc_subject_sm      => string2array(layer['ThemeKeywords'], true),
       :dc_title_s         => layer['LayerDisplayName'],
       :dc_type_s          => 'Dataset',  # or 'Image' for non-georectified, 
                                          # or 'PhysicalObject' for non-digitized maps
       # Dublin Core terms
       :dct_isPartOf_sm    => collection.nil?? nil : [collection],
       :dct_references_s   => refs.to_json.to_s,
-      :dct_spatial_sm     => string2array(layer['PlaceKeywords']),
+      :dct_spatial_sm     => string2array(layer['PlaceKeywords'], true),
       :dct_temporal_sm    => [dt.year.to_s],
       :dct_issued_s       => pub_dt.year.to_s,
       :dct_provenance_s   => layer['Institution'],
@@ -194,10 +195,10 @@ class TransformOgp
       :solr_sw_pt => "#{s},#{w}",
       :solr_geom  => "ENVELOPE(#{w}, #{e}, #{n}, #{s})",
       :solr_year_i => dt.year,
-      :solr_issued_dt => pub_dt.strftime('%FT%TZ'), # Solr requires 1995-12-31T23:59:59Z
-      :solr_wms_url => location['wms'],
-      :solr_wfs_url => location['wfs'],
-      :solr_wcs_url => location['wcs']
+      :solr_issued_dt => pub_dt.strftime('%FT%TZ') # Solr requires 1995-12-31T23:59:59Z
+      # :solr_wms_url => location['wms'],
+      # :solr_wfs_url => location['wfs'],
+      # :solr_wcs_url => location['wcs']
       
       # :layer_year_i       => dt.year#, # XXX: migrate to copyField
       # :ogp_area_f         => layer['Area'],
@@ -222,8 +223,11 @@ class TransformOgp
     @output.write "\n,\n"
     
     unless skip_fgdc or layer['FgdcText'].nil? or layer['FgdcText'].empty?
-      xml = Nokogiri::XML(layer['FgdcText'])
-      xml.write_xml_to(File.open('fgdc' + '/' + slug + '.xml', 'wb'), :encoding => 'UTF-8', :indent => 2)
+      _fn = 'fgdc' + '/' + slug + '.xml'
+      unless File.size?(_fn)
+        xml = Nokogiri::XML(layer['FgdcText'])
+        xml.write_xml_to(_fn, 'wb', :encoding => 'UTF-8', :indent => 2)
+      end
     end
   end
 
@@ -234,13 +238,22 @@ class TransformOgp
     
   # @param [String] s has semi-colon/comma/gt delimited array
   # @return [Array] results as array
-  def string2array(s)
-    if s.to_s =~ /[;,>]/
-      s.split(/\s*[;,>]\s*/).uniq.collect {|i| i.strip}
-    elsif s.is_a?(String) and s.size > 0
-      [s.strip]
+  def string2array(s, clean_only = false)
+    return nil if s.nil?
+    if clean_only
+      if !s.strip.index(' ')
+        [s.strip]
+      else
+        nil
+      end
     else
-      nil
+      if s.to_s =~ /[;,>]/
+        s.split(/\s*[;,>]\s*/).uniq.collect {|i| i.strip}
+      elsif s.is_a?(String) && s.size > 0
+        [s.strip]
+      else
+        nil
+      end
     end
   end
   
@@ -273,12 +286,8 @@ class TransformOgp
   # Ensure that the WMS/WFS/WCS location values are as expected
   def validate_location(id, location)
     begin
-      x = JSON::parse(location)
-      if x['wms'].nil? or (x['wcs'].nil? and x['wfs'].nil?)
-        raise ArgumentError, "ERROR: #{id}: Missing WMS or WCS/WFS: #{x}"
-      end
-      
-      %w{wms wcs wfs}.each do |protocol|
+      x = JSON::parse(location)      
+      %w{download url wms wcs wfs}.each do |protocol|
         begin
           unless x[protocol].nil?
             if x[protocol].is_a? String
@@ -293,6 +302,7 @@ class TransformOgp
               uri = clean_uri.parse(url)
               raise ArgumentError, "ERROR: #{id}: Invalid URL: #{uri}" unless uri.kind_of?(clean_uri::HTTP) or uri.kind_of?(clean_uri::HTTPS)
             end
+            x[protocol] = x[protocol].first
           end
         rescue Exception => e
           raise ArgumentError, "ERROR: #{id}: Invalid #{k}: #{x}"
