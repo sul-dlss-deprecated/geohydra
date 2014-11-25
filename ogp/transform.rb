@@ -27,7 +27,7 @@ class TransformOgp
   # @return [String] a normalized URI
   def clean_uri(s)
     unless s.nil? or s.empty?
-      return (s.is_a?(Array) ? URI(s.first) : URI(s)).to_s
+      return (s.is_a?(Array) ? URI(s.first.to_s.strip) : URI(s.to_s.strip)).to_s
     end
     ''
   end
@@ -60,6 +60,7 @@ class TransformOgp
 
     # For URN style @see http://www.ietf.org/rfc/rfc2141.txt
     # For ARK @see https://wiki.ucop.edu/display/Curation/ARK
+    layer['Institution'].strip!
     prefix = case layer['Institution']
     when 'Stanford'
       'http://purl.stanford.edu/'
@@ -74,13 +75,13 @@ class TransformOgp
     when 'Harvard'
       'urn:hul.harvard.edu:'
     when 'Minnesota'
-      raise ArgumentError, 'urn:umn.edu:'
+      raise ArgumentError, 'ERROR: Skipping urn:umn.edu:'
     when 'UCLA'
-      raise ArgumentError, 'urn:ucla.edu:'
+      'urn:ucla.edu:'
     when 'Columbia', 'Columbia University'
-      raise ArgumentError, 'urn:columbia.edu:'
+      'urn:columbia.edu:'
     else
-      raise ArgumentError, 'urn:UNKNOWN:'
+      raise ArgumentError, 'ERROR: Skipping urn:UNKNOWN:'
     end
     uuid = prefix + URI.encode(id)
     
