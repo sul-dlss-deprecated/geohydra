@@ -20,7 +20,12 @@ class IngestOgp
       doc.delete('_version_')
       doc.delete('timestamp')
       putc "."
-      @solr.add doc
+      begin
+        @solr.add doc      
+      rescue Exception => e
+        puts e
+      end
+      
       n += 1
       if n % 100 == 0
         @solr.commit 
@@ -41,7 +46,7 @@ end
 
 
 # __MAIN__
-IngestOgp.new(ARGV[0], (ARGV[1].nil?? 'http://localhost:18080/solr' : ARGV[1])) do |ogp|
+IngestOgp.new(ARGV[0], (ARGV[1].nil?? 'http://localhost:58080/solr' : ARGV[1])) do |ogp|
   Dir.glob("transformed*.json") do |fn|
     ogp.ingest(fn)
   end
