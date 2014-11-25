@@ -26,7 +26,7 @@ class ValidateOgp
       begin
         validate(doc)
         stats[:accepted] += 1
-      rescue ArgumentError => e
+      rescue Exception => e
         puts e
         stats[:rejected] += 1
       end
@@ -41,12 +41,14 @@ class ValidateOgp
     %w{LayerId Name Institution Access MinX MinY MaxX MaxY LayerDisplayName}.each do |k|
       if layer[k].nil? || layer[k].to_s.empty?
         raise ArgumentError, "ERROR: #{id} missing #{k}"
-        return
       end
     end
     
     k = 'LayerId'
-    raise ArgumentError, "ERROR: #{k} is not a String" unless layer[k].is_a? String
+    if layer[k].is_a? Array
+      layer[k] = layer[k].first
+    end
+    raise ArgumentError, "ERROR: #{k} is not a String: #{layer[k]}" unless layer[k].is_a? String
     
     %w{MinX MaxX}.each do |lon|
       raise ArgumentError, "ERROR: #{id}: Invalid longitude value: #{layer[lon]}" unless lon?(layer[lon])
@@ -60,13 +62,11 @@ class ValidateOgp
     k = 'Institution'
     if ([layer[k]] & %w{Berkeley Harvard MIT MassGIS Stanford Tufts UCLA Minnesota Columbia Columbia\ University}).empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
-      return
     end
 
     k = 'DataType'
-    if ([layer[k]] & %w{Line Paper\ Map Point Polygon Raster LibraryRecord}).empty?
+    if ([layer[k]] & %w{Line Paper Paper\ Map Point Polygon Raster LibraryRecord CD-ROM DVD-ROM}).empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
-      return
     end
 
     k = 'Access'
@@ -88,7 +88,6 @@ class ValidateOgp
     end
     if ([layer[k]] & %w{Online Offline}).empty?
       raise ArgumentError, "ERROR: #{id} has unsupported #{k}: #{layer[k]}"
-      return
     end
 
     k = 'Location'
@@ -114,7 +113,8 @@ class ValidateOgp
     end
     dt = Date.rfc3339(layer[k])
     if dt.year < 1500 or dt.year > 2100
-      raise ArgumentError, "ERROR: #{id} has invalid #{k}: #{layer[k]}"
+      puts "WARNING: #{id} has invalid #{k}: #{layer[k]}: #{dt}"
+      layer[k] = nil
     end
     
     # k = 'FgdcText'
@@ -136,7 +136,12 @@ class ValidateOgp
   
   def validate_location(id, location)
     begin
-      x = JSON::parse(location)
+      begin
+        x = JSON::parse(location)
+      rescue JSON::ParserError => e
+        x = JSON::parse("{ #{location} }") # wrap in dictionary
+      end
+      
       unless x['externalDownload'].nil?
         x['download'] = x['externalDownload']
         x.delete('externalDownload')
@@ -145,15 +150,21 @@ class ValidateOgp
         x['url'] = x['libRecord']
         x.delete('libRecord')
       end
-      # if x['download'].nil? && x['wms'].nil? && (x['wcs'].nil? && x['wfs'].nil?) && x['url'].nil?
-      #   raise ArgumentError, "ERROR: #{id}: Missing Download or WMS or WCS/WFS: #{x}"
-      # end
+      if x['download'].nil? && x['wms'].nil? && (x['wcs'].nil? && x['wfs'].nil?) && x['url'].nil?
+        puts "WARNING: #{id}: Missing Download or WMS or WCS/WFS or URL: #{x}"
+        return {}.to_json
+      end
       
       %w{download wms wcs wfs url}.each do |protocol|
         begin
           unless x[protocol].nil?
             if x[protocol].is_a? String
-              x[protocol] = [x[protocol]]
+              if x[protocol].empty? || x[protocol] == "None available"
+                x[protocol] = nil
+                next
+              else
+                x[protocol] = [x[protocol]]
+              end
             end
             
             unless x[protocol].is_a? Array
@@ -162,22 +173,20 @@ class ValidateOgp
             
             x[protocol].each do |url|
               uri = URI.parse(url)
-              raise ArgumentError, "ERROR: #{id}: Invalid URL: #{uri}" unless uri.kind_of?(URI::HTTP) or uri.kind_of?(URI::HTTPS)
+              raise ArgumentError, "ERROR: #{id}: Invalid URL: #{uri}" unless uri.kind_of?(URI::HTTP) or uri.kind_of?(URI::HTTPS) or uri.kind_of?(URI::FTP)
             end
             
             # convert from Array to String
-            x[protocol] = x[protocol].first
+            x[protocol] = x[protocol].first if x[protocol].is_a? Array
           end
-        rescue Exception => e
-          raise ArgumentError, "ERROR: #{id}: Invalid key #{protocol}: #{x}"
+        rescue URI::InvalidURIError => e
+          raise ArgumentError, "ERROR: #{id}: Invalid URL parsing: #{x}"
         end        
       end
       
-      @wms_servers[x['wms']] = true      
+      @wms_servers[x['wms']] = true unless x['wms'].nil?
 
       return x.to_json
-    rescue JSON::ParserError => e
-      raise ArgumentError, "ERROR: #{id}: Invalid JSON in Location: #{location}"
     end
     nil
   end
@@ -196,7 +205,11 @@ end
 ValidateOgp.new(ARGV[0].nil?? 'valid.json' : ARGV[0]) do |ogp|
   stats = { :accepted => 0, :rejected => 0 }
   Dir.glob('data/*.json') do |fn|
-    s = ogp.validate_file(fn)
+    begin
+      s = ogp.validate_file(fn)      
+    rescue Exception => e
+    end
+    
     stats[:accepted] += s[:accepted]
     stats[:rejected] += s[:rejected]
   end
